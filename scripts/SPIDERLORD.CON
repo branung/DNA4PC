@@ -1,0 +1,288 @@
+action SPIDERLORDWALKING          0   4  5  1  22
+action SPIDERLORDSTANDING         0   1  5  1  10
+action SPIDERLORDATTACKING        21  2  1  1  30
+action SPIDERLORDDYING            30  5  1  1  8
+action SPIDERLORDDEADBODY         34  1  1  1  10
+action SPIDERLORDFROZEN           0   1  5  1  10
+action SPIDERLORDFLINCH           24  1  5  1  10
+action SPIDERLORDGROW             0   1  1  1  10
+
+move SPIDERLORDSTOPPED
+move SPIDERLORDWALKVEL 132
+move SPIDERLORDSHRUNKVELS 32
+
+ai AISPIDERLORDWAIT               SPIDERLORDSTANDING SPIDERLORDSTOPPED geth
+ai AISPIDERLORDSEEK               SPIDERLORDWALKING SPIDERLORDWALKVEL seekplayer
+ai AISPIDERLORDATTACKPLAYER       SPIDERLORDATTACKING SPIDERLORDSTOPPED faceplayer
+ai AISPIDERLORDDYING	            SPIDERLORDDYING SPIDERLORDSTOPPED geth
+ai AISPIDERLORDHIT                SPIDERLORDFLINCH SPIDERLORDSTOPPED faceplayer
+ai AISPIDERLORDFROZEN             SPIDERLORDFROZEN SPIDERLORDSTOPPED geth
+ai AISPIDERLORDSHRUNK             SPIDERLORDWALKING SPIDERLORDSHRUNKVELS fleeenemy
+ai AISPIDERLORDGROW               SPIDERLORDGROW SPIDERLORDSTOPPED geth
+
+state spiderlordhitstate
+        ifcount 9 ai AISPIDERLORDWAIT
+ends
+
+state spiderlordwaitstate
+	ifcount 30 ai AISPIDERLORDSEEK
+ends
+
+state spiderlordseekstate
+       ifcansee ifpdistl 6144
+        ifrnd 2
+        {
+			// add sound here
+        }
+        ifcount 10
+        ifcansee ifpdistl 6144
+        ifp palive
+        {
+			ifrnd 8 
+            { 
+                ai AISPIDERLORDATTACKPLAYER 
+                // add sound here
+            }
+        }
+
+        ifrnd 4 ifpdistg 6144 ai AISPIDERLORDWAIT    
+ends
+
+state spiderlordattackstate
+  
+  ifcount 72
+    state spiderlordseekstate
+  else
+    ifaction SPIDERLORDATTACKING
+      ifactioncount 2
+  {
+    shoot RPG
+    resetactioncount
+  }
+ends
+
+
+state spiderlordgrowstate
+        state genericgrowcode
+        sizeto 255 192
+ends
+
+state spiderlordshrunkstate
+  ifcount SHRUNKDONECOUNT
+    ai AISPIDERLORDWAIT
+  else
+    ifcount SHRUNKCOUNT
+        {
+          ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
+          else
+      sizeto 48 40
+        }
+  else
+    state genericshrunkcode
+ends
+
+state spiderlordfrozenstate
+
+    ifcount THAWTIME
+	{
+		ai AISPIDERLORDWAIT
+		getlastpal
+    }
+    else
+		ifcount FROZENDRIPTIME
+    {
+      ifactioncount 26
+      {
+        spawn WATERDRIP
+        resetactioncount
+      }
+    }
+    ifhitweapon
+    {
+      ifwasweapon FREEZEBLAST
+      {
+		strength 0
+        break
+      }
+      addkills 1 
+          // state enemy_death
+
+      ifrnd 84
+        spawn BLOODPOOL
+          lotsofglass 30
+      state standard_jibs
+      sound GLASS_BREAKING
+      killit
+    }
+    ifp pfacing
+      ifpdistl FROZENQUICKKICKDIST
+        pkick
+  
+ends
+
+useractor enemy SPIDERLORD SPIDERLORDSTRENGTH
+
+fall
+ifai 0
+{
+	// play alert sound here
+    cstat 257
+	ai AISPIDERLORDSEEK
+}
+
+ifai AISPIDERLORDDYING
+{
+        strength 0
+		/*ifwasweapon RPG
+		{
+				sound SQUISHED
+				spawn BLOODPOOL
+				state standard_jibs
+				killit
+		}
+		ifwasweapon RADIUSEXPLOSION
+		{
+				sound SQUISHED
+				spawn BLOODPOOL
+				state standard_jibs
+				killit
+		}*/
+        
+        ifaction SPIDERLORDDYING
+        {
+                ifactioncount 5
+                {
+						cstat 0
+						globalsound THUD
+                        action SPIDERLORDDEADBODY
+                        break
+                }
+        }    
+        ifaction SPIDERLORDDEADBODY
+        {
+          findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+            ifn temp -1
+            {
+                  addkills -1
+                  spawn TRANSPORTERSTAR
+                  cstat 257
+                  strength SPIDERLORDSTRENGTH
+                  ai AISPIDERLORDWAIT
+                  // play sound here
+            }
+                ifhitweapon
+                {
+                        ifwasweapon RPG
+                        {
+                                sound SQUISHED
+                                spawn BLOODPOOL
+								state standard_jibs
+                                killit
+                        }
+                        ifwasweapon RADIUSEXPLOSION
+                        {
+                                sound SQUISHED
+                                spawn BLOODPOOL
+								state standard_jibs
+                                killit
+                        }
+                }
+                ifcount RESPAWNACTORTIME
+                ifrespawn
+                {
+                  addkills -1
+                  spawn TRANSPORTERSTAR
+                  cstat 257
+                  strength SPIDERLORDSTRENGTH
+                  ai AISPIDERLORDWAIT
+                  // play sound here
+                }
+        }
+        
+        break
+}
+
+
+ifai AISPIDERLORDGROW { state spiderlordgrowstate break }
+ifai AISPIDERLORDFROZEN { state spiderlordfrozenstate break }
+ifai AISPIDERLORDSHRUNK state spiderlordshrunkstate else
+ifai AISPIDERLORDWAIT state spiderlordwaitstate else
+ifai AISPIDERLORDHIT state spiderlordhitstate else
+ifai AISPIDERLORDATTACKPLAYER state spiderlordattackstate else
+ifai AISPIDERLORDSEEK state spiderlordseekstate
+
+
+ifhitweapon
+{
+    ifwasweapon SHRINKSPARK
+        {
+                ifstrength 600
+                {
+                  sound ACTOR_SHRINKING
+                  ai AISPIDERLORDSHRUNK
+                  // set shrunken 1
+                  break
+                }
+                else addstrength -60
+        }
+        else
+        ifwasweapon GROWSPARK
+          sound EXPANDERHIT
+		guts JIBS2 1
+        ifdead
+        {
+              spawn ACCESSCARD
+                ifwasweapon FREEZEBLAST
+                {
+                  sound SOMETHINGFROZE
+                  spritepal 1
+                  ai AISPIDERLORDFROZEN
+                  strength 0
+                  // state freezeme
+                  break
+                }
+                ifwasweapon GROWSPARK
+                {
+					cstat 0
+					sound ACTOR_GROWING
+					ai AISPIDERLORDGROW
+					break
+                }
+                addkills 1
+				// play death sound here
+                ai AISPIDERLORDDYING
+                //guts JIBS6 8
+                ifspritepal 0 break
+                ifwasweapon RPG
+                {
+                        sound SQUISHED
+                        spawn BLOODPOOL
+                        killit
+                }
+                ifwasweapon RADIUSEXPLOSION
+                {
+                        sound SQUISHED
+                        spawn BLOODPOOL
+                        killit
+                }
+                break
+        }
+		
+        
+        // play pain sound here
+        ifrnd 2
+          spawn BLOODPOOL
+		    ifai AISPIDERLORDHIT nullop else
+        ifai AISPIDERLORDSHRUNK nullop else
+        {
+			    ifrnd 32
+			    ai AISPIDERLORDHIT        
+        }
+
+        debris SCRAP1 1
+        guts JIBS6 1
+
+}
+
+
+enda

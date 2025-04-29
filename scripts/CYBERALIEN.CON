@@ -1,0 +1,289 @@
+action CYBERALIENWALKING          0   3  5  1  22
+action CYBERALIENSTANDING         0   1  5  1  10
+action CYBERALIENATTACKING        16  6  1  1  30
+action CYBERALIENDYING            29  5  1  1  8
+action CYBERALIENDEADBODY         33  1  1  1  10
+action CYBERALIENFROZEN           0   1  5  1  10
+action CYBERALIENFLINCH           23  1  5  1  10
+action CYBERALIENGROW             0   1  1  1  10
+
+move CYBERALIENSTOPPED
+move CYBERALIENWALKVEL 132
+move CYBERALIENSHRUNKVELS 32
+
+ai AICYBERALIENWAIT               CYBERALIENSTANDING CYBERALIENSTOPPED geth
+ai AICYBERALIENSEEK               CYBERALIENWALKING CYBERALIENWALKVEL seekplayer
+ai AICYBERALIENATTACKPLAYER       CYBERALIENATTACKING CYBERALIENSTOPPED faceplayer
+ai AICYBERALIENDYING	            CYBERALIENDYING CYBERALIENSTOPPED geth
+ai AICYBERALIENHIT                CYBERALIENFLINCH CYBERALIENSTOPPED faceplayer
+ai AICYBERALIENFROZEN             CYBERALIENFROZEN CYBERALIENSTOPPED geth
+ai AICYBERALIENSHRUNK             CYBERALIENWALKING CYBERALIENSHRUNKVELS fleeenemy
+ai AICYBERALIENGROW               CYBERALIENGROW CYBERALIENSTOPPED geth
+
+state cyberalienhitstate
+        ifcount 9 ai AICYBERALIENWAIT
+ends
+
+state cyberalienwaitstate
+	ifcount 30 ai AICYBERALIENSEEK
+ends
+
+state cyberalienseekstate
+       ifcansee ifpdistl 6144
+        ifrnd 2
+        {
+			// add sound here
+        }
+        ifcount 10
+        ifcansee ifpdistl 6144
+        ifp palive
+        {
+			ifrnd 8 
+            { 
+              sound BOS1_ATTACK2
+                ai AICYBERALIENATTACKPLAYER 
+            }
+        }
+
+        ifrnd 4 ifpdistg 6144 ai AICYBERALIENWAIT    
+ends
+
+state cyberalienattackstate
+  
+  ifcount 8
+  {
+    ifcount 10
+      ai AICYBERALIENSEEK
+  }
+  else
+	ifcount 7
+		  shoot MORTER
+   else
+	 ifactioncount 6
+	   resetactioncount
+ends
+
+
+state cyberaliengrowstate
+        state genericgrowcode
+        sizeto 255 192
+ends
+
+state cyberalienshrunkstate
+  ifcount SHRUNKDONECOUNT
+    ai AICYBERALIENWAIT
+  else
+    ifcount SHRUNKCOUNT
+        {
+          ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
+          else
+      sizeto 48 40
+        }
+  else
+    state genericshrunkcode
+ends
+
+state cyberalienfrozenstate
+
+    ifcount THAWTIME
+	{
+		ai AICYBERALIENWAIT
+		getlastpal
+    }
+    else
+		ifcount FROZENDRIPTIME
+    {
+      ifactioncount 26
+      {
+        spawn WATERDRIP
+        resetactioncount
+      }
+    }
+    ifhitweapon
+    {
+      ifwasweapon FREEZEBLAST
+      {
+		strength 0
+        break
+      }
+      addkills 1 
+          // state enemy_death
+
+      ifrnd 84
+        spawn BLOODPOOL
+          lotsofglass 30
+      state standard_jibs
+      sound GLASS_BREAKING
+      killit
+    }
+    ifp pfacing
+      ifpdistl FROZENQUICKKICKDIST
+        pkick
+  
+ends
+
+useractor enemy CYBERALIEN CYBERALIENSTRENGTH
+
+fall
+ifai 0
+{
+	// play alert sound here
+    cstat 257
+	ai AICYBERALIENSEEK
+}
+
+ifai AICYBERALIENDYING
+{
+        strength 0
+		/*ifwasweapon RPG
+		{
+				sound SQUISHED
+				spawn BLOODPOOL
+				state standard_jibs
+				killit
+		}
+		ifwasweapon RADIUSEXPLOSION
+		{
+				sound SQUISHED
+				spawn BLOODPOOL
+				state standard_jibs
+				killit
+		}*/
+        
+        ifaction CYBERALIENDYING
+        {
+                ifactioncount 5
+                {
+						cstat 0
+						globalsound THUD
+                        action CYBERALIENDEADBODY
+                        break
+                }
+        }    
+        ifaction CYBERALIENDEADBODY
+        {
+          findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+            ifn temp -1
+            {
+                  addkills -1
+                  spawn TRANSPORTERSTAR
+                  cstat 257
+                  strength CYBERALIENSTRENGTH
+                  ai AICYBERALIENWAIT
+                  // play sound here
+            }
+                ifhitweapon
+                {
+                        ifwasweapon RPG
+                        {
+                                sound SQUISHED
+                                spawn BLOODPOOL
+								                state standard_jibs
+                                killit
+                        }
+                        ifwasweapon RADIUSEXPLOSION
+                        {
+                                sound SQUISHED
+                                spawn BLOODPOOL
+								state standard_jibs
+                                killit
+                        }
+                }
+                ifcount RESPAWNACTORTIME
+                ifrespawn
+                {
+                  addkills -1
+                  spawn TRANSPORTERSTAR
+                  cstat 257
+                  strength CYBERALIENSTRENGTH
+                  ai AICYBERALIENWAIT
+                  // play sound here
+                }
+        }
+        
+        break
+}
+
+
+ifai AICYBERALIENGROW { state cyberaliengrowstate break }
+ifai AICYBERALIENFROZEN { state cyberalienfrozenstate break }
+ifai AICYBERALIENSHRUNK state cyberalienshrunkstate else
+ifai AICYBERALIENWAIT state cyberalienwaitstate else
+ifai AICYBERALIENHIT state cyberalienhitstate else
+ifai AICYBERALIENATTACKPLAYER state cyberalienattackstate else
+ifai AICYBERALIENSEEK state cyberalienseekstate
+
+
+ifhitweapon
+{
+    ifwasweapon SHRINKSPARK
+        {
+                ifstrength 600
+                {
+                  sound ACTOR_SHRINKING
+                  ai AICYBERALIENSHRUNK
+                  // set shrunken 1
+                  break
+                }
+                else addstrength -60
+        }
+        else
+        ifwasweapon GROWSPARK
+          sound EXPANDERHIT
+		guts JIBS2 1
+        ifdead
+        {
+              spawn ACCESSCARD
+                ifwasweapon FREEZEBLAST
+                {
+                  sound SOMETHINGFROZE
+                  spritepal 1
+                  ai AICYBERALIENFROZEN
+                  strength 0
+                  // state freezeme
+                  break
+                }
+                ifwasweapon GROWSPARK
+                {
+					cstat 0
+					sound ACTOR_GROWING
+					ai AICYBERALIENGROW
+					break
+                }
+                addkills 1
+				// play death sound here
+                ai AICYBERALIENDYING
+                //guts JIBS6 8
+                ifspritepal 0 break
+                ifwasweapon RPG
+                {
+                        sound SQUISHED
+                        spawn BLOODPOOL
+                        killit
+                }
+                ifwasweapon RADIUSEXPLOSION
+                {
+                        sound SQUISHED
+                        spawn BLOODPOOL
+                        killit
+                }
+                break
+        }
+		
+        
+        // play pain sound here
+        ifrnd 2
+          spawn BLOODPOOL
+		    ifai AICYBERALIENHIT nullop else
+        ifai AICYBERALIENSHRUNK nullop else
+        {
+			    ifrnd 16 
+			    ai AICYBERALIENHIT        
+        }
+
+        debris SCRAP1 1
+        guts JIBS6 1
+}
+
+
+enda

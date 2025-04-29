@@ -1,0 +1,319 @@
+actor GREYPROJECTILE GREYPROJECTILESTRENGTH enda
+actor GREYREVIVEPROJECTILE GREYPROJECTILESTRENGTH enda
+
+action GREYWALKING          0   3  5  1  22
+action GREYSTANDING         16  1  5  1  10
+action GREYATTACKING        23  4  1  1  30
+action GREYREVIVING         28  5  1  1  20
+action GREYDYING            39  5  1  1  8
+action GREYDEADBODY         43  1  1  1  10
+action GREYFROZEN           0   1  5  1  10
+action GREYFLINCH           33  1  5  1  10
+action GREYGROW             0   1  1  1  10
+
+move GREYSTOPPED
+move GREYWALKVEL 132
+move GREYSHRUNKVELS 32
+
+ai AIGREYWAIT               GREYSTANDING GREYSTOPPED geth
+ai AIGREYSEEK               GREYWALKING GREYWALKVEL seekplayer
+ai AIGREYATTACKPLAYER       GREYATTACKING GREYSTOPPED faceplayer
+ai AIGREYREVIVING           GREYREVIVING GREYSTOPPED randomangle //figure out direction for this
+ai AIGREYDYING	            GREYDYING GREYSTOPPED geth
+ai AIGREYHIT                GREYFLINCH GREYSTOPPED faceplayer
+ai AIGREYFROZEN             GREYFROZEN GREYSTOPPED geth
+ai AIGREYSHRUNK             GREYWALKING GREYSHRUNKVELS fleeenemy
+ai AIGREYGROW               GREYGROW GREYSTOPPED geth
+
+state greyhitstate
+        ifcount 9 ai AIGREYWAIT
+ends
+
+state greywaitstate
+	ifcount 30 ai AIGREYSEEK
+ends
+
+state greyseekstate
+       ifcansee ifpdistl 6144
+        ifrnd 2
+        {
+			// add sound here
+        }
+        ifcount 10
+        ifcansee ifpdistl 6144
+        ifp palive
+        {
+			    ifrnd 8 
+            { 
+                
+                ai AIGREYATTACKPLAYER
+                sound GREYATTACK
+            }
+          else
+            ifrnd 4 
+            { 
+                
+                ai AIGREYREVIVING 
+                sound GREYATTACK
+            }
+        }
+
+        ifrnd 4 ifpdistg 6144 ai AIGREYWAIT    
+ends
+
+state greyattackstate
+  
+  ifcount 25
+  {
+    ifcount 27
+      ai AIGREYSEEK
+  }
+  else
+	ifcount 24
+      shoot GREYPROJECTILE
+   else
+	 ifactioncount 6
+	   resetactioncount
+ends
+
+state greyrevivestate
+  
+  ifcount 25
+  {
+    ifcount 27
+      ai AIGREYSEEK
+  }
+  else
+	ifcount 24
+      //findnearspritez GREYPROJECTILE 5120 20480 temp
+      //Need to find a way to look for multiple enemy fallen sprites and have grey face it 
+            ifn temp -1
+            {
+                shoot GREYREVIVEPROJECTILE
+            }
+      
+   else
+	 ifactioncount 6
+	   resetactioncount
+ends
+
+
+state greygrowstate
+        state genericgrowcode
+        sizeto 255 192
+ends
+
+state greyshrunkstate
+  ifcount SHRUNKDONECOUNT
+    ai AIGREYWAIT
+  else
+    ifcount SHRUNKCOUNT
+      sizeto 48 40
+  else
+    state genericshrunkcode
+ends
+
+state greyfrozenstate
+
+    ifcount THAWTIME
+	{
+		ai AIGREYWAIT
+		getlastpal
+    }
+    else
+		ifcount FROZENDRIPTIME
+    {
+      ifactioncount 26
+      {
+        spawn WATERDRIP
+        resetactioncount
+      }
+    }
+    ifhitweapon
+    {
+      ifwasweapon FREEZEBLAST
+      {
+		strength 0
+        break
+      }
+      addkills 1 
+
+      ifrnd 84
+        spawn BLOODPOOL
+          lotsofglass 30
+      state standard_jibs
+      sound GLASS_BREAKING
+      killit
+    }
+    ifp pfacing
+      ifpdistl FROZENQUICKKICKDIST
+        pkick
+  
+ends
+
+useractor enemy GREY GREYSTRENGTH
+
+fall
+ifai 0
+{
+	// play alert sound here
+    cstat 257
+	ai AIGREYSEEK
+}
+
+ifai AIGREYDYING
+{
+        strength 0
+        
+		ifwasweapon RPG
+		{
+				sound SQUISHED
+				spawn BLOODPOOL
+				state standard_jibs
+				killit
+		}
+		ifwasweapon RADIUSEXPLOSION
+		{
+				sound SQUISHED
+				spawn BLOODPOOL
+				state standard_jibs
+				killit
+		}
+        
+        ifaction GREYDYING
+        {
+                ifactioncount 5
+                {
+						cstat 0
+						globalsound THUD
+                        action GREYDEADBODY
+                        break
+                }
+        }    
+        ifaction GREYDEADBODY
+          {
+            findnearspritez GREYREVIVEPROJECTILE 200 20000 temp
+            ifn temp -1
+            {
+              addkills -1
+              spawn TRANSPORTERSTAR
+              cstat 257
+              strength GREYSTRENGTH
+              ai AIGREYWAIT
+              // play sound here
+            }
+                ifhitweapon
+                {
+                        ifwasweapon RPG
+                        {
+                                sound SQUISHED
+                                spawn BLOODPOOL
+								state standard_jibs
+                                killit
+                        }
+                        ifwasweapon RADIUSEXPLOSION
+                        {
+                                sound SQUISHED
+                                spawn BLOODPOOL
+								state standard_jibs
+                                killit
+                        }
+                }
+                ifcount RESPAWNACTORTIME
+                ifrespawn
+                {
+                  addkills -1
+                  spawn TRANSPORTERSTAR
+                  cstat 257
+                  strength GREYSTRENGTH
+                  ai AIGREYWAIT
+                  // play sound here
+                }
+        }
+        
+        break
+}
+
+
+ifai AIGREYGROW { state greygrowstate break }
+ifai AIGREYFROZEN { state greyfrozenstate break }
+ifai AIGREYSHRUNK state greyshrunkstate else
+ifai AIGREYWAIT state greywaitstate else
+ifai AIGREYHIT state greyhitstate else
+ifai AIGREYATTACKPLAYER state greyattackstate else
+ifai AIGREYREVIVING state greyrevivestate else
+ifai AIGREYSEEK state greyseekstate
+
+
+ifhitweapon
+{
+    spawn BLOOD
+    ifwasweapon SHRINKSPARK
+        {
+                ifstrength 600
+                {
+                  sound ACTOR_SHRINKING
+                  ai AIGREYSHRUNK
+                  // set shrunken 1
+                  break
+                }
+                else addstrength -60
+        }
+        else
+        ifwasweapon GROWSPARK
+          sound EXPANDERHIT
+		guts JIBS2 1
+        ifdead
+        {
+                ifwasweapon FREEZEBLAST
+                {
+                  sound SOMETHINGFROZE
+                  spritepal 1
+                  ai AIGREYFROZEN
+                  strength 0
+                  // state freezeme
+                  break
+                }
+                ifwasweapon GROWSPARK
+                {
+					cstat 0
+					sound ACTOR_GROWING
+					ai AIGREYGROW
+					break
+                }
+                addkills 1
+                sound GREYDEATH
+				        // play death sound here
+                ai AIGREYDYING
+                //guts JIBS6 8
+                ifspritepal 0 break
+                ifwasweapon RPG
+                {
+                        sound SQUISHED
+                        spawn BLOODPOOL
+                        killit
+                }
+                ifwasweapon RADIUSEXPLOSION
+                {
+                        sound SQUISHED
+                        spawn BLOODPOOL
+                        killit
+                }
+                break
+        }
+		
+        state random_wall_jibs
+        // play pain sound here
+        ifrnd 2
+                spawn BLOODPOOL
+		ifai AIGREYHIT nullop else
+        ifai AIGREYSHRUNK nullop else
+        {
+			ifrnd 16 
+			ai AIGREYHIT        
+        }
+
+}
+
+
+enda

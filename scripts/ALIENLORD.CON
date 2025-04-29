@@ -1,0 +1,330 @@
+actor ALIENLORDPROJECTILE ALIENLORDPROJECTILESTRENGTH enda
+
+action ALIENLORDWALKING          0   4  5  1  22
+action ALIENLORDSTANDING         0   1  5  1  10
+action ALIENLORDATTACKING        21  6  1  1  18
+action ALIENLORDTHROWING        28  6  1  1  18
+action ALIENLORDDYING            41  6  1  1  8
+action ALIENLORDDEADBODY         46  1  1  1  10
+action ALIENLORDFROZEN           0   1  5  1  10
+action ALIENLORDFLINCH           35  1  5  1  10
+action ALIENLORDGROW             0   1  1  1  10
+
+move ALIENLORDSTOPPED
+move ALIENLORDWALKVEL 100
+move ALIENLORDSHRUNKVELS 32
+
+ai AIALIENLORDWAIT               ALIENLORDSTANDING ALIENLORDSTOPPED geth
+ai AIALIENLORDSEEK               ALIENLORDWALKING ALIENLORDWALKVEL seekplayer
+ai AIALIENLORDATTACKPLAYER       ALIENLORDATTACKING ALIENLORDSTOPPED faceplayer
+ai AIALIENLORDTHROW              ALIENLORDTHROWING ALIENLORDSTOPPED faceplayer
+ai AIALIENLORDDYING	             ALIENLORDDYING ALIENLORDSTOPPED geth
+ai AIALIENLORDHIT                ALIENLORDFLINCH ALIENLORDSTOPPED faceplayer
+ai AIALIENLORDFROZEN             ALIENLORDFROZEN ALIENLORDSTOPPED geth
+ai AIALIENLORDSHRUNK             ALIENLORDWALKING ALIENLORDSHRUNKVELS fleeenemy
+ai AIALIENLORDGROW               ALIENLORDGROW ALIENLORDSTOPPED geth
+
+state alienlordhitstate
+        ifcount 9 ai AIALIENLORDWAIT
+ends
+
+state alienlordwaitstate
+	ifcount 30 ai AIALIENLORDSEEK
+ends
+
+state alienlordseekstate
+  ifrnd 2
+    //soundonce BOS1_ROAM
+  else
+    ifactioncount 6
+  {
+    resetactioncount
+    //sound BOS1_WALK
+  }
+
+  ifpdistl 2548
+    ifp palive
+  {
+    ai AIALIENLORDATTACKPLAYER
+    break
+  }
+
+  ifcansee
+    ifcount 32
+  {
+    ifrnd 32
+    {
+      ifp palive
+        ifcanshoottarget
+          ai AIALIENLORDATTACKPLAYER
+    }
+    else
+      ifpdistg 2548
+        ifrnd 192
+          ifcanshoottarget
+    {
+      ifrnd 64
+      {
+        ai AIALIENLORDSEEK
+        
+      }
+      else
+        ai AIALIENLORDTHROW
+    }
+  }
+
+ends
+
+state alienlordattackstate
+  ifcount 25
+  {
+    ifcount 27
+      ai AIALIENLORDSEEK
+  }
+  else
+	ifcount 24
+		  shoot GREYPROJECTILE
+   else
+	 ifactioncount 6
+	   resetactioncount
+ends
+
+state alienlordthrowstate
+  ifcount 25
+  {
+    ifcount 27
+      ai AIALIENLORDSEEK
+  }
+  else
+	ifcount 24
+		  shoot ALIENLORDPROJECTILE
+   else
+	 ifactioncount 6
+	   resetactioncount
+ends
+
+state alienlordgrowstate
+        state genericgrowcode
+        sizeto 255 192
+ends
+
+state alienlordshrunkstate
+  ifcount SHRUNKDONECOUNT
+    ai AIALIENLORDWAIT
+  else
+    ifcount SHRUNKCOUNT
+        {
+          ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
+          else
+      sizeto 48 40
+        }
+  else
+    state genericshrunkcode
+ends
+
+state alienlordfrozenstate
+
+    ifcount THAWTIME
+	{
+		ai AIALIENLORDWAIT
+		getlastpal
+    }
+    else
+		ifcount FROZENDRIPTIME
+    {
+      ifactioncount 26
+      {
+        spawn WATERDRIP
+        resetactioncount
+      }
+    }
+    ifhitweapon
+    {
+      ifwasweapon FREEZEBLAST
+      {
+		strength 0
+        break
+      }
+      addkills 1 
+          // state enemy_death
+
+      ifrnd 84
+        spawn BLOODPOOL
+          lotsofglass 30
+      state standard_jibs
+      sound GLASS_BREAKING
+      killit
+    }
+    ifp pfacing
+      ifpdistl FROZENQUICKKICKDIST
+        pkick
+  
+ends
+
+useractor enemy ALIENLORD ALIENLORDSTRENGTH
+
+fall
+ifai 0
+{
+	// play alert sound here
+    cstat 257
+	ai AIALIENLORDSEEK
+}
+
+ifai AIALIENLORDDYING
+{
+        strength 0
+		/*ifwasweapon RPG
+		{
+				sound SQUISHED
+				spawn BLOODPOOL
+				state standard_jibs
+				killit
+		}
+		ifwasweapon RADIUSEXPLOSION
+		{
+				sound SQUISHED
+				spawn BLOODPOOL
+				state standard_jibs
+				killit
+		}*/
+        
+        ifaction ALIENLORDDYING
+        {
+                ifactioncount 5
+                {
+						cstat 0
+						globalsound THUD
+                        action ALIENLORDDEADBODY
+                        break
+                }
+        }    
+        ifaction ALIENLORDDEADBODY
+        {
+          findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+            ifn temp -1
+            {
+                  addkills -1
+                  spawn TRANSPORTERSTAR
+                  cstat 257
+                  strength ALIENLORDSTRENGTH
+                  ai AIALIENLORDWAIT
+                  // play sound here
+            }
+                ifhitweapon
+                {
+                        ifwasweapon RPG
+                        {
+                                sound SQUISHED
+                                spawn BLOODPOOL
+								                state standard_jibs
+                                killit
+                        }
+                        ifwasweapon RADIUSEXPLOSION
+                        {
+                                sound SQUISHED
+                                spawn BLOODPOOL
+								                state standard_jibs
+                                killit
+                        }
+                }
+                ifcount RESPAWNACTORTIME
+                ifrespawn
+                {
+                  addkills -1
+                  spawn TRANSPORTERSTAR
+                  cstat 257
+                  strength ALIENLORDSTRENGTH
+                  ai AIALIENLORDWAIT
+                  // play sound here
+                }
+        }
+        
+        break
+}
+
+
+ifai AIALIENLORDGROW { state alienlordgrowstate break }
+ifai AIALIENLORDFROZEN { state alienlordfrozenstate break }
+ifai AIALIENLORDSHRUNK state alienlordshrunkstate else
+ifai AIALIENLORDWAIT state alienlordwaitstate else
+ifai AIALIENLORDHIT state alienlordhitstate else
+ifai AIALIENLORDATTACKPLAYER state alienlordattackstate else
+ifai AIALIENLORDTHROW state alienlordthrowstate else
+ifai AIALIENLORDSEEK state alienlordseekstate
+
+
+ifhitweapon
+{
+    ifwasweapon SHRINKSPARK
+        {
+                ifstrength 600
+                {
+                  sound ACTOR_SHRINKING
+                  ai AIALIENLORDSHRUNK
+                  // set shrunken 1
+                  break
+                }
+                else addstrength -60
+        }
+        else
+        ifwasweapon GROWSPARK
+          sound EXPANDERHIT
+		      guts JIBS2 1
+        ifdead
+        {
+              spawn ACCESSCARD
+                ifwasweapon FREEZEBLAST
+                {
+                  sound SOMETHINGFROZE
+                  spritepal 1
+                  ai AIALIENLORDFROZEN
+                  strength 0
+                  // state freezeme
+                  break
+                }
+                ifwasweapon GROWSPARK
+                {
+					cstat 0
+					sound ACTOR_GROWING
+					ai AIALIENLORDGROW
+					break
+                }
+                addkills 1
+				// play death sound here
+                ai AIALIENLORDDYING
+                //guts JIBS6 8
+                ifspritepal 0 break
+                ifwasweapon RPG
+                {
+                        sound SQUISHED
+                        spawn BLOODPOOL
+                        killit
+                }
+                ifwasweapon RADIUSEXPLOSION
+                {
+                        sound SQUISHED
+                        spawn BLOODPOOL
+                        killit
+                }
+                break
+        }
+		
+        
+        // play pain sound here
+        ifrnd 2
+          spawn BLOODPOOL
+		    ifai AIALIENLORDHIT nullop else
+        ifai AIALIENLORDSHRUNK nullop else
+        {
+          ifrnd 32 
+          ai AIALIENLORDHIT        
+        }
+        
+        debris SCRAP1 1
+        guts JIBS6 1
+
+}
+
+
+enda
