@@ -352,6 +352,7 @@ definequote 124       MAP HAS A DIFFERENT NUMBER OF PLAYERS
 
 
 
+
 // Volume titles cannot excede 32 characters.
 
 definevolumename 0 L.A. MELTDOWN
@@ -942,10 +943,3 @@ definesound HORNSND                shorn1.voc      0   0   255  2    0
 definesound BELLSND                sbell1a.voc     0   0   255  2    0
 definesound GOAWAY                 goaway.voc      0   0    4   0    0
 definesound JOKE                   joke.voc        0   0   128  0    0
-
-define GREYATTACK 398
-definesound GREYATTACK            sounds/grey_attack.wav    256  256  3  0   7680
-define GREYDEATH 399
-definesound GREYDEATH             sounds/grey_death.wav    256  256  3  0   7680
-define SLIMERATTACK 400
-definesound SLIMERATTACK          sounds/slimer_attack.wav    256  256  3  0   7680

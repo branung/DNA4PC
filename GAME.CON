@@ -25,6 +25,9 @@ any .CON files before making any changes.
 --------------------------------------------------------------------------------
 */
 
+// dynamicremap
+// define DOORTILE5 3678
+
 include DEFS.CON
 include USER.CON
 include scripts/dna4pc.con
@@ -2177,7 +2180,57 @@ actor SHOTGUNSPRITE
       }
 enda
 
+actor LEAD_CANNON_SPRITE
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifcanseetarget
+      {
+          ifgotweaponce 0
+            break
 
+		      ife player[].curr_weapon SHOTGUN_WEAPON
+          {
+            ife 0 player[].bsubweapon SHOTGUN_WEAPON
+            {
+              sound SHOTGUN_COCK
+              setp[].bsubweapon SHOTGUN_WEAPON 1
+              setvar SHOT_SWITCH 1
+            }
+            else
+            {
+              
+            }
+          }
+          else
+          { 
+              sound SHOTGUN_COCK
+              setp[].bsubweapon SHOTGUN_WEAPON 1
+              setp[].weapon_pos 3
+
+          }
+        
+          ifn player.ammo_amount SHOTGUN_WEAPON MAXSHOTGUNAMMO
+          addweapon SHOTGUN_WEAPON 5
+        
+
+        addweapon SHOTGUN_WEAPON 5
+        
+            quote 125
+          
+
+          ifspawnedby LEAD_CANNON_SPRITE
+            state getweaponcode
+          else
+            state quikweaponget
+        }
+enda
 
 actor SIXPAK
   fall
@@ -4608,8 +4661,9 @@ state troopcode fall
         cstat 257
         strength TROOPSTRENGTH
         ai AITROOPSEEKENEMY
+        break
     }
-    break
+    
 
     ifrespawn
       ifcount RESPAWNACTORTIME
@@ -5122,8 +5176,8 @@ state lizdyingstate
         cstat 257
         strength LIZSTRENGTH
         ai AILIZGETENEMY
+        break
     }
-    break
 
     ifhitweapon
       ifwasweapon RADIUSEXPLOSION
@@ -5660,8 +5714,8 @@ actor OCTABRAIN OCTASTRENGTH
         cstat 257
         strength OCTASTRENGTH
         ai AIOCTAGETENEMY
+        break
     }
-    break
 
     ifcount RESPAWNACTORTIME
       ifrespawn
@@ -6131,8 +6185,8 @@ actor PIGCOP PIGCOPSTRENGTH APIGSTAND
         cstat 257
         strength PIGCOPSTRENGTH
         ai AIPIGSEEKENEMY
+        break
     }
-    break
 
     ifrespawn
       ifcount RESPAWNACTORTIME
@@ -8412,8 +8466,8 @@ state newbeastdyingstate
         cstat 257
         strength NEWBEASTSTRENGTH
         ai AINEWBEASTGETENEMY
+        break
     }
-    break
 
     ifhitweapon
       ifwasweapon RADIUSEXPLOSION
