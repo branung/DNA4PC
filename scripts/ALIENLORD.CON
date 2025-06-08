@@ -1,5 +1,7 @@
 actor ALIENLORDPROJECTILE ALIENLORDPROJECTILESTRENGTH enda
 
+spriteflags ALIENLORD 4194304
+
 action ALIENLORDWALKING          0   4  5  1  22
 action ALIENLORDSTANDING         0   1  5  1  10
 action ALIENLORDATTACKING        21  6  1  1  18
@@ -34,7 +36,7 @@ ends
 
 state alienlordseekstate
   ifrnd 2
-    //soundonce BOS1_ROAM
+    soundonce ALIENLORDROAM
   else
     ifactioncount 6
   {
@@ -211,23 +213,6 @@ ifai AIALIENLORDDYING
                   ai AIALIENLORDWAIT
                   // play sound here
             }
-                ifhitweapon
-                {
-                        ifwasweapon RPG
-                        {
-                                sound SQUISHED
-                                spawn BLOODPOOL
-								                state standard_jibs
-                                killit
-                        }
-                        ifwasweapon RADIUSEXPLOSION
-                        {
-                                sound SQUISHED
-                                spawn BLOODPOOL
-								                state standard_jibs
-                                killit
-                        }
-                }
                 ifcount RESPAWNACTORTIME
                 ifrespawn
                 {
@@ -291,7 +276,7 @@ ifhitweapon
 					break
                 }
                 addkills 1
-				// play death sound here
+                sound ALIENLORDDEATH
                 ai AIALIENLORDDYING
                 //guts JIBS6 8
                 ifspritepal 0 break

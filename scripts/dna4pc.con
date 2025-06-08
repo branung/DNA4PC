@@ -1,13 +1,90 @@
 include scripts/dnadef.con
+include scripts/BREAKABLE.CON
+include scripts/WEAPONS.CON
+
+onevent EVENT_NEWGAME
+    readgamevar dna_localization
+    readgamevar dna_dukecutscenevoc
+    readgamevar dna_menu_tutorial
+endevent
+
+//Set all Liztroops to blue on spawn rather than the hardcoded green 
+onevent EVENT_SPAWN
+    switch sprite[].picnum
+        case LIZTROOP seta[].pal 0 break
+        case LIZTROOPRUNNING seta[].pal 0 break
+        case LIZTROOPSTAYPUT seta[].pal 0 break
+        case LIZTROOPJETPACK seta[].pal 0 break
+    endswitch
+endevent
 
 gamevar WEAPON1_CLIP 0 0 // Prevent pistol from reloading
 gamevar WEAPON1_TOTALTIME 9 // Increases delay time between each pistol shot
 gamevar temp 0 2
 
-// Disable all cutscenes
-gamevar LOGO_FLAGS 2095359 0
+gamevar SCREENALPHA 255 0
+gamevar CUTSCENE_STEP 0 0
+gamevar CUTSCENE_SCREEN 0 0
+gamevar CUTSCENE_DIALOG 0 0
+gamevar CUTSCENE_DIALOG2 0 0
+gamevar CUTSCENE_DUKE 0 0
+gamevar CUTSCENE_DIALOGBOX 3921 0
+gamevar CUTSCENE_SPRITE 0 0
+gamevar y 0 0
 
-// Override for episode endings
+defstate waste_time
+{
+  ifvarg delayTime 0
+  {
+        setvar RETURN 0
+        getticks curtick
+        ifvare prevtick -1 setvar ticktmp 0 else
+        {
+        setvarvar ticktmp curtick
+        subvarvar ticktmp prevtick
+        }
+
+        subvarvar delayTime ticktmp
+        //addlogvar delayTime
+        
+        setvarvar prevtick curtick
+  }
+  else {
+    setvar prevtick -1
+  }
+}
+ends
+
+include scripts/DIALOGDEF.CON
+include scripts/CUTSCENES.CON
+include scripts/HUD.CON
+
+var viewscreen_spr 0 0
+
+appendevent EVENT_PRELEVEL
+  for viewscreen_spr allsprites
+  {
+    ifvare sprite[viewscreen_spr].picnum VIEWSCREEN
+    {
+        setactor[viewscreen_spr].mdflags 16
+                    
+    }
+  }
+endevent
+
+appendevent EVENT_ANIMATESPRITES
+{
+    switch sprite[].picnum
+    case VIEWSCREEN
+        settspr[].tsprpicnum sprite[].picnum
+        settspr[].tsprxrepeat sprite[].xrepeat
+        settspr[].tspryrepeat sprite[].yrepeat
+        settspr[].tsprcstat sprite[].cstat
+        break
+    endswitch
+}
+endevent
+
 onevent EVENT_GAME
     ifactor APLAYER
     {
@@ -16,36 +93,111 @@ onevent EVENT_GAME
 		{
 			setplayer[THISACTOR].jumping_counter 0 //Limit jump height
 		}
+        // Override for episode endings
         setuserdef .eog 0
-        ifvare VOLUME 0 ifvare LEVEL 19 setuserdef .eog 1
+        ifvare VOLUME 5 ifvare LEVEL 19 setuserdef .eog 1
     }
-endevent
+    endevent
+
+//Next Events are for handling Lead Cannon 
+// onevent EVENT_WEAPKEY3
+//     ife player[].curr_weapon SHOTGUN_WEAPON
+//     {
+//         ife 1 player[].bsubweapon SHOTGUN_WEAPON
+//         {
+//             ifvare SHOT_SWITCH 0 {
+//                 setvar SHOT_SWITCH 1 
+//             }
+//             else
+//                 setvar SHOT_SWITCH 0
+            
+//         }
+//     }
+// endevent
+
+// appendevent EVENT_GETSHOTRANGE
+
+// 	ife player[].curr_weapon SHOTGUN_WEAPON
+// 	{
+		
+// 	}
+
+// endevent
+
+// appendevent EVENT_DOFIRE 
+// 	ife player[].curr_weapon SHOTGUN_WEAPON {
+// 		ife 1 player[].bsubweapon SHOTGUN_WEAPON
+  
+// 	}
+// endevent
+
+gamevar weapSwitch 0 1
+
+// onevent EVENT_PREVIOUSWEAPON
+//  setvar weapSwitch 1
+// endevent
+
+// onevent EVENT_NEXTWEAPON
+//  setvar weapSwitch 2
+// endevent
+
+// onevent EVENT_SELECTWEAPON
+
+//         ife player[].curr_weapon SHOTGUN_WEAPON
+//         {
+//             ife 1 player[].bsubweapon SHOTGUN_WEAPON
+//             {
+//                 ifvare weapSwitch 1 {
+//                     ifvare SHOT_SWITCH 1 
+//                     {
+//                         setvar SHOT_SWITCH 0
+//                         setvar RETURN -1
+//                     }
+//                 }
+//                 ifvare weapSwitch 2 {
+//                     ifvare SHOT_SWITCH 0
+//                     {
+//                         setvar SHOT_SWITCH 1 
+//                         setvar RETURN -1
+//                     }
+//                 }
+//             }
+//         }
+    
+//     setvar weapSwitch 0
+// endevent
+
 
 // Episodes
-definevolumename 0 Duke Advance
+undefinevolume 0
+undefinevolume 1
+undefinevolume 2
+undefinevolume 3
+undefinevolume 4
+definevolumename 5 Duke Advance
 
 // Levels
-definelevelname 0 0 maps/MAP01.map  00:00 00:00 Gathering Intel
-definelevelname 0 1 maps/MAP02.map 00:00 00:00 Close Encounter
-definelevelname 0 2 maps/MAP03.map 00:00 00:00 Hybrid Army
-definelevelname 0 3 maps/MAP04.map 00:00 00:00 Temple of Amun
-definelevelname 0 4 maps/MAP05.map 00:00 00:00 Inner Sanctum
-definelevelname 0 5 maps/MAP06.map 00:00 00:00 The Controller
-definelevelname 0 6 maps/MAP07.map 00:00 00:00 Temple Escape
-definelevelname 0 7 maps/MAP08.map 00:00 00:00 Down Under
-definelevelname 0 8 maps/MAP09.map 00:00 00:00 Eating Out
-definelevelname 0 9 maps/MAP10.map 00:00 00:00 Day at the Opera
-definelevelname 0 10 maps/MAP11.map 00:00 00:00 Doomsday Weapon
-definelevelname 0 11 maps/MAP12.map 00:00 00:00 Alien Ship
-definelevelname 0 12 maps/MAP13.map 00:00 00:00 Cloaking Device
-definelevelname 0 13 maps/MAP14.map 00:00 00:00 Mazeframe
-definelevelname 0 14 maps/MAP15.map 00:00 00:00 Jenny 2
-definelevelname 0 15 maps/MAP16.map 00:00 00:00 Jenny 3
-definelevelname 0 16 maps/MAP17.map 00:00 00:00 Jenny 4
-definelevelname 0 17 maps/MAP18.map 00:00 00:00 Alien Lord
-definelevelname 0 18 maps/MAP19.map 00:00 00:00 Run Your Ass Off!
+definelevelname 5 0 maps/MAP01.map  00:00 00:00 Gathering Intel
+definelevelname 5 1 maps/MAP02.map 00:00 00:00 Close Encounter
+definelevelname 5 2 maps/MAP03.map 00:00 00:00 Hybrid Army
+definelevelname 5 3 maps/MAP04.map 00:00 00:00 Temple of Amun
+definelevelname 5 4 maps/MAP05.map 00:00 00:00 Inner Sanctum
+definelevelname 5 5 maps/MAP06.map 00:00 00:00 The Controller
+definelevelname 5 6 maps/MAP07.map 00:00 00:00 Temple Escape
+definelevelname 5 7 maps/MAP08.map 00:00 00:00 Down Under
+definelevelname 5 8 maps/MAP09.map 00:00 00:00 Eating Out
+definelevelname 5 9 maps/MAP10.map 00:00 00:00 Day at the Opera
+definelevelname 5 10 maps/MAP11.map 00:00 00:00 Doomsday Weapon
+definelevelname 5 11 maps/MAP12.map 00:00 00:00 Alien Ship
+definelevelname 5 12 maps/MAP13.map 00:00 00:00 Cloaking Device
+definelevelname 5 13 maps/MAP14.map 00:00 00:00 Mazeframe
+definelevelname 5 14 maps/MAP15.map 00:00 00:00 Seeing Double
+definelevelname 5 15 maps/MAP16.map 00:00 00:00 Clone Saga
+definelevelname 5 16 maps/MAP17.map 00:00 00:00 Deja Vu Encore
+definelevelname 5 17 maps/MAP18.map 00:00 00:00 Alien Lord
+definelevelname 5 18 maps/MAP19.map 00:00 00:00 Run Your Ass Off!
 
 // Music
-music 1 
+music 6 
 //Level 1    Level 2     Level 3    Level 4    Level 5     Level 6    Level 7    Level 8   Level 9      Level 10     Level 11 Level 12  Level 13     Level 14    Level 15   Level 16   Level 17     Level 18     Level 19
-restrict.mid xplasma.mid alienz.mid snake1.mid thecall.mid gloomy.mid ahgeez.mid prepd.mid inhiding.mid watrwld1.mid pob.mid  storm.mid warehaus.mid intents.mid stalag.mid spook.mid  robocrep.mid gutwrnch.mid depart.mid
+restrict.mid xplasma.mid alienz.mid music/DesertMaze.ogg thecall.mid gloomy.mid ahgeez.mid prepd.mid inhiding.mid watrwld1.mid pob.mid  storm.mid warehaus.mid intents.mid stalag.mid spook.mid  robocrep.mid gutwrnch.mid depart.mid

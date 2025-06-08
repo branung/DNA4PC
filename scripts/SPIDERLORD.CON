@@ -1,3 +1,5 @@
+spriteflags SPIDERLORD 4194304
+
 action SPIDERLORDWALKING          0   4  5  1  22
 action SPIDERLORDSTANDING         0   1  5  1  10
 action SPIDERLORDATTACKING        21  2  1  1  30
@@ -32,7 +34,7 @@ state spiderlordseekstate
        ifcansee ifpdistl 6144
         ifrnd 2
         {
-			// add sound here
+          soundonce SPIDERLORDROAM
         }
         ifcount 10
         ifcansee ifpdistl 6144
@@ -249,7 +251,7 @@ ifhitweapon
 					break
                 }
                 addkills 1
-				// play death sound here
+                sound SPIDERLORDDEATH
                 ai AISPIDERLORDDYING
                 //guts JIBS6 8
                 ifspritepal 0 break

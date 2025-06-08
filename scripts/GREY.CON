@@ -1,6 +1,8 @@
 actor GREYPROJECTILE GREYPROJECTILESTRENGTH enda
 actor GREYREVIVEPROJECTILE GREYPROJECTILESTRENGTH enda
 
+spriteflags GREY 4194304
+
 action GREYWALKING          0   3  5  1  22
 action GREYSTANDING         16  1  5  1  10
 action GREYATTACKING        23  4  1  1  30
@@ -14,6 +16,9 @@ action GREYGROW             0   1  1  1  10
 move GREYSTOPPED
 move GREYWALKVEL 132
 move GREYSHRUNKVELS 32
+
+gamevar greyprojpos 0 0
+gamevar greycurrpos 0 0
 
 ai AIGREYWAIT               GREYSTANDING GREYSTOPPED geth
 ai AIGREYSEEK               GREYWALKING GREYWALKVEL seekplayer
@@ -45,7 +50,6 @@ state greyseekstate
         {
 			    ifrnd 8 
             { 
-                
                 ai AIGREYATTACKPLAYER
                 sound GREYATTACK
             }
@@ -63,14 +67,21 @@ ends
 
 state greyattackstate
   
-  ifcount 25
+  ifcount 23
   {
-    ifcount 27
+    ifcount 24
       ai AIGREYSEEK
   }
   else
-	ifcount 24
-      shoot GREYPROJECTILE
+	ifcount 22
+  {
+    geta[THISACTOR].z greyprojpos
+    setvarvar greycurrpos greyprojpos
+    subvar greyprojpos 3000
+    seta[THISACTOR].z greyprojpos
+    shoot GREYPROJECTILE
+    seta[THISACTOR].z greycurrpos
+  }
    else
 	 ifactioncount 6
 	   resetactioncount
@@ -89,7 +100,12 @@ state greyrevivestate
       //Need to find a way to look for multiple enemy fallen sprites and have grey face it 
             ifn temp -1
             {
-                shoot GREYREVIVEPROJECTILE
+              geta[THISACTOR].z greyprojpos
+              setvarvar greycurrpos greyprojpos
+              subvar greyprojpos 3000
+              seta[THISACTOR].z greyprojpos
+              shoot GREYREVIVEPROJECTILE
+              seta[THISACTOR].z greycurrpos
             }
       
    else
@@ -141,7 +157,6 @@ state greyfrozenstate
       ifrnd 84
         spawn BLOODPOOL
           lotsofglass 30
-      state standard_jibs
       sound GLASS_BREAKING
       killit
     }
@@ -208,14 +223,14 @@ ifai AIGREYDYING
                         {
                                 sound SQUISHED
                                 spawn BLOODPOOL
-								state standard_jibs
+								                state standard_jibs
                                 killit
                         }
                         ifwasweapon RADIUSEXPLOSION
                         {
                                 sound SQUISHED
                                 spawn BLOODPOOL
-								state standard_jibs
+								                state standard_jibs
                                 killit
                         }
                 }
@@ -247,6 +262,7 @@ ifai AIGREYSEEK state greyseekstate
 
 ifhitweapon
 {
+    //guts JIBS6 1
     spawn BLOOD
     ifwasweapon SHRINKSPARK
         {
@@ -262,7 +278,7 @@ ifhitweapon
         else
         ifwasweapon GROWSPARK
           sound EXPANDERHIT
-		guts JIBS2 1
+		      //guts JIBS2 1
         ifdead
         {
                 ifwasweapon FREEZEBLAST
@@ -305,13 +321,13 @@ ifhitweapon
         state random_wall_jibs
         // play pain sound here
         ifrnd 2
-                spawn BLOODPOOL
-		ifai AIGREYHIT nullop else
-        ifai AIGREYSHRUNK nullop else
-        {
-			ifrnd 16 
-			ai AIGREYHIT        
-        }
+        spawn BLOODPOOL
+		    ifai AIGREYHIT nullop else
+          ifai AIGREYSHRUNK nullop else
+          {
+            ifrnd 16 
+            ai AIGREYHIT        
+          }
 
 }
 

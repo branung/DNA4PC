@@ -1,6 +1,8 @@
+spriteflags CYBERALIEN 4194304
+
 action CYBERALIENWALKING          0   3  5  1  22
 action CYBERALIENSTANDING         0   1  5  1  10
-action CYBERALIENATTACKING        16  6  1  1  30
+action CYBERALIENLOBBING        16  6  1  1  30
 action CYBERALIENDYING            29  5  1  1  8
 action CYBERALIENDEADBODY         33  1  1  1  10
 action CYBERALIENFROZEN           0   1  5  1  10
@@ -13,7 +15,7 @@ move CYBERALIENSHRUNKVELS 32
 
 ai AICYBERALIENWAIT               CYBERALIENSTANDING CYBERALIENSTOPPED geth
 ai AICYBERALIENSEEK               CYBERALIENWALKING CYBERALIENWALKVEL seekplayer
-ai AICYBERALIENATTACKPLAYER       CYBERALIENATTACKING CYBERALIENSTOPPED faceplayer
+ai AICYBERALIENLOBSHOT            CYBERALIENLOBBING CYBERALIENSTOPPED faceplayer
 ai AICYBERALIENDYING	            CYBERALIENDYING CYBERALIENSTOPPED geth
 ai AICYBERALIENHIT                CYBERALIENFLINCH CYBERALIENSTOPPED faceplayer
 ai AICYBERALIENFROZEN             CYBERALIENFROZEN CYBERALIENSTOPPED geth
@@ -32,7 +34,7 @@ state cyberalienseekstate
        ifcansee ifpdistl 6144
         ifrnd 2
         {
-			// add sound here
+          soundonce SPIDERLORDROAM
         }
         ifcount 10
         ifcansee ifpdistl 6144
@@ -41,26 +43,29 @@ state cyberalienseekstate
 			ifrnd 8 
             { 
               sound BOS1_ATTACK2
-                ai AICYBERALIENATTACKPLAYER 
+              ai AICYBERALIENLOBSHOT 
             }
         }
 
         ifrnd 4 ifpdistg 6144 ai AICYBERALIENWAIT    
 ends
 
-state cyberalienattackstate
-  
-  ifcount 8
+state cyberalienlobstate
+ifcansee
   {
-    ifcount 10
-      ai AICYBERALIENSEEK
+    ifactioncount 2
+    {
+      resetactioncount
+      sound BOS1_ATTACK2
+      shoot MORTER
+    }
+    else
+      ifcount 64
+        ifrnd 16
+          ai AICYBERALIENSEEK 
   }
   else
-	ifcount 7
-		  shoot MORTER
-   else
-	 ifactioncount 6
-	   resetactioncount
+    ai AICYBERALIENSEEK 
 ends
 
 
@@ -134,7 +139,7 @@ ifai 0
 
 ifai AICYBERALIENDYING
 {
-        strength 0
+    strength 0
 		/*ifwasweapon RPG
 		{
 				sound SQUISHED
@@ -210,7 +215,7 @@ ifai AICYBERALIENFROZEN { state cyberalienfrozenstate break }
 ifai AICYBERALIENSHRUNK state cyberalienshrunkstate else
 ifai AICYBERALIENWAIT state cyberalienwaitstate else
 ifai AICYBERALIENHIT state cyberalienhitstate else
-ifai AICYBERALIENATTACKPLAYER state cyberalienattackstate else
+ifai AICYBERALIENLOBSHOT state cyberalienlobstate else
 ifai AICYBERALIENSEEK state cyberalienseekstate
 
 
@@ -230,7 +235,7 @@ ifhitweapon
         else
         ifwasweapon GROWSPARK
           sound EXPANDERHIT
-		guts JIBS2 1
+		    guts JIBS2 1
         ifdead
         {
               spawn ACCESSCARD
@@ -251,7 +256,7 @@ ifhitweapon
 					break
                 }
                 addkills 1
-				// play death sound here
+                sound SPIDERLORDDEATH
                 ai AICYBERALIENDYING
                 //guts JIBS6 8
                 ifspritepal 0 break

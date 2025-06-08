@@ -1,5 +1,7 @@
 actor SLIMECRABPROJECTILE SLIMECRABPROJECTILESTRENGTH enda
 
+spriteflags SLIMECRAB 4194304
+
 action CRABWALKING          0   4  5  1  22
 action CRABSTANDING         0   1  5  1  10
 action CRABATTACKING        23  4  1  1  30
@@ -114,7 +116,6 @@ state crabfrozenstate
       ifrnd 84
         spawn BLOODPOOL
           lotsofglass 30
-      state standard_jibs
       sound GLASS_BREAKING
       killit
     }
@@ -157,8 +158,8 @@ ifai AICRABDYING
         {
                 ifactioncount 5
                 {
-						cstat 0
-						globalsound THUD
+						        cstat 0
+						            globalsound THUD
                         action CRABDEADBODY
                         break
                 }
@@ -181,15 +182,15 @@ ifai AICRABDYING
                         {
                                 sound SQUISHED
                                 spawn BLOODPOOL
-								state standard_jibs
+                                state standard_jibs
                                 killit
                         }
                         ifwasweapon RADIUSEXPLOSION
                         {
-                                sound SQUISHED
-                                spawn BLOODPOOL
-								state standard_jibs
-                                killit
+                          sound SQUISHED
+                          spawn BLOODPOOL
+                          state standard_jibs
+                          killit
                         }
                 }
                 ifcount RESPAWNACTORTIME
@@ -219,6 +220,8 @@ ifai AICRABSEEK state crabseekstate
 
 ifhitweapon
 {
+    //guts JIBS6 1
+    //spawn BLOOD
     ifwasweapon SHRINKSPARK
         {
                 ifstrength 600
@@ -233,7 +236,7 @@ ifhitweapon
         else
         ifwasweapon GROWSPARK
           sound EXPANDERHIT
-		guts JIBS2 1
+		//guts JIBS2 1
         ifdead
         {
                 ifwasweapon FREEZEBLAST
@@ -253,7 +256,7 @@ ifhitweapon
 					break
                 }
                 addkills 1
-				// play death sound here
+                sound SLIM_DYING
                 ai AICRABDYING
                 //guts JIBS6 8
                 ifspritepal 0 break

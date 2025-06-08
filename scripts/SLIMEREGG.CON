@@ -1,5 +1,7 @@
 actor SLIMECRABPROJECTILE SLIMEREGGPROJECTILESTRENGTH enda
 
+spriteflags SLIMEREGG 4194304
+
 action SLIMEREGGWAIT 0
 action SLIMEREGGHATCH 2
 action SLIMEREGGATTACKING 2  2  1  1  30
@@ -11,6 +13,9 @@ action SLIMEREGGGROW             0   1  1  1  10
 
 move SLIMEREGGSTOPPED
 move SLIMEREGGSHRUNKVELS 32
+
+gamevar slimereggprojpos 0 0
+gamevar slimereggcurrpos 0 0
 
 ai AISLIMEREGGWAIT                     SLIMEREGGWAIT SLIMEREGGSTOPPED geth
 ai AISLIMEREGGATTACKPLAYER                SLIMEREGGATTACKING SLIMEREGGSTOPPED faceplayer
@@ -52,7 +57,14 @@ state slimereggattackstate
   }
   else
 	ifcount 24
+  {
+      geta[THISACTOR].z slimereggprojpos
+      setvarvar slimereggcurrpos slimereggprojpos
+      subvar slimereggprojpos 3000
+      seta[THISACTOR].z slimereggprojpos      
 		  shoot SLIMECRABPROJECTILE
+      seta[THISACTOR].z slimereggcurrpos
+  }
    else
 	 ifactioncount 6
 	   resetactioncount
@@ -106,7 +118,6 @@ state slimereggfrozenstate
       ifrnd 84
         spawn BLOODPOOL
           lotsofglass 30
-      state standard_jibs
       sound GLASS_BREAKING
       killit
     }
@@ -226,7 +237,7 @@ ifhitweapon
         else
         ifwasweapon GROWSPARK
           sound EXPANDERHIT
-		guts JIBS2 1
+		//guts JIBS2 1
         ifdead
         {
                 ifwasweapon FREEZEBLAST
@@ -246,7 +257,7 @@ ifhitweapon
 					break
                 }
                 addkills 1
-				// play death sound here
+                sound SLIM_DYING
                 ai AISLIMEREGGDYING
                 //guts JIBS6 8
                 ifspritepal 0 break
