@@ -107,132 +107,195 @@ defineprojectile ALIENLORDPROJECTILE PROJ_EXTRA ALIENLORDPROJECTILESTRENGTH
 defineprojectile ALIENLORDPROJECTILE PROJ_HITRADIUS 100
 defineprojectile ALIENLORDPROJECTILE PROJ_OFFSET -128
 
-//Sounds
-define GREYATTACK 398
-definesound GREYATTACK            sounds/grey_attack.wav    0  0  3  0   7680
-define GREYDEATH 399
-definesound GREYDEATH             sounds/grey_death.wav    -100  100  3  0   7680
-define SLIMERATTACK 400
-definesound SLIMERATTACK          sounds/slimer_attack.wav    -100  100  3  0   7680
-define A51SIRENLOOP 401
-definesound A51SIRENLOOP          sounds/area51_siren.wav    0  0  0  3   0
-define SPIDERLORDROAM 402
-definesound SPIDERLORDROAM          sounds/spiderlord_roam.wav    0   0   3   0   0
-define SPIDERLORDDEATH 403
-definesound SPIDERLORDDEATH          sounds/spiderlord_dead.wav   0   0   3   0   0
-define CONTROLLERATTACK 404
-definesound CONTROLLERATTACK          sounds/controller_attack.wav   0   0   3   0   0
-define ALIENLORDROAM 405
-definesound ALIENLORDROAM          sounds/alienlord_roam.wav   0   0   3   0   0
-define ALIENLORDDEATH 406
-definesound ALIENLORDDEATH          sounds/alienlord_dead.wav   0   0   3   0   0
+//DN:A Misc sounds
+define GREYATTACK 400
+define GREYDEATH 401
+define SLIMERATTACK 402
+define SPIDERLORDROAM 404
+define SPIDERLORDDEATH 405
+define CONTROLLERATTACK 406
+define ALIENLORDROAM 407
+define ALIENLORDDEATH 408
+//          SOUND TOKEN               SOUND FILE                        Pitch Low--High   Prio  Type  Distance
+definesound GREYATTACK                sounds/grey_attack.wav                 -80   -80    3     0     7680
+definesound GREYDEATH                 sounds/grey_death.wav                  -100   100   3     0     7680
+definesound SLIMERATTACK              sounds/slimer_attack.wav               -100   100   3     0     7680
+definesound SPIDERLORDROAM            sounds/spiderlord_roam.wav             -80   -80    3     0     0
+definesound SPIDERLORDDEATH           sounds/spiderlord_dead.wav             -80   -80    3     0     0
+definesound CONTROLLERATTACK          sounds/controller_attack.wav           -80   -80    3     0     0
+definesound ALIENLORDROAM             sounds/alienlord_roam.wav              -80   -80    3     0     0
+definesound ALIENLORDDEATH            sounds/alienlord_dead.wav              -80   -80    3     0     0
+//Ambience
+define AAMB_COMPUTER 560
+define AAMB_FRY 561
+define AAMB_LAVA 562
+define AAMB_MACHINERY 563
+define AAMB_RUMBLE 564
+define AAMB_STINGER 565
+define AAMB_TRAIN 566
+define AAMB_WARAMB 567
+define AAMB_WIND 568
+define AAMB_A51SIRENLOOP 569
+define AAMB_ALIENMACHINERY 570
+definesound AAMB_COMPUTER             sounds/amb/comloop.wav                 -80   -80    0     3     0
+definesound AAMB_FRY                  sounds/amb/fryloop.wav                 -80   -80    0     3     0
+definesound AAMB_LAVA                 sounds/amb/lava06.wav                  -80   -80    0     3     0
+definesound AAMB_MACHINERY            sounds/amb/machinery.wav               -80   -80    0     3     0
+definesound AAMB_RUMBLE               sounds/amb/rumble.wav                  -80   -80    0     3     0
+definesound AAMB_STINGER              sounds/amb/stinger.wav                 -80   -80    0    16     0
+definesound AAMB_TRAIN                sounds/amb/trainloop.wav               -80   -80    0     3     0
+definesound AAMB_WARAMB               sounds/amb/waramb.wav                 -592   -80    0    16     0
+definesound AAMB_WIND                 sounds/amb/wind.wav                    -80   -80    0     3     0
+definesound AAMB_A51SIRENLOOP         sounds/amb/area51_siren.wav            -80   -80    0    16     0
+definesound AAMB_ALIENMACHINERY       sounds/amb/alienmachine.wav            -80   -80    0     3     0
+
+
+//Uttered by Duke Nukem
+define ADUKE_PAIN 573
+define ADUKE_USEMEDKIT 574
+define ADUKE_USEMEDKIT2 575
+define ADUKE_JIBBED1 576
+define ADUKE_JIBBED2 577
+define ADUKE_JIBBED3 578
+define ADUKE_JIBBED5 579
+define ADUKE_JIBBED6 580
+define ADUKE_JIBBED7 581
+define ADUKE_GETWEAPON1 582
+define ADUKE_GETWEAPON2 583
+define ADUKE_GETWEAPON4 584
+define ADUKE_GETWEAPON6 585
+define ADUKE_KILLED1 586
+define ADUKE_BONUS1 587
+define ADUKE_CRACK 588
+define ADUKE_SEARCH 589
+define ADUKE_ENDSEQVOL2SND7 590
+//          SOUND TOKEN               SOUND FILE                        Pitch Low--High   Prio  Type  Distance
+definesound ADUKE_PAIN           sounds/duke/owwh.wav                        -80   -80    255   4     0
+definesound ADUKE_USEMEDKIT      sounds/duke/ahh.wav                         -80   -80    255   4     0
+definesound ADUKE_USEMEDKIT2     sounds/duke/ahh2.wav                        -80   -80    255   4     0
+definesound ADUKE_JIBBED1        sounds/duke/amess.wav                       -80   -80    255   4     0
+definesound ADUKE_JIBBED2        sounds/duke/bitchin.wav                     -80   -80    255   4     0
+definesound ADUKE_JIBBED3        sounds/duke/holycw.wav                      -80   -80    255   4     0
+definesound ADUKE_JIBBED5        sounds/duke/imgood.wav                      -80   -80    255   4     0
+definesound ADUKE_JIBBED6        sounds/duke/piece.wav                       -80   -80    255   4     0
+definesound ADUKE_JIBBED7        sounds/duke/gothrt.wav                      -80   -80    255   4     0
+definesound ADUKE_GETWEAPON1     sounds/duke/cool.wav                        -80   -80    255   4     0
+definesound ADUKE_GETWEAPON2     sounds/duke/getsom.wav                      -80   -80    255   4     0
+definesound ADUKE_GETWEAPON4     sounds/duke/wansom.wav                      -80   -80    255   4     0
+definesound ADUKE_GETWEAPON6     sounds/duke/hail.wav                        -80   -80    255   4     0
+definesound ADUKE_KILLED1        sounds/duke/damn.wav                        -80   -80    255   4     0
+definesound ADUKE_BONUS1         sounds/duke/letsrock.wav                    -80   -80    255   4     0
+definesound ADUKE_CRACK          sounds/duke/waitin.wav                      -80   -80    255   4     0
+definesound ADUKE_SEARCH         sounds/duke/wallhump.wav                    -80   -80    255   4     0
+definesound ADUKE_ENDSEQVOL2SND7 sounds/duke/whistle.wav                     -80   -80    255   4     0
 
 //Gianni Matragrano lines
 define GM_THATSGOTTAHURT 600
-definesound GM_THATSGOTTAHURT     sounds/gianni/GM_ThatsGottaHurt.wav       0   0   255 4   0
 define GM_BACONBITS 601
-definesound GM_BACONBITS     sounds/gianni/GM_BaconBits.wav            0   0   255 4   0
 define GM_TIMEMORE 602
-definesound GM_TIMEMORE     sounds/gianni/GM_TimeMore.wav            0   0   255 4   0
 define GM_LETSROCK 603
-definesound GM_LETSROCK     sounds/gianni/GM_LetsRock.wav            0   0   255 4   0
 define GM_NEWHARDWARE 604
-definesound GM_NEWHARDWARE     sounds/gianni/GM_NewHardware.wav            0   0   255 4   0
 define GM_LETSROCK2 605
-definesound GM_LETSROCK2     sounds/gianni/GM_LetsRock2.wav            0   0   255 4   0
 define GM_PLENTYTOKICK 606
-definesound GM_PLENTYTOKICK     sounds/gianni/GM_PlentyToKick.wav            0   0   255 4   0
 define GM_DUKEOUT 607
-definesound GM_DUKEOUT     sounds/gianni/GM_DukeOut.wav      0   0   255 4   0
 define GM_ALGAEEATERS 608
-definesound GM_ALGAEEATERS     sounds/gianni/GM_AlgaeEaters.wav      0   0   255 4   0
 define GM_WRONGPLANET 609
-definesound GM_WRONGPLANET     sounds/gianni/GM_WrongPlanet.wav      0   0   255 4   0
 define GM_CLOSEENCOUNTER 610
-definesound GM_CLOSEENCOUNTER     sounds/gianni/GM_CloseEncounter.wav      0   0   255 4   0
 define GM_BUBBLEGUM 611
-definesound GM_BUBBLEGUM     sounds/gianni/GM_BubbleGum.wav      0   0   255 4   0
 define GM_PIECEOFCAKE 612
-definesound GM_PIECEOFCAKE     sounds/gianni/GM_PieceOfCake.wav      0   0   255 4   0
 define GM_COMEGETSOME 613
-definesound GM_COMEGETSOME     sounds/gianni/GM_ComeGetSome.wav      0   0   255 4   0
 define GM_EGYPTIAN 614
-definesound GM_EGYPTIAN     sounds/gianni/GM_Egyptian.wav       0   0   255 4   0
 define GM_ROCKIN 615
-definesound GM_ROCKIN     sounds/gianni/GM_Rockin.wav      0   0   255 4   0
 define GM_SWITCHFLIPPER 616
-definesound GM_SWITCHFLIPPER     sounds/gianni/GM_SwitchFlipper.wav      0   0   255 4   0
 define GM_SCORPIONKING 617
-definesound GM_SCORPIONKING     sounds/gianni/GM_ScorpionKing.wav      0   0   255 4   0
 define GM_CASEOFCRABS 618
-definesound GM_CASEOFCRABS     sounds/gianni/GM_CaseOfCrabs.wav      0   0   255 4   0
 define GM_DAMNIMGOOD 619
-definesound GM_DAMNIMGOOD     sounds/gianni/GM_DamnImGood.wav      0   0   255 4   0
 define GM_TWOWONDERS 620
-definesound GM_TWOWONDERS     sounds/gianni/GM_TwoWonders.wav      0   0   255 4   0
 define GM_ALIENTELE 621
-definesound GM_ALIENTELE     sounds/gianni/GM_AlienTele.wav      0   0   255 4   0
 define GM_HENDRIX 622
-definesound GM_HENDRIX     sounds/gianni/GM_Hendrix.wav      0   0   255 4   0
 define GM_JAMSSIGNAL 623
-definesound GM_JAMSSIGNAL     sounds/gianni/GM_JamsSignal.wav      0   0   255 4   0
 define GM_MOTHERLODE 624
-definesound GM_MOTHERLODE     sounds/gianni/GM_MotherLode.wav      0   0   255 4   0
 define GM_EGGCRACKINTIME 625
-definesound GM_EGGCRACKINTIME     sounds/gianni/GM_EggCrackinTime.wav      0   0   255 4   0
 define GM_HURRYUP 626
-definesound GM_HURRYUP     sounds/gianni/GM_HurryUp.wav      0   0   255 4   0
 define GM_SHAKEITBABY 627
-definesound GM_SHAKEITBABY     sounds/gianni/GM_ShakeItBaby.wav      0   0   255 4   0
 define GM_ENGAGEMENTS 628
-definesound GM_ENGAGEMENTS     sounds/gianni/GM_Engagements.wav      0   0   255 4   0
 define GM_HAILTOKING 629
-definesound GM_HAILTOKING     sounds/gianni/GM_HailToKing.wav      0   0   255 4   0
 define GM_COOL 630
-definesound GM_COOL     sounds/gianni/GM_Cool.wav      0   0   255 4   0
 define GM_WHOWANTSSOME 631
-definesound GM_WHOWANTSSOME     sounds/gianni/GM_WhoWantsSome.wav      0   0   255 4   0
 define GM_HOTBABE 632
-definesound GM_HOTBABE     sounds/gianni/GM_HotBabe.wav      0   0   255 4   0
 define GM_DONTWORRY 633
-definesound GM_DONTWORRY     sounds/gianni/GM_DontWorry.wav      0   0   255 4   0
 define GM_HOTFOOT 634
-definesound GM_HOTFOOT     sounds/gianni/GM_HotFoot.wav      0   0   255 4   0
 define GM_ASSGOBLIN 635
-definesound GM_ASSGOBLIN     sounds/gianni/GM_AssGoblin.wav      0   0   255 4   0
 define GM_URANUS 636
-definesound GM_URANUS     sounds/gianni/GM_Uranus.wav      0   0   255 4   0
 define GM_BETONDUKE 637
-definesound GM_BETONDUKE     sounds/gianni/GM_BetOnDuke.wav      0   0   255 4   0
 define GM_GONNAPAY 638
-definesound GM_GONNAPAY     sounds/gianni/GM_GonnaPay.wav      0   0   255 4   0
 define GM_SIGNCHECKS 639
-definesound GM_SIGNCHECKS     sounds/gianni/GM_SignChecks.wav      0   0   255 4   0
 define GM_ONMYWAY 640
-definesound GM_ONMYWAY     sounds/gianni/GM_OnMyWay.wav      0   0   255 4   0
 define GM_FAIRFIGHT 641
-definesound GM_FAIRFIGHT     sounds/gianni/GM_FairFight.wav      0   0   255 4   0
 define GM_STACKEDODDS 642
-definesound GM_STACKEDODDS     sounds/gianni/GM_StackedOdds.wav      0   0   255 4   0
 define GM_RESURRECTOVERTIME 643
-definesound GM_RESURRECTOVERTIME     sounds/gianni/GM_ResurrectOvertime.wav      0   0   255 4   0
 define GM_DERAILED 644
-definesound GM_DERAILED     sounds/gianni/GM_Derailed.wav      0   0   255 4   0
 define GM_BULLETSTOKILL 645
-definesound GM_BULLETSTOKILL     sounds/gianni/GM_BulletsToKill.wav      0   0   255 4   0
 define GM_SHOOTMYWAY 646
-definesound GM_SHOOTMYWAY     sounds/gianni/GM_ShootMyWay.wav      0   0   255 4   0
 define GM_TUXEDO 647
-definesound GM_TUXEDO     sounds/gianni/GM_Tuxedo1.wav      0   0   255 4   0
 define GM_LAYFINGERS 648
-definesound GM_LAYFINGERS     sounds/gianni/GM_LayFingers.wav      0   0   255 4   0
 define GM_IMDUKE 649
-definesound GM_IMDUKE     sounds/gianni/GM_ImDuke.wav      0   0   255 4   0
 define GM_OVERHEATALIENS 650
-definesound GM_OVERHEATALIENS     sounds/gianni/GM_OverheatAliens.wav      0   0   255 4   0
 define GM_KICKINGBUTT 651
-definesound GM_KICKINGBUTT     sounds/gianni/GM_KickingButt.wav      0   0   255 4   0
 define GM_SCRATCHBUTT 652
-definesound GM_SCRATCHBUTT     sounds/gianni/GM_ScratchButt.wav      0   0   255 4   0
 define GM_FINDMYOWNWAY 653
-definesound GM_FINDMYOWNWAY     sounds/gianni/GM_FindMyOwnWay.wav      0   0   255 4   0
+//          SOUND TOKEN               SOUND FILE                        Pitch Low--High   Prio  Type  Distance
+definesound GM_THATSGOTTAHURT         sounds/gianni/GM_ThatsGottaHurt.wav     0     0     255   4     0
+definesound GM_BACONBITS              sounds/gianni/GM_BaconBits.wav          0     0     255   4     0
+definesound GM_TIMEMORE               sounds/gianni/GM_TimeMore.wav           0     0     255   4     0
+definesound GM_LETSROCK               sounds/gianni/GM_LetsRock.wav           0     0     255   4     0
+definesound GM_NEWHARDWARE            sounds/gianni/GM_NewHardware.wav        0     0     255   4     0
+definesound GM_LETSROCK2              sounds/gianni/GM_LetsRock2.wav          0     0     255   4     0
+definesound GM_PLENTYTOKICK           sounds/gianni/GM_PlentyToKick.wav       0     0     255   4     0
+definesound GM_DUKEOUT                sounds/gianni/GM_DukeOut.wav            0     0     255   4     0
+definesound GM_ALGAEEATERS            sounds/gianni/GM_AlgaeEaters.wav        0     0     255   4     0
+definesound GM_WRONGPLANET            sounds/gianni/GM_WrongPlanet.wav        0     0     255   4     0
+definesound GM_CLOSEENCOUNTER         sounds/gianni/GM_CloseEncounter.wav     0     0     255   4     0
+definesound GM_BUBBLEGUM              sounds/gianni/GM_BubbleGum.wav          0     0     255   4     0
+definesound GM_PIECEOFCAKE            sounds/gianni/GM_PieceOfCake.wav        0     0     255   4     0
+definesound GM_COMEGETSOME            sounds/gianni/GM_ComeGetSome.wav        0     0     255   4     0
+definesound GM_EGYPTIAN               sounds/gianni/GM_Egyptian.wav           0     0     255   4     0
+definesound GM_ROCKIN                 sounds/gianni/GM_Rockin.wav             0     0     255   4     0
+definesound GM_SWITCHFLIPPER          sounds/gianni/GM_SwitchFlipper.wav      0     0     255   4     0
+definesound GM_SCORPIONKING           sounds/gianni/GM_ScorpionKing.wav       0     0     255   4     0
+definesound GM_CASEOFCRABS            sounds/gianni/GM_CaseOfCrabs.wav        0     0     255   4     0
+definesound GM_DAMNIMGOOD             sounds/gianni/GM_DamnImGood.wav         0     0     255   4     0
+definesound GM_TWOWONDERS             sounds/gianni/GM_TwoWonders.wav         0     0     255   4     0
+definesound GM_ALIENTELE              sounds/gianni/GM_AlienTele.wav          0     0     255   4     0
+definesound GM_HENDRIX                sounds/gianni/GM_Hendrix.wav            0     0     255   4     0
+definesound GM_JAMSSIGNAL             sounds/gianni/GM_JamsSignal.wav         0     0     255   4     0
+definesound GM_MOTHERLODE             sounds/gianni/GM_MotherLode.wav         0     0     255   4     0
+definesound GM_EGGCRACKINTIME         sounds/gianni/GM_EggCrackinTime.wav     0     0     255   4     0
+definesound GM_HURRYUP                sounds/gianni/GM_HurryUp.wav            0     0     255   4     0
+definesound GM_SHAKEITBABY            sounds/gianni/GM_ShakeItBaby.wav        0     0     255   4     0
+definesound GM_ENGAGEMENTS            sounds/gianni/GM_Engagements.wav        0     0     255   4     0
+definesound GM_HAILTOKING             sounds/gianni/GM_HailToKing.wav         0     0     255   4     0
+definesound GM_COOL                   sounds/gianni/GM_Cool.wav               0     0     255   4     0
+definesound GM_WHOWANTSSOME           sounds/gianni/GM_WhoWantsSome.wav       0     0     255   4     0
+definesound GM_HOTBABE                sounds/gianni/GM_HotBabe.wav            0     0     255   4     0
+definesound GM_DONTWORRY              sounds/gianni/GM_DontWorry.wav          0     0     255   4     0
+definesound GM_HOTFOOT                sounds/gianni/GM_HotFoot.wav            0     0     255   4     0
+definesound GM_ASSGOBLIN              sounds/gianni/GM_AssGoblin.wav          0     0     255   4     0
+definesound GM_URANUS                 sounds/gianni/GM_Uranus.wav             0     0     255   4     0
+definesound GM_BETONDUKE              sounds/gianni/GM_BetOnDuke.wav          0     0     255   4     0
+definesound GM_GONNAPAY               sounds/gianni/GM_GonnaPay.wav           0     0     255   4     0
+definesound GM_SIGNCHECKS             sounds/gianni/GM_SignChecks.wav         0     0     255   4     0
+definesound GM_ONMYWAY                sounds/gianni/GM_OnMyWay.wav            0     0     255   4     0
+definesound GM_FAIRFIGHT              sounds/gianni/GM_FairFight.wav          0     0     255   4     0
+definesound GM_STACKEDODDS            sounds/gianni/GM_StackedOdds.wav        0     0     255   4     0
+definesound GM_RESURRECTOVERTIME      sounds/gianni/GM_ResurrectOvertime.wav  0     0     255   4     0
+definesound GM_DERAILED               sounds/gianni/GM_Derailed.wav           0     0     255   4     0
+definesound GM_BULLETSTOKILL          sounds/gianni/GM_BulletsToKill.wav      0     0     255   4     0
+definesound GM_SHOOTMYWAY             sounds/gianni/GM_ShootMyWay.wav         0     0     255   4     0
+definesound GM_TUXEDO                 sounds/gianni/GM_Tuxedo1.wav            0     0     255   4     0
+definesound GM_LAYFINGERS             sounds/gianni/GM_LayFingers.wav         0     0     255   4     0
+definesound GM_IMDUKE                 sounds/gianni/GM_ImDuke.wav             0     0     255   4     0
+definesound GM_OVERHEATALIENS         sounds/gianni/GM_OverheatAliens.wav     0     0     255   4     0
+definesound GM_KICKINGBUTT            sounds/gianni/GM_KickingButt.wav        0     0     255   4     0
+definesound GM_SCRATCHBUTT            sounds/gianni/GM_ScratchButt.wav        0     0     255   4     0
+definesound GM_FINDMYOWNWAY           sounds/gianni/GM_FindMyOwnWay.wav       0     0     255   4     0

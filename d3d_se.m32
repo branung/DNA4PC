@@ -1,0 +1,590 @@
+
+ife sprite[h].picnum SECTOREFFECTOR {
+    switch sprite[h].lotag
+        case 0:
+            redefinequote   Q_MENU1 SE 0 : Rotate Sector
+            redefinequote   Q_MENU2 Used to rotate a sector around a pivot point.
+            redefinequote   Q_HITAG Set equal to Hitag of SE 1 as pivot point for sector.
+            redefinequote   Q_ANGLE Rotate: ^%ldUP = all points around SE 1 ^%ldDOWN = sector around SE 1.
+                ife sprite[h].ang 512 { qsprintf Q_ANGLE Q_ANGLE col_dgreen col_green } else { qsprintf Q_ANGLE Q_ANGLE col_green col_dgreen }
+            redefinequote   Q_NOTE1 * If Relative alignment is set on the floor,( the R key ), then all
+            redefinequote   Q_NOTE2 sprites and actors on the floor will rotate with the sector
+            redefinequote   Q_NOTE3 WARNING: If not matched with a valid pair then the game will exit with an error! (Not in all source ports)
+            break
+        case 1: 
+            redefinequote   Q_MENU1 SE 1 : Pivot for Rotate SE 0
+            redefinequote   Q_MENU2 Used as a pivot point for Sector Effector 0 to rotate a sector around.
+            redefinequote   Q_HITAG Set equal to Hitag of all SE 0 to rotate.
+            redefinequote   Q_ANGLE Rotation direction: ^%ldUP = Clockwise ^%ldDOWN = Counter-clockwise
+                ife sprite[h].ang 512 { qsprintf Q_ANGLE Q_ANGLE col_dgreen col_green } else { qsprintf Q_ANGLE Q_ANGLE col_green col_dgreen }
+            break
+        case 2:
+            redefinequote   Q_MENU1 SE 2 : Earthquake
+            redefinequote   Q_MENU2 Used to set off an earthquake. 
+            redefinequote   Q_MENU3 During the earthquake the screen will shake for about 4 seconds.
+            redefinequote   Q_MENU4 The sector will move in the direction that the SE sprite is pointing. 
+            redefinequote   Q_MENU5 If there is a slope, then it will rise uring the earthquake.
+            redefinequote   Q_ANGLE Direction to move sector during earthquake.
+            redefinequote   Q_NOTE1 * Must activate with Masterswitch.
+            redefinequote   Q_NOTE2 * If there is a slope, then it will be made flat at pre-map and
+            redefinequote   Q_NOTE3   raised during the earthquake to a maximum height of 4 clicks.
+            break
+        case 3:
+            redefinequote   Q_MENU1 SE 3 : Random lights after shot out
+            redefinequote   Q_MENU2 Used to create lighting effect when lights are shot out.
+            redefinequote   Q_MENU3 It will also set the color of light when the light is on.
+            redefinequote   Q_MENU4 Make the sector shade dark when the light is out 
+            redefinequote   Q_MENU5 and make the SE sprite shade bright when the light is on.
+            redefinequote   Q_HITAG Set equal to Wall lotag or Ceiling Hitag with graphic of light
+            redefinequote   Q_SHADE Set to brightness when light is on, set sector brightness to when light is off.
+            redefinequote Q_PALETTE Set to Palette Lookup number when light is on.
+            redefinequote   Q_NOTE1 * Can be used with SE 12 to be turned on and off with a light
+            redefinequote   Q_NOTE2   switch until the lights are shot out.
+            redefinequote   Q_NOTE3 * The lights color is taken from the SE sprites Palette when the
+            redefinequote   Q_NOTE4   light is on, and the sectors palette when the light is off.
+            redefinequote   Q_NOTE5   Default is no color. e.g. palette = 0.
+            redefinequote   Q_NOTE6 * Both the SE sprite and the sector can have different palettes.
+            break
+        case 4:
+            redefinequote   Q_MENU1 SE 4 : Random lights
+            redefinequote   Q_MENU2 Used to make sector randomly flash in brightness. 
+            redefinequote   Q_MENU3 It will also set the color of light when the light is on. Make the sector shade dark
+            redefinequote   Q_MENU4 when the light is off and make the SE sprite shade bright when the light is on.
+            redefinequote   Q_HITAG Set for Random Flash number (Used to synchronize multiple sectors)
+            redefinequote   Q_SHADE Set to brightness when light is on, set sector brightness to when light is off.
+            redefinequote Q_PALETTE Set to when light is on.
+            redefinequote   Q_NOTE1 * Can NOT be used with SE 12 to be turned on and off with a light switch.
+            redefinequote   Q_NOTE2 * The lights color is taken from the SE sprites Palette when the
+            redefinequote   Q_NOTE3   light is on, and the sectors palette when the light is off.
+            redefinequote   Q_NOTE4 * Default is no color. e.g. palette = 0.
+            redefinequote   Q_NOTE5 * Both the SE sprite and the sector can have different palettes.
+            break
+        case 5:
+            redefinequote   Q_MENU1 SE 5 : Helicopter -- Unused!
+            redefinequote   Q_MENU2 An unfinished effect intended for a rooftop boss battle
+            redefinequote   Q_MENU3 Most of the code was never finished however there are still limited use cases
+            redefinequote   Q_MENU4 The effect moves a sector around, facing the player and seeking the nearest locator sprite
+            redefinequote   Q_MENU5 while firing a stream of laser towards an opposite tangent of what it should (away from player)
+            redefinequote   Q_NOTE1 * This effect is prone to bugs, however there are limited use cases such as trying to create turrets
+            redefinequote   Q_NOTE2   which fire away from the player or i.e. space ships that follow the player and force a teleport.
+            break
+        case 6:
+            redefinequote   Q_MENU1 SE 6 : Subway Engine
+            redefinequote   Q_MENU2 Used as the Engine for a Subway. 
+            redefinequote   Q_MENU3 - Use with SE 14 for multiple subway cars. 
+            redefinequote   Q_MENU4 - Must be used with Locator Sprite to set track.
+            redefinequote   Q_MENU5 This track should be a single sector and contain no sloping
+            redefinequote   Q_MENU6 - All sectors within car sector must be of equal Sector Hitag
+            redefinequote   Q_MENU7 - All nested sectors must reside inside the main "engine sector", engine should not be split.
+            redefinequote   Q_HITAG Set equal to Locator Lotag for starting position.
+            redefinequote   Q_ANGLE Set for direction of Subway.
+            redefinequote   Q_NOTE1 * Set relative align on sector floor, (R key), to make sprites move.
+            redefinequote   Q_NOTE2 * If a Locator has a Hitag of 1, then the Subway will stop at that locator for 5 seconds then continue.
+            redefinequote   Q_NOTE3 * You may replace default movement sound with a MusicAndSFX, where it's Lotag = sound number
+            redefinequote   Q_NOTE4   in the same sector as SE6 engine
+            redefinequote   Q_NOTE5 * Compatible with GPSpeed, when under 64 then no sound will be played. Affects waiting time at "stops"
+            redefinequote   Q_NOTE6 * Parallax floor/ceiling will disable sounds, in addition when used on a floor it assumes the role of
+            redefinequote   Q_NOTE7   a "space ship" and all cars will fire rockets at the player. You may use PAL0 to disable rockets.
+            redefinequote   Q_NOTE8 * Rocket firing and movement speed is determined by Sector's .extra. A value of 0 is reached at stops,
+            redefinequote   Q_NOTE9   where speed is zero and no firing will be done. This .extra can be manipulated with effects such as SE21
+            redefinequote  Q_NOTE10 * You can't have Recon Patrol Vehicles or Two-way trains on the same map.
+            break
+        case 7:
+            redefinequote   Q_MENU1 SE 7 : Transport / Water
+            redefinequote   Q_MENU2 Used as Teleporter and Water submerging Effect depending on sector Lotag
+            redefinequote   Q_MENU3 Sector Lotag: ^%ld 0 = Teleporter^%ld 1 = Over water^%ld 2 = Underwater
+                set temp sprite[h].sectnum : set temp sector[temp].lotag
+                ife temp 1      { qsprintf Q_MENU3 Q_MENU3 col_dgreen col_green col_dgreen }
+                else ife temp 2 { qsprintf Q_MENU3 Q_MENU3 col_dgreen col_dgreen col_green }
+                else            { qsprintf Q_MENU3 Q_MENU3 col_green col_dgreen col_dgreen }
+            redefinequote   Q_HITAG Set equal to one other SE 7 to transport to/from.
+            redefinequote Q_PALETTE Sounds and visuals:^%ld 0 = Enabled^%ld >0 = Disabled
+                ifg sprite[h].pal 0 { qsprintf Q_PALETTE Q_PALETTE col_dgreen col_green } else { qsprintf Q_PALETTE Q_PALETTE col_green col_dgreen }
+            redefinequote   Q_NOTE1 * If the Sector Effector Sprite is off the ground, then you will only 
+            redefinequote   Q_NOTE2   teleport when dukes waist is at the same height as the sprite and in the same sector.
+            redefinequote   Q_NOTE3 * When used with water, the two sectors must be exactly the same size and SE7/23s must be at the same relative placement
+            redefinequote   Q_NOTE4 * Compatible with ACTIVATORLOCKED, allows disabling the teleporter on demand.
+            redefinequote   Q_NOTE5 * Can be paired with SE23 for an one-way teleporter effect
+            redefinequote   Q_NOTE6 * If used with water, you can optionally use PAL8 on the surface for slime pools.
+            break
+        case 8:
+            redefinequote   Q_MENU1 SE 8 : Up Open Door Lights
+            redefinequote   Q_MENU2 Used to light up a room when a door is opened.
+            redefinequote   Q_MENU3 This is to  be used with effects that raise the ceiling, i.e. "doomdoor" ST 20
+            redefinequote   Q_HITAG Set equal to all other SE 8 used together.
+            redefinequote   Q_SHADE Set to brightness when light is on, set sector brightness to when light is off.
+            redefinequote   Q_NOTE1 * At least one SE 8 with equal Hitag must be in a sector in which the ceiling rises.
+            break
+        case 9:
+            redefinequote   Q_MENU1 SE 9 : Down Open Door Lights
+            redefinequote   Q_MENU2 Used to light up a room when a light comes down from the ceiling.
+            redefinequote   Q_MENU3 This is to  be used with effects that lowers the ceiling, i.e. "inverse doomdoor" ST 21
+            redefinequote   Q_HITAG Set equal to all other SE 9 used together.
+            redefinequote   Q_SHADE Set to brightness when light is on, set sector brightness to when light is off.
+            redefinequote   Q_NOTE1 * At least one SE 9 with equal Hitag must be in a sector in witch the floor rises.
+            break
+        case 10:
+            redefinequote   Q_MENU1 SE 10 : Door Auto Close
+            redefinequote   Q_MENU2 Used to Automatically close a door after a set delay.
+            redefinequote   Q_HITAG Delay until door closes. ex: 128 equals 4 seconds.
+            redefinequote   Q_NOTE1 * Generally compatible with most vertical door types
+            redefinequote   Q_NOTE2 * This is not fully compatible with sliding doors due to a coding bug,
+            redefinequote   Q_NOTE3   when used it will instead repeatedly open/close the door without player interaction.
+            break
+        case 11:
+            redefinequote   Q_MENU1 SE 11 : Rotate Sector Door
+            redefinequote   Q_MENU2 Used as a door that rotates 90 degrees when activated.
+            set temp 23 : state se_check_st_dependency
+            redefinequote   Q_HITAG Optional pairing tag
+            redefinequote   Q_ANGLE Rotation direction: ^%ldUP = Clockwise ^%ldDOWN = Counter-clockwise
+                ife sprite[h].ang 512 { qsprintf Q_ANGLE Q_ANGLE col_dgreen col_green } else { qsprintf Q_ANGLE Q_ANGLE col_green col_dgreen }
+            redefinequote   Q_NOTE1 * Will also activate other SE 11 with equal Hitag values.
+            redefinequote   Q_NOTE1 * Use GPSpeed to adjust opening speed, use of values other than powers of 2 may cause issues.
+            redefinequote   Q_NOTE1 Recommended values i.e. 8, 32, 64, 128, etc.. Default being 256
+            redefinequote   Q_NOTE1 * MusicAndFX use: Hitag = Close sound, Lotag = Open sound
+            redefinequote   Q_NOTE1 * Compatible with activator, activatorlocked, masterswitch
+            break
+        case 12:
+            redefinequote   Q_MENU1 SE 12 : Light Switch
+            redefinequote   Q_MENU2 Used light up a sector when activated with a switch.
+            redefinequote   Q_HITAG Set equal to all other SE 12 used together
+            redefinequote   Q_SHADE Set to brightness when light is on, set sector brightness to when light is off.
+            redefinequote Q_PALETTE Set to when lights are on.
+            redefinequote   Q_NOTE1 The lights color is taken from the SE sprites Palette when the
+            redefinequote   Q_NOTE2 light is on, and the sectors palette when the light is off.
+            redefinequote   Q_NOTE3 Default is no color. e.g. palette = 0.
+            redefinequote   Q_NOTE4 Both the SE sprite and the sector can have different palettes.
+            break
+        case 13:
+            redefinequote   Q_MENU1 SE 13 : C-9 Explosive
+            redefinequote   Q_MENU2 Used to blow apart the ceiling and floor of a sector to create holes in walls
+            redefinequote   Q_HITAG Set equal to SEENINE, OOZCAN, or CRACK sprites to activate
+            redefinequote   Q_ANGLE On spawn, pull together: ^%ldUP = Both Floor & Ceiling ^%ldDOWN = Only the one closest to SE
+                ife sprite[h].ang 512 { qsprintf Q_ANGLE Q_ANGLE col_dgreen col_green } else { qsprintf Q_ANGLE Q_ANGLE col_green col_dgreen }
+            redefinequote  Q_NOTE1 * Can be activated by a Masterswitch with equal Hitags.
+            redefinequote  Q_NOTE2 * If the ceiling has a Sky texture without Parallax set, then the
+            redefinequote  Q_NOTE3   tile will be replaced at Pre-map with the closest non-Sky
+            redefinequote  Q_NOTE4   texture. When it explodes, the sky will change to Parallax.
+            redefinequote  Q_NOTE5 * To create an exploding ceiling, combine above parallax trick and
+            redefinequote  Q_NOTE6   point the SE DOWN, then put the SE at the same level as the room's ceiling.
+            redefinequote  Q_NOTE7   after explosion it will "remove" a chunk and insert parallax.
+            redefinequote  Q_NOTE8 * When used with slopes, it will only raise/lower according to true sector Z (firstwall's Z)
+        case 14:
+            redefinequote  Q_MENU1 SE 14 : Subway Car
+            redefinequote  Q_MENU2 Used as the Car for an existing subway (SE6).
+            redefinequote  Q_MENU3 Must be used with Locator Sprite to set track.
+            redefinequote  Q_HITAG Set equal to Locator Lotag for starting position.
+            redefinequote  Q_ANGLE Set for direction of Subway.
+            redefinequote  Q_NOTE1 * Set relative align on sector floor, (R key), to make sprites move.
+            redefinequote  Q_NOTE2 - For more information about subways, see SE6 "Subway engine" -
+            break
+        case 15:
+            redefinequote   Q_MENU1 SE 15 : Slide Door
+            redefinequote   Q_MENU2 Used as a door that slides sideways when opened.
+            set temp 25 : state se_check_st_dependency
+            // Hitag pairing rant Q_MENU4-6
+            set temp 0 : for i allsprites {
+                ife sprite[i].picnum SECTOREFFECTOR { 
+                    ife sprite[i].lotag 15 {
+                        ife sprite[i].hitag sprite[h].hitag {
+                            ife sprite[h].hitag 0 { add temp 1 } else { sub temp 1 }
+                        }
+                    }
+                }
+            }
+            ifg temp 1 {
+                redefinequote Q_MENU4 ^%ld! ^%ldMore than one door sprite found with hitag 0
+                redefinequote Q_MENU5 ^%ld! ^%ldEach door should have it's own hitag, if not done then
+                redefinequote Q_MENU6 ^%ld! ^%ldactivating one of these will activate all other hitag 0 slide doors.
+                qsprintf Q_MENU4 Q_MENU4 col_ired col_white
+                qsprintf Q_MENU5 Q_MENU5 col_ired col_white
+                qsprintf Q_MENU6 Q_MENU6 col_ired col_white
+            } else ifl temp -1 {
+                inv temp { redefinequote Q_MENU4 Found^%ld %ld ^%ldsprite pairs for current door!
+                }
+                qsprintf Q_MENU4 Q_MENU4 col_green temp col_iwhite
+            }
+            redefinequote   Q_HITAG Set equal to other doors to be opened at same time.
+            redefinequote Q_ANGLE Set to direction when door is closed.
+            redefinequote Q_NOTE1 Speed Sprite sets distance to door to open.
+            redefinequote Q_NOTE2 Check !SE.map on how to build.
+            redefinequote Q_NOTE3 Use MusicSFX sprite for sound.
+            break
+        case 16:
+            redefinequote   Q_MENU1 SE 16 : Roate reactor sector -- Unused!
+            redefinequote   Q_MENU2 A combination of a crusher and sector rotation, tied to a reactor sprite.
+            redefinequote   Q_MENU3 When a reactor sprite is present, the sector will move up/down and spin continously.
+            redefinequote   Q_NOTE1 * To construct, place this SE and a REACTOR or REACTOR2 sprite in the same sector.
+            redefinequote   Q_NOTE2 * When the reactor is destroyed, any movement will cease fully
+            break
+        case 17:
+            redefinequote  Q_MENU1 SE 17 : Elevator transport
+            redefinequote  Q_MENU2 Combines player teleportation between two elevators in order to simulate seamless room over room
+            set temp 15 : state se_check_st_dependency
+            ife sector[temp].hitag 15 redefinequote   Q_MENU4 What floor this represents, see extra notes
+            redefinequote  Q_HITAG Set equal to other SE 17 to Transport to.
+            redefinequote  Q_SHADE Darkest of these (highest shade value) will be the elevator's starting floor on map load
+            redefinequote  Q_NOTE1 * Top and bottom floors must be built at their correct physcial heights despite teleportation
+            redefinequote  Q_NOTE2 * Sector hitag according to documentation is always 0 for lower floor and 1 for higher floor.
+            redefinequote  Q_NOTE3 -- however in reality it can be any sequential pair, i.e. 45-46 as long as the order is the same
+            redefinequote  Q_NOTE4 * There is a hidden cut behavior that allows multiple floors to be used if you keep adding more floors.
+            redefinequote  Q_NOTE5 -- Ability to select direction was removed, however you can call the elevator successfully from any floor.
+            break
+        case 18:
+            redefinequote  Q_MENU1 SE 18 : Incremental sector raise/fall
+            redefinequote  Q_MENU2 Used as sector floor or ceiling raise/fall that can be activated incrementally.
+            redefinequote   Q_ANGLE Movement direction: ^%ldUP = Raise floor ^%ldDOWN = Lower ceiling
+                ife sprite[h].ang 512 { qsprintf Q_ANGLE Q_ANGLE col_dgreen col_green } else { qsprintf Q_ANGLE Q_ANGLE col_green col_dgreen }
+            redefinequote   Q_PALETTE Startup position:^%ld 0 = As seen in editor^%ld 0+ = SE sprite's height
+                ifg sprite[h].pal 0 { qsprintf Q_PALETTE Q_PALETTE col_dgreen col_green } else { qsprintf Q_PALETTE Q_PALETTE col_green col_dgreen }
+            redefinequote  Q_NOTE1 * Sector will move in opposite direction as it is at premap. 
+            redefinequote  Q_NOTE2 i.e. if sector is set to SE Sprite floor/ceiling will move to set height.
+            break
+        case 19:
+            redefinequote  Q_MENU1 SE 19 : Ceiling falls from explosion
+            redefinequote  Q_MENU2 Drop the ceiling when an explosion is detected in the sector, acting as a blast door.
+            redefinequote  Q_MENU3 During development it used to seal the player space from space vacuum when an explosion destroyed a force fielded window
+            redefinequote  Q_HITAG Equal to others to activate at same time.
+            redefinequote  Q_NOTE1 * Adjust rate of movement with GPSpeed
+            redefinequote  Q_NOTE2 * Any physically connected invisible forcefield (i.e. BIGFORCE) maskwalls will be disabled upon hit.
+            redefinequote  Q_NOTE3 * Hidden feature: Can be paired with SE0/1 rotation to create a spinning hazard light, create a spinning sector light
+            redefinequote  Q_NOTE4 construct, give the rotation SEs a palette (i.e. red) and it will start spinning & light up when triggered!
+            redefinequote  Q_NOTE5 - Used to be paired with a space vacuum effect that would suck all objects and the player, but it doesn't exist anymore.
+            break
+        case 20:
+            redefinequote  Q_MENU1 SE 20 : Stretching or shrinking sector (Bridge)
+            redefinequote  Q_MENU2 Stretch or shrink a sector towards a direction pointed by the sprite's angle/tail
+            redefinequote  Q_MENU3 This effectively drags a set of wallpoints belonging to the sector.
+            set temp 27 : state se_check_st_dependency
+            redefinequote  Q_HITAG Equal to others to activate at same time.
+            redefinequote  Q_NOTE1 * SE sprite will act as the anchor point for movent
+            redefinequote  Q_NOTE2 * All other sprites (incl. effect) should be placed next to SE to avoid drifting off-sector and breaking it.
+            redefinequote  Q_NOTE3 * The maximum total sprites this can carry is 10.
+            redefinequote  Q_NOTE4 * Set relative alignment (R key) on sector floor/ceiling to make them move with the sector.
+            redefinequote  Q_NOTE5 * Use GPSpeed's lotag to adjust the distance, where each 1024 is the largest grid square. Default is 256.
+            redefinequote  Q_NOTE6 * Use MusicAndSFX for sound (hitag = Stop sound, lotag = Start sound).
+            redefinequote  Q_NOTE7 * Compatible with Activator and MasterSwitch.
+            break
+        case 21:
+            redefinequote  Q_MENU1 SE 21 : Raise floor or Lower ceiling (Floor rise/ceiling drop)
+            redefinequote  Q_MENU2 Used to make a floor rise or a ceiling to lower to the height of SE. It's recommended to use SE31/32 instead.
+            redefinequote  Q_MENU3 This effect was used during development of Duke3D until SE31/32 was introduced and largely went unused since.
+            redefinequote  Q_MENU4 There is a very niche use case trick which allows the manipulation of sector's extra (typically speed)
+            set temp 27 : state se_check_st_dependency
+            redefinequote  Q_HITAG Set equal to others to activate simultaneously
+            redefinequote   Q_ANGLE Activation should: ^%ldUP = Lower the ceiling ^%ldDOWN = Raise the floor
+                ife sprite[h].ang 512 { qsprintf Q_ANGLE Q_ANGLE col_dgreen col_green } else { qsprintf Q_ANGLE Q_ANGLE col_green col_dgreen }
+            redefinequote  Q_NOTE1 * Compatible with both Activator & Masterswitch, however it's always single use
+            redefinequote  Q_NOTE2 * Requires a GPSpeed that's between 1-127
+            redefinequote  Q_NOTE3 * Activation has a delay that's determined by sector's extra (GPSpeed)
+            redefinequote  Q_NOTE4 * Movement speed is determine by sector's extra (GPSpeed)
+            redefinequote  Q_NOTE5 * You can use MusicAndSFX with this, lotag = starting sound, hitag = stopping sound
+            redefinequote  Q_NOTE6 * It is not recommended to use this effect as SE31/32 offers more control and is no longer single use
+            redefinequote  Q_NOTE7 * There is a very niche application with this effect as it can be combined with some effects such as sector rotation.
+            redefinequote  Q_NOTE8   As the activation delay is taken from sector's extra and modified on the fly, it can be used to intentionally
+            redefinequote  Q_NOTE9   break some effects. A rotating sector would gradually slow it's speed down to zero. Set SE to floor Z & floor mode.
+            break
+        case 22:
+            redefinequote  Q_MENU1 SE 22 : Teeth door
+            redefinequote  Q_MENU2 Used as a ceiling-type door with teeth prongs. This effect was not used in the game.
+            redefinequote  Q_MENU3 This effect can develop problems. Never interrupt the door while it's operating. 
+            redefinequote  Q_MENU4 For best results, use with a switch and Activator, and do not step under the door while it's closing.
+            set temp 29 : state se_check_st_dependency
+            redefinequote  Q_HITAG Set equal to other SE22, also the door sector's hitag must share this hitag
+            redefinequote  Q_NOTE1 * The prongs will sink inside the ground (below the door sector) regardless of what you set the height at.
+            redefinequote  Q_NOTE2   For a realistic visual match with prongs, lower the ground by (DoorHeight / 4) + DoorHeight + 2.25
+            redefinequote  Q_NOTE3   DoorHeight should be divisable by 1024 so use Pgup/Pgdown to adjust it.
+            redefinequote  Q_NOTE4 * To make the door initially closed: Lower the door and prong sectors completely
+            redefinequote  Q_NOTE5 * To make the door initially open: Raise all door sectors at least 1 unit below the surrounding ceiling.
+            redefinequote  Q_NOTE6   Again to match visuals for prongs: (DoorLoweredUnits X 1.25) + 2.25. DoorLoweredUnits is per Pgup/Pgdown.
+            redefinequote  Q_NOTE7 * You can use MusicAndSFX with this, lotag = starting sound, hitag = stopping sound
+            redefinequote  Q_NOTE8 * Compatible with Activator, ActivatorLocked, and MasterSwitch.
+            redefinequote  Q_NOTE9 * You can add GPSpeed to each element (default 256), prongs must always overtake the door sector or things will break.
+            redefinequote  Q_NOTE10 * Effect can work without prong SEs as a normal doomdoor
+            break
+        case 23:
+            redefinequote  Q_MENU1 SE 23 : One way Transport / Water (exit point)
+            redefinequote  Q_MENU2 Works and constructed almost exactly like normal SE7 teleportation except it only works as an exit point
+            redefinequote  Q_MENU3 Commonly used to perform an invisible & silent teleportation within hallways or manholes.
+            redefinequote  Q_MENU4 Expects to be paired with an SE7.
+            redefinequote   Q_MENU5 Sector Lotag: ^%ld 0 = Teleporter^%ld 1 = Over water^%ld 2 = Underwater
+                set temp sprite[h].sectnum : set temp sector[temp].lotag
+                ife temp 1      { qsprintf Q_MENU5 Q_MENU5 col_dgreen col_green col_dgreen }
+                else ife temp 2 { qsprintf Q_MENU5 Q_MENU5 col_dgreen col_dgreen col_green }
+                else            { qsprintf Q_MENU5 Q_MENU5 col_green col_dgreen col_dgreen }
+            redefinequote   Q_HITAG Set equal to one other SE 7 to Transport from.
+            redefinequote Q_PALETTE Sounds and visuals:^%ld 0 = Enabled^%ld >0 = Disabled
+                ifg sprite[h].pal 0 { qsprintf Q_PALETTE Q_PALETTE col_dgreen col_green } else { qsprintf Q_PALETTE Q_PALETTE col_green col_dgreen }
+            redefinequote   Q_NOTE1 * Move the SE sprite to the exact location (and optionally the height) at which you want the player to exit.
+            redefinequote   Q_NOTE2 * The entrance and destination teleporters do not have to be the same size or shape.
+            redefinequote   Q_NOTE3 * When used with water, the two sectors must be exactly the same size and SE7/23s must be at the same relative placement
+            redefinequote   Q_NOTE4 * Compatible with ACTIVATORLOCKED, allows disabling the teleporter on demand.
+            redefinequote   Q_NOTE5 * Can be paired with SE23 for an one-way teleporter effect
+            redefinequote   Q_NOTE6 * If used with water, you can optionally use PAL8 on the surface for slime pools.
+            redefinequote   Q_NOTE7 * This type of teleporter will not impose a delay on objects attempting to pass through it in quick succession. 
+            redefinequote   Q_NOTE8 Player's movement will not be momentarily halted after passing through this type of teleporter.
+            break
+        case 24:
+            redefinequote  Q_MENU1 SE 24 : Conveyor belt
+            redefinequote  Q_MENU2 Moves the floor texture and sprites along it as if being moved by a belt or a current
+            redefinequote  Q_HITAG Set equal to a switch to be toggled by
+            redefinequote   Q_ANGLE Direction to carry objects in
+            redefinequote  Q_NOTE1 * The texture's direction of movement depends on it's relative alignment (R) and how it's flipped (F)
+            redefinequote  Q_NOTE2 A good way to figure out it's visual movement is by increasing xpanning from 0>255, same as holding numpad 6
+            redefinequote  Q_NOTE3 * Movement speed can be adjusted with GPSpeed, where 256 is the default
+            redefinequote  Q_NOTE4 * It is possible to stack multiple SEs under different tags, each stack works independently as expected
+            redefinequote  Q_NOTE5 * Conveyor belts can also carry sprites that are floating a few Z-units above the floor (up to 4095 units)
+            redefinequote  Q_NOTE6 * This effect is not compatible with touchplates
+            break
+        case 25:
+            redefinequote  Q_MENU1 SE 25 : Crusher (Piston / Engine)
+            redefinequote  Q_MENU2 Endlessly cycles a sector's ceiling up/down like a st20/doomdoor.
+            redefinequote  Q_MENU3 Used primarily as a crusher in the game's maps. Also known as "engine" or "piston".
+            redefinequote  Q_HITAG Set equal to a switch to be toggled by
+            redefinequote  Q_NOTE1 * Activation will display "activated" "deactivated" incorrectly in reverse
+            redefinequote  Q_NOTE2 * SE sprite's heigh determines the initial starting position of the crusher
+            redefinequote  Q_NOTE3 * Use GPSpeed to set the rate of motion. Default is 256.
+            redefinequote  Q_NOTE4 * Crusher will always start as active
+            redefinequote  Q_NOTE5 * Ceiling height will be used to determine the maximum height it will rise to
+            break
+        case 26:
+            redefinequote  Q_MENU1 SE 26 : Escalator
+            redefinequote  Q_MENU2 An unused and abandoned effect that partially works in order to create a somewhat convincing escalator
+            redefinequote  Q_MENU3 It moves the sector by 256 units in the pointed direction, raising it by 2048 units and moving sprites along it.
+            redefinequote  Q_MENU4 There are a few quirks due to sector interpolation that limits the usability
+            redefinequote   Q_ANGLE Direction to move 256 units towards
+            redefinequote   Q_SHADE Direction:^%ld 0 = Going up^%ld 0+ = Going down
+                ifg sprite[h].shade 0 { qsprintf Q_SHADE Q_SHADE col_dgreen col_green } else { qsprintf Q_SHADE Q_SHADE col_green col_dgreen }
+            redefinequote  Q_NOTE1 * This is compatible with GPSpeed, however it acts as a multiplier! Default value is 16 and not the usual 256!
+            redefinequote  Q_NOTE2 A multiplier of 1 is 16u distance and 128u height. Thus the default 16 gives (16*16)=256 and (16*128)=2048
+            redefinequote  Q_NOTE3 * Set relative (R) floor to make it move correctly with the sector's shape
+            redefinequote  Q_NOTE4 * Movement rate is fixed on a global clock, this is to make it easy for stacking multiple steps together
+            redefinequote  Q_NOTE5 * Once the goal x/y/z is reached, the position will reset. Unfortunately this was changed to apply motion interpolation
+            redefinequote  Q_NOTE6 near the end of development so instead of a seamless reset, you get a strange jerky rewind-like motion.
+            redefinequote  Q_NOTE7 * The escalator can only carry active sprites (actors) with a very high degree of compatibility
+            redefinequote  Q_NOTE8 * It is possible to stack multiple instances of this effect in order to create a combination, i.e. up&down
+            redefinequote  Q_NOTE9 * It's recommended to construct the child sectors as an independent chopped rectangle and not attach to any walls as
+            redefinequote  Q_NOTE10 this effect can be a bit ugly and this allows you to mask any wall stretching that might appear.
+            break
+        case 27:
+            redefinequote  Q_MENU1 SE 27 : Demo camera
+            redefinequote  Q_MENU2 Used as a camera position for showing a third-person perspective when recording game demos
+            redefinequote  Q_HITAG Maximum distance in build units
+            redefinequote  Q_NOTE1 * Camera does not work well with extreme heights
+            redefinequote  Q_NOTE2 * Do not let two demo cameras "see" each other
+            redefinequote  Q_NOTE3 * Demo cameras are unable to display mirrors
+            redefinequote  Q_NOTE4 * As this effect ignores any custom palette, you can optionally mark these SE with a visual aid palette
+            break
+        case 28:
+            redefinequote  Q_MENU1 SE 28 : Lightning bolt (1.4+ only)
+            redefinequote  Q_MENU2 Used to create a lightning effect when combined with #4890 sprites
+            redefinequote  Q_MENU3 Activation will be random, linked sprites will be flashed any related sound effects will be played
+            redefinequote  Q_HITAG Set equal to hitag of lightning bolt sprites to animate
+            redefinequote  Q_NOTE1 * Effective range is 10000 build units
+            break
+        case 29:
+            redefinequote  Q_MENU1 SE 29 : Floating sector / waves
+            redefinequote  Q_MENU2 Used to make a sector's floor undulate like water or waves.
+            redefinequote  Q_MENU3 This is either adjusts a sector's floor height with a sine wave or slopes itself to match neighbouring sector's height
+            redefinequote  Q_MENU4 If a sector has exactly 4 wallpoints, it will also slope from the firstwall (slope's hinge) towars the next sector.
+            redefinequote  Q_MENU5 This sector has^%ld %ld walls ^%ldand will be: ^%ldSLOPING ^%ldNON SLOPING
+                set temp sprite[h].sectnum
+                set temp sector[temp].wallnum
+                ifn temp 4 { qsprintf Q_MENU5 Q_MENU5 col_green temp col_iwhite col_dgreen col_green } else { qsprintf Q_MENU5 Q_MENU5 col_green temp col_iwhite col_green col_dgreen }
+            redefinequote  Q_HITAG Initial phase offset for the wave (height). A full up/down cycle is 2048 steps (values: 0-2047).
+            redefinequote  Q_NOTE1 * 
+            redefinequote  Q_NOTE2 * GPSpeed value will determine the wave's amplitude/intensity (0-32767). Each 256 equals one Pgup/down
+            redefinequote  Q_NOTE3 * The height of SE determines the sector's actaul starting height, any phase/amplitude will be applied to this position.
+            redefinequote  Q_NOTE4 * To create a wave effect, use many four-sided floating sectors adjacent to each other with identically set first walls while
+            redefinequote  Q_NOTE5 increasing phase (hitag). ~256/512 is a good start. GPSpeed values can also be incremental to simulate a change in intensity.
+            redefinequote  Q_NOTE6 Start the chain with a NON SLOPING sector. This reference float which will then be passed on to the remaining sloping ones.
+            redefinequote  Q_NOTE7 * It is not a requirement to use multiple floating sectors. The effect can be used individually.
+            redefinequote  Q_NOTE8 * Floating sectors can be submergible, but the effect will not be seen from underwater as this only affects a sector's floor.
+            break
+        case 30:
+            redefinequote  Q_MENU1 SE 30 : Two way train
+            redefinequote  Q_MENU2 Used as a train car (sector) that travels between locators A and B in a straight line while triggering two channels
+            redefinequote  Q_MENU3 Due to having access to many channels, delay and the ability to re-trigger, it's very useful for sequencing effects.
+            redefinequote  Q_MENU4 Two tags will be reserved: OUTPUT A/B, these will be triggered upon reaching/departing a "station", i.e. for doors)
+                set temp 31 : state se_check_st_dependency
+            redefinequote  Q_HITAG Set to OUTPUT A
+            redefinequote  Q_ANGLE Travel direction, upon reaching Locator A it will reverse back with the exact same angle.
+            redefinequote  Q_NOTE1 * In current setup: INPUT = ^%ld%ld^%ld / OUTPUT A = ^%ld%ld^%ld / OUTPUT B = ^%ld%ld
+                set temp4 sprite[h].sectnum
+                for i spritesofsector temp4 { ife sprite[i].picnum ACTIVATOR set temp5 sprite[i].lotag }
+                set temp2 sprite[h].hitag : set temp3 temp2 : add temp3 1
+                qsprintf Q_NOTE1 Q_NOTE1 col_green temp5 col_white col_green temp2 col_white col_green temp3
+            redefinequote  Q_NOTE2 * Add two locators in the track, First as lotag 1 (Loc.A) Second as lotag 0 (Loc.B) in an uninterrupted straight line.
+            redefinequote  Q_NOTE3 * Add an activator as INPUT channel within the train sector, you can use regular switches to trigger train movement.
+            redefinequote  Q_NOTE4 * Ensure that the ANGLE points towards Loc.A and that Loc.B can be reached once the train reverses the same path.
+            redefinequote  Q_NOTE5 * Leave some distance between locators, at least 5120 units or it might slow down too quickly or even stop moving.
+            redefinequote  Q_NOTE6 * The train can start anywhere in the track/line formed by Loc.A/B as long as it reaches Loc.A first.
+            redefinequote  Q_NOTE7 * You may have additional "island" child sectors inside the train sector as long as you don't split the main unit's base.
+//                                 |                                                                                                                           |
+            redefinequote  Q_NOTE8 * Any sprite will be carried along as long as they reside in the same sector as the SE sprite
+            redefinequote  Q_NOTE9 * Speed will always be fixed regardless of GPSpeed settings
+            redefinequote Q_NOTE10 * Do not: Traverse across sectors / Slope the track sector (at your own risk!) / Have recon patrol vehicles in the same map
+            break
+        case 31:
+            redefinequote  Q_MENU1 SE 31 : Raise/lower floor
+            redefinequote  Q_MENU2 Adjusts a floor's height when activated.
+            redefinequote  Q_MENU3 This along with SE32 are a replacement for SE21 "floor/ceiling drop", giving much more control.
+            redefinequote  Q_MENU4 Speed and re-triggering are supported along with no sector tag requirements.
+            redefinequote  Q_HITAG Ticks to wait until activation. NOTE: This only works on subsequent activations and not on first one!
+            redefinequote   Q_ANGLE Up/Down: Starts at ^%ldFLOOR ^%ldSE ^%ldheight and moves towards ^%ldFLOOR ^%ldSE ^%ldheight
+                ifn sprite[h].ang 512 { qsprintf Q_ANGLE Q_ANGLE col_green col_dgreen col_white col_dgreen col_green col_white } else { qsprintf Q_ANGLE Q_ANGLE col_dgreen col_green col_white col_green col_dgreen col_white }
+            redefinequote  Q_NOTE1 * Use GPSpeed to set movement speed, where the default is 256. Height differences should be a multiple of this speed value.
+            redefinequote  Q_NOTE2 * Use MusicAndSFX for sound (hitag = Stop sound, lotag = Start sound)
+            redefinequote  Q_NOTE3 * Compatible with Activator and Masterswitch. Masterswitch will change the MusicAndSFX function (lotag = Stop sound).
+            redefinequote  Q_NOTE4 * SE31 and SE32 can be used simultaneously in the same sector without issues.
+            break
+        case 32:
+            redefinequote  Q_MENU1 SE 32 : Raise/lower ceiling
+            redefinequote  Q_MENU2 Adjusts a ceiling's height when activated.
+            redefinequote  Q_MENU3 This along with SE31 are a replacement for SE21 "floor/ceiling drop", giving much more control.
+            redefinequote  Q_MENU4 Speed and re-triggering are supported along with no sector tag requirements.
+            redefinequote   Q_ANGLE Up/Down: Starts at ^%ldCEILING ^%ldSE ^%ldheight and moves towards ^%ldCEILING ^%ldSE ^%ldheight
+                ifn sprite[h].ang 512 { qsprintf Q_ANGLE Q_ANGLE col_green col_dgreen col_white col_dgreen col_green col_white } else { qsprintf Q_ANGLE Q_ANGLE col_dgreen col_green col_white col_green col_dgreen col_white }
+            redefinequote  Q_NOTE1 * Use GPSpeed to set movement speed, where the default is 256. Height differences should be a multiple of this speed value.
+            redefinequote  Q_NOTE2 * Use MusicAndSFX for sound (hitag = Stop sound, lotag = Start sound)
+            redefinequote  Q_NOTE3 * Compatible with Activator and Masterswitch. Masterswitch will change the MusicAndSFX function (lotag = Stop sound).
+            redefinequote  Q_NOTE4 * SE31 and SE32 can be used simultaneously in the same sector without issues.
+            redefinequote  Q_NOTE5 * Unlike SE31, you can't set a delay with hitag.
+            break
+        case 33:
+            redefinequote  Q_MENU1 SE 33 : Earthquake debris
+            redefinequote  Q_MENU2 Spawns metal and rock debris from SE's position during an earthquake
+            redefinequote  Q_MENU3 Debris will be spawned whenever there is an earthquake active in the map
+            break
+        case 34:
+            redefinequote  Q_MENU1 SE 34 : Conveyor belt (half speed)
+            redefinequote  Q_MENU2 Moves the floor texture and sprites along it as if being moved by a belt or a current
+            redefinequote  Q_MENU3 This works exactly the same as SE24 but the speed will always be halved.
+            redefinequote  Q_HITAG Set equal to a switch to be toggled by
+            redefinequote   Q_ANGLE Direction to carry objects in
+            redefinequote  Q_NOTE1 * The texture's direction of movement depends on it's relative alignment (R) and how it's flipped (F)
+            redefinequote  Q_NOTE2 A good way to figure out it's visual movement is by increasing xpanning from 0>255, same as holding numpad 6
+            redefinequote  Q_NOTE3 * Movement speed can be adjusted with GPSpeed, where 256 is the default
+            redefinequote  Q_NOTE4 * It is possible to stack multiple SEs under different tags, each stack works independently as expected
+            redefinequote  Q_NOTE5 * Conveyor belts can also carry sprites that are floating a few Z-units above the floor (up to 4095 units)
+            redefinequote  Q_NOTE6 * This effect is not compatible with touchplates
+            break
+        case 35:
+            redefinequote  Q_MENU1 SE 35 : [!] Drill
+            redefinequote  Q_MENU2 Acts like a rudimentary drill, spawning explosions and smoke as it cycles it's ceiling up/down close to the floor.
+            redefinequote  Q_MENU3 [!] This is an unfinished effect & abandoned mid-development and only useful for niche applicatioons.
+            redefinequote  Q_MENU4 [!] The game used to handle hardcoded explosion sounds for this and and the explosion sprite was about half the size.
+            redefinequote  Q_NOTE1 * You may control the rate with GPSpeed, default value being 256
+            redefinequote  Q_NOTE2 * Various strange combinations can be done with activators, door tags and whatnot.
+            redefinequote  Q_NOTE3 * Drill itself is questionable, you can make it a bit more convincing by combining it with rotation.
+            redefinequote  Q_NOTE4 * This seems to have been done before the engine supported slopes, it will mostly ignore those.
+            redefinequote  Q_NOTE5 * The floor will start approximately 8192 units below the SE sprite, Drill will cycle +-8192 units from SE sprite.
+            break
+        case 36:
+            redefinequote  Q_MENU1 SE 36 : Automatic shooter
+            redefinequote  Q_MENU2 Used to spawn a shot from the SE sprite's position approximately every 5 seconds once activated.
+            redefinequote  Q_MENU3 The effect requires a GPSpeed to be present in the same sector, it's lotag will determine projectile ID to spawn.
+            redefinequote  Q_ANGLE Set to desired direction of trajectory
+            redefinequote  Q_NOTE1 * Compatible with Activator & Masterswitch
+            redefinequote  Q_NOTE2 * MusicAndSFX sets the sound, where hitag = deactivation, lotag = activation. Only works with Activators.
+            redefinequote  Q_NOTE3 [940]  Bounce mine      VFD   [1360] Octabrain blast  DH    [1625] Liztroop laser   DH    [1636] Enforcer spit    LDH  
+            redefinequote  Q_NOTE4 [1641] Freeze blast     ADH   [1650] Mortar shell     LD    [2296] Bloodsplat 1     WS    [2297] Bloodsplat 2     WS   
+            redefinequote  Q_NOTE5 [2298] Bloodsplat 3     WS    [2299] Bloodsplat 4     WS    [2448] Expander ray     DH    [2521] Knee kick        MSI  
+            redefinequote  Q_NOTE6 [2536] Chaingun         DHI   [2556] Shrinker ray           [2563] Tripbomb laser   W     [2595] Generic bullet   DHI  
+            redefinequote  Q_NOTE7 [2605] Rocket           ADH   [2613] Shotgun blast    DHI                                                              
+            redefinequote  Q_NOTE8 V=Inverse lobbed | F=Floats upwards    | D=Track distance  | H=Track height | L=Lobbed 
+            redefinequote  Q_NOTE9 S=Silent         | M=Melee/close range | W=Place near Wall | I=Invisible    | A=Auto-aim
+            redefinequote Q_NOTE10 * Only octabrain blast and tripbomb will play their sound effects
+            break
+        case 40:
+        case 41
+        case 42
+        case 43
+        case 44
+        case 45
+            redefinequote  Q_MENU1 SE %ld : [!] Room over Room
+                qsprintf Q_MENU1 Q_MENU1 sprite[h].lotag
+            redefinequote  Q_MENU2 Projects another room above or under another room
+            redefinequote  Q_MENU3 [!] This effect is a bit unfinished and only partially working in DOS 1.5, you should use source ports
+            redefinequote  Q_MENU4 [!] for furhter fixes that make it more usable. There are many oddities which limit the usefulness of this effect.
+            redefinequote  Q_MENU5 You have 5 SE sprite lotags to pull this off: Camera origin points & 2 "Enable camera rendering" triggers
+            redefinequote  Q_MENU6 .                 Camera: 40 = UPPER floor camera               41 = LOWER floor camera
+            redefinequote  Q_MENU7 When player is in sector: 42 = Lower floor when drawn by 42     43 = Raise ceiling when drawn by 44
+            redefinequote  Q_MENU8 .                         45 = Render LOWER, lower SE42 floors  44 = Render UPPER, raise SE43 ceilings
+            redefinequote  Q_HITAG Set equal to relevant pairings: 40 <-> 44/43  AND 41 <-> 45/42
+            redefinequote   Q_ANGLE Must be 512! (pointing down) ^%ld[OK]
+                ife sprite[h].ang 512 { qsprintf Q_ANGLE Q_ANGLE col_green } else { qsprintf Q_ANGLE Q_ANGLE col_dgreen }
+            redefinequote  Q_NOTE1 * When a RENDER is activated, it will look for a matching CAMERA via Hitag and attach to matching 42/43
+            redefinequote  Q_NOTE2 * RENDER will deactivate the moment you step out of the sector
+            redefinequote  Q_NOTE3 * Each sector where ROR is visible will need it's own RENDER - CAMERA - RAISE/LOWER setups. Each with unique HITAGs!
+            redefinequote  Q_NOTE4 * The effect is ONLY a projection! No object will pass through the layer, use SE7 teleporters to fake more!
+            redefinequote  Q_NOTE5 * As a performance optimization, the engine always checks for presence of #13 (FOFTILE) before rendering anything.
+            redefinequote  Q_NOTE6 While this makes optimizing easier, it also means that transparent water alone is not enough to get ROR to render.
+            redefinequote  Q_NOTE7 * This effect functions differently between 1.5, cDuke and EDuke32.
+            redefinequote  Q_NOTE8 For EDuke32, use 40/41 pairings
+            redefinequote  Q_NOTE9 For cDuke, SE42/43 render with adjusted Z, SE44/45 do not adjust Z. ANGLE of 42/43 determines whether floor/ceiling.
+            break
+        case 70
+            redefinequote  Q_MENU1 SE %ld : [DN:A] Sector bridge/flood
+                qsprintf Q_MENU1 Q_MENU1 sprite[h].lotag
+            redefinequote  Q_MENU2 Primarily sed to flood/unflood sectors which move up/down
+            redefinequote  Q_MENU3 This single use effect pairs with an Activator and is intended for ST16 and ST17 sectors.
+            redefinequote  Q_MENU4 It will monitor sector's movement and change to a new picnum either when bottom is reached or rising starts.
+            redefinequote  Q_HITAG Pair with activator's LOTAG
+            redefinequote  Q_EXTRA New picnum: ST16 when bottom is reached, ST17 when rising starts
+            redefinequote  Q_NOTE1 This effect is single use only!
+            break
+        case 71
+            redefinequote  Q_MENU1 SE %ld : [DN:A] Door controller
+                qsprintf Q_MENU1 Q_MENU1 sprite[h].lotag
+            redefinequote  Q_MENU2 Automatically opens doors on proximity and handles locking
+            redefinequote  Q_MENU3 Place this in a ST20 door sector and it will automatically open it when the player is nearby.
+            redefinequote  Q_MENU4 WIP: Activatorlocked in the same sector will handle any switch requirements for on/off
+            redefinequote  Q_HITAG <UNUSED>
+            redefinequote  Q_EXTRA ^%ld1|Blue  ^%ld2|Red  ^%ld4|Yellow  ^%ld8|Computer  ^%ld16|CD  ^%ld32|Chip  ^%ld64|Mission  ^%ld128|One-way  ^%ld256|Switch
+                ife sprite[h].extra -1 qsprintf Q_EXTRA Q_EXTRA col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen
+                ifand sprite[h].extra 1   qsprintf Q_EXTRA Q_EXTRA col_green col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen
+                ifand sprite[h].extra 2   qsprintf Q_EXTRA Q_EXTRA col_dgreen col_green col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen
+                ifand sprite[h].extra 4   qsprintf Q_EXTRA Q_EXTRA col_dgreen col_dgreen col_green col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen
+                ifand sprite[h].extra 8   qsprintf Q_EXTRA Q_EXTRA col_dgreen col_dgreen col_dgreen col_green col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen
+                ifand sprite[h].extra 16  qsprintf Q_EXTRA Q_EXTRA col_dgreen col_dgreen col_dgreen col_dgreen col_green col_dgreen col_dgreen col_dgreen col_dgreen
+                ifand sprite[h].extra 32  qsprintf Q_EXTRA Q_EXTRA col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_green col_dgreen col_dgreen col_dgreen
+                ifand sprite[h].extra 64  qsprintf Q_EXTRA Q_EXTRA col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_green col_dgreen col_dgreen
+                ifand sprite[h].extra 128 qsprintf Q_EXTRA Q_EXTRA col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_green col_dgreen
+                ifand sprite[h].extra 256 qsprintf Q_EXTRA Q_EXTRA col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_dgreen col_green
+                
+            redefinequote  Q_NOTE1 This effect is single use only!
+            ifin3dmode { nullop } else { drawcircle16b sprite[h].x sprite[h].y 1536 32 }
+            break
+        case 128:
+            redefinequote  Q_MENU1 SE 128 : [!RESERVED!] Adjust wall 0 
+            redefinequote  Q_MENU2 Adjusts wall 0 by increasing overtile texture by one and remove most cstat bits
+            redefinequote  Q_MENU3 [!] This is an useless old effect and was likely spawned on demand to control window glass breakage animation
+            redefinequote  Q_NOTE1 * Since this effect was not designed to be mapper placed, it's likely that a hit to the glass originally spawned
+            redefinequote  Q_NOTE2 this SE and the affected wall was set on the fly
+            break
+        case 130:
+            redefinequote  Q_MENU1 SE 130 : [!RESERVED!] Spawn explosions, normal duration
+            redefinequote  Q_MENU2 Creates explosions between the floor and cailing once spawned
+            redefinequote  Q_MENU3 This was used to cause post-destruction explosions from wall computer textures when shot.
+            redefinequote  Q_MENU4 The effect would happen immediatley after the affected wall is hit and last for almost 3 seconds
+            redefinequote  Q_MENU5 As the SE is no longer spawned by anything and is only "mapper placed", the effect is now fairly useless
+            break
+        case 131:
+            redefinequote  Q_MENU1 SE 131 : [!RESERVED!] Spawn explosions, short duration
+            redefinequote  Q_MENU2 Creates explosions between the floor and cailing once spawned
+            redefinequote  Q_MENU3 This was used to cause post-destruction explosions from wall computer textures when shot.
+            redefinequote  Q_MENU4 The effect would happen immediatley after the affected wall is hit and last for 1.5 seconds
+            redefinequote  Q_MENU5 As the SE is no longer spawned by anything and is only "mapper placed", the effect is now fairly useless
+            break
+        default:
+            redefinequote   Q_MENU1 SE %ld : Unknown
+            qsprintf Q_MENU1 Q_MENU1 sprite[h].lotag
+            redefinequote  Q_MENU2 Undefined or documentation missing!
+            redefinequote  Q_NOTE1 Sector effector is a special sprite that is invisible in-game and is used to create
+            redefinequote  Q_NOTE2 all sorts of "effects" from deformation in geometry to lighting changes.
+            redefinequote  Q_NOTE3 In Duke3D, "Lotag" specifies behavior and "Hitag" is typically used for pairing/linking.
+            redefinequote  Q_NOTE4 Many effects also need activation with MASTERSWITCH, ACTIVATOR or ACTIVATORLOCKED
+            break
+    endswitch
+}

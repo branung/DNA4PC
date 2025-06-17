@@ -1,0 +1,470 @@
+// Extra stuff by oasiz
+// (1) Inverse lock: Activatorlocked with .extra 1 will be "open" on map load
+// (2) Autoshading: Turning 's_state' to 1 or 2 will enable/disable autoshading
+// (3) New actor "alarmblare" will sound 
+// (4) SE70: Floor sink, elevator lowers and turns floor to lava
+
+// Temp junk
+var s_temp1 0 0
+var s_temp2 0 0
+var s_temp3 0 0
+var s_temp4 0 0
+var s_temp5 0 0
+// Wall angle
+var s_wang 0 0
+// Shadeval
+var s_sectshade 0 0
+var s_tempshade 0 0
+var s_tempvis 0 0
+// Effect state
+var s_state 0 0
+define enabled 3
+define pre_enable 2
+define pre_disable 1
+define disabled 0
+
+// Iterators
+var i 0 0
+var u 0 0
+
+
+// Actorvars
+var fx_owner 0 2
+var fx_extra 0 2
+var fx_int 0 2
+
+// Keycard flag bit
+var lockbits 0 0
+define lock_bluekey 1
+define lock_redkey 2
+define lock_yellowkey 4
+define lock_syskey 8
+define lock_cdkey 16
+define lock_chipkey 32
+// Non-pickup lockbits
+define lock_mission 64
+define lock_oneway 128
+define lock_switch 256
+define LOCKQUOTE 1
+// Keycard actors
+define DNA_SYSKEY 3901
+define DNA_CDKEY 3902
+define DNA_CHIPKEY 3903
+define DNA_BLUEKEY 3942
+define DNA_REDKEY 3943
+define DNA_YELLOWKEY 3944
+define DNA_KEYQUOTE 300
+definequote DNA_KEYQUOTE
+
+
+
+
+define A51ALARM 5600
+
+
+
+
+//// --------- SAVE MAPTAGS TO ACTORVARS ---------
+// This is necessary for saving various tags not intended for mapper use.
+// As all the defaults are known, we can just read these nasty values into
+// actorvars and then restore the sane defaults, giving us tons of extra tags.
+defstate get_fxtags
+    geta .owner fx_owner
+    geta .extra fx_extra
+    seta .owner -1
+    seta .extra -1
+ends
+eventloadactor A51ALARM
+    state get_fxtags
+    seta .cstat 32768
+enda
+eventloadactor ACTIVATOR
+    state get_fxtags
+enda
+eventloadactor SECTOREFFECTOR
+    state get_fxtags
+    ife sprite.lotag 71 {
+        ifn fx_extra -1 {
+            espawn ACTIVATOR
+            geta [RETURN].sectnum temp
+            add temp 9999
+            seta [RETURN].lotag temp
+        }
+    }
+enda
+
+//// --------- RAN ON ACTOR SPAWN ---------
+// Probably will be moved to respective eventloadactors
+
+appendevent EVENT_SPAWN
+    switch sprite.picnum
+        case ACTIVATORLOCKED
+            // If extra is 1 then reverse AL functionality (open on spawn)
+            state get_fxtags
+            ife fx_extra 1 {
+                gets[sprite[].sectnum].lotag temp
+                xor temp 16384
+                sets[sprite[].sectnum].lotag temp
+            }
+            break
+        //case A51ALARM
+        //    seta .cstat 0
+        //    break
+        case DNA_SYSKEY
+        case DNA_CDKEY
+        case DNA_CHIPKEY
+        case DNA_BLUEKEY
+        case DNA_REDKEY
+        case DNA_YELLOWKEY
+            //seta .cstat 0
+            seta .xrepeat 48
+            seta .yrepeat 48
+            seta .shade -17
+            break
+    endswitch
+endevent
+
+//// --------- WALL ANGLE HELPER ---------
+// Gets wall angle to s_temp3, expects u to contain wallpoint 1
+defstate getwallang
+    getw[u].x s_temp1
+    getw[u].y s_temp2
+    getw[u].point2 s_temp3
+    getw[s_temp3].x s_temp4
+    getw[s_temp3].y s_temp5
+    sub s_temp4 s_temp1
+    sub s_temp5 s_temp2
+    getangle s_temp3 s_temp4 s_temp5
+    sin s_temp3 s_temp3
+ends
+
+//// --------- AUTOSHADE ---------
+// Used to apply basic directional shading to a map.
+// Sector shade is used as a reference 's_sectshade'
+// Walls are a global angle based negative offset from this and the ceiling a hardcoded one
+// Bright sectors will be forced to full visibility and darker ones with increasing darkness
+// 's_state' has four values: enabled/disabled and 'pre' variants for transitioning a state
+defstate enable_autoshade
+        for i allsectors {
+            gets[i].floorshade s_sectshade
+            // Do basic shading if we're not fullbright
+            ifg s_sectshade -1 {
+                for u wallsofsector i {
+                    state getwallang
+                    shiftr s_temp3 13
+                    set s_temp1 s_sectshade
+                    add s_temp1 s_temp3
+                    shiftl s_temp3 1
+                    abs s_temp3
+                    add s_temp1 s_temp3
+                    setw[u].shade s_temp1
+                    set s_tempvis 8
+                    
+                }
+                // Increase darkness (vis) if areas are darker
+                ifg s_sectshade 2 shiftl s_tempvis 1
+                ifg s_sectshade 8 shiftl s_tempvis 1
+                ifg s_sectshade 16 shiftl s_tempvis 1
+            }
+            else {
+                // For bright sectors it should be slightly less intense (and full vis)
+                for u wallsofsector i {
+                    state getwallang
+                    shiftr s_temp3 13
+                    abs s_temp3
+                    add s_temp1 s_temp3
+                    setw[u].shade s_temp1
+                    set s_tempvis 240
+                }
+            }
+            // Apply final visibility and darken the ceiling a bit for better three-dee
+            sets[i].visibility s_tempvis
+            set s_temp1 s_sectshade
+            add s_temp1 6
+            sets[i].ceilingshade s_temp1
+        }
+    set s_state enabled
+ends
+
+// This is fairly straightforward as it just resets walls to sector.floorshade and vis to 0.
+defstate disable_autoshade
+    for i allsectors {
+        gets[i].floorshade s_sectshade
+        for u wallsofsector i {
+            setw[u].shade s_sectshade
+        }
+        sets[i].visibility 0
+        sets[i].ceilingshade s_sectshade
+    }
+    set s_state disabled
+ends
+
+
+
+
+
+
+defstate checklock
+    getplayer[].got_access lockbits
+    set temp 0
+    redefinequote LOCKQUOTE
+    ifn fx_extra -1 {
+        ifand fx_extra lock_bluekey { 
+            ifand lockbits lock_bluekey    { 
+                set temp 1
+            } else redefinequote LOCKQUOTE NEEDS BLUE KEY
+        }
+        ifand fx_extra lock_redkey { 
+            ifand lockbits lock_redkey { 
+                set temp 1 
+            } else redefinequote LOCKQUOTE NEEDS RED KEY
+        }
+        ifand fx_extra lock_yellowkey {
+            ifand lockbits lock_yellowkey {
+                set temp 1
+            } else redefinequote LOCKQUOTE NEEDS YELLOW KEY
+        }
+        ifand fx_extra lock_syskey {
+            ifand lockbits lock_syskey {
+                set temp 1
+            } else redefinequote LOCKQUOTE FIND THE COMPUTER!
+        }
+        ifand fx_extra lock_cdkey {
+            ifand lockbits lock_cdkey {
+                set temp 1
+            } else redefinequote LOCKQUOTE FIND THE DATA DISC!
+        }
+        ifand fx_extra lock_chipkey {
+            ifand lockbits lock_chipkey {
+                set temp 1
+            } else redefinequote LOCKQUOTE FIND THE MICROCHIP!
+        }
+        ifand fx_extra lock_mission { 
+            ifand lockbits lock_mission {
+            set temp 1
+            } else redefinequote LOCKQUOTE COMPLETE MISSION OBJECTIVE!
+        }
+        ifand fx_extra lock_oneway {
+            ife sprite.ang 512 ifl player.posy sprite.y set temp 1
+            ife sprite.ang 1536 ifg player.posy sprite.y set temp 1
+            ife sprite.ang 2048 ifl player.posx sprite.x set temp 1
+            ife sprite.ang 1024 ifg player.posx sprite.x set temp 1
+            ifn temp 1                 redefinequote LOCKQUOTE THIS DOOR IS ONE WAY
+        }
+        ifand sector[fx_int].lotag 16384 {
+            redefinequote LOCKQUOTE A SWITCH IS NEEDED
+        }
+    } else {
+        set temp 1
+    }
+ends
+
+// DOWN is 512
+// LEFT is 1024
+// UP is 1536
+// RIGHT is 2048
+
+
+//// -- SE70: Sink/bridge effect for floor (single use) --
+// Hitag: Monitor this activator
+// Extra: Change to this picnum once motion is complete
+defstate do_se70
+    // Check if we're moving
+    checkactivatormotion sprite.hitag
+    // Have we already been started?
+    ife temp 1 {
+        // But are we actually stil moving?
+        ife RETURN 0 {
+            // We've stopped
+            sets[sprite.sectnum].floorpicnum fx_extra
+            killit
+        }
+    } else {
+        // We've now stared motion, yes?!
+        ife RETURN 1 {
+            set temp 1
+            ife sector[sprite.sectnum].lotag 17 sets[sprite.sectnum].floorpicnum fx_extra
+        }
+    }
+ends
+
+//// -- SE71: Door controller --
+// Controls automatic door opening and has some conditions
+// Extra: Use following lockbits, each comes with a hardcoded message
+// lock_bluekey | lock_redkey | lock_yellowkey | lock_mission | lock_oneway | lock_switch
+defstate do_se71
+    //ife player.cursectnum sprite.sectnum {
+        dist temp THISACTOR player[].i
+        ifl temp 1536 { 
+            neartag player.posx player.posy player.posz player.cursectnum player.ang fx_int temp temp temp 256 1
+            ifn fx_int -1 {
+                state checklock
+                ife temp 1 {
+                    ife sector[fx_int].lotag 20 operatesectors fx_int player[].i
+                } else {
+                    ife sector[fx_int].lotag 20 ife sector[fx_int].ceilingz sector[fx_int].floorz quote LOCKQUOTE
+                }
+            }
+        }
+        
+    //    addlogvar temp
+    //}
+ends
+
+
+
+//// --------- LEVEL STARTUP ---------
+
+appendevent EVENT_ENTERLEVEL
+    // For now, always autoshade on map load.
+    state enable_autoshade
+endevent
+
+//// --------- LEVEL MAINLOOP --------
+
+appendevent EVENT_GAME
+    // Has an autoshade change been requested?
+    ife s_state pre_disable state disable_autoshade
+    ife s_state pre_enable state enable_autoshade
+    
+    for i sprofstat STAT_EFFECTOR {
+        setu[].vm_sprite i
+        switch sprite.picnum
+            case SECTOREFFECTOR
+                ife sprite[i].lotag 70 state do_se70
+                ife sprite[i].lotag 71 state do_se71
+                break
+        endswitch
+    }
+endevent
+
+//// --------- WIP, If this will be implemented! ---------
+// onevent EVENT_OPERATEACTIVATORS
+//     
+// endevent
+
+
+
+
+//// --------- ALARM ACTOR ---------
+// Starts upon seeing the player. Compatible with RESPAWN
+// Hitag: Counts up from 0 to 10 and dies
+// Extra: If set to 1 then re-usable after ~10s, waits for line of sight. No RESPAWN.
+
+action A51ALARMON 0 0 1 1 1
+action A51ALARMOFF 0 0 1 1 1
+action A51ALARMREADY 0 0 1 1 1
+
+useractor enemy A51ALARM 0 A51ALARMON
+    // First default action, fire the sound on sight
+    ifaction A51ALARMON ifactioncount 35 {
+        geta .hitag temp
+        ife temp 10 {
+            ife fx_extra -1 {
+                killit
+            } else {
+                action A51ALARMOFF
+                resetactioncount
+            }
+        } else {
+            add temp 1
+            seta .hitag temp
+            globalsound AAMB_A51SIRENLOOP
+            resetactioncount
+        }
+    }
+    // If extra was 1, then wait ~10s in a busyloop.
+    ifaction A51ALARMOFF ifactioncount 300 {
+        action A51ALARMREADY
+    }
+    // Re-armed, if the player is seen then restart the alarm!
+    ifaction A51ALARMREADY {
+        ifcansee {
+            action A51ALARMON
+            seta .hitag 0
+        }
+    }
+enda
+
+
+
+
+defstate dna_getcode
+// This needs to replace stuff later on!
+    state getcode
+ends
+
+
+
+//// --------- KEYITEM ACTOR ---------
+// Generic pickup for key items
+// Hitag: Triggered when picked up
+defstate access_shared
+    fall
+    ifmove RESPAWN_ACTOR_FLAG {
+        state respawnit
+    } else {
+        ifp pshrunk {
+            nullop
+        } else {
+            ifp palive {
+                ifpdistl RETRIEVEDISTANCE {
+                    ifcount 6 {
+                        ifcanseetarget {
+                            getplayer[].got_access temp
+                            ifactor DNA_BLUEKEY { 
+                                or temp lock_bluekey
+                                redefinequote DNA_KEYQUOTE Got the blue access card!
+                            }
+                            ifactor DNA_REDKEY {
+                                or temp lock_redkey
+                                redefinequote DNA_KEYQUOTE Got the red access card!
+                            }
+                            ifactor DNA_YELLOWKEY {
+                                or temp lock_yellowkey
+                                redefinequote DNA_KEYQUOTE Got the yellow access card!
+                            }
+                            ifactor DNA_SYSKEY {
+                                or temp lock_syskey
+                                redefinequote DNA_KEYQUOTE Accessed the computer!
+                            }
+                            ifactor DNA_CDKEY {
+                                or temp lock_cdkey
+                                redefinequote DNA_KEYQUOTE Found a data disc!
+                            }
+                            ifactor DNA_CHIPKEY {
+                                or temp lock_chipkey
+                                redefinequote DNA_KEYQUOTE Retreived the microchip!
+                            }
+                            setplayer[].got_access temp
+                            
+                            ifn sprite.hitag 0 { operateactivators sprite.hitag -1 }
+                            quote DNA_KEYQUOTE
+                            addlogvar temp
+                            state getcode
+                        }
+                    }
+                }
+            }
+        }
+    }
+ends
+
+useractor notenemy DNA_SYSKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_CDKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_CHIPKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_BLUEKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_REDKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_YELLOWKEY 0
+    state access_shared
+enda

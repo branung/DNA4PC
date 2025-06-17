@@ -1,0 +1,3989 @@
+// DUKE 3D Scriptset by oasiz
+
+// Game definition happens here, this changes some game specific things like naming among other things.
+define duke3d 0 : define shadow 1 : define other 3 : gamevar game 0 0
+set game duke3d
+
+include names.h
+
+
+
+// Things that should exist:
+// - For shift selection, don't just show "SPR ONLY", use SECTORS and WALL + SPR
+// - Virtual sprite[].slope that works with the offsets
+
+
+
+// ############################################################################
+//                          DEFINE USER FRIENDLY VALUES FOR TOKENS
+// ############################################################################
+
+gamevar col_ired 0 0 :    gamevar col_igreen 0 0 :  gamevar col_iblue 0 0 : gamevar col_iwhite 0 0
+gamevar col_iyellow 0 0 : gamevar col_iorange 0 0 : gamevar col_ipink 0 0 : gamevar col_red 0 0 :   gamevar col_green 0 0
+gamevar col_blue 0 0 :    gamevar col_orange 0 0 :  gamevar col_brown 0 0 : gamevar col_white 0 0 : gamevar col_grey 0 0 : gamevar col_black 0 0
+gamevar col_dblue 0 0 : gamevar col_dgrey 0 0 : gamevar col_dgreen 0 0 : gamevar col_ltiyellow 0 0
+gamevar firstboot_done 300 0 : gamevar m_bg 0 0
+gamevar gamelogo 0 0
+
+// For searchstat in 2D and 3D mode, h = highlighted, are we pointing at what sort of object? used with searchstat
+define h_wall 0
+define h_ceiling 1
+define h_floor 2
+define h_sprite 3
+define h_maskwall 4
+define h_sector 5
+define h_mulcnt 6
+define h_mulsectcnt 7
+// Define CSTAT values for sprites
+define cstat_sprite_block 1
+define cstat_sprite_translucent 2
+define cstat_sprite_xflip 4
+define cstat_sprite_yflip 8
+define cstat_sprite_wall 16
+define cstat_sprite_floor 32
+define cstat_sprite_slope 48
+define cstat_sprite_one_sided 64
+define cstat_sprite_ycenter 128
+define cstat_sprite_block_hitscan 256
+define cstat_sprite_trans_flip 512
+define cstat_sprite_priorty 1024
+define cstat_sprite_noshade 2048
+define cstat_sprite_noshadow 8192
+define cstat_sprite_onlyshadow 16384
+define cstat_sprite_invisible 32768
+// Define hotkey values for shift/ctrl/alt. This is to allow holding and not stealing them at certain events.
+define shift 1
+define ctrl 2
+define shift_ctrl 3
+define alt 4
+define shift_alt 5
+define ctrl_alt 6
+define shift_ctrl_alt 7
+// Obligatory
+define true 1
+define false 0
+
+
+// Constants for rotatesprite BG
+define rhx 160
+define rhy 100
+define rbz 8388608
+define rpt 199
+
+define hud_ypos 32
+
+// ############################################################################
+//                          SHARED VARIABLE SETUP FOR SCRIPT USE
+// ############################################################################
+
+// Setup iterator variables
+gamevar i 0 0                   // Iterator #1
+gamevar o 0 0                   // Iterator #2
+gamevar h 0 0                   // Iterator: Highlighted index
+gamevar t 0 0                   // Iterator: T-Sprite
+
+// Bunch of variables for temporary "scratchpad" -- Assume that contents are always dirty!
+gamevar temp 0 0 : gamevar temp1 0 0 : gamevar temp2 0 0 : gamevar temp3 0 0 : gamevar temp4 0 0
+gamevar temp5 0 0 : gamevar temp6 0 0 : gamevar temp7 0 0 : gamevar temp8 0 0 : gamevar temp9 0 0
+gamevar temp10 0 0 : gamevar temp11 0 0 : gamevar temp12 0 0 : gamevar temp13 0 0 : gamevar temp14 0 0
+
+// Boolean selector *WIP AND RESERVED*
+gamevar m_b_select 0 0
+gamevar m_b_active 0 0
+gamevar m_b_value 0 0
+gamevar m_b_vartype 0 0
+gamevar m_b_h 0 0
+gamevar m_b_selectmax 0 0
+gamevar m_b_htype 0 0
+
+
+// Mousemenu
+gamevar mm_active 0 0
+gamevar mm_hstat 0 0
+gamevar mm_h 0 0
+gamevar mm_selcx 0 0
+gamevar mm_selcy 0 0
+
+// Halfres variables, will be filled in
+// gamevar hxdim 0 0
+// gamevar hydim 0 0
+
+
+// Store highlighted object searchstat style
+gamevar hstat 0 0
+// Whether we read `h` (i.e. pause updates during number asking)
+gamevar hreading 0 0
+// Are we inside getnumber?
+gamevar getnumber 0 0
+
+// Values to be utilized inside analyzesprites
+gamevar getnumbertype 0 0
+gamevar getnumbervalue 0 0
+define gn_pal 1
+define gn_shade 2
+define gn_picnum 3
+define gn_z 4
+define gn_ang 5
+define gn_xrepeat 6
+define gn_yrepeat 7
+define gn_xoffset 8
+define gn_yoffset 9
+
+
+// Temporary sprite struct members *WIP AND RESERVED*
+define thitag 0 : define tlotag 1 : define textra 2 : define tpalette 3 : define tshade 4 : define tangle 5
+define txvel 6 : define tyvel 7 : define tzvel 8 : define towner 9 : define tcstat 10 : define tclipdist 11 : define txrepeat 12
+define tyrepeat 13 : define txoffset 14 : define tyoffset 15 : define tstatnum 16 : define tz 17
+
+// Clipboard values for some missing structs
+gamevar clipboard_slope 0 0     // tempslope
+gamevar clipboard_ypanning 0 0  // tempypanning
+gamevar clipboard_xpanning 0 0  // tempxpanning
+gamevar clipboard_z 0 0         // temp sprite/floor/ceilingz
+
+// Misc. variables
+gamevar bytevar 0 0             // Temp variable for byte storage with split tags
+gamevar lastsector 0 0          // Last known sector gets stored here
+gamevar currentpalette 0 0      // Store current global palette (i.e. underwater)
+
+gamevar iselsprites 0 0         // When transitioning from 2D to 3D, keeps count of "selsprites"
+gamevar iselsectors 0 0         // When transitioning from 2D to 3D, keeps count of "selsectors"
+gamevar iselwalls 0 0           // When transitioning from 2D to 3D, keeps count of "selwalls"
+
+// Global flags and values
+gamevar editsettings 0 0        // Editor settings bitmask, 1 = voxel rotation | 2 = boolean menu (RESERVED)
+gamevar skillpreview 0 0        // What skill is in play, 0 - disabled | 1-4 >> Skills 0-3
+gamevar hlitesprite 0 0         // Sprite to highlight in anaylzesprites (tag selection)
+gamevar rotang 0 0              // Stored current rotation angle for voxel spin
+gamevar hudtext 0 0             // HUD TEXT: Flag to call top hud, resets on it's own
+gamevar mousetext 0 0           // MOUSE TEXT: Flag to show mousetext
+gamevar mousetext2 0 0          // MOUSE TEXT: Flag to show mousetext2
+gamevar heldkeys 0 0            // CTRL ALT SHIFT status
+
+/* Setup for 3D mode HUD text colour and other viusals */
+gamevar osdcolor 0 0            // Used for pulsing colour with the hud
+gamevar direction 0 0           // What direction OSD should pulse (inc or dec colour)
+gamevar hud_timer 0 0
+gamevar delay 0 0               // Delay loop filler
+gamevar delayloop 0 0           // Internal timer based delay loop, updates at ~10Hz
+gamevar delayloop2 0 0          // Internal timer based delay loop, updates at ~30Hz
+gamevar hudtextcolor 0 0        // derived from osdcolor
+gamevar hudtextcolorhack 0 0    // derived from hudtextcolor
+gamevar firstboot 1 0           // Timer for the state machine that is "welcome message"
+gamevar warning 0 0             // Used to warn (centerd string)
+
+gamevar error_timer 0 0         // Our pretty error text handler timer
+gamevar errortext 0 0           // Redefinequote hud_error
+
+gamevar c_warning 0 0
+
+
+gamevar sprite_tile_other -1 0
+gamevar sprite_dim_x 0 0
+gamevar sprite_dim_y 0 0
+gamevar sprite_dim_yz 0 0
+
+// ############################################################################
+//                          CONSTANTS FOR SCRIPT USE
+// ############################################################################
+
+// Define quote numbers
+define txt 360
+define txt2 361
+
+define hud_error 369
+define hud_quote 370
+define hud_top 371
+define hud_mouse 372
+define statustext 373
+define hud_mouse2 374
+define tquote 375
+define qwarning 376
+define voidspace 377
+
+// 420 - general purpose quotes | 421 - top HUD | 422 - Mouse cursor quote
+// 425 - Display info for tsprite (like skill)
+// Redefine hud_top and hud_mouse then set either hudtext or mousetext vars as 1
+definequote 360 printbuffer
+definequote 361 printbuffer2
+definequote 369 THIS IS AN ERROR
+definequote 370 hud_text
+definequote 371 SCRIPTS LOADED
+definequote 372 mouse_text
+definequote 373 temp
+definequote 374 tempquote
+definequote 375 tquote
+definequote 376 qwarning
+definequote 377 You can't do that on void space!
+
+// ############################################################################
+//                          FIRSTBOOT SCRIPT
+// ############################################################################
+
+// This is done on intial bootup and determines colours to be used for each game. Only to be run once.
+defstate leboot
+// Enable value reading
+    set hreading true
+// Duke3D
+    ife game duke3d {
+        set col_ired 203
+        set col_igreen 251
+        set col_iblue 76
+        set col_iyellow 158
+        set col_ltiyellow 63
+        set col_iorange 5
+        set col_ipink 6
+        set col_blue 86
+        set col_red 237
+        set col_green 125
+        set col_dgreen 109
+        set col_dblue 252
+        set col_orange 10
+        set col_brown 10
+        set col_white 25
+        set col_iwhite 31
+        set col_grey 12
+        set col_dgrey 8
+        set col_black 2
+        set gamelogo 3190
+        redefinequote hud_top Loaded Duke3D Scriptset 0.1 by oasiz
+        set hudtext true
+    }
+// Shadow warrior
+    ife game shadow {
+        set col_ired 55
+    }
+    
+    ifg firstboot_done 0 {
+        set temp firstboot_done
+        mul temp 128
+        set temp2 hud_ypos
+        rotatesprite 160 temp2 temp 0 3190 0 0 0 0 0 xdim ydim
+        sub firstboot_done 1
+    }
+    
+ends
+
+// In case we need to use -color to get the proper 256col indexing under 16col mode
+defstate flipcolors
+    inv col_ired
+    inv col_igreen
+    inv col_iblue
+    inv col_iyellow
+    inv col_ltiyellow
+    inv col_iorange
+    inv col_ipink
+    inv col_blue
+    inv col_red
+    inv col_green
+    inv col_dgreen
+    inv col_dblue
+    inv col_orange
+    inv col_brown
+    inv col_white
+    inv col_iwhite
+    inv col_grey
+    inv col_dgrey
+    inv col_black
+ends
+
+// ############################################################################
+//                          Q_MENU SYSTEM
+// ############################################################################
+
+gamevar m_extended 0 0          // Flag for extended help (N) -- to show or not to show
+gamevar m_strlen 0 0            // String length (temp)
+gamevar m_strcount 0 0          // String count
+define m_window_posx 16
+define m_window_posy 24
+
+gamevar m_window_x1 0 0         // ..
+gamevar m_window_x2 0 0         // Maximum x1-y1,x2,y2 bounds for the current work window
+gamevar m_window_y1 0 0         // ..
+gamevar m_window_y2 0 0         // ..
+
+gamevar m_windowdraw_x1 0 0         // ..
+gamevar m_windowdraw_x2 0 0         // Maximum x1-y1,x2,y2 bounds for the current work window
+gamevar m_windowdraw_y1 0 0         // ..
+gamevar m_windowdraw_y2 0 0         // ..
+
+gamevar m_window1_x1 0 0         // ..
+gamevar m_window1_x2 0 0         // Maximum x1-y1,x2,y2 bounds for the window we draw stuff in
+gamevar m_window1_y1 0 0         // ..
+gamevar m_window1_y2 0 0         // ..
+
+gamevar m_window2_x1 0 0         // ..
+gamevar m_window2_x2 0 0         // Maximum x1-y1,x2,y2 bounds for the window we draw stuff in
+gamevar m_window2_y1 0 0         // ..
+gamevar m_window2_y2 0 0         // ..
+
+gamevar drawing_window 0 0
+define window1 0
+define window2 1
+gamevar q_doc_type 0 0
+define spritetag 1
+define walltag 2
+define sectortag 4
+define spritefx 8
+
+gamevar m_cursor_x 0 0          // Store current cursor coordinate here, travel starts from window x1,y1
+gamevar m_cursor_y 0 0          // ..
+gamevar m_cursor_x_descpos 0 0  // ..
+// Static value for padding, defaults to one character (8px)
+#define m_window_xpadding 8
+#define m_window_ypadding 8
+gamevar m_color 0 0
+
+// ================  ================  ================
+// ================  DEFINING  QUOTES  ================
+// ================  ================  ================
+//
+// Extra (N) note // "Print buffer" for all text // Dummy quote for erasing
+define Q_NOTEPOP 900 :   define Q_MPRINT 901 :   define Q_EMPTY 902 : define Q_BOOL_UNUSED 905
+define Q_BOOL_ENABLED 906 : define Q_BOOL_DISABLED 907 : define Q_NOTEPOPBG 908
+
+
+definequote Q_NOTEPOP PRESS ^%ldN^%ld FOR ADDITIONAL INFORMATION
+definequote Q_NOTEPOPBG PRESS N FOR ADDITIONAL INFORMATION
+definequote Q_MPRINT
+definequote Q_EMPTY
+definequote Q_BOOL_UNUSED -n/a-
+definequote Q_BOOL_ENABLED .
+definequote Q_BOOL_DISABLED .
+
+//
+// First three strings in an effector documentation, i.e. NAME - FUNCTION - SPECIAL MENTION
+define Q_MENU1 380 :     define Q_MENU2 381 :    define Q_MENU3 382
+
+// MENU4 - MENU10 will only be shown if m_extended is true, kinda like notes but important to know 
+define Q_MENU4 383 :     define Q_MENU5 384 :    define Q_MENU6 385 :    define Q_MENU7 386 :     define Q_MENU8 387
+define Q_MENU9 388 :     define Q_MENU10 389
+
+// Extra notes if needed - i.e. compatible with GPSPEED or some additional timing formulas 
+define Q_NOTE1 390 :     define Q_NOTE2 391 :    define Q_NOTE3 392 :    define Q_NOTE4 393 :     define Q_NOTE5 394
+define Q_NOTE6 395 :     define Q_NOTE7 396 :    define Q_NOTE8 397 :    define Q_NOTE9 398 :     define Q_NOTE10 399
+
+// More extra menues, fill in EVERYTHING! -- We can use this as an alias for window2
+define Q_MENU11 400 : define Q_MENU12 401 : define Q_MENU13 402 : define Q_MENU14 403 : define Q_MENU15 404 : define Q_MENU16 405
+define Q_MENU17 406 : define Q_MENU18 407 : define Q_MENU19 408 : define Q_MENU20 409 : define Q_MENU21 410 : define Q_MENU22 411
+define Q_MENU23 412 : define Q_MENU24 413 : define Q_MENU25 414 : define Q_MENU26 415 : define Q_MENU27 416 : define Q_MENU28 417
+define Q_MENU29 418 : define Q_MENU30 419 : define Q_MENU31 420 : define Q_MENU32 421 : define Q_MENU33 422 : define Q_MENU34 423
+define Q_MENU35 424 : define Q_MENU36 425 : define Q_MENU37 426 : define Q_MENU38 427 : define Q_MENU39 428 : define Q_MENU40 429
+define Q_MENU41 430 : define Q_MENU42 431 : define Q_MENU43 432 : define Q_MENU44 433 : define Q_MENU45 434 : define Q_MENU46 435
+define Q_MENU47 436 : define Q_MENU48 437 : define Q_MENU49 438 : define Q_MENU50 439 : define Q_MENU51 440 : define Q_MENU52 441
+define Q_MENU53 442 : define Q_MENU54 443 : define Q_MENU55 444 : define Q_MENU56 445 : define Q_MENU57 446 : define Q_MENU58 447
+define Q_MENU59 448 : define Q_MENU60 449 : define Q_MENU61 450 : define Q_MENU62 451 : define Q_MENU63 452 : define Q_MENU64 453
+define Q_MENU65 454 : define Q_MENU66 455 : define Q_MENU67 456 : define Q_MENU68 457 : define Q_MENU69 458 : define Q_MENU70 459
+define Q_MENU71 460 : define Q_MENU72 461 : define Q_MENU73 462 : define Q_MENU74 463 : define Q_MENU75 464 : define Q_MENU76 465
+define Q_MENU77 466 : define Q_MENU78 467 : define Q_MENU79 468 : define Q_MENU80 469 : define Q_MENU81 470 : define Q_MENU82 471
+define Q_MENU83 472 : define Q_MENU84 473 : define Q_MENU85 474 : define Q_MENU86 475 : define Q_MENU87 476 : define Q_MENU88 477
+define Q_MENU89 478 : define Q_MENU90 479 : define Q_MENU91 480 : define Q_MENU92 481 : define Q_MENU93 482 : define Q_MENU94 483
+define Q_MENU95 484 : define Q_MENU96 485 : define Q_MENU97 486 : define Q_MENU98 487 : define Q_MENU99 488
+
+// Quote definitions for HITAG info
+// 400 - 418
+define Q_HITAG 400 :   define Q_HITAG1 401 :  define Q_HITAG2 402 :  define Q_HITAG3 403 : define Q_HITAG4 404
+define Q_HITAG5 405 :  define Q_HITAG6 406 :  define Q_HITAG7 407 :  define Q_HITAG8 408 
+define Q_HITAG9 409 :  define Q_HITAG10 410 : define Q_HITAG11 411 : define Q_HITAG12 412
+define Q_HITAG13 413 : define Q_HITAG14 414 : define Q_HITAG15 415 : define Q_HITAG16 416
+define Q_HITAGE 417
+
+// Quote definitions for LOTAG info
+// 400 - 418
+define Q_LOTAG 420 :   define Q_LOTAG1 421 :  define Q_LOTAG2 422 :  define Q_LOTAG3 423 : define Q_LOTAG4 424
+define Q_LOTAG5 425 :  define Q_LOTAG6 426 :  define Q_LOTAG7 427 :  define Q_LOTAG8 428 
+define Q_LOTAG9 429 :  define Q_LOTAG10 430 : define Q_LOTAG11 431 : define Q_LOTAG12 432
+define Q_LOTAG13 433 : define Q_LOTAG14 434 : define Q_LOTAG15 435 : define Q_LOTAG16 436
+define Q_LOTAGE 437
+
+// Quote definitions for EXTRA info
+// 400 - 418
+define Q_EXTRA 440 :   define Q_EXTRA1 441 :  define Q_EXTRA2 442 :  define Q_EXTRA3 443 : define Q_EXTRA4 444
+define Q_EXTRA5 445 :  define Q_EXTRA6 446 :  define Q_EXTRA7 447 :  define Q_EXTRA8 448 
+define Q_EXTRA9 449 :  define Q_EXTRA10 450 : define Q_EXTRA11 451 : define Q_EXTRA12 452
+define Q_EXTRA13 453 : define Q_EXTRA14 454 : define Q_EXTRA15 455 : define Q_EXTRA16 456
+define Q_EXTRAE 457
+
+// Quote definitions for PALETTE info
+// 400 - 418
+define Q_PALETTE 460 :   define Q_PALETTE1 461 :  define Q_PALETTE2 462 :  define Q_PALETTE3 3 : define Q_PALETTE4 4
+define Q_PALETTE5 465 :  define Q_PALETTE6 466 :  define Q_PALETTE7 467 :  define Q_PALETTE8 468
+define Q_PALETTEE 467
+
+// Quote definitions for SHADE info
+// 400 - 418
+define Q_SHADE 480 :   define Q_SHADE1 481 :  define Q_SHADE2 482 :  define Q_SHADE3 483 : define Q_SHADE4 484
+define Q_SHADE5 485 :  define Q_SHADE6 486 :  define Q_SHADE7 487 :  define Q_SHADE8 488
+define Q_SHADEE 487
+
+// Quote definitions for ANGLE info
+// 400 - 418
+define Q_ANGLE 500 :   define Q_ANGLE1 501 :  define Q_ANGLE2 502 :  define Q_ANGLE3 503 : define Q_ANGLE4 504
+define Q_ANGLE5 505 :  define Q_ANGLE6 506 :  define Q_ANGLE7 507 :  define Q_ANGLE8 508 
+define Q_ANGLE9 509 :  define Q_ANGLE10 510 : define Q_ANGLE11 511 : define Q_ANGLE12 512
+define Q_ANGLE13 513 : define Q_ANGLE14 514 : define Q_ANGLE15 515 : define Q_ANGLE16 516
+define Q_ANGLEE 517
+
+// Quote definitions for XVEL info
+// 400 - 418
+define Q_XVEL 520 :   define Q_XVEL1 521 :  define Q_XVEL2 522 :  define Q_XVEL3 523 : define Q_XVEL4 524
+define Q_XVEL5 525 :  define Q_XVEL6 526 :  define Q_XVEL7 527 :  define Q_XVEL8 528 
+define Q_XVEL9 529 :  define Q_XVEL10 530 : define Q_XVEL11 531 : define Q_XVEL12 532
+define Q_XVEL13 533 : define Q_XVEL14 534 : define Q_XVEL15 535 : define Q_XVEL16 536
+define Q_XVELE 537
+
+// Quote definitions for YVEL info
+// 400 - 418
+define Q_YVEL 540 :   define Q_YVEL1 541 :  define Q_YVEL2 542 :  define Q_YVEL3 543 : define Q_YVEL4 544
+define Q_YVEL5 545 :  define Q_YVEL6 546 :  define Q_YVEL7 547 :  define Q_YVEL8 548 
+define Q_YVEL9 549 :  define Q_YVEL10 550 : define Q_YVEL11 551 : define Q_YVEL12 552
+define Q_YVEL13 553 : define Q_YVEL14 554 : define Q_YVEL15 555 : define Q_YVEL16 556
+define Q_YVELE 7
+
+// Quote definitions for ZVEL info
+// 400 - 418
+define Q_ZVEL 560 :   define Q_ZVEL1 561 :  define Q_ZVEL2 562 :  define Q_ZVEL3 563 : define Q_ZVEL4 564
+define Q_ZVEL5 565 :  define Q_ZVEL6 566 :  define Q_ZVEL7 567 :  define Q_ZVEL8 568 
+define Q_ZVEL9 569 :  define Q_ZVEL10 570 : define Q_ZVEL11 571 : define Q_ZVEL12 572
+define Q_ZVEL13 573 : define Q_ZVEL14 574 : define Q_ZVEL15 575 : define Q_ZVEL16 576
+define Q_ZVELE 577
+
+// Quote definitions for OWNER info
+// 400 - 418
+define Q_OWNER 580 :   define Q_OWNER1 581 :  define Q_OWNER2 582 :  define Q_OWNER3 583 : define Q_OWNER4 584
+define Q_OWNER5 585 :  define Q_OWNER6 586 :  define Q_OWNER7 587 :  define Q_OWNER8 588 
+define Q_OWNER9 589 :  define Q_OWNER10 590 : define Q_OWNER11 591 : define Q_OWNER12 592
+define Q_OWNER13 593 : define Q_OWNER14 594 : define Q_OWNER15 595 : define Q_OWNER16 596
+define Q_OWNERE 597
+
+// Quote definitions for CSTAT info
+// 400 - 418
+define Q_CSTAT 600 :   define Q_CSTAT1 601 :  define Q_CSTAT2 602 :  define Q_CSTAT3 603 : define Q_CSTAT4 604
+define Q_CSTAT5 605 :  define Q_CSTAT6 606 :  define Q_CSTAT7 607 :  define Q_CSTAT8 608 
+define Q_CSTAT9 609 :  define Q_CSTAT10 610 : define Q_CSTAT11 611 : define Q_CSTAT12 612
+define Q_CSTAT13 613 : define Q_CSTAT14 614 : define Q_CSTAT15 615 : define Q_CSTAT16 616
+define Q_CSTATE 617
+
+// Quote definitions for CLIPDIST info
+// 400 - 418
+define Q_CLIPDIST 620 :   define Q_CLIPDIST1 621 :  define Q_CLIPDIST2 622 :  define Q_CLIPDIST3 623 : define Q_CLIPDIST4 624
+define Q_CLIPDIST5 625 :  define Q_CLIPDIST6 626 :  define Q_CLIPDIST7 627 :  define Q_CLIPDIST8 628
+define Q_CLIPDISTE 627
+
+// Quote definitions for XREPEAT info
+// 400 - 418
+define Q_XREPEAT 640 :   define Q_XREPEAT1 641 :  define Q_XREPEAT2 642 :  define Q_XREPEAT3 643 : define Q_XREPEAT4 644
+define Q_XREPEAT5 645 :  define Q_XREPEAT6 646 :  define Q_XREPEAT7 647 :  define Q_XREPEAT8 648
+define Q_XREPEATE 647
+
+// Quote definitions for YREPEAT info
+// 400 - 418
+define Q_YREPEAT 660 :   define Q_YREPEAT1 661 :  define Q_YREPEAT2 662 :  define Q_YREPEAT3 663 : define Q_YREPEAT4 664
+define Q_YREPEAT5 665 :  define Q_YREPEAT6 666 :  define Q_YREPEAT7 667 :  define Q_YREPEAT8 668
+
+// Quote definitions for XOFFSET info
+// 400 - 418
+define Q_XOFFSET 680 :   define Q_XOFFSET1 681 :  define Q_XOFFSET2 682 :  define Q_XOFFSET3 683 : define Q_XOFFSET4 684
+define Q_XOFFSET5 685 :  define Q_XOFFSET6 686 :  define Q_XOFFSET7 687 :  define Q_XOFFSET8 688
+define Q_XOFFSETE 687
+
+// Quote definitions for YOFFSET info
+// 400 - 418
+define Q_YOFFSET 700 :   define Q_YOFFSET1 701 :  define Q_YOFFSET2 702 :  define Q_YOFFSET3 703 : define Q_YOFFSET4 704
+define Q_YOFFSET5 705 :  define Q_YOFFSET6 706 :  define Q_YOFFSET7 707 :  define Q_YOFFSET8 708
+define Q_YOFFSETE 707
+
+// Quote definitions for STATNUM info
+// 400 - 418
+define Q_STATNUM 720 :   define Q_STATNUM1 721 :  define Q_STATNUM2 722 :  define Q_STATNUM3 723 : define Q_STATNUM4 724
+define Q_STATNUM5 725 :  define Q_STATNUM6 726 :  define Q_STATNUM7 727 :  define Q_STATNUM8 728 
+define Q_STATNUM9 729 :  define Q_STATNUM10 730 : define Q_STATNUM11 731 : define Q_STATNUM12 732
+define Q_STATNUM13 733 : define Q_STATNUM14 734 : define Q_STATNUM15 735 : define Q_STATNUM16 736
+define Q_STATNUME 737
+
+// Quote definitions for Sprite Z
+// 400 - 418
+define Q_Z 740 :   define Q_Z1 741 :  define Q_Z2 742 :  define Q_Z3 743 : define Q_Z4 744
+define Q_Z5 745 :  define Q_Z6 746 :  define Q_Z7 747 :  define Q_Z8 748 
+define Q_Z9 749 :  define Q_Z10 750 : define Q_Z11 751 : define Q_Z12 752
+define Q_Z13 753 : define Q_Z14 754 : define Q_Z15 755 : define Q_Z16 756
+define Q_ZE 757
+
+// Quote definitions for TAG1-15 -- This is for shadow warrior compatibility!
+// Some are overlaps of above definitions so we simply re-use the numbers under an alternate label name
+define Q_TAG1 400 :      define Q_TAG2 401 :     define Q_TAG3 620 :     define Q_TAG4 500 :      define Q_TAG5 520
+define Q_TAG6 540 :      define Q_TAG7 806 :     define Q_TAG8 807 :     define Q_TAG9 808 :      define Q_TAG10 809
+define Q_TAG11 480 :     define Q_TAG12 460 :    define Q_TAG13 812 :    define Q_TAG14 813  :    define Q_TAG15 814
+define Q_TAG_X1 815 :    define Q_TAG_X2 816 :   define Q_TAG_X3 817 :   define Q_TAG_X4 818 :    define Q_TAG_X5 819
+
+definequote 380
+definequote 381
+definequote 382
+definequote 383
+definequote 384
+definequote 385
+definequote 386
+definequote 387
+definequote 388
+definequote 389
+definequote 390
+definequote 391
+definequote 392
+definequote 393
+definequote 394
+definequote 395
+definequote 396
+definequote 397
+definequote 398
+definequote 399
+definequote 400
+definequote 401
+definequote 402
+definequote 403
+definequote 404
+definequote 405
+definequote 406
+definequote 407
+definequote 408
+definequote 409
+definequote 410
+definequote 411
+definequote 412
+definequote 413
+definequote 414
+definequote 415
+definequote 416
+definequote 417
+definequote 418
+definequote 419
+definequote 420
+definequote 421
+definequote 422
+definequote 423
+definequote 424
+definequote 425
+definequote 426
+definequote 427
+definequote 428
+definequote 429
+definequote 430
+definequote 431
+definequote 432
+definequote 433
+definequote 434
+definequote 435
+definequote 436
+definequote 437
+definequote 438
+definequote 439
+definequote 440
+definequote 441
+definequote 442
+definequote 443
+definequote 444
+definequote 445
+definequote 446
+definequote 447
+definequote 448
+definequote 449
+definequote 450
+definequote 451
+definequote 452
+definequote 453
+definequote 454
+definequote 455
+definequote 456
+definequote 457
+definequote 458
+definequote 459
+definequote 460
+definequote 461
+definequote 462
+definequote 463
+definequote 464
+definequote 465
+definequote 466
+definequote 467
+definequote 468
+definequote 469
+definequote 470
+definequote 471
+definequote 472
+definequote 473
+definequote 474
+definequote 475
+definequote 476
+definequote 477
+definequote 478
+definequote 479
+definequote 480
+definequote 481
+definequote 482
+definequote 483
+definequote 484
+definequote 485
+definequote 486
+definequote 487
+definequote 488
+definequote 489
+definequote 490
+definequote 491
+definequote 492
+definequote 493
+definequote 494
+definequote 495
+definequote 496
+definequote 497
+definequote 498
+definequote 499
+definequote 500
+definequote 501
+definequote 502
+definequote 503
+definequote 504
+definequote 505
+definequote 506
+definequote 507
+definequote 508
+definequote 509
+definequote 510
+definequote 511
+definequote 512
+definequote 513
+definequote 514
+definequote 515
+definequote 516
+definequote 517
+definequote 518
+definequote 519
+definequote 520
+definequote 521
+definequote 522
+definequote 523
+definequote 524
+definequote 525
+definequote 526
+definequote 527
+definequote 528
+definequote 529
+definequote 530
+definequote 531
+definequote 532
+definequote 533
+definequote 534
+definequote 535
+definequote 536
+definequote 537
+definequote 538
+definequote 539
+definequote 540
+definequote 541
+definequote 542
+definequote 543
+definequote 544
+definequote 545
+definequote 546
+definequote 547
+definequote 548
+definequote 549
+definequote 550
+definequote 551
+definequote 552
+definequote 553
+definequote 554
+definequote 555
+definequote 556
+definequote 557
+definequote 558
+definequote 559
+definequote 560
+definequote 561
+definequote 562
+definequote 563
+definequote 564
+definequote 565
+definequote 566
+definequote 567
+definequote 568
+definequote 569
+definequote 570
+definequote 571
+definequote 572
+definequote 573
+definequote 574
+definequote 575
+definequote 576
+definequote 577
+definequote 578
+definequote 579
+definequote 580
+definequote 581
+definequote 582
+definequote 583
+definequote 584
+definequote 585
+definequote 586
+definequote 587
+definequote 588
+definequote 589
+definequote 590
+definequote 591
+definequote 592
+definequote 593
+definequote 594
+definequote 595
+definequote 596
+definequote 597
+definequote 598
+definequote 599
+definequote 600
+definequote 601
+definequote 602
+definequote 603
+definequote 604
+definequote 605
+definequote 606
+definequote 607
+definequote 608
+definequote 609
+definequote 610
+definequote 611
+definequote 612
+definequote 613
+definequote 614
+definequote 615
+definequote 616
+definequote 617
+definequote 618
+definequote 619
+definequote 620
+definequote 621
+definequote 622
+definequote 623
+definequote 624
+definequote 625
+definequote 626
+definequote 627
+definequote 628
+definequote 629
+definequote 630
+definequote 631
+definequote 632
+definequote 633
+definequote 634
+definequote 635
+definequote 636
+definequote 637
+definequote 638
+definequote 639
+definequote 640
+definequote 641
+definequote 642
+definequote 643
+definequote 644
+definequote 645
+definequote 646
+definequote 647
+definequote 648
+definequote 649
+definequote 650
+definequote 651
+definequote 652
+definequote 653
+definequote 654
+definequote 655
+definequote 656
+definequote 657
+definequote 658
+definequote 659
+definequote 660
+definequote 661
+definequote 662
+definequote 663
+definequote 664
+definequote 665
+definequote 666
+definequote 667
+definequote 668
+definequote 669
+definequote 670
+definequote 671
+definequote 672
+definequote 673
+definequote 674
+definequote 675
+definequote 676
+definequote 677
+definequote 678
+definequote 679
+definequote 680
+definequote 681
+definequote 682
+definequote 683
+definequote 684
+definequote 685
+definequote 686
+definequote 687
+definequote 688
+definequote 689
+definequote 690
+definequote 691
+definequote 692
+definequote 693
+definequote 694
+definequote 695
+definequote 696
+definequote 697
+definequote 698
+definequote 699
+definequote 700
+definequote 701
+definequote 702
+definequote 703
+definequote 704
+definequote 705
+definequote 706
+definequote 707
+definequote 708
+definequote 709
+definequote 710
+definequote 711
+definequote 712
+definequote 713
+definequote 714
+definequote 715
+definequote 716
+definequote 717
+definequote 718
+definequote 719
+definequote 720
+definequote 721
+definequote 722
+definequote 723
+definequote 724
+definequote 725
+definequote 726
+definequote 727
+definequote 728
+definequote 729
+definequote 730
+definequote 731
+definequote 732
+definequote 733
+definequote 734
+definequote 735
+definequote 736
+definequote 737
+definequote 738
+definequote 739
+definequote 740
+definequote 741
+definequote 742
+definequote 743
+definequote 744
+definequote 745
+definequote 746
+definequote 747
+definequote 748
+definequote 749
+definequote 750
+definequote 751
+definequote 752
+definequote 753
+definequote 754
+definequote 755
+definequote 756
+definequote 757
+definequote 758
+definequote 759
+definequote 760
+definequote 761
+definequote 762
+definequote 763
+definequote 764
+definequote 765
+definequote 766
+definequote 767
+definequote 768
+definequote 769
+definequote 770
+definequote 771
+definequote 772
+definequote 773
+definequote 774
+definequote 775
+definequote 776
+definequote 777
+definequote 778
+definequote 779
+definequote 780
+definequote 781
+definequote 782
+definequote 783
+definequote 784
+definequote 785
+definequote 786
+definequote 787
+definequote 788
+definequote 789
+definequote 790
+definequote 791
+definequote 792
+definequote 793
+definequote 794
+definequote 795
+definequote 796
+definequote 797
+definequote 798
+definequote 799
+definequote 800
+definequote 801
+definequote 802
+definequote 803
+definequote 804
+definequote 805
+definequote 806
+definequote 807
+definequote 808
+definequote 809
+definequote 810
+definequote 811
+definequote 812
+definequote 813
+definequote 814
+definequote 815
+definequote 816
+definequote 817
+definequote 818
+definequote 819
+
+// ############################################################################
+//                          STATES USED BY THE SCRIPT
+// ############################################################################
+
+defstate notepop
+    xor m_extended 1
+ends
+
+
+// Rotatesprite functions, Rich man's poor terminal that uses rotatesprite to write tiles
+// RESERVED!
+
+defstate q_menu_prepare // Empties all quotes used by Q_MENU, 380 - 819
+    set temp 819
+    sub temp 380
+    for i range temp {
+        add i 380
+        qstrcpy i Q_EMPTY
+    }
+ends
+
+defstate q_dowindow
+    // Takes in m_window_x-y/1-2 and draws a window with a border
+    rotatesprite16 rhx rhy rbz 0 rpt 32 0 1057 m_window_x1 m_window_y1 m_window_x2 m_window_y2
+    add m_window_x1 1 : add m_window_y1 1 : sub m_window_x2 1 : sub m_window_y2 1
+    rotatesprite16 rhx rhy rbz 0 rpt 8 0 1057 m_window_x1 m_window_y1 m_window_x2 m_window_y2
+    sub m_window_x1 1 : sub m_window_y1 1 : add m_window_x2 1 : add m_window_y2 1
+ends
+
+defstate q_doredwindow
+    // Takes in m_window_x-y/1-2 and draws a window with a border
+    rotatesprite16 rhx rhy rbz 0 rpt 32 2 1057 m_window_x1 m_window_y1 m_window_x2 m_window_y2
+    add m_window_x1 1 : add m_window_y1 1 : sub m_window_x2 1 : sub m_window_y2 1
+    rotatesprite16 rhx rhy rbz 0 rpt 8 2 1057 m_window_x1 m_window_y1 m_window_x2 m_window_y2
+    sub m_window_x1 1 : sub m_window_y1 1 : add m_window_x2 1 : add m_window_y2 1
+ends
+
+defstate q_sanitycheck
+	set temp 0
+	ifl xdim 1280 set temp 1
+	ifl ydim 960 set temp 1
+	ife temp 1
+	{
+		redefinequote txt Please increase your resolution to at least 1280x960 !
+		set m_window_y1 midydim16 : set m_window_x1 halfxdim16
+        set m_window_y2 midydim16 : set m_window_x2 halfxdim16
+		qstrlen m_strlen txt
+        set temp2 m_strlen
+        mul temp2 4
+        add temp2 8
+        // temp2 now contains strlen in pixels, half of it
+        sub m_window_x1 temp2 : add m_window_x2 temp2
+        set m_cursor_x m_window_x1 : add m_cursor_x 8
+        set m_cursor_y m_window_y1 : sub m_cursor_y 4
+        sub m_window_y1 8 : add m_window_y2 8
+        state q_doredwindow
+        printext256 txt m_cursor_x m_cursor_y m_color -1 65536
+        
+
+    }
+ends
+
+
+/* get_sprite_dimensions (stolen from Ion Fury's subroutines.con)
+ * DESCRIPTION: determine the current x and y dimensions of a sprite tile in build units for
+                its given scaling (xrepeat,yrepeat)
+                to make life easier this gives you:
+                x as build grid units
+                y as build grid units
+                y converted to build z units
+ * INPUTS: sprite_tile_other - set this if you want the dimensions of a tile other than the current picnum
+ * OUTPUTS: sprite_dim_x - final size dimension for x scale
+            sprite_dim_y - final size dimension for y scale
+            sprite_dim_yz - final size dimension for y scale in z units
+ */
+
+defstate get_sprite_dimensions
+    ifn sprite_tile_other -1 {
+
+        set sprite_dim_x sprite[sprite_tile_other].picnum]
+        set sprite_dim_x tilesizx[sprite_dim_x]
+        mul sprite_dim_x sprite[sprite_tile_other].xrepeat
+        shiftr sprite_dim_x 2
+
+        set sprite_dim_y sprite[sprite_tile_other].picnum
+        set sprite_dim_y tilesizy[sprite_dim_y]
+        mul sprite_dim_y sprite[sprite_tile_other].yrepeat
+        shiftr sprite_dim_y 2
+
+        set sprite_dim_yz sprite[sprite_tile_other].picnum
+        set sprite_dim_yz tilesizy[sprite_dim_yz]
+        shiftl sprite_dim_yz 2
+        mul sprite_dim_yz sprite[sprite_tile_other].yrepeat
+    }
+    set sprite_tile_other -1
+ends
+
+
+defstate get_tsprite_dimensions
+    ifn sprite_tile_other -1 {
+
+        set sprite_dim_x tsprite[sprite_tile_other].picnum]
+        set sprite_dim_x tilesizx[sprite_dim_x]
+        mul sprite_dim_x tsprite[sprite_tile_other].xrepeat
+        shiftr sprite_dim_x 2
+
+        set sprite_dim_y tsprite[sprite_tile_other].picnum
+        set sprite_dim_y tilesizy[sprite_dim_y]
+        mul sprite_dim_y tsprite[sprite_tile_other].yrepeat
+        shiftr sprite_dim_y 2
+
+        set sprite_dim_yz tsprite[sprite_tile_other].picnum
+        set sprite_dim_yz tilesizy[sprite_dim_yz]
+        shiftl sprite_dim_yz 2
+        mul sprite_dim_yz tsprite[sprite_tile_other].yrepeat
+    }
+    set sprite_tile_other -1
+ends
+
+defstate m_son // Stub routines to do text shifting when printing with 3D shadows on text
+add m_cursor_x 1
+add m_cursor_y 1
+ends
+
+defstate m_soff // Stub routines to do text shifting when printing with 3D shadows on text
+sub m_cursor_x 1
+sub m_cursor_y 1
+ends
+
+defstate print_shadowtext
+    //printext256 txt m_cursor_x m_cursor_y 0 -1 65536
+    //state m_son : state m_son
+    //printext256 txt m_cursor_x m_cursor_y 0 -1 65536
+    //state m_soff
+    //printext256 txt m_cursor_x m_cursor_y 0 -1 65536
+    //state m_soff
+    printext256 txt m_cursor_x m_cursor_y m_color -1 65536
+    redefinequote txt
+ends
+
+defstate print_small_shadowtext
+    printext256 txt m_cursor_x m_cursor_y 0 -1 1
+    state m_son : state m_son
+    printext256 txt m_cursor_x m_cursor_y 0 -1 1
+    state m_soff
+    printext256 txt m_cursor_x m_cursor_y 0 -1 1
+    state m_soff
+    printext256 txt m_cursor_x m_cursor_y m_color -1 1
+    redefinequote txt
+ends
+
+defstate print_notepop
+    ife m_extended 1 {
+        redefinequote Q_NOTEPOP PRESS ^%ldN^%ld TO HIDE EXTRA INFORMATION
+        redefinequote Q_NOTEPOPBG PRESS N TO HIDE EXTRA INFORMATION
+    } else {
+        redefinequote Q_NOTEPOP PRESS ^%ldN^%ld FOR ADDITIONAL INFORMATION
+        redefinequote Q_NOTEPOPBG PRESS N FOR ADDITIONAL INFORMATION
+    }
+    set m_bg -1
+    qstrcpy txt Q_NOTEPOPBG
+    printext256 txt m_cursor_x m_window_y2 0 m_bg 1
+    state m_son : state m_son
+    printext256 txt m_cursor_x m_window_y2 0 -1 1
+    state m_soff
+    printext256 txt m_cursor_x m_window_y2 8 -1 1
+    state m_soff
+    set m_color col_ltiyellow
+    qstrcpy txt Q_NOTEPOP
+    qsprintf txt txt col_iblue col_ltiyellow
+    printext256 txt m_cursor_x m_window_y2 m_color -1 1
+    redefinequote txt
+ends
+
+defstate print_shadowtext_tag2
+    //state m_son : state m_son
+    //printext256 txt2 m_cursor_x m_cursor_y 0 -1 65536
+    //printext256 txt m_cursor_x_descpos m_cursor_y 0 -1 65536
+    //state m_soff
+    //printext256 txt2 m_cursor_x m_cursor_y 0 -1 65536
+    //printext256 txt m_cursor_x_descpos m_cursor_y 0 -1 65536
+    //state m_soff
+    printext256 txt2 m_cursor_x m_cursor_y m_color col_blue 65536
+    printext256 txt m_cursor_x_descpos m_cursor_y col_white col_blue 65536
+    
+    set temp m_cursor_x
+    add temp 56
+    redefinequote txt2 |
+    
+    state m_son : state m_son
+    printext256 txt2 temp m_cursor_y 0 -1 65536
+    state m_soff
+    printext256 txt2 temp m_cursor_y 0 -1 65536
+    state m_soff
+    printext256 txt2 temp m_cursor_y col_ltiyellow -1 65536
+    add temp 16
+    
+    redefinequote txt2 ^%ld[^%ld%ld^%ld]
+    qsprintf txt2 txt2 col_dgreen col_green temp2 col_dgreen
+    state m_son : state m_son
+    printext256 txt2 temp m_cursor_y 0 -1 65536
+    state m_soff
+    printext256 txt2 temp m_cursor_y 0 -1 65536
+    state m_soff
+    printext256 txt2 temp m_cursor_y m_color -1 65536
+    add m_cursor_y 8
+ends
+
+defstate print_tag
+    set m_color col_iyellow
+    printext256 txt2 m_cursor_x m_cursor_y m_color -1 65536
+    printext256 txt m_cursor_x_descpos m_cursor_y col_white -1 65536
+    
+    set temp m_cursor_x
+    add temp 56
+    redefinequote txt2 |
+    
+    // state m_son : state m_son
+    // printext256 txt2 temp m_cursor_y 0 -1 65536
+    // state m_soff
+    // printext256 txt2 temp m_cursor_y 0 -1 65536
+    // state m_soff
+    printext256 txt2 temp m_cursor_y col_ltiyellow -1 65536
+    add temp 16
+    
+    redefinequote txt2 ^%ld[^%ld%ld^%ld]
+    qsprintf txt2 txt2 col_dgreen col_green temp2 col_dgreen
+    // state m_son : state m_son
+    // printext256 txt2 temp m_cursor_y 0 -1 65536
+    // state m_soff
+    // printext256 txt2 temp m_cursor_y 0 -1 65536
+    // state m_soff
+    printext256 txt2 temp m_cursor_y m_color -1 65536
+    add m_cursor_y 8
+ends
+
+defstate q_window_to2d
+    shiftvarr m_window_x1 12
+    shiftvarr m_window_y1 12
+    shiftvarr m_window_x2 12
+    shiftvarr m_window_y2 12
+ends
+
+defstate q_window_to3d
+    shiftvarl m_window_x1 12
+    shiftvarl m_window_y1 12
+    shiftvarl m_window_x2 12
+    shiftvarl m_window_y2 12
+ends
+
+defstate draw_q_menu_clean_window
+    set m_window_x1 0
+    set m_window_x2 0
+    set m_window_y1 0
+    set m_window_y2 0
+ends
+
+defstate draw_q_menu_clean_window1
+    set m_window1_x1 0
+    set m_window1_x2 0
+    set m_window1_y1 0
+    set m_window1_y2 0
+ends
+
+defstate draw_q_menu_clean_window2
+    set m_window2_x1 0
+    set m_window2_x2 0
+    set m_window2_y1 0
+    set m_window2_y2 0
+ends
+
+defstate q_save_window1
+    set m_window1_x1 m_window_x1
+    set m_window1_y1 m_window_y1
+    set m_window1_x2 m_window_x2
+    set m_window1_y2 m_window_y2
+ends
+
+defstate q_save_window2
+    set m_window2_x1 m_window_x1
+    set m_window2_y1 m_window_y1
+    set m_window2_x2 m_window_x2
+    set m_window2_y2 m_window_y2
+ends
+
+defstate q_load_window1
+    set m_window_x1 m_window1_x1
+    set m_window_y1 m_window1_y1
+    set m_window_x2 m_window1_x2
+    set m_window_y2 m_window1_y2
+ends
+
+defstate q_load_window2
+    set m_window_x1 m_window2_x1
+    set m_window_y1 m_window2_y1
+    set m_window_x2 m_window2_x2
+    set m_window_y2 m_window2_y2
+ends
+
+defstate se_check_st_dependency
+        set temp2 sprite[h].sectnum
+        ife sector[temp2].lotag temp {
+            redefinequote   Q_MENU9 Sector must have lotag %ld! ^%ld[OK]
+            qsprintf Q_MENU9 Q_MENU9 temp col_green
+        }
+        else {
+            redefinequote   Q_MENU9 Sector must have lotag %ld! ^%ld[MISSING]
+            qsprintf Q_MENU9 Q_MENU9 temp col_red
+        }
+ends
+
+defstate get_hitag
+    set temp2 sprite[h].hitag
+    redefinequote txt2 HITAG
+ends
+
+defstate get_lotag
+    set temp2 sprite[h].lotag
+    redefinequote txt2 LOTAG
+ends
+
+defstate get_extra
+    set temp2 sprite[h].extra
+    redefinequote txt2 EXTRA
+ends
+
+defstate get_palette
+    set temp2 sprite[h].pal
+    redefinequote txt2 PALETTE
+ends
+
+defstate get_shade
+    set temp2 sprite[h].shade
+    redefinequote txt2 SHADE
+ends
+
+defstate get_angle
+    set temp2 sprite[h].ang
+    redefinequote txt2 ANGLE
+ends
+
+defstate get_xvel
+    set temp2 sprite[h].xvel
+    redefinequote txt2 X-VEL
+ends
+
+defstate get_yvel
+    set temp2 sprite[h].yvel
+    redefinequote txt2 Y-VEL
+ends
+
+defstate get_zvel
+    set temp2 sprite[h].zvel
+    redefinequote txt2 Z-VEL
+ends
+
+defstate get_owner
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].owner }
+    } else {
+        ifge pointhighlight 16384 { set temp2 pointhighlight : sub temp2 16384 : set temp2 sprite[temp2].owner }
+    }
+    redefinequote txt2 OWNER
+ends
+
+defstate get_cstat
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].cstat }
+    } else {
+        ifge pointhighlight 16384 { set temp2 pointhighlight : sub temp2 16384 : set temp2 sprite[temp2].cstat }
+    }
+    redefinequote txt2 CSTAT
+ends
+
+defstate get_clipdist
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].clipdist }
+    } else {
+        ifge pointhighlight 16384 { set temp2 pointhighlight : sub temp2 16384 : set temp2 sprite[temp2].clipdist }
+    }
+    redefinequote txt2 CLIPDIST
+ends
+
+defstate get_xrepeat
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].xrepeat }
+    } else {
+        ifge pointhighlight 16384 { set temp2 pointhighlight : sub temp2 16384 : set temp2 sprite[temp2].xrepeat }
+    }
+    redefinequote txt2 X-REPEAT
+ends
+
+defstate get_yrepeat
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].yrepeat }
+    } else {
+        ifge pointhighlight 16384 { set temp2 pointhighlight : sub temp2 16384 : set temp2 sprite[temp2].yrepeat }
+    }
+    redefinequote txt2 Y-REPEAT
+ends
+
+defstate get_xoffset
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].xoffset }
+    } else {
+        ifge pointhighlight 16384 { set temp2 pointhighlight : sub temp2 16384 : set temp2 sprite[temp2].xoffset }
+    }
+    redefinequote txt2 X-OFFSET
+ends
+
+defstate get_yoffset
+    set temp2 sprite[h].yoffset
+    redefinequote txt2 Y-OFFSET
+ends
+
+defstate get_statnum
+    set temp2 sprite[h].statnum
+    redefinequote txt2 STATNUM
+ends
+
+defstate get_tag1       // Hitag recycle
+    state get_hitag
+    redefinequote txt2 TAG 1
+ends
+
+defstate get_tag2       // Lotag recycle
+    state get_lotag
+    redefinequote txt2 TAG 2
+ends
+
+defstate get_tag3       // Clipdist recycle
+    state get_clipdist
+    redefinequote txt2 TAG 3
+ends
+
+defstate get_tag4       // Angle recycle
+    state get_angle
+    redefinequote txt2 TAG 4
+ends
+
+defstate get_tag5
+    state get_xvel
+    redefinequote txt2 TAG 5
+ends
+
+defstate get_tag6
+    state get_yvel
+    redefinequote txt2 TAG 6
+ends
+
+defstate get_tag7       //zvel1
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].zvel }
+    } else {
+        ifge pointhighlight 16384 { set temp2 pointhighlight : sub temp2 16384 : set temp2 sprite[temp2].zvel }
+    }
+    and temp2 65280 shiftvarr temp2 8
+    redefinequote txt2 TAG 7
+ends
+
+defstate get_tag8       //zvel2
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].zvel }
+    } else {
+        ifge pointhighlight 16384 { set temp2 pointhighlight : sub temp2 16384 : set temp2 sprite[temp2].zvel }
+    }
+    and temp2 255
+    redefinequote txt2 TAG 8
+ends
+
+defstate get_tag9       //owner1
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].owner }
+    } else {
+        ifge pointhighlight 16384 { set temp2 pointhighlight : sub temp2 16384 : set temp2 sprite[temp2].owner }
+    }
+    and temp2 65280 shiftvarr temp2 8
+    redefinequote txt2 TAG 9
+ends
+
+defstate get_tag10      //owner2
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].owner }
+    } else {
+        ifge pointhighlight 16384 { set temp2 pointhighlight : sub temp2 16384 : set temp2 sprite[temp2].owner }
+    }
+    and temp2 255
+    redefinequote txt2 TAG 10
+ends
+
+//shade
+defstate get_tag11
+    state get_shade
+    redefinequote txt2 TAG 11
+ends
+//palette
+defstate get_tag12
+    state get_palette
+    redefinequote txt2 TAG 12
+ends
+
+//offsets
+defstate get_tag13
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].xoffset : set temp3 sprite[searchwall].yoffset }
+    } else {
+        ifge pointhighlight 16384 { set temp4 pointhighlight : sub temp4 16384 : set temp2 sprite[temp4].xoffset : set temp3 sprite[temp4].yoffset }
+    }
+    ifl temp2 0 { and temp2 127 : or temp2 128 }
+    ifl temp3 0 { and temp3 127 : or temp3 128 }
+    mul temp3 256 : add temp2 temp3
+    ifg temp2 32767 { and temp2 32767 : or temp2 -32768 }
+    redefinequote txt2 TAG 13
+ends
+
+//repeats
+defstate get_tag14
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].xrepeat : set temp3 sprite[searchwall].yrepeat }
+    } else {
+        ifge pointhighlight 16384 { set temp4 pointhighlight : sub temp4 16384 : set temp2 sprite[temp4].xrepeat : set temp3 sprite[temp4].yrepeat }
+    }
+    ifl temp2 0 { and temp2 127 : or temp2 128 }
+    ifl temp3 0 { and temp3 127 : or temp3 128 }
+    mul temp3 256 : add temp2 temp3
+    ifg temp2 32767 { and temp2 32767 : or temp2 -32768 }
+    redefinequote txt2 TAG 14
+ends
+
+// Sprite Z
+defstate get_tag15
+    ifin3dmode {
+        ife searchstat h_sprite { set temp2 sprite[searchwall].z }
+    } else {
+        ifge pointhighlight 16384 { set temp2 pointhighlight : sub temp2 16384 : set temp2 sprite[temp2].z }
+    }
+    redefinequote txt2 TAG 15
+ends
+
+
+
+
+defstate draw_q_menu // Hotkey display
+    // There are two windows: 1 - Displays any Q_ quote that is defined, useful for help tooltops
+    //                        2 - Displays quotes Q_MENU1 - 9    Useful for hotkeys ... ALWAYS under menu1
+    qstrlen m_strlen Q_MENU1
+    ifg m_strlen 0 {
+        ifl m_strlen 24 {
+            for m_strlen range 24 {
+                add m_strlen 1
+            }
+        }
+        //add m_strlen 6
+        
+        // Figure out and store longest string in m_strlen and string count in m_strcount
+        set m_strcount 0
+        set temp 820
+        set temp3 1
+        for i range temp {
+            add i 380
+            ife i 820 break
+            // ife drawing_window window1 ife i 399 set i temp
+            qstrlen temp2 i
+            ife drawing_window window1 {
+                ife m_extended 0 {
+                    ifg i Q_MENU2 { ifl i Q_MENU11 { set temp2 0 } }
+                }
+            }
+            ifg temp2 0 { add m_strcount 1 : ifg i 399 add temp2 18 }
+            ifg temp2 m_strlen set m_strlen temp2
+        }
+        add m_strlen 2
+        add m_strcount 1
+    } else { return }
+    
+    // m_window stores current drawn windows coords
+    // m_window1 will be the first window
+    // m_window2 will be the second window
+    // First we load WINDOW with target data and then modify WINDOW1 or WINDOW2 as needed
+    state draw_q_menu_clean_window // Variables are dirty from previous use
+    
+    set m_window_x1 m_window_xpadding : set m_window_y1 m_window_xpadding // Add margins
+    add m_window_x2 m_window_xpadding : add m_window_y2 m_window_ypadding // Add margins
+    
+    ife drawing_window window1 add m_strcount 1
+//    { qstrlen temp Q_HITAG : ifg temp 0 { add m_strcount 1 } }
+    set temp m_strlen : mul temp 8 : add m_window_x2 temp // Setup x2 for the longest string (m_strlen) * 8
+    set temp m_strcount : mul temp 9 : add m_window_y2 temp // Setup y2 for the string count (m_strcount) * 9
+
+    // Now the needed window dimensions to fit all text are stored in m_window_x1,y1-x2,y2
+    // Next we increase window1 or window2 size based on what the required size is going to be
+    ife drawing_window window1 {
+        ifg m_window_x1 m_window1_x1 { add m_window1_x1 4 } else ifl m_window_x1 m_window1_x1 { sub m_window1_x1 4 }
+        ifg m_window_y1 m_window1_y1 { add m_window1_y1 4 } else ifl m_window_y1 m_window1_y1 { sub m_window1_y1 4 }
+        ifg m_window_x2 m_window1_x2 { add m_window1_x2 4 } else ifl m_window_x2 m_window1_x2 { sub m_window1_x2 4 }
+        ifg m_window_y2 m_window1_y2 { add m_window1_y2 4 } else ifl m_window_y2 m_window1_y2 { sub m_window1_y2 4 }
+        set temp m_window1_x1 : sub temp m_window_x1 : ifl temp 5 set m_window1_x1 m_window_x1
+        set temp m_window1_x2 : sub temp m_window_x2 : ifl temp 5 set m_window1_x2 m_window_x2
+        set temp m_window1_y1 : sub temp m_window_y1 : ifl temp 5 set m_window1_y1 m_window_y1
+        set temp m_window1_y2 : sub temp m_window_y2 : ifl temp 5 set m_window1_y2 m_window_y2
+        set temp m_window1_y2 : mod temp 2 : ife temp 0 add m_window1_y2 1
+        set temp m_window1_x2 : mod temp 2 : ife temp 0 add m_window1_x2 1
+    } else ife drawing_window window2 {
+        ifg m_window_x1 m_window2_x1 { add m_window2_x1 4 } else ifl m_window_x1 m_window2_x1 { sub m_window2_x1 4 }
+        ifg m_window_y1 m_window2_y1 { add m_window2_y1 4 } else ifl m_window_y1 m_window2_y1 { sub m_window2_y1 4 }
+        ifg m_window_x2 m_window2_x2 { add m_window2_x2 4 } else ifl m_window_x2 m_window2_x2 { sub m_window2_x2 4 }
+        ifg m_window_y2 m_window2_y2 { add m_window2_y2 4 } else ifl m_window_y2 m_window2_y2 { sub m_window2_y2 4 }
+        set temp m_window2_x1 : sub temp m_window_x1 : ifl temp 5 set m_window2_x1 m_window_x1
+        set temp m_window2_x2 : sub temp m_window_x2 : ifl temp 5 set m_window2_x2 m_window_x2
+        set temp m_window2_y1 : sub temp m_window_y1 : ifl temp 5 set m_window2_y1 m_window_y1
+        set temp m_window2_y2 : sub temp m_window_y2 : ifl temp 5 set m_window2_y2 m_window_y2
+        set temp m_window2_y2 : mod temp 2 : ife temp 0 add m_window2_y2 1
+        set temp m_window2_x2 : mod temp 2 : ife temp 0 add m_window2_x2 1
+    }
+    
+    // Now what window1 and window2 sizes have been changed, we will ditch our "reference target" and use the
+    // same variables for drawing instead..
+    // Bit of duplication from above for readability.
+    ife drawing_window window1 state q_load_window1
+    ife drawing_window window2 state q_load_window2
+    // Next we make sure that window 2 will always be below window 1 + some padding, only if win1 was drawn.
+    
+    ife drawing_window window2 {
+        ifg m_window1_y2 0 {
+            add m_window_y1 m_window1_y2 : add m_window_y2 m_window1_y2
+            add m_window_y1 m_window_ypadding : add m_window_y2 m_window_ypadding
+        }
+    }
+    
+    state q_dowindow
+
+    set m_cursor_y m_window_y1 : add m_cursor_x m_window_xpadding
+    set m_cursor_x m_window_x1
+    
+    // Which key is being held
+    ife drawing_window window1 {
+        set m_color col_ired : set m_bg col_dblue : add m_cursor_x 8 : redefinequote txt 
+    } else {
+        set m_color col_iyellow : set m_bg col_dblue : add m_cursor_x 8 : redefinequote txt 
+    }
+    qstrcat txt Q_MENU1 : state print_shadowtext
+    
+    set m_cursor_x 8 : add m_cursor_y 12
+    add m_cursor_x m_window_xpadding
+    set m_cursor_x_descpos m_cursor_x
+    add m_cursor_x_descpos 144
+    set m_color col_iwhite : redefinequote txt
+    ife drawing_window window2  {
+        qstrlen temp Q_MENU2 : ifn temp 0 { qstrcpy txt Q_MENU2 : state print_shadowtext : add m_cursor_y 9 }
+        qstrlen temp Q_MENU3 : ifn temp 0 { qstrcpy txt Q_MENU3 : state print_shadowtext : add m_cursor_y 9 }
+        qstrlen temp Q_MENU4 : ifn temp 0 { qstrcpy txt Q_MENU4 : state print_shadowtext : add m_cursor_y 9 }
+        qstrlen temp Q_MENU5 : ifn temp 0 { qstrcpy txt Q_MENU5 : state print_shadowtext : add m_cursor_y 9 }
+        qstrlen temp Q_MENU6 : ifn temp 0 { qstrcpy txt Q_MENU6 : state print_shadowtext : add m_cursor_y 9 }
+        qstrlen temp Q_MENU7 : ifn temp 0 { qstrcpy txt Q_MENU7 : state print_shadowtext : add m_cursor_y 9 }
+        qstrlen temp Q_MENU8 : ifn temp 0 { qstrcpy txt Q_MENU8 : state print_shadowtext : add m_cursor_y 9 }
+        qstrlen temp Q_MENU9 : ifn temp 0 { qstrcpy txt Q_MENU9 : state print_shadowtext : add m_cursor_y 9 }
+        return
+    } else {
+        qstrlen temp Q_MENU2 : ifn temp 0 { qstrcpy txt Q_MENU2 : state print_shadowtext : add m_cursor_y 9 }
+        ife m_extended 1 {
+            qstrlen temp Q_MENU3 : ifn temp 0 { qstrcpy txt Q_MENU3 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_MENU4 : ifn temp 0 { qstrcpy txt Q_MENU4 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_MENU5 : ifn temp 0 { qstrcpy txt Q_MENU5 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_MENU6 : ifn temp 0 { qstrcpy txt Q_MENU6 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_MENU7 : ifn temp 0 { qstrcpy txt Q_MENU7 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_MENU8 : ifn temp 0 { qstrcpy txt Q_MENU8 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_MENU9 : ifn temp 0 { qstrcpy txt Q_MENU9 : state print_shadowtext : add m_cursor_y 9 }
+    }
+    add m_cursor_y 8
+    qstrlen temp Q_HITAG    : ifn temp 0 { state get_hitag    : qstrcpy txt Q_HITAG    : state print_tag }
+    qstrlen temp Q_LOTAG    : ifn temp 0 { state get_lotag    : qstrcpy txt Q_LOTAG    : state print_tag }
+    
+    // Shadow warrior has special treatment for some of the fields, we don't use them.
+    ifn game shadow {
+        qstrlen temp Q_EXTRA    : ifn temp 0 { state get_extra    : qstrcpy txt Q_EXTRA    : state print_tag }
+    }
+    qstrlen temp Q_PALETTE  : ifn temp 0 { state get_palette  : qstrcpy txt Q_PALETTE  : state print_tag }
+    qstrlen temp Q_SHADE    : ifn temp 0 { state get_shade    : qstrcpy txt Q_SHADE    : state print_tag }
+    qstrlen temp Q_ANGLE    : ifn temp 0 { state get_angle    : qstrcpy txt Q_ANGLE    : state print_tag }
+    qstrlen temp Q_XVEL     : ifn temp 0 { state get_xvel     : qstrcpy txt Q_XVEL     : state print_tag }
+    qstrlen temp Q_YVEL     : ifn temp 0 { state get_yvel     : qstrcpy txt Q_YVEL     : state print_tag }
+    ifn game shadow {
+        qstrlen temp Q_ZVEL     : ifn temp 0 { state get_zvel     : qstrcpy txt Q_ZVEL     : state print_tag }
+        qstrlen temp Q_OWNER    : ifn temp 0 { state get_owner    : qstrcpy txt Q_OWNER    : state print_tag }
+    }
+    qstrlen temp Q_CSTAT    : ifn temp 0 { state get_cstat    : qstrcpy txt Q_CSTAT    : state print_tag }
+    qstrlen temp Q_CLIPDIST : ifn temp 0 { state get_clipdist : qstrcpy txt Q_CLIPDIST : state print_tag }
+    ifn game shadow {
+        qstrlen temp Q_XREPEAT  : ifn temp 0 { state get_xrepeat  : qstrcpy txt Q_XREPEAT  : state print_tag }
+        qstrlen temp Q_YREPEAT  : ifn temp 0 { state get_yrepeat  : qstrcpy txt Q_YREPEAT  : state print_tag }
+        qstrlen temp Q_XOFFSET  : ifn temp 0 { state get_xoffset  : qstrcpy txt Q_XOFFSET  : state print_tag }
+        qstrlen temp Q_YOFFSET  : ifn temp 0 { state get_yoffset  : qstrcpy txt Q_YOFFSET  : state print_tag }
+    }
+    qstrlen temp Q_STATNUM  : ifn temp 0 { state get_statnum  : qstrcpy txt Q_STATNUM  : state print_tag }
+    qstrlen temp Q_Z        : ifn temp 0 { state get_tag15    : qstrcpy txt Q_Z        : state print_tag }
+    
+    // Only consider these tags if we're doing shadow warrior
+    ife game shadow {
+        qstrlen temp Q_TAG1  : ifn temp 0 { state get_tag1  : qstrcpy txt Q_TAG1  : state print_tag }
+        qstrlen temp Q_TAG2  : ifn temp 0 { state get_tag2  : qstrcpy txt Q_TAG2  : state print_tag }
+        qstrlen temp Q_TAG3  : ifn temp 0 { state get_tag3  : qstrcpy txt Q_TAG3  : state print_tag }
+        qstrlen temp Q_TAG4  : ifn temp 0 { state get_tag4  : qstrcpy txt Q_TAG4  : state print_tag }
+        qstrlen temp Q_TAG5  : ifn temp 0 { state get_tag5  : qstrcpy txt Q_TAG5  : state print_tag }
+        qstrlen temp Q_TAG6  : ifn temp 0 { state get_tag6  : qstrcpy txt Q_TAG6  : state print_tag }
+        qstrlen temp Q_TAG7  : ifn temp 0 { state get_tag7  : qstrcpy txt Q_TAG7  : state print_tag }
+        qstrlen temp Q_TAG8  : ifn temp 0 { state get_tag8  : qstrcpy txt Q_TAG8  : state print_tag }
+        qstrlen temp Q_TAG9  : ifn temp 0 { state get_tag9  : qstrcpy txt Q_TAG9  : state print_tag }
+        qstrlen temp Q_TAG10 : ifn temp 0 { state get_tag10 : qstrcpy txt Q_TAG10 : state print_tag }
+        qstrlen temp Q_TAG11 : ifn temp 0 { state get_tag11 : qstrcpy txt Q_TAG11 : state print_tag }
+        qstrlen temp Q_TAG12 : ifn temp 0 { state get_tag12 : qstrcpy txt Q_TAG12 : state print_tag }
+        qstrlen temp Q_TAG13 : ifn temp 0 { state get_tag13 : qstrcpy txt Q_TAG13 : state print_tag }
+        qstrlen temp Q_TAG14 : ifn temp 0 { state get_tag14 : qstrcpy txt Q_TAG14 : state print_tag }
+        qstrlen temp Q_TAG15 : ifn temp 0 { state get_tag15 : qstrcpy txt Q_TAG15 : state print_tag }
+    }
+    ifn m_extended 0 {
+        qstrlen temp Q_NOTE1
+        ifn temp 0 {
+            add m_cursor_y 9
+            set m_color col_white
+            qstrcpy txt Q_NOTE1 : state print_shadowtext : add m_cursor_y 8 
+            qstrlen temp Q_NOTE2 : ifn temp 0 { qstrcpy txt Q_NOTE2 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_NOTE3 : ifn temp 0 { qstrcpy txt Q_NOTE3 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_NOTE4 : ifn temp 0 { qstrcpy txt Q_NOTE4 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_NOTE5 : ifn temp 0 { qstrcpy txt Q_NOTE5 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_NOTE6 : ifn temp 0 { qstrcpy txt Q_NOTE6 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_NOTE7 : ifn temp 0 { qstrcpy txt Q_NOTE7 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_NOTE8 : ifn temp 0 { qstrcpy txt Q_NOTE8 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_NOTE9 : ifn temp 0 { qstrcpy txt Q_NOTE9 : state print_shadowtext : add m_cursor_y 9 }
+            qstrlen temp Q_NOTE10 : ifn temp 0 { qstrcpy txt Q_NOTE10 : state print_shadowtext : add m_cursor_y 9 }
+        }
+    }
+    state print_notepop
+}
+
+ends
+
+
+// defstate cleanvars
+//     
+// ends
+
+
+defstate hotkeys
+    state q_menu_prepare
+    
+    ifin3dmode {
+        ife heldkeys shift {
+            redefinequote Q_MENU1 SHIFT is being held
+            redefinequote Q_MENU2 W   Flip slope
+            redefinequote Q_MENU3 Y   Paste slope
+            redefinequote Q_MENU4 U   Raise object by 1
+            redefinequote Q_MENU5 J   Lower object by 1
+            redefinequote Q_MENU6 SPC Select sector or sprite
+            redefinequote Q_MENU7 + - Inc / Dec Extra
+        }
+        ife heldkeys ctrl {
+            redefinequote Q_MENU1 CTRL is being held
+            redefinequote Q_MENU2 W   Paste picnum
+            redefinequote Q_MENU3 D   Clone sprite
+            redefinequote Q_MENU4 Y   Paste shade
+            redefinequote Q_MENU5 U   Move sprite to actual ceiling
+            redefinequote Q_MENU6 J   Move sprite to actual floor
+            redefinequote Q_MENU7 + - Inc / Dec Hitag
+        }
+        ife heldkeys alt {
+            redefinequote Q_MENU1 ALT is being held
+            redefinequote Q_MENU2 W   Fix wall repeats
+            redefinequote Q_MENU3 C   Object corrector
+            redefinequote Q_MENU4 Y   Paste palette
+            redefinequote Q_MENU5 U   Round Z to 1024
+            redefinequote Q_MENU6 J   Round Z to 128
+            redefinequote Q_MENU7 + - Inc / Dec Lotag
+        }
+        ife heldkeys shift_ctrl {
+            redefinequote Q_MENU1 SHIFT & CTRL are being held
+            redefinequote Q_MENU2 W   Paste Z
+            redefinequote Q_MENU4 Y   Z noise
+            redefinequote Q_MENU5 U   Flatten sprite to ceiling
+            redefinequote Q_MENU6 J   Flatten sprite to floor
+        }
+        ife heldkeys ctrl_alt {
+            redefinequote Q_MENU1 CTRL & ALT are being held
+            redefinequote Q_MENU3 D   Paste Xpanning
+            redefinequote Q_MENU4 Y   Paste Ypanning
+            redefinequote Q_MENU5 U   Raise sectors 1024
+            redefinequote Q_MENU6 J   Lower sectors 1024
+        }
+        ife heldkeys shift_ctrl_alt {
+            redefinequote Q_MENU1 SHIFT & CTRL & ALT are being held
+            redefinequote Q_MENU5 U   Raise sectors 128
+            redefinequote Q_MENU6 J   Lower sectors 128
+        }
+        ifholdkey KEY_QUOTE {
+            ifholdkey KEY_SEMI {
+                redefinequote Q_MENU1 Quote & Semicolon are being held
+                redefinequote Q_MENU2 P Paste palette to selection
+            }
+            else {
+                redefinequote Q_MENU1 Quote is being held
+                redefinequote Q_MENU2 H   Change hitag
+                redefinequote Q_MENU3 T   Change lotag
+                // L key
+                    ife hstat h_sprite {
+                        redefinequote Q_MENU4 L   Change sprite x/y/z/angle
+                    } else ife hstat h_floor { 
+                        redefinequote Q_MENU4 L   Change floor Z and slope
+                    } else ife hstat h_ceiling { 
+                        redefinequote Q_MENU4 L   Change ceiling Z and slope
+                    } else { 
+                        redefinequote Q_MENU4 L   Adjust floor/ceiling/sprite
+                    }
+                // End L key
+                redefinequote Q_MENU5 V   Change visibility
+                redefinequote Q_MENU6 X   Map shade preview
+            }
+        } else {
+            ifholdkey KEY_SEMI {
+                redefinequote Q_MENU1 Semicolon is being held
+            }
+        }
+//---------------------------------------------------------------------- 2D
+    } else {
+        ife heldkeys shift {
+            redefinequote Q_MENU1 SHIFT is being held
+            redefinequote Q_MENU7 + -  Inc / Dec Extra
+        }
+        ife heldkeys ctrl {
+            redefinequote Q_MENU1 CTRL is being held
+            redefinequote Q_MENU7 + -  Inc / Dec Hitag
+        }
+        ife heldkeys alt {
+            redefinequote Q_MENU1 ALT is being held
+            redefinequote Q_MENU7 + -  Inc / Dec Lotag
+        }
+    }
+    qstrlen m_strlen Q_MENU1 
+    ifn m_strlen 0 { set drawing_window window2 : state draw_q_menu } else { state draw_q_menu_clean_window2 }
+ends
+
+
+// ############################################################################
+//                          STATES FOR GETTING TAGS
+// ############################################################################
+// Any stubs for TAG are there to maintain aesthetic compatibility with SW use.
+// Some TAGs are not compatible with regular structs so not all tag-struct combos match
+
+// In the following order:
+//  hitag      1    lotag      2    extra           palette   12    shade     11    angle      4
+//  xvel       5    yvel       6    zvel            owner           cstat           clipdist   3
+//  xrepeat         yrepeat         xoffset         yoffset         statnum         Z          15
+    
+// Special tags for SW:
+//  Lo-Zvel    7    Hi-Zvel    8    Lo-Owner   9    Hi-Owner  10    Offsets   13    Repeats    14
+// For some reason SW decided to split Zvel and Owner but then combines Offsets and Repeats !??
+
+defstate change_tag_shared
+    set hreading false
+    // Rest is to determine what should be displayed for tag/etc.. 
+    // Count our selected sprites and/or walls
+    set temp 0 : set temp2 0 
+    for i selsprites { add temp 1 : set hstat h_mulcnt }
+    for i selwalls { add temp2 1  : set hstat h_mulcnt }
+    // Prompt accordingly for sprites/walls, first empty the quote
+    redefinequote txt
+    ifg temp 0               { redefinequote txt Set %ld selected sprites 
+                                qsprintf txt txt temp
+                                set hstat h_mulcnt }
+    ifg temp2 0              { redefinequote txt Set %ld selected walls 
+                                qsprintf txt txt temp2
+                                set hstat h_mulcnt }
+    ifg temp 0 ifg temp2 0   { redefinequote txt Set %ld selected sprites and %ld walls 
+                                qsprintf txt txt temp temp2
+                                set hstat h_mulcnt }
+    // Sectors and walls 
+    ife temp 0 ife temp2 0 {
+        ifg highlightsectorcnt 0 { redefinequote txt Set %ld selected sectors 
+                                    qsprintf txt txt highlightsectorcnt 
+                                    set hstat h_mulsectcnt }
+        ife hstat h_sprite       { redefinequote txt Sprite (%ld) 
+                                        qsprintf txt txt h }
+        ife hstat h_wall         { redefinequote txt Wall (%ld) 
+                                        qsprintf txt txt h }
+        ife hstat h_ceiling      { redefinequote txt Sector (%ld) 
+                                        qsprintf txt txt h }
+        ife hstat h_floor        { redefinequote txt Sector (%ld) 
+                                        qsprintf txt txt h }
+        ife hstat h_sector       { redefinequote txt Sector (%ld) 
+                                    qsprintf txt txt h }
+    }
+ends
+
+
+defstate change_hitag // TAG1 / hitag (-32768 to 32767)
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 {
+        // SW has exclusive tags/names
+        ife game shadow
+            redefinequote txt2 Hi-Tag - TAG 1:^%ld 
+       else redefinequote txt2 Hi-Tag:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].hitag
+            ife hstat h_wall       set temp3              wall[h].hitag
+            ife hstat h_floor      set temp3            sector[h].hitag
+            ife hstat h_ceiling    set temp3            sector[h].hitag
+            ife hstat h_sector     set temp3            sector[h].hitag
+        } else { set temp3 0 }
+        
+        getnumberfromuser temp3 txt -32767 15
+        ifn temp3 -2147483648 {
+            ife hstat h_wall                          set wall[h].hitag temp3
+            ife hstat h_ceiling                     set sector[h].hitag temp3
+            ife hstat h_sector                      set sector[h].hitag temp3
+            ife hstat h_floor                       set sector[h].hitag temp3
+            ife hstat h_sprite                      set sprite[h].hitag temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].hitag temp3
+            ife hstat h_mulcnt     for i selwalls     set wall[i].hitag temp3
+            ife hstat h_mulsectcnt for i selsectors set sector[i].hitag temp3
+        }
+    }
+    set hreading true
+ends
+
+defstate change_lotag
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 {
+        // SW has exclusive tags/names
+        ife game shadow
+            redefinequote txt2 Lo-Tag - TAG 2:^%ld 
+       else redefinequote txt2 Lo-Tag:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].lotag
+            ife hstat h_wall       set temp3              wall[h].lotag
+            ife hstat h_floor      set temp3            sector[h].lotag
+            ife hstat h_ceiling    set temp3            sector[h].lotag
+            ife hstat h_sector     set temp3            sector[h].lotag
+        } else { set temp3 0 }
+        
+        getnumberfromuser temp3 txt -32767 15
+        ifn temp3 -2147483648 {
+            ife hstat h_wall                          set wall[h].lotag temp3
+            ife hstat h_ceiling                     set sector[h].lotag temp3
+            ife hstat h_sector                      set sector[h].lotag temp3
+            ife hstat h_floor                       set sector[h].lotag temp3
+            ife hstat h_sprite                      set sprite[h].lotag temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].lotag temp3
+            ife hstat h_mulcnt     for i selwalls     set wall[i].lotag temp3
+            ife hstat h_mulsectcnt for i selsectors set sector[i].lotag temp3
+        }
+    }
+    set hreading true
+ends
+defstate change_extra
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 {
+        // SW has exclusive tags/names
+        ife game shadow
+            redefinequote txt2 Extra - BOOLEAN:^%ld 
+       else redefinequote txt2 Extra:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].extra
+            ife hstat h_wall       set temp3              wall[h].extra
+            ife hstat h_floor      set temp3            sector[h].extra
+            ife hstat h_ceiling    set temp3            sector[h].extra
+            ife hstat h_sector     set temp3            sector[h].extra
+        } else { set temp3 0 }
+        
+        getnumberfromuser temp3 txt -32767 15
+        ifn temp3 -2147483648 {
+            ife hstat h_wall                          set wall[h].extra temp3
+            ife hstat h_ceiling                     set sector[h].extra temp3
+            ife hstat h_sector                      set sector[h].extra temp3
+            ife hstat h_floor                       set sector[h].extra temp3
+            ife hstat h_sprite                      set sprite[h].extra temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].extra temp3
+            ife hstat h_mulcnt     for i selwalls     set wall[i].extra temp3
+            ife hstat h_mulsectcnt for i selsectors set sector[i].extra temp3
+        }
+    }
+    set hreading true
+ends
+
+defstate change_clipdist    ///// FIXME!!!!!!!
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 {
+        // SW has exclusive tags/names
+        ife game shadow
+            redefinequote txt2 Clipdist - TAG 3:^%ld 
+       else redefinequote txt2 Clipdist:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].clipdist
+        } else { set temp3 0 }
+        
+        getnumberfromuser temp3 txt -32767 15
+        ifn temp3 -2147483648 {
+            ife hstat h_sprite                      set sprite[h].clipdist temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].clipdist temp3
+        }
+    }
+    set hreading true
+ends
+
+defstate change_angle
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 {
+        // SW has exclusive tags/names
+        ife game shadow
+            redefinequote txt2 Angle - TAG 4:^%ld 
+       else redefinequote txt2 Angle:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].ang
+        } else { set temp3 0 }
+        set getnumbertype gn_ang
+        getnumberfromuser temp3 txt -32767 15
+        set getnumbertype false
+        ifn temp3 -2147483648 {
+            ife hstat h_sprite                      set sprite[h].ang temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].ang temp3
+        }
+    }
+    set hreading true
+ends
+
+defstate change_xvel
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 {
+        // SW has exclusive tags/names
+        ife game shadow
+            redefinequote txt2 Xvel - TAG 5:^%ld 
+       else redefinequote txt2 Xvel:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].xvel
+        } else { set temp3 0 }
+        
+        getnumberfromuser temp3 txt -32767 15
+        ifn temp3 -2147483648 {
+            ife hstat h_sprite                      set sprite[h].xvel temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].xvel temp3
+        }
+    }
+    set hreading true
+ends
+
+defstate change_yvel
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 {
+        // SW has exclusive tags/names
+        ife game shadow
+            redefinequote txt2 Yvel - TAG 6:^%ld 
+       else redefinequote txt2 Yvel:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].yvel
+        } else { set temp3 0 }
+        
+        getnumberfromuser temp3 txt -32767 15
+        ifn temp3 -2147483648 {
+            ife hstat h_sprite                      set sprite[h].yvel temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].yvel temp3
+        }
+    }
+    set hreading true
+ends
+
+defstate change_zvel
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 {
+        // SW has exclusive tags/names
+        ife game shadow
+            redefinequote txt2 Zvel - TAG 6:^%ld 
+       else redefinequote txt2 Zvel:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].zvel
+        } else { set temp3 0 }
+        
+        getnumberfromuser temp3 txt -32767 15
+        ifn temp3 -2147483648 {
+            ife hstat h_sprite                      set sprite[h].zvel temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].zvel temp3
+        }
+    }
+    set hreading true
+ends
+
+defstate change_shade
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+
+    // SW has exclusive tags/names
+    ife game shadow
+        redefinequote txt2 Shade - TAG 15:^%ld 
+   else redefinequote txt2 Shade:^%ld 
+    qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+    // 
+    ifg h -1 {
+        ife hstat h_sprite     set temp3            sprite[h].shade
+        ife hstat h_floor      set temp3            sector[h].floorshade
+        ife hstat h_ceiling    set temp3            sector[h].ceilingshade
+        ife hstat h_sector     set temp3            sector[h].floorshade
+    } else { set temp3 0 }
+    set getnumbertype gn_shade
+    getnumberfromuser temp3 txt -32767 15
+    set getnumbertype false
+    ifn temp3 -2147483648 {
+        ife hstat h_wall                          set wall[h].shade temp3
+        ife hstat h_ceiling                     set sector[h].ceilingshade temp3
+        ife hstat h_sector                      set sector[h].floorshade temp3
+        ife hstat h_floor                       set sector[h].floorshade temp3
+        ife hstat h_sprite                      set sprite[h].shade temp3
+        ife hstat h_mulcnt     for i selsprites set sprite[i].shade temp3
+        ife hstat h_mulcnt     for i selwalls     set wall[i].shade temp3
+        ife hstat h_mulsectcnt for i selsectors { set sector[i].floorshade temp3 : set sector[i].ceilingshade temp3 }
+    }
+    set hreading true
+ends
+
+defstate change_pal
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 {
+        // SW has exclusive tags/names
+        ife game shadow
+            redefinequote txt2 Palette - TAG 12:^%ld 
+       else redefinequote txt2 Palette:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].pal
+            ife hstat h_wall       set temp3              wall[h].pal
+            ife hstat h_floor      set temp3            sector[h].floorpal
+            ife hstat h_ceiling    set temp3            sector[h].ceilingpal
+            ife hstat h_sector     set temp3            sector[h].floorpal
+        } else { set temp3 0 }
+        set getnumbertype gn_pal
+        getnumberfromuser temp3 txt -32767 15
+        set getnumbertype false
+        ifn temp3 -2147483648 {
+            ife hstat h_wall                          set wall[h].pal temp3
+            ife hstat h_ceiling                     set sector[h].ceilingpal temp3
+            ife hstat h_sector                      { set sector[h].floorpal temp3 : set sector[h].ceilingpal temp3 }
+            ife hstat h_floor                       set sector[h].floorpal temp3
+            ife hstat h_sprite                      set sprite[h].pal temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].pal temp3
+            ife hstat h_mulcnt     for i selwalls     set wall[i].pal temp3
+            ife hstat h_mulsectcnt for i selsectors { set sector[i].floorpal temp3 : set sector[i].ceilingpal temp3 }
+        }
+    }
+    set hreading true
+ends
+
+defstate change_z
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 ifn hstat h_wall {
+        // SW has exclusive tags/names
+        ife game shadow
+            redefinequote txt2 Z-Height - TAG 15:^%ld 
+       else redefinequote txt2 Z-Height:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].z
+            ife hstat h_floor      set temp3            sector[h].floorz
+            ife hstat h_ceiling    set temp3            sector[h].ceilingz
+            ife hstat h_sector     set temp3            sector[h].floorz
+        } else { set temp3 0 }
+        set getnumbertype gn_z
+        getnumberfromuser temp3 txt -32767 15
+        set getnumbertype false
+        ifn temp3 -2147483648 {
+            ife hstat h_ceiling                     set sector[h].ceilingz temp3
+            ife hstat h_sector                      set sector[h].floorz temp3
+            ife hstat h_floor                       set sector[h].floorz temp3
+            ife hstat h_sprite                      set sprite[h].z temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].z temp3
+            ife hstat h_mulsectcnt for i selsectors set sector[i].floorz temp3
+        }
+    }
+    set hreading true
+ends
+
+defstate change_xrepeat
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 ifn hstat h_wall {
+        redefinequote txt2 X-Repeat:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].xrepeat
+            ife hstat h_wall       set temp3              wall[h].xrepeat
+        } else { set temp3 0 }
+        set getnumbertype gn_xrepeat
+        getnumberfromuser temp3 txt -32767 15
+        set getnumbertype false
+        ifn temp3 -2147483648 {
+            ife hstat h_sprite                      set sprite[h].xrepeat temp3
+            ife hstat h_wall                          set wall[h].xrepeat temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].xrepeat temp3
+            ife hstat h_mulcnt     for i selwalls     set wall[i].xrepeat temp3
+        }
+    }
+    set hreading true
+ends
+
+defstate change_xrepeat
+    // Get pointed ID under 'h' and type in 'hstat' 
+    state change_tag_shared
+    // If we're actually pointing at something then...
+    ifn hstat -1 ifn hstat h_wall {
+        redefinequote txt2 X-Repeat:^%ld 
+        qsprintf txt2 txt2 col_iblue : qstrcat txt txt2
+        // 
+        ifg h -1 {
+            ife hstat h_sprite     set temp3            sprite[h].yrepeat
+            ife hstat h_wall       set temp3              wall[h].yrepeat
+        } else { set temp3 0 }
+        set getnumbertype gn_xrepeat
+        getnumberfromuser temp3 txt -32767 15
+        set getnumbertype false
+        ifn temp3 -2147483648 {
+            ife hstat h_sprite                      set sprite[h].yrepeat temp3
+            ife hstat h_wall                          set wall[h].yrepeat temp3
+            ife hstat h_mulcnt     for i selsprites set sprite[i].yrepeat temp3
+            ife hstat h_mulcnt     for i selwalls     set wall[i].yrepeat temp3
+        }
+    }
+    set hreading true
+ends
+
+defstate change_tag1 : state change_hitag : ends // Stub line for "state change_tagx" compatibility
+defstate change_tag2 : state change_lotag : ends // Stub line for "state change_tagx" compatibility
+defstate change_tag3 : state change_clipdist : ends // Stub line for "state change_tagx" compatibility
+defstate change_tag4 : state change_angle : ends // Stub line for "state change_tagx" compatibility
+defstate change_tag5 : state change_xvel : ends // Stub line for "state change_tagx" compatibility
+defstate change_tag6 : state change_yvel : ends // Stub line for "state change_tagx" compatibility
+// TAG7  = zvel 1 (-128 to 127)
+// TAG8  = zvel 2 (-128 to 127) 
+// TAG9  = owner 1 (-128 to 127)  - default is unsigned 255 or signed -1
+// TAG10 = owner 2 (-128 to 127) - default is unsigned 255 or signed -1
+defstate change_tag11 : state change_shade : ends // Stub line for "state change_tagx" compatibility
+defstate change_tag12 : state change_pal : ends // Stub line for "state change_tagx" compatibility
+// TAG13 = xoffset and yoffset (-32768 to 32767) 
+// TAG14 = xrepeat and yrepeat (-32768 to 32767)
+defstate change_tag15 : state change_z : ends // Stub line for "state change_tagx" compatibility
+
+// ############################################################################
+//                          STATES FOR LABELS
+// ############################################################################
+
+defstate showsectorlabel        // Sector label with Q_MENU1 HITAG,LOTAG,EXTRA    --- Input is wall index [i]
+    ifg zoom 768 {
+        set temp6 0
+        ifn sector[i].hitag 0 add temp6 1
+        ifn sector[i].lotag 0 add temp6 1
+        ife game shadow {
+            ifn sector[i].extra 0 add temp6 1
+        } else {
+            ifn sector[i].extra -1 add temp6 1
+        }
+        
+        
+        ifn temp2 0 {
+            set temp2 0 : set temp3 0 : set temp4 0 : set temp5 0
+            for temp6 wallsofsector i {
+                add temp2 wall[temp6].x
+                add temp3 wall[temp6].y
+                add temp4 1
+                add temp5 1
+            }
+            div temp2 temp4
+            div temp3 temp5
+            ifn temp6 3 {
+                redefinequote txt %ld,%ld
+                qsprintf txt txt sector[i].hitag sector[i].lotag
+                } else {
+                redefinequote txt %ld,%ld,%ld
+                qsprintf txt txt sector[i].hitag sector[i].lotag sector[i].extra
+                }
+            qstrcat txt Q_MENU1
+            drawlabel txt temp2 temp3 0 0 7    // Black on grey
+        }
+    }
+ends
+defstate showwalllabel          // Wall label with Q_MENU1 + HITAG,LOTAG          --- Input is wall index [i]
+    ifg zoom 768 {
+        set temp2 0 : set temp3 0 : set temp4 0 : set temp5 0
+        set temp2 wall[i].x
+        set temp3 wall[i].y
+        set temp5 wall[i].point2
+        set temp4 wall[temp5].x
+        set temp5 wall[temp5].y
+        add temp2 temp4
+        add temp3 temp5
+        div temp2 2
+        div temp3 2
+        redefinequote txt %ld,%ld 
+        qsprintf txt txt wall[i].hitag wall[i].lotag
+        qstrcat txt Q_MENU1
+        drawlabel txt temp2 temp3 0 0 31    // Black on grey
+    }
+ends
+defstate showspritelabelht      // Sprite label with hitag + Q_MENU1 text         --- Input is sprite index [h]
+    ifg zoom 768 {
+        redefinequote txt %ld 
+        qsprintf txt txt sprite[h].hitag
+        qstrcat txt Q_MENU1
+        redefinequote txt2 , %ld
+        qsprintf txt2 txt2 sprite[h].lotag
+        qstrcat txt txt2
+        drawlabel txt sprite[h].x sprite[h].y 0 0 3
+    }
+ends
+
+// ############################################################################
+//                          STATES FOR MOST SETTINGS
+// ############################################################################
+
+defstate read_clipboard // Reads values in to clipboard, additional values to completement [TAB] reading
+// Values read from: WALL / CEILING / FLOOR / SPRITE / MASKWALL
+// If applicable, following are read: Y-panning / Slope / Z coordinate
+    ifin3dmode {
+        switch searchstat
+            case h_wall // Cursor pointing at wall
+                set clipboard_ypanning wall[searchwall].ypanning
+                set clipboard_ypanning wall[searchbottomwall].ypanning
+                redefinequote hud_top Clipboard (wall): Y panning: %ld
+                qsprintf hud_top hud_top clipboard_ypanning
+                break
+            case h_ceiling // Cursor pointing at ceiling
+                set clipboard_slope sector[searchsector].ceilingslope
+                set clipboard_z sector[searchsector].ceilingz
+                set clipboard_ypanning sector[searchsector].ceilingypanning
+                set clipboard_xpanning sector[searchsector].ceilingxpanning
+                redefinequote hud_top Clipbard (ceiling): Y panning: %ld  -  Slope: %ld  -  Z: %ld
+                qsprintf hud_top hud_top clipboard_ypanning clipboard_slope clipboard_z
+                break
+            case h_floor // Cursor pointing at floor
+                set clipboard_slope sector[searchsector].floorslope
+                set clipboard_z sector[searchsector].floorz
+                set clipboard_ypanning sector[searchsector].floorypanning
+                set clipboard_xpanning sector[searchsector].floorxpanning
+                redefinequote hud_top Clipboard (floor):  Y panning: %ld  -  Slope: %ld  -  Z: %ld
+                qsprintf hud_top hud_top clipboard_ypanning clipboard_slope clipboard_z
+                break
+            case h_sprite // Cursor pointing at sprite
+                set clipboard_z sprite[searchwall].z
+                set clipboard_slope 0
+                set temp sprite[searchwall].yoffset
+                shiftvarl temp 8
+                or clipboard_slope temp
+                set temp sprite[searchwall].xoffset
+                and temp 255
+                add clipboard_slope temp
+                redefinequote hud_top Clipboard (sprite):  Slope: %ld  -  Z: %ld
+                qsprintf hud_top hud_top clipboard_slope clipboard_z
+                break
+            case h_maskwall // Cursor pointing at masked wall
+                set clipboard_ypanning wall[searchwall].ypanning
+                redefinequote hud_top Clipboard (maskwall):  Y panning: %ld
+                qsprintf hud_top hud_top clipboard_ypanning clipboard_slope clipboard_z
+                break
+        endswitch
+        set hudtext true
+    }
+ends
+defstate clear_selections // Clear group selected sprites/sectors inherited from 2D, used in 3D. For most functions.
+    ife highlightsectorcnt -1 {
+        for i allsprites {
+            sethighlight 16384 i 0
+        }
+        for i allwalls {
+            sethighlight 0 i 0
+        }
+    }
+    ifn highlightsectorcnt -1 {
+        set i 0
+        whilen i highlightsectorcnt {
+            sethighlightsector highlightsector[i] 0
+            add i 1
+        }
+    }
+    redefinequote hud_top Active selections cleared!
+    set hudtext true
+ends
+defstate updatepal // Called in draw functions, updates gamepalette to be what the script wants it to be.
+    setgamepalette currentpalette
+ends
+
+// Split 16-bit to 2x 8-bit
+defstate word_to_byte
+    // INPUT = temp (16bit)
+    // OUTPUT = temp2 (low byte) temp3 (high byte)
+    shiftvarl temp 8
+    shiftvarr temp 8
+    set temp2 temp
+    shiftvarr temp 8
+    set temp3 temp
+ends
+
+// Combine 2x 8-bit to 16-bit
+defstate byte_to_word
+    // INPUT =  temp2 (low byte) temp3 (high byte)
+    // OUTPUT = temp (16bit)
+    set temp temp3
+    shiftvarl temp 8
+    or temp temp2
+    and temp 255
+ends
+
+defstate slope_to_sprite
+    // INPUT = temp
+    state word_to_byte
+    ife temp 0 {
+        ifand sprite[i].cstat cstat_sprite_slope
+        xor   sprite[i].cstat cstat_sprite_slope
+    } else {
+        and sprite[i].cstat cstat_sprite_slope
+    }
+    set sprite[i].xoffset temp2
+    set sprite[i].yoffset temp3
+    
+ends
+
+defstate slope_from_sprite
+    // OUTPUT = temp
+    set temp2 sprite[i].xoffset
+    set temp3 sprite[i].yoffset
+    state byte_to_word
+ends
+
+// Paste clipboarded slope to floor/ceiling/sprite 
+defstate paste_slope 
+    // state geth
+    set i h
+    switch searchstat
+        case h_ceiling
+            ife highlightsectorcnt -1 { set sector[i].ceilingslope clipboard_slope }
+            else { for i selsectors {   set sector[i].ceilingslope clipboard_slope } }
+            redefinequote hud_top Ceiling slope set to: %ld
+            break
+        case h_floor
+            ife highlightsectorcnt -1 { set sector[i].floorslope clipboard_slope }
+            else { for i selsectors {   set sector[i].floorslope clipboard_slope } }
+            redefinequote hud_top Floor slope set to: %ld
+            break
+        case h_sprite
+            set h searchwall
+            set temp clipboard_slope
+            state slope_to_sprite
+            redefinequote hud_top Sprite slope set to: %ld
+            break
+        case h_wall
+        case h_maskwall
+            redefinequote hud_top Sloping only works on floor/ceiling/sprites!
+            break
+    endswitch
+    qsprintf hud_top hud_top clipboard_slope
+    set hudtext true
+ends
+
+defstate pickselect // Toggle selecting on sprites or sectors
+    switch searchstat
+        case h_sprite
+            ifg highlightsectorcnt -1 { 
+                quote txt
+            } else {
+                ifhighlighted sprite searchwall { sethighlight 16384 searchwall 0 } else { sethighlight 16384 searchwall 1 }
+            }
+        break
+        case h_ceiling
+        case h_floor
+            ifg highlightcnt -1 {
+                quote txt
+            } else {
+                set i 0
+                set temp 0
+                ifn highlightsectorcnt -1 {
+                    whilen i highlightsectorcnt {
+                        ife highlightsector[i] searchsector set temp 1
+                        add i 1
+                    }
+                    ife temp 1 { sethighlightsector searchsector 0 } else { sethighlightsector searchsector 1 }
+                } else {
+                    sethighlightsector searchsector 1
+                }
+            }
+        break
+    endswitch
+ends
+
+
+// Needs isel
+defstate paste_shade // Paste clipboarded shade to floor/ceiling/sprite
+    switch searchstat
+        case h_wall
+            set wall[searchwall].shade tempshade
+            set wall[searchbottomwall].shade tempshade
+            redefinequote hud_top Wall
+            break
+        case h_ceiling
+            set sector[searchsector].ceilingshade tempshade
+            redefinequote hud_top Ceiling
+            break
+        case h_floor
+            set sector[searchsector].floorshade tempshade
+            redefinequote hud_top Floor
+            break
+        case h_sprite
+            set sprite[searchwall].shade tempshade
+            redefinequote hud_top Sprite
+            break
+        case h_maskwall
+            set wall[searchwall].shade tempshade
+            redefinequote hud_top Maskwall
+            break
+    endswitch
+    redefinequote txt2 shaded to: %ld
+    qsprintf txt2 txt2 tempshade
+    qstrcat hud_top txt2
+    set hudtext true
+ends
+// Needs isel
+defstate paste_ypanning // Paste clipboarded Ypanning
+    switch searchstat
+        case h_wall
+            set wall[searchwall].ypanning clipboard_ypanning
+            set wall[searchbottomwall].ypanning clipboard_ypanning
+            redefinequote hud_top Wall Ypanning set to: %ld
+            qsprintf hud_top hud_top clipboard_ypanning
+            set hudtext true
+            break
+        case h_ceiling
+            set sector[searchsector].ceilingypanning clipboard_ypanning
+            redefinequote hud_top Ceiling Ypanning set to: %ld
+            qsprintf hud_top hud_top clipboard_ypanning
+            set hudtext true
+            break
+        case h_floor
+            set sector[searchsector].floorypanning clipboard_ypanning
+            redefinequote hud_top Floor Ypanning set to: %ld
+            qsprintf hud_top hud_top clipboard_ypanning
+            set hudtext true
+            break
+        case h_maskwall
+            set wall[searchwall].ypanning clipboard_ypanning
+            redefinequote hud_top Maskwall Ypanning set to: %ld
+            qsprintf hud_top hud_top clipboard_ypanning
+            set hudtext true
+            break
+    endswitch
+ends
+// Needs isel
+defstate paste_xpanning // Paste clipboarded Xpanning
+    switch searchstat
+        case h_wall
+            set wall[searchwall].xpanning clipboard_xpanning
+            set wall[searchbottomwall].xpanning clipboard_xpanning
+            redefinequote hud_top Wall Xpanning set to: %ld
+            qsprintf hud_top hud_top clipboard_xpanning
+            set hudtext true
+            break
+        case h_ceiling
+            set sector[searchsector].ceilingxpanning clipboard_xpanning
+            redefinequote hud_top Ceiling Xpanning set to: %ld
+            qsprintf hud_top hud_top clipboard_ypanning
+            set hudtext true
+            break
+        case h_floor
+            set sector[searchsector].floorxpanning clipboard_xpanning
+            redefinequote hud_top Floor Xpanning set to: %ld
+            qsprintf hud_top hud_top clipboard_ypanning
+            set hudtext true
+            break
+        case h_maskwall
+            set wall[searchwall].xpanning clipboard_xpanning
+            redefinequote hud_top Maskwall Xpanning set to: %ld
+            qsprintf hud_top hud_top clipboard_xpanning
+            set hudtext true
+            break
+    endswitch
+ends
+// Needs isel
+defstate paste_palette // Paste clipboarded palette
+    switch searchstat
+        case h_wall
+            set wall[searchwall].pal temppal
+            set wall[searchbottomwall].pal temppal
+            redefinequote hud_top Wall palette set to: %ld
+            break
+        case h_ceiling
+            set sector[searchsector].ceilingpal temppal
+            redefinequote hud_top Ceiling palette set to: %ld
+            set hudtext true
+            break
+        case h_floor
+            set sector[searchsector].floorpal temppal
+            redefinequote hud_top Floor palette set to: %ld
+            break
+        case h_sprite
+            set sprite[searchwall].pal temppal
+            redefinequote hud_top Sprite palette set to: %ld
+            break
+        case h_maskwall
+            set wall[searchwall].pal temppal
+            redefinequote hud_top Maskwall palette set to: %ld
+            break
+    endswitch
+    qsprintf hud_top hud_top temppal
+    set hudtext true
+    
+ends
+//Needs isel
+defstate paste_picnum // Paste clipboarded picnum
+    switch searchstat
+        case h_wall
+            set wall[searchwall].picnum temppicnum
+            set wall[searchbottomwall].picnum temppicnum
+            redefinequote hud_top Wall texture changed to: %ld
+            qsprintf hud_top hud_top temppicnum
+            set hudtext true
+            break
+        case h_ceiling
+            set sector[searchsector].ceilingpicnum temppicnum
+            redefinequote hud_top Ceiling texture changed to: %ld
+            qsprintf hud_top hud_top temppicnum
+            set hudtext true
+            break
+        case h_floor
+            set sector[searchsector].floorpicnum temppicnum
+            redefinequote hud_top Floor texture changed to: %ld
+            qsprintf hud_top hud_top temppicnum
+            set hudtext true
+            break
+        case h_sprite
+            set sprite[searchwall].picnum temppicnum
+            redefinequote hud_top Sprite changed to: %ld
+            qsprintf hud_top hud_top temppicnum
+            set hudtext true
+            break
+        case h_maskwall
+            set wall[searchwall].picnum temppicnum
+            redefinequote hud_top Maskwall texture changed to: %ld
+            qsprintf hud_top hud_top temppicnum
+            set hudtext true
+            break	
+    endswitch
+ends
+//Needs isel
+defstate paste_z // Paste clipboarded Z
+    switch searchstat
+        case h_ceiling
+            set sector[searchsector].ceilingz clipboard_z
+            redefinequote hud_top Ceiling Z set to: %ld
+            qsprintf hud_top hud_top clipboard_z
+            set hudtext true
+            break
+        case h_floor
+            set sector[searchsector].floorz clipboard_z
+            redefinequote hud_top Floor Z set to: %ld
+            qsprintf hud_top hud_top clipboard_z
+            set hudtext true
+            break
+        case h_sprite
+            set sprite[searchwall].z clipboard_z
+            redefinequote hud_top Sprite Z set to: %ld
+            qsprintf hud_top hud_top clipboard_z
+            set hudtext true
+            break
+    endswitch
+ends
+defstate slapsprite_floor // Slap one or more sprites to Floor Z
+    ife iselsprites 0
+    {
+        ife searchstat h_sprite
+        {
+            set temp sprite[searchwall].sectnum
+            set temp sector[temp].floorz
+            set sprite[searchwall].z temp
+            redefinequote hud_top Sprite Z set to Floor Z: %ld
+            qsprintf hud_top hud_top temp
+            set hudtext true
+        } else	{
+            redefinequote hud_top This only works on sprites!
+            set hudtext true
+        }
+    } else {
+        for i selsprites
+        {
+            set temp sprite[i].sectnum
+            set temp sector[temp].floorz
+            set sprite[i].z temp
+            redefinequote hud_top %ld Sprites have been set to Floor Z
+            qsprintf hud_top hud_top iselsprites
+            set hudtext true
+        }
+    }
+ends
+defstate slapsprite_ceiling // Slap one or more sprites to Ceiling Z
+    ife iselsprites 0
+    {
+        ife searchstat h_sprite
+        {
+            set temp sprite[searchwall].sectnum
+            set temp sector[temp].ceilingz
+            set sprite[searchwall].z temp
+            redefinequote hud_top Sprite Z set to Ceiling Z: %ld
+            qsprintf hud_top hud_top temp
+            set hudtext true
+        } else	{
+            redefinequote hud_top This only works on sprites!
+            set hudtext true
+        }
+    } else {
+        for i selsprites
+        {
+            set temp sprite[i].sectnum
+            set temp sector[temp].ceilingz
+            set sprite[i].z temp
+            redefinequote hud_top %ld Sprites have been set to Ceiling Z
+            qsprintf hud_top hud_top iselsprites
+            set hudtext true
+        }
+    }
+ends
+defstate slapsprite_floor_flatten // Slap AND flatten one or more sprites to Floor Z
+    ife iselsprites 0
+    {
+        ife searchstat h_sprite
+        {
+            set temp sprite[searchwall].sectnum
+            set temp1 sector[temp].floorslope
+            or sprite[searchwall].cstat cstat_sprite_wall
+            or sprite[searchwall].cstat cstat_sprite_floor
+            // Mangles an 16bit value into two 8bit entries
+            set temp2 temp1 // Restore Floorslope
+            shiftvarl temp2 8
+            shiftvarr temp2 8
+            set sprite[searchwall].xoffset temp2    // Set Xoffset byte
+            set temp2 temp1 // Restore Floorslope
+            shiftvarr temp2 8
+            set sprite[searchwall].yoffset temp2    // Set Yoffset byte
+            set temp2 temp1 // Restore Floorslope
+            getflorzofslope sprite[searchwall].sectnum sprite[searchwall].x sprite[searchwall].y sprite[searchwall].z
+            redefinequote hud_top Sprite flattened against the floor!
+            set hudtext true
+        } else	{
+            redefinequote hud_top This only works on sprites!
+            set hudtext true
+        }
+    } else {
+        for i selsprites
+        {
+            set temp sprite[i].sectnum
+            set temp1 sector[temp].floorslope
+            or sprite[i].cstat cstat_sprite_wall
+            or sprite[i].cstat cstat_sprite_floor
+            // Mangles an 16bit value into two 8bit entries
+            set temp2 temp1 // Restore Floorslope
+            shiftvarl temp2 8
+            shiftvarr temp2 8
+            set sprite[i].xoffset temp2    // Set Xoffset byte
+            set temp2 temp1 // Restore Floorslope
+            shiftvarr temp2 8
+            set sprite[i].yoffset temp2    // Set Yoffset byte
+            set temp2 temp1 // Restore Floorslope
+            getflorzofslope sprite[i].sectnum sprite[i].x sprite[i].y sprite[i].z
+        }
+        redefinequote hud_top Sprite flattened against the floor!
+        set hudtext true
+    }
+ends
+defstate slapsprite_ceiling_flatten // Slap AND flatten one or more sprites to Ceiling Z
+    ife iselsprites 0
+    {
+        ife searchstat h_sprite
+        {
+            set temp sprite[searchwall].sectnum
+            set temp1 sector[temp].ceilingslope
+            or sprite[searchwall].cstat cstat_sprite_wall
+            or sprite[searchwall].cstat cstat_sprite_wall
+            set temp2 temp1 // Restore Ceilingslope
+            shiftvarl temp2 8
+            shiftvarr temp2 8
+            set sprite[searchwall].xoffset temp2    // Set Xoffset byte
+            set temp2 temp1 // Restore Ceilingslope
+            shiftvarr temp2 8
+            set sprite[searchwall].yoffset temp2    // Set Yoffset byte
+            set temp2 temp1 // Restore Ceilingslope
+            getceilzofslope sprite[searchwall].sectnum sprite[searchwall].x sprite[searchwall].y sprite[searchwall].z
+            redefinequote hud_top Sprite flattened against the ceiling!
+            set hudtext true
+        } else	{
+            redefinequote hud_top This only works on sprites!
+            set hudtext true
+        }
+    } else {
+        for i selsprites
+        {
+            set temp sprite[i].sectnum
+            set temp1 sector[temp].floorslope
+            or sprite[i].cstat cstat_sprite_wall
+            or sprite[i].cstat cstat_sprite_wall
+            set temp2 temp1 // Restore Ceilingslope
+            shiftvarl temp2 8
+            shiftvarr temp2 8
+            set sprite[i].xoffset temp2    // Set Xoffset byte
+            set temp2 temp1 // Restore Ceilingslope
+            shiftvarr temp2 8
+            set sprite[i].yoffset temp2    // Set Yoffset byte
+            set temp2 temp1 // Restore Ceilingslope
+            getceilzofslope sprite[i].sectnum sprite[i].x sprite[i].y sprite[i].z
+        }
+        redefinequote hud_top Sprite flattened against the ceiling!
+        set hudtext true
+    }
+ends
+defstate flip_slope // Flips Ceiling/Floor/Sprite slope (inverts the value, does not touch firstwall)
+    switch searchstat
+        case h_ceiling
+            ifn iselsectors 0
+            {
+                for i selsectors 
+                {
+                    set temp sector[i].ceilingslope
+                    inv temp
+                    set sector[i].ceilingslope temp
+                }
+                ife iselsectors 1 ifg temp 0 redefinequote hud_top Ceiling slope flipped! 
+                ife iselsectors 1 ife temp 0 redefinequote hud_top Value is zero! Flipping a burger instead...
+                ifg iselsectors 1 redefinequote hud_top %ld Ceiling slopes flipped! 
+                ifg iselsectors 1 qsprintf hud_top hud_top iselsectors
+            } else
+            {
+                set temp sector[searchsector].ceilingslope
+                inv temp
+                set sector[searchsector].ceilingslope temp
+                ifn temp 0 redefinequote hud_top Ceiling slope flipped! 
+                ife temp 0 redefinequote hud_top Value is zero! Flipping a burger instead...
+            }
+            set hudtext true
+            break
+        case h_floor
+            ifn iselsectors 0
+            {
+                for i selsectors 
+                {
+                    set temp sector[i].floorslope
+                    inv temp
+                    set sector[i].floorslope temp
+                }
+                ife iselsectors 1 ifg temp 0 redefinequote hud_top Floor slope flipped! 
+                ife iselsectors 1 ife temp 0 redefinequote hud_top Value is zero! Flipping a burger instead...
+                ifg iselsectors 1 redefinequote hud_top %ld Floor slopes flipped! 
+                ifg iselsectors 1 qsprintf hud_top hud_top iselsectors
+            } else
+            {
+                set temp sector[searchsector].floorslope
+                inv temp
+                set sector[searchsector].floorslope temp
+                ifn temp 0 redefinequote hud_top Floor slope flipped! 
+                ife temp 0 redefinequote hud_top Value is zero! Flipping a burger instead...
+            }
+            set hudtext true
+            break
+        case h_sprite
+            ifn iselsprites 0 {
+                for i selsprites {
+                    set temp 0
+                    set temp2 sprite[i].yoffset
+                    shiftvarl temp2 8
+                    or temp temp2
+                    set temp2 sprite[i].xoffset
+                    and temp2 255
+                    add temp temp2
+                    ifn temp 0 {
+                        inv temp
+                        set temp2 temp
+                        shiftvarl temp 8
+                        shiftvarr temp 8
+                        set sprite[i].xoffset temp
+                        set temp temp2
+                        shiftvarr temp 8
+                        set sprite[i].yoffset temp
+                    }
+                } 
+            } else {
+                set temp 0
+                set temp2 sprite[searchwall].yoffset
+                shiftvarl temp2 8
+                or temp temp2
+                set temp2 sprite[searchwall].xoffset
+                and temp2 255
+                add temp temp2
+                ifn temp 0 {
+                    inv temp
+                    set temp2 temp
+                    shiftvarl temp 8
+                    shiftvarr temp 8
+                    set sprite[searchwall].xoffset temp
+                    set temp temp2
+                    shiftvarr temp 8
+                    set sprite[searchwall].yoffset temp
+                }
+            }
+            break
+    endswitch
+ends
+// Needs isel
+defstate raise_object_1 // Raises pointed object or selection by 1 build unit
+    switch searchstat
+        case h_ceiling
+            ifn iselsectors 0
+            {
+                for i selsectors sub sector[i].ceilingz 1
+                redefinequote hud_top Ceiling sectors raised to: %ld
+            } else
+            {
+                sub sector[searchsector].ceilingz 1
+                redefinequote hud_top Ceiling raised to: %ld
+            }
+            qsprintf hud_top hud_top sector[searchsector].ceilingz
+            set hudtext true
+            break
+        case h_floor
+            ifn iselsectors 0
+            {
+                for i selsectors sub sector[i].floorz 1
+                redefinequote hud_top Floor sectors raised to: %ld
+            } else
+            {
+                sub sector[searchsector].floorz 1
+                redefinequote hud_top Floor raised to: %ld
+            }
+            qsprintf hud_top hud_top sector[searchsector].floorz
+            set hudtext true
+            break
+        case h_sprite
+            ifn iselsprites 0
+            {
+                for i selsprites sub sprite[i].z 1
+                redefinequote hud_top Sprites raised to: %ld
+            } else
+            {
+                sub sprite[searchwall].z 1
+                redefinequote hud_top Sprite raised to: %ld
+            }
+            qsprintf hud_top hud_top sprite[searchwall].z
+            set hudtext true
+            break
+    endswitch
+ends
+// Needs isel
+defstate lower_object_1 // Lowers pointed object or selection by 1 build unit
+switch searchstat
+        case h_ceiling
+            ifn iselsectors 0
+            {
+                for i selsectors add sector[i].ceilingz 1
+                redefinequote hud_top Ceiling sectors lowered to: %ld
+            } else
+            {
+                add sector[searchsector].ceilingz 1
+                redefinequote hud_top Ceiling lowered to: %ld
+            }
+            qsprintf hud_top hud_top sector[searchsector].ceilingz
+            set hudtext true
+            break
+        case h_floor
+            ifn iselsectors 0
+            {
+                for i selsectors add sector[i].floorz 1
+                redefinequote hud_top Floor sectors lowered to: %ld
+            } else
+            {
+                add sector[searchsector].floorz 1
+                redefinequote hud_top Floor lowered to: %ld
+            }
+            qsprintf hud_top hud_top sector[searchsector].floorz
+            set hudtext true
+            break
+        case h_sprite
+            ifn iselsprites 0
+            {
+                for i selsprites add sprite[i].z 1
+                redefinequote hud_top Sprites lowered to: %ld
+            } else
+            {
+                add sprite[searchwall].z 1
+                redefinequote hud_top Sprite lowered to: %ld
+            }
+            qsprintf hud_top hud_top sprite[searchwall].z
+            set hudtext true
+            break
+    endswitch
+ends
+defstate sprite_clone // Clone one or selected sprites (in-place identical copy)
+    ife iselsprites 0
+    {
+        ife searchstat h_sprite
+        {
+            set temp searchwall
+            dupsprite temp
+            redefinequote hud_top Sprite %ld has been cloned !
+            qsprintf hud_top hud_top temp searchwall
+        }
+    } else
+    {
+        for i selsprites dupsprite i
+        redefinequote hud_top ALL of your %ld sprites have been cloned !
+        qsprintf hud_top hud_top iselsprites
+    }
+    set hudtext true
+ends
+// Needs isel
+defstate round_object_128 // Round selection's Z coordinates to "Mouse Z" or home+end version of pgup/down
+    switch searchstat
+        case h_ceiling
+            set temp sector[searchsector].ceilingz
+            shiftr temp 8 
+            shiftl temp 8
+            set sector[searchsector].ceilingz temp
+            redefinequote hud_top Ceiling rounded to closest PgUp!
+            set hudtext true
+            break
+        case h_floor
+            set temp sector[searchsector].floorz
+            shiftr temp 8 
+            shiftl temp 8
+            set sector[searchsector].floorz temp
+            redefinequote hud_top Floor rounded to closest PgUp!
+            set hudtext true
+            break
+        case h_sprite
+            set temp2 searchwall
+            set temp sprite[temp2].z
+            shiftr temp 8 
+            shiftl temp 8
+            set sprite[temp2].z temp
+            redefinequote hud_top Sprite rounded to closest PgUp!
+            set hudtext true
+            break
+    endswitch
+ends
+// Needs isel
+defstate round_object_1024 // Round selection's Z coordinates to to Pageup/down
+    switch searchstat
+        case h_ceiling
+            set temp sector[searchsector].ceilingz
+            shiftr temp 10 
+            shiftl temp 10
+            set sector[searchsector].ceilingz temp
+            redefinequote hud_top Ceiling rounded to closest PgUp!
+            set hudtext true
+            break
+        case h_floor
+            set temp sector[searchsector].floorz
+            shiftr temp 10 
+            shiftl temp 10
+            set sector[searchsector].floorz temp
+            redefinequote hud_top Floor rounded to closest PgUp!
+            set hudtext true
+            break
+        case h_sprite
+            set temp2 searchwall
+            set temp sprite[temp2].z
+            shiftr temp 10 
+            shiftl temp 10
+            set sprite[temp2].z temp
+            redefinequote hud_top Sprite rounded to closest PgUp!
+            set hudtext true
+            break
+    endswitch
+ends
+defstate do_fixrepeats // Sets wall's Y-repeat to match X-repeat, matching 1:1 pixel aspect ratio
+    ife searchstat 0 fixrepeats searchwall
+    ife searchstat 4 fixrepeats searchwall
+ends
+defstate corrector // auto-corrector function, various auto-size and adjustments to match game universe, for sprites
+    ife game duke3d {
+        nullop
+    }
+ends
+defstate z_noise_object // Adds Z noise to sector's floor/ceiling or sprites. Depending on where you point.
+    switch searchstat
+        case h_ceiling
+            ifg iselsectors 0 {
+                for i selsectors
+                {
+                    set temp sector[i].ceilingz
+                    rand temp2 384
+                    rand temp3 1
+                    ife temp3 1
+                    {
+                        add temp temp2
+                    }
+                    ife temp3 0
+                    {
+                        sub temp temp2
+                    }
+                    set sector[i].ceilingz temp
+                }
+            } else {
+                set temp sector[searchsector].ceilingz
+                    rand temp2 384
+                    rand temp3 1
+                    ife temp3 1
+                    {
+                        add temp temp2
+                    }
+                    ife temp3 0
+                    {
+                        sub temp temp2
+                    }
+                    set sector[searchsector].ceilingz temp
+            }
+            break
+        case h_floor
+            ifg iselsectors 0 {
+                for i selsectors
+                {
+                    set temp sector[i].floorz
+                    rand temp2 384
+                    rand temp3 1
+                    ife temp3 1
+                    {
+                        add temp temp2
+                    }
+                    ife temp3 0
+                    {
+                        sub temp temp2
+                    }
+                    set sector[i].floorz temp
+                }
+            } else {
+                set temp sector[searchsector].floorz
+                    rand temp2 384
+                    rand temp3 1
+                    ife temp3 1
+                    {
+                        add temp temp2
+                    }
+                    ife temp3 0
+                    {
+                        sub temp temp2
+                    }
+                    set sector[searchsector].floorz temp
+            }
+            break
+        case h_sprite
+            ifg iselsprites 0 {
+                for i selsprites 
+                {
+                    set temp sprite[i].z
+                    rand temp2 384
+                    rand temp3 1
+                    ife temp3 1
+                    {
+                        add temp temp2
+                    }
+                    ife temp3 0
+                    {
+                        sub temp temp2
+                    }
+                    set sprite[i].z temp
+                }
+            } else {
+                set temp sprite[searchwall].z
+                    rand temp2 384
+                    rand temp3 1
+                    ife temp3 1
+                    {
+                        add temp temp2
+                    }
+                    ife temp3 0
+                    {
+                        sub temp temp2
+                    }
+                    set sprite[searchwall].z temp
+            }
+            break
+    endswitch
+ends
+defstate raise_sectors_256 // Raise selected sectors by 256
+    for i selsectors 
+    {
+        sub sector[i].floorz 256
+        sub sector[i].ceilingz 256
+        for h spritesofsector i
+        {
+            sub sprite[h].z 256
+        }
+    }
+    redefinequote hud_top Selected sectors moved up by 128 units
+    set hudtext true
+ends
+defstate raise_sectors_512 // Raise selected sectors by 512
+    for i selsectors 
+    {
+        sub sector[i].floorz 512
+        sub sector[i].ceilingz 512
+        for h spritesofsector i
+        {
+            sub sprite[h].z 512
+        }
+    }
+    redefinequote hud_top Selected sectors moved up by 512 units
+    set hudtext true
+ends
+defstate raise_sectors_1024 // Raise selected sectors by 1024
+    for i selsectors 
+    {
+        sub sector[i].floorz 1024
+        sub sector[i].ceilingz 1024
+        for h spritesofsector i
+        {
+            sub sprite[h].z 1024
+        }
+    }
+    redefinequote hud_top Selected sectors moved up by 1024 units
+    set hudtext true
+ends
+defstate lower_sectors_256 // Lower selected sectors by 256
+    for i selsectors 
+    {
+        add sector[i].floorz 256
+        add sector[i].ceilingz 256
+        for h spritesofsector i
+        {
+            add sprite[h].z 256
+        }
+    }
+    redefinequote hud_top Selected sectors moved down by 128 units
+    set hudtext true
+ends
+defstate lower_sectors_512 // Lower selected sectors by 512
+    for i selsectors 
+    {
+        add sector[i].floorz 512
+        add sector[i].ceilingz 512
+        for h spritesofsector i
+        {
+            add sprite[h].z 512
+        }
+    }
+    redefinequote hud_top Selected sectors moved down by 512 units
+    set hudtext true
+ends
+defstate lower_sectors_1024 // Lower selected sectors by 1024
+    for i selsectors 
+    {
+        add sector[i].floorz 1024
+        add sector[i].ceilingz 1024
+        for h spritesofsector i
+        {
+            add sprite[h].z 1024
+        }
+    }
+    redefinequote hud_top Selected sectors moved down by 1024 units
+    set hudtext true
+ends
+
+
+
+
+
+defstate voxelspin // EDITOR SETTING - Voxel spin
+    xor editsettings 1
+    ifand editsettings 1 {
+        redefinequote hud_top Voxel spinning enabled!
+    } else {
+        redefinequote hud_top Voxel spinning disabled!
+    }
+    set hudtext true
+ends
+defstate half_sprite_size // Set sprite to half of default (64,64 -> 32,32)
+    ife searchstat h_sprite
+    {
+        set sprite[searchwall].xrepeat 32
+        set sprite[searchwall].yrepeat 32
+    }
+ends
+defstate quarter_sprite_size // Set sprite to quarter of default (64,64 -> 16,16)
+    ife searchstat h_sprite
+    {
+        set sprite[searchwall].xrepeat 16
+        set sprite[searchwall].yrepeat 16
+    }
+ends
+
+
+defstate inc_angle_1
+    ifg highlightcnt 0
+    {
+        for i selsprites add sprite[i].ang 1
+    } else {
+        ifin3dmode {
+            ife searchstat h_sprite add sprite[searchwall].ang 1
+        } else {
+            ifge pointhighlight 16384
+            {
+                set h pointhighlight
+                sub h 16384
+                add sprite[h].ang 1
+            }
+        }
+    }
+ends
+
+defstate dec_angle_1
+    ifg highlightcnt 0
+    {
+        for i selsprites sub sprite[i].ang 1
+    } else {
+        ifin3dmode {
+            ife searchstat h_sprite sub sprite[searchwall].ang 1
+        } else {
+            ifge pointhighlight 16384
+            {
+                set h pointhighlight
+                sub h 16384
+                sub sprite[h].ang 1
+            }
+        }
+    }
+ends
+defstate inc_angle_128
+    ifg highlightcnt 0
+    {
+        for i selsprites add sprite[i].ang 128
+    } else {
+        ifin3dmode {
+            ife searchstat h_sprite add sprite[searchwall].ang 128
+        } else {
+            ifge pointhighlight 16384
+            {
+                set h pointhighlight
+                sub h 16384
+                add sprite[h].ang 128
+            }
+        }
+    }
+ends
+defstate dec_angle_128
+    ifg highlightcnt 0
+    {
+        for i selsprites sub sprite[i].ang 128
+    } else {
+        ifin3dmode {
+            ife searchstat h_sprite sub sprite[searchwall].ang 128
+        } else {
+            ifge pointhighlight 16384
+            {
+                set h pointhighlight
+                sub h 16384
+                sub sprite[h].ang 128
+            }
+        }
+    }
+ends
+defstate inc_lotag
+    ifg highlightcnt 0
+    {
+        for i selsprites add sprite[i].lotag 1
+    } else {
+        ifin3dmode {
+            ife searchstat h_sprite add sprite[searchwall].lotag 1
+        } else {
+            ifge pointhighlight 16384
+            {
+                set h pointhighlight
+                sub h 16384
+                add sprite[h].lotag 1
+            }
+        }
+    }
+ends
+defstate dec_lotag
+    ifg highlightcnt 0
+    {
+        for i selsprites sub sprite[i].lotag 1
+    } else {
+        ifin3dmode {
+            ife searchstat h_sprite sub sprite[searchwall].lotag 1
+        } else {
+            ifge pointhighlight 16384
+            {
+                set h pointhighlight
+                sub h 16384
+                sub sprite[h].lotag 1
+            }
+        }
+    }
+ends
+defstate inc_hitag
+    ifg highlightcnt 0
+    {
+        for i selsprites add sprite[i].hitag 1
+    } else {
+        ifin3dmode {
+            ife searchstat h_sprite add sprite[searchwall].hitag 1
+        } else {
+            ifge pointhighlight 16384
+            {
+                set h pointhighlight
+                sub h 16384
+                add sprite[h].hitag 1
+            }
+        }
+    }
+ends
+defstate dec_hitag
+    ifg highlightcnt 0
+    {
+        for i selsprites sub sprite[i].hitag 1
+    } else {
+        ifin3dmode {
+            ife searchstat h_sprite sub sprite[searchwall].hitag 1
+        } else {
+            ifge pointhighlight 16384
+            {
+                set h pointhighlight
+                sub h 16384
+                sub sprite[h].hitag 1
+            }
+        }
+    }
+ends
+defstate inc_extra
+    ifg highlightcnt 0
+    {
+        for i selsprites add sprite[i].extra 1
+    } else {
+        ifin3dmode {
+            ife searchstat h_sprite add sprite[searchwall].extra 1
+        } else {
+            ifge pointhighlight 16384
+            {
+                set h pointhighlight
+                sub h 16384
+                add sprite[h].extra 1
+            }
+        }
+    }
+ends
+defstate dec_extra
+    ifg highlightcnt 0
+    {
+        for i selsprites sub sprite[i].extra 1
+    } else {
+        ifin3dmode {
+            ife searchstat h_sprite sub sprite[searchwall].extra 1
+        } else {
+            ifge pointhighlight 16384
+            {
+                set h pointhighlight
+                sub h 16384
+                sub sprite[h].extra 1
+            }
+        }
+    }
+ends
+
+
+defstate inc_xrepeat
+    ife hstat h_sprite   add sprite[h].xrepeat 1
+    ife hstat h_wall       add wall[h].xrepeat 1
+    ife hstat h_mulcnt {
+        for i selsprites add sprite[i].xrepeat 1
+        for i selwalls     add wall[i].xrepeat 1
+    }
+ends
+defstate dec_xrepeat
+    ife hstat h_sprite   sub sprite[h].xrepeat 1
+    ife hstat h_wall       sub wall[h].xrepeat 1
+    ife hstat h_mulcnt {
+        for i selsprites sub sprite[i].xrepeat 1
+        for i selwalls     sub wall[i].xrepeat 1
+    }
+ends
+defstate inc_yrepeat
+    ife hstat h_sprite   add sprite[h].yrepeat 1
+    ife hstat h_wall       add wall[h].yrepeat 1
+    ife hstat h_mulcnt {
+        for i selsprites add sprite[i].yrepeat 1
+        for i selwalls     add wall[i].yrepeat 1
+    }
+ends
+defstate dec_yrepeat
+    ife hstat h_sprite   sub sprite[h].yrepeat 1
+    ife hstat h_wall       sub wall[h].yrepeat 1
+    ife hstat h_mulcnt {
+        for i selsprites sub sprite[i].yrepeat 1
+        for i selwalls     sub wall[i].yrepeat 1
+    }
+ends
+
+
+
+
+// ############################################################################
+//                          WHAT AM I POINTING AT?
+// ############################################################################
+defstate geth
+    // Goal is to get what we're pointing at and return them as 'h' and 'hstat'
+    // 'hstat' has h_mulcnt for "sprites/walls" selected and 
+    // h_mulsectcnt if many sectors are selected
+    //
+    // When pointing at a single object:
+    //      OUTPUT: h     will be the normalized ID
+    //      OUTPUT: hstat will be the object type we're pointing at
+    ife hreading true {
+
+        //
+        set h -1
+        set hstat -1
+        set temp 0
+    
+        ife highlightcnt -1       { sub temp 1 } else { set hstat h_mulcnt }
+        ife highlightsectorcnt -1 { sub temp 1 } else { set hstat h_mulsectcnt }
+    
+        ife temp -2 {
+
+            // Find the single object's ID and TYPE we're pointing at
+            ifin3dmode { 
+                set hstat searchstat
+                ife searchstat h_ceiling set h searchsector
+                ife searchstat h_floor set h searchsector
+                ife searchstat h_sprite set h searchwall
+                ife searchstat h_wall set h searchwall
+                ife searchstat h_maskwall set h searchwall
+                // ife searchstat h_maskwall set h_
+            } else {
+                // 2D LOGIC:
+                // Use either SPRITE or WALL being highlighted
+                // If neither is found, use SECTOR
+                // If SHIFT is being held then use SECTOR
+                
+                // BLINKING SPRITE
+                ifge pointhighlight 16384 {
+                    set hstat h_sprite
+                    set h pointhighlight
+                    sub h 16384
+                    // BLINKING WALL
+                } else {
+                    ifge linehighlight 0 {
+                        set h linehighlight
+                        set hstat h_wall
+                    } else {
+                        // If no wall was found, fallback to SECTOR
+                        set temp 1
+                    }
+                    ife heldkeys shift { set temp 1 }
+                    ife temp 1 { 
+                        ifn searchsector -1 {
+                            set hstat h_sector
+                            set h searchsector
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+ends
+
+
+
+// ############################################################################
+//                          HUD TEXT AT THE TOP
+// ############################################################################
+
+defstate drawhud
+    ife hudtext true {
+        set hud_timer 160
+        set hudtext false
+        qstrlen m_strlen hud_top
+        mul m_strlen 2
+        add hud_timer m_strlen
+    }
+
+    ifg hud_timer 0 {
+        set m_window_y1 hud_ypos
+        set m_window_y2 m_window_y1
+        add m_window_y2 8
+        qstrlen m_strlen hud_top
+        add m_strlen 2
+        mul m_strlen 8
+        set temp m_strlen
+        div temp 2
+        
+        set m_window_x1 halfxdim16
+            set m_window_x2 m_window_x1
+            add m_window_x2 temp
+        sub m_window_x1 temp
+
+
+        ifl hud_timer 3 {
+            set temp8 3
+            sub temp8 hud_timer
+            sub m_window_y1 temp8
+            sub m_window_y2 temp8
+        }
+
+        set temp m_window_x1 : set temp2 m_window_y1 : set temp3 m_window_x2 : set temp4 m_window_y2
+        add temp 8
+        
+        ifg hud_timer 9 {
+            rotatesprite16 rhx rhy rbz 0 rpt 32 0 1057 m_window_x1 m_window_y1 m_window_x2 m_window_y2
+            sub m_window_x1 2 : sub m_window_y1 2 : add m_window_x2 2 : add m_window_y2 2
+            rotatesprite16 rhx rhy rbz 0 rpt 32 0 1057 m_window_x1 m_window_y1 m_window_x2 m_window_y2
+            printext256 hud_top temp temp2 col_iwhite -1 65536
+        }
+        ifl hud_timer 10 ifg hud_timer 4 {
+            rotatesprite16 rhx rhy rbz 0 rpt 32 0 1057 m_window_x1 m_window_y1 m_window_x2 m_window_y2
+            printext256 hud_top temp temp2 col_iwhite -1 65536
+            sub m_window_x1 2 : sub m_window_y1 2 : add m_window_x2 2 : add m_window_y2 2
+            rotatesprite16 rhx rhy rbz 0 rpt 32 0 1057 m_window_x1 m_window_y1 m_window_x2 m_window_y2
+        }
+        ifl hud_timer 5 {
+            printext256 hud_top temp temp2 col_iwhite -1 65536
+            rotatesprite16 rhx rhy rbz 0 rpt 32 0 1057 m_window_x1 m_window_y1 m_window_x2 m_window_y2
+            sub m_window_x1 1 : sub m_window_y1 1 : add m_window_x2 1 : add m_window_y2 1
+            rotatesprite16 rhx rhy rbz 0 rpt 32 0 1057 m_window_x1 m_window_y1 m_window_x2 m_window_y2
+        }
+        
+        sub hud_timer 1
+        ifl hud_timer 0 set hud_timer 0
+    }
+    
+    
+    
+    ifg highlightcnt -1 {
+        redefinequote txt Active selection: ^%ld%ld sectors
+        redefinequote txt Toggle active selection with [SHIFT]+[SPACE]
+        redefinequote txt Use [RSHIFT] to clear
+    }
+    
+    
+ends
+
+// ############################################################################
+//                          STATE FOR GUIDANCE
+// ############################################################################
+defstate q_guidance
+    ife hstat -1 return
+    ife hstat h_sprite {
+        state q_menu_prepare
+        include d3d_se.m32
+    } else ife hstat h_floor {
+        state q_menu_prepare
+    } else ife hstat h_ceiling {
+        state q_menu_prepare
+    } else ife hstat h_wall {
+        state q_menu_prepare
+    } else ife hstat h_maskwall {
+        state q_menu_prepare
+    }
+        // If we have stuff to document, we should offset box #2 for key display
+        qstrlen m_strlen Q_MENU1
+ends
+
+// ############################################################################
+//                          STATE FOR BOOLEAN
+// ############################################################################
+
+// Will be done inshallah!
+///
+
+
+
+defstate drawloop
+
+    // Initialize colours, first boot routines
+    ifg firstboot_done 0 state leboot
+    
+    // Check that user is running the correct resolution
+    // state q_sanitycheck
+    
+    // Load in 'hstat' and 'h'
+    
+    state geth
+    // Now 'hstat' stores searchstat style var for 2D and 3D and 'h' the index
+    // Zero out the menu quote ranges
+    state q_menu_prepare
+    // Full in new guidance text based on pointed stuff
+    state q_guidance
+    
+    // Draw tooltip popup
+    ifn m_strlen 0 { set drawing_window window1 : state draw_q_menu } else { state draw_q_menu_clean_window1 }
+    
+    // Only for hotkey display
+    state hotkeys
+    
+    state drawhud
+    
+    
+ends
+
+// ------------------------------------------------------------------------------------------------
+// -------------------------------EVENT_GETNUMBER--------------------------------------------------
+// ------------------------------------------------------------------------------------------------
+onevent EVENT_GETNUMBER
+    ifin3dmode {
+        // Setting this as true since we're going to need to draw the backdrop
+        // This event is the only one where we can guarantee that we're in the middle of getting a number.
+        set getnumber true
+        rotatesprite16 rhx rhy rbz 0 rpt 32 0 1057 0 8 xdim 10
+        rotatesprite16 rhx rhy rbz 0 rpt 32 0 1057 0 8 xdim 12
+        set getnumbervalue getnumberval
+    }
+endevent
+
+
+
+// ------------------------------------------------------------------------------------------------
+// -------------------------------EVENT_DRAW2DSCREEN-----------------------------------------------
+// ------------------------------------------------------------------------------------------------
+onevent EVENT_DRAW2DSCREEN
+    state drawloop
+endevent
+
+// ------------------------------------------------------------------------------------------------
+// -------------------------------EVENT_DRAW3DSCREEN-----------------------------------------------
+// ------------------------------------------------------------------------------------------------
+onevent EVENT_DRAW3DSCREEN
+    state drawloop
+    ife getnumber true {
+        ifin3dmode rotatesprite16 rhx rhy rbz 0 rpt 32 0 0 0 0 xdim 7
+    } 
+endevent
+
+
+// ------------------------------------------------------------------------------------------------
+// -------------------------------EVENT_ANALYZESPRITES---------------------------------------------
+// ------------------------------------------------------------------------------------------------
+onevent EVENT_ANALYZESPRITES
+    
+    
+    for i range spritesortcnt {
+        set t tsprite[i].owner
+        
+        // ------ Shade or Pal preview for getnumber -----
+        ife getnumber true {
+            
+            set temp 0
+            ifhighlighted sprite t set temp 1
+            ife h t set temp 1
+            
+            ife temp 1 {
+                set temp getnumbervalue
+                switch getnumbertype
+                    case gn_pal
+                        clamp temp 0 255
+                        set tsprite[i].pal temp
+                        break
+                    case gn_shade
+                        clamp temp -127 127
+                        set tsprite[i].shade temp
+                        break
+                    case gn_picnum
+                        clamp temp 0 MAXTILES
+                        set tsprite[i].picnum temp
+                        break
+                endswitch
+            }
+            
+        }
+        // -----------------------------------------------
+        // ------ Show highlighted sprites visually ------
+        ifg highlightcnt -1 {
+        
+            ifhighlighted sprite t {
+                tdupsprite t
+                set t spritesortcnt
+                sub t 1
+                set sprite_tile_other t
+                state get_tsprite_dimensions
+                set temp2 sprite_dim_yz
+                    set temp tsprite[t].xrepeat
+                    add temp 8
+                    ifg temp 255 set temp 255
+                    set tsprite[t].xrepeat temp
+                    set temp tsprite[t].yrepeat
+                    add temp 8
+                    ifg temp 255 set temp 255
+                    set tsprite[t].yrepeat temp
+                set sprite_tile_other t
+                state get_tsprite_dimensions
+                sub temp2 sprite_dim_yz
+                set tsprite[t].shade -127
+                set tsprite[t].pal 6
+                set tsprite[t].statnum 255
+                ifand tsprite[t].cstat 32 {
+                    nullop
+                } else {
+                    div temp2 2
+                    sub tsprite[t].z temp2
+                }
+            }
+        }
+        // -----------------------------------------------
+
+    }
+    
+    ife getnumber true {
+        ife hstat h_sprite {
+            ifn getnumbertype gn_shade {
+                for i range spritesortcnt {
+                    ife h tsprite[i].owner {
+                        set tsprite[i].shade -127
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    
+endevent
+
+
+defstate initkeys
+    // heldkeys holds the state of modifiers as a hack. Values correspond to static define strings.
+    set heldkeys 0
+    ifeithershift add heldkeys shift   // 1
+    ifeitherctrl  add heldkeys ctrl    // 2
+    ifeitheralt   add heldkeys alt     // 4
+    
+    // Future use MOUSE driven menu check
+    // ife mousebits 8 {
+    //     set mm_active 1
+    //     state geth
+    //     set mm_hstat hstat
+    //     set mm_h h
+    // }
+    set getnumber false
+ends
+
+
+
+
+// ------------------------------------------------------------------------------------------------
+// -------------------------------EVENT_PREKEYS3D--------------------------------------------------
+// ------------------------------------------------------------------------------------------------
+onevent EVENT_PREKEYS3D
+    state initkeys
+    ife keystatus[KEY_TAB] 1 state read_clipboard
+    ifhitkey KEY_RSHIFT    state clear_selections
+    
+    ife heldkeys shift {
+        ifhitkey KEY_W state flip_slope
+        //           D
+        //           C  -- Neuter center bit
+        ifhitkey KEY_Y state paste_slope
+        ifhitkey KEY_U state raise_object_1
+        ifhitkey KEY_J state lower_object_1
+        
+        ifhitkey KEY_PERIOD state inc_angle_1
+        ifhitkey KEY_COMMA state dec_angle_1
+        
+        ifhitkey KEY_gPLUS state inc_extra
+        ifhitkey KEY_gMINUS state dec_extra
+        
+        ifhitkey KEY_SPACE state pickselect
+        
+        ife keystatus[KEY_HOME] 1 {
+            ifhitkey KEY_PGUP state raise_sectors_256
+            ifhitkey KEY_PGDN state lower_sectors_256
+        } else ife keystatus[KEY_END] 1 {
+            ifhitkey KEY_PGUP state raise_sectors_512
+            ifhitkey KEY_PGDN state lower_sectors_512
+        } else {
+            ifhitkey KEY_PGUP state raise_sectors_1024
+            ifhitkey KEY_PGDN state lower_sectors_1024
+        }
+        
+        //ifhitkey KEY_gLEFT  state dec_xrepeat
+        ifhitkey KEY_KP4    state dec_xrepeat
+        //ifhitkey KEY_gRIGHT state inc_xrepeat
+        ifhitkey KEY_KP6    state inc_xrepeat
+        //ifhitkey KEY_gDOWN  state inc_yrepeat
+        ifhitkey KEY_KP2    state inc_yrepeat
+        //ifhitkey KEY_gUP    state dec_yrepeat
+        ifhitkey KEY_KP8    state dec_yrepeat
+        
+    } else ife heldkeys ctrl {
+        ifhitkey KEY_W state paste_picnum
+        ifhitkey KEY_Y state paste_shade
+        ifhitkey KEY_gPLUS state inc_hitag
+        ifhitkey KEY_gMINUS state dec_hitag
+        // Sprite
+        switch hstat
+            case h_sprite
+            case h_mulcnt
+                ifhitkey KEY_U state slapsprite_ceiling
+                ifhitkey KEY_J state slapsprite_floor
+                ifhitkey KEY_C state corrector
+                ifhitkey KEY_D state sprite_clone
+                break
+        endswitch
+    } else ife heldkeys alt {
+        // 
+      // ifhitkey KEY_D will adjust clipdist
+        
+        ifhitkey KEY_Y state paste_palette
+        ifhitkey KEY_U state round_object_1024
+        ifhitkey KEY_J state round_object_128
+        ifhitkey KEY_gPLUS state inc_lotag
+        ifhitkey KEY_gMINUS state dec_lotag
+        
+        ifhitkey KEY_H state change_hitag
+        ifhitkey KEY_T state change_lotag
+        ifhitkey KEY_M state change_extra
+        
+        ifhitkey KEY_X state change_xvel
+        ifhitkey KEY_Y state change_yvel
+        ifhitkey KEY_Z state change_zvel
+        // 
+        //ifhitkey KEY_V state change_cstat
+        ifhitkey KEY_P state change_pal
+        ifhitkey KEY_S state change_shade
+        
+        
+        // ifhitkey KEY_V state change_visibility
+        
+        
+    } else ife heldkeys shift_ctrl {
+        
+        ifhitkey KEY_W state paste_z
+        //ifhitkey KEY_D state getbool
+        //           C  -- Neuter center bit
+        // ifhitkey KEY_Y state z_noise_object
+        ifhitkey KEY_U state slapsprite_ceiling_flatten
+        ifhitkey KEY_J state slapsprite_floor_flatten
+    } else ife heldkeys ctrl_alt {
+      //ifhitkey KEY_W state cycle_sprite_skill
+        ifhitkey KEY_D state paste_xpanning
+        ifhitkey KEY_Y state paste_ypanning
+        
+        
+        ifhitkey KEY_U state raise_sectors_1024
+        ifhitkey KEY_J state lower_sectors_1024
+    } else ife heldkeys shift_ctrl_alt {
+        //           W
+        //           D  -- Neuter clipdist
+        //           C  -- Neuter center bit
+        //           Y
+        //ifhitkey KEY_U state raise_sectors_128
+        //ifhitkey KEY_J state lower_sectors_128
+    } else {
+        ifhitkey KEY_PERIOD state inc_angle_128
+        ifhitkey KEY_COMMA state dec_angle_128
+        ifhitkey KEY_N state notepop
+    }
+    
+    ifhitkey KEY_gKP5 state do_fixrepeats
+    
+    
+
+    
+
+endevent
+
+// ------------------------------------------------------------------------------------------------
+// -------------------------------EVENT_PREKEYS2d--------------------------------------------------
+// ------------------------------------------------------------------------------------------------
+onevent EVENT_PREKEYS2D
+    state initkeys
+    ife keystatus[KEY_TAB] 1 state read_clipboard
+    ife heldkeys shift {
+        ifhitkey KEY_PERIOD state inc_angle_1
+        ifhitkey KEY_COMMA state dec_angle_1
+        ifhitkey KEY_gPLUS state inc_extra
+        ifhitkey KEY_gMINUS state dec_extra
+    } else ife heldkeys ctrl {
+        ifhitkey KEY_gPLUS state inc_hitag
+        ifhitkey KEY_gMINUS state dec_hitag
+    } else ife heldkeys alt {
+//        ifhitkey KEY_D will adjust clipdist
+        ifhitkey KEY_H state change_hitag
+        ifhitkey KEY_gPLUS state inc_lotag
+        ifhitkey KEY_gMINUS state dec_lotag
+        ifhitkey KEY_X state change_xvel
+    } else ife heldkeys shift_ctrl {
+        nullop
+    } else ife heldkeys ctrl_alt {
+        nullop
+    } else ife heldkeys shift_ctrl_alt {
+        nullop
+    } else {
+        ifhitkey KEY_PERIOD state inc_angle_128
+        ifhitkey KEY_COMMA state dec_angle_128
+        ifhitkey KEY_N state notepop
+    }
+endevent
