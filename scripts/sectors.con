@@ -1,8 +1,9 @@
 // Extra stuff by oasiz
 // (1) Inverse lock: Activatorlocked with .extra 1 will be "open" on map load
 // (2) Autoshading: Turning 's_state' to 1 or 2 will enable/disable autoshading
-// (3) New actor "alarmblare" will sound 
+// (3) New actor "alarmblare" will sound on sight
 // (4) SE70: Floor sink, elevator lowers and turns floor to lava
+// (5) SE71: Door controller
 
 // Temp junk
 var s_temp1 0 0
