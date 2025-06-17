@@ -3700,7 +3700,7 @@ onevent EVENT_GETNUMBER
         set getnumber true
         rotatesprite16 rhx rhy rbz 0 rpt 32 0 1057 0 8 xdim 10
         rotatesprite16 rhx rhy rbz 0 rpt 32 0 1057 0 8 xdim 12
-        set getnumbervalue getnumberval
+        //set getnumbervalue getnumberval
     }
 endevent
 
