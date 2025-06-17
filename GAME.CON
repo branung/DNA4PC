@@ -8651,3 +8651,4 @@ include scripts/SPIDERLORD.CON
 include scripts/CONTROLLERBOSS.CON
 include scripts/CYBERALIEN.CON
 include scripts/ALIENLORD.CON
+include scripts/sectors.con
