@@ -173,6 +173,7 @@ defstate enable_autoshade
                     state getwallang
                     shiftr s_temp3 13
                     abs s_temp3
+                    set s_temp1 s_sectshade
                     add s_temp1 s_temp3
                     setw[u].shade s_temp1
                     set s_tempvis 240
