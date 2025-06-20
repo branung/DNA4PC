@@ -9,7 +9,7 @@ include scripts/cutscenes.con
 include scripts/hud.con
 include scripts/effects.con
 
-
+damageeventtile 1405
 
 
 // Moved from GAME.CON

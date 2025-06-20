@@ -126,6 +126,7 @@ var fx_owner 0 2
 var fx_extra 0 2
 // Otherwise internal (Pretty much like htg_t but without the risks)
 var fx_int 0 2
+var fx_int2 0 2
 
 
 
@@ -537,3 +538,4 @@ definesound BONUS_SPEECH1               sounds/duke/letsrock.wav             -80
 definesound DUKE_CRACK                  sounds/duke/waitin.wav               -80   -80    255   4     0
 definesound DUKE_SEARCH                 sounds/duke/wallhump.wav             -80   -80    255   4     0
 definesound ENDSEQVOL2SND7              sounds/duke/whistle.wav              -80   -80    255   4     0
+definesound RPG_EXPLODE                 sounds/weapon/explosion.wav          -80   -80    3     0     0

@@ -182,3 +182,79 @@ enda
 useractor notenemy DNA_YELLOWKEY 0
     state access_shared
 enda
+
+
+
+
+//// --------- EXTRA REVIVE FUNCTION FOR GREY ---------
+// This hijacks into the common "checksquished" state from original GAME.CON
+// The enemy currently supports reviving trooper/pigcop/octa/newbeast.
+appendstate checksquished
+    ifaction ATROOPDEAD {
+        findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+        ifn temp -1 {
+            addkills -1
+            spawn TRANSPORTERSTAR
+            cstat 257
+            strength TROOPSTRENGTH
+            ai AITROOPSEEKENEMY
+        }
+    }
+    ifaction ALIZLYINGDEAD {
+        findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+        ifn temp -1 {
+            addkills -1
+            spawn TRANSPORTERSTAR
+            cstat 257
+            strength LIZSTRENGTH
+            ai AILIZGETENEMY
+        }
+    }
+    ifaction AOCTADEAD {
+        findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+        ifn temp -1 {
+            addkills -1
+            spawn TRANSPORTERSTAR
+            cstat 257
+            strength OCTASTRENGTH
+            ai AIOCTAGETENEMY
+        }
+    }
+    ifaction APIGDEAD {
+        findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+        ifn temp -1 {
+            addkills -1
+            spawn TRANSPORTERSTAR
+            cstat 257
+            strength PIGCOPSTRENGTH
+            ai AIPIGSEEKENEMY
+        }
+    }
+    ifaction ANEWBEASTLYINGDEAD {
+        findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+        ifn temp -1 {
+            addkills -1
+            spawn TRANSPORTERSTAR
+            cstat 257
+            strength NEWBEASTSTRENGTH
+            ai AINEWBEASTGETENEMY
+        }
+    }
+ends
+
+
+//// --------- EXTRA SCREENFLASH FOR THE PLAYER ---------
+// This hijacks into the common "checksquished" state from original GAME.CON
+
+appendevent EVENT_DAMAGESPRITE
+    setu .vm_player myconnectindex
+    ife sprite[RETURN].picnum APLAYER {
+        set temp sprite[THISACTOR].picnum
+        ife temp GREYPROJECTILE
+            palfrom 16 0 32 32
+        ife temp SLIMECRABPROJECTILE
+            palfrom 16 0 64
+        ife temp ALIENLORDPROJECTILE
+            palfrom 48 32
+    }
+endevent
