@@ -181,40 +181,26 @@ defineprojectile ALIENLORDPROJECTILE PROJ_OFFSET -128
 // To get the correct pitch use -80 as the base value
 
 //DN:A Enemies
-// Grey
 define GREYATTACK 400
 define GREYDEATH 401
-// Slimer
 define SLIMERATTACK 402
 define SLIMEREGG 403
-// Spider
 define SPIDERLORDROAM 404
 define SPIDERLORDDEATH 405
-// Controller
 define CONTROLLERATTACK 406
-// AlienLord
 define ALIENLORDROAM 407
 define ALIENLORDDEATH 408
-
-// Pigcop
 define A_PIGDYING 409
 define A_PIGROAM 410
-// Liztroop
 define A_TROOPDYING 411
 define A_TROOPROAM 412
-// Lizman
 define A_LIZDYING 413
 define A_LIZROAM A_TROOPROAM
-// Octobrain
 define A_OCTODYING GREYDEATH
 define A_OCTOATTACK 415
 define A_OCTOROAM 416
-// Aliencrab
 define A_CRABDYING 418
 define A_CRABATTACK SLIMERATTACK
-
-
-
 //          SOUND TOKEN                 SOUND FILE                        Pitch Low--High   Prio  Type  Distance
 definesound GREYATTACK                  sounds/enemy/greyattack.wav                  -80   -80    3     0     7680
 definesound GREYDEATH                   sounds/enemy/greydying.wav                   -180   20    3     0     7680
@@ -225,15 +211,80 @@ definesound SPIDERLORDDEATH             sounds/enemy/spiderlord_dead.wav        
 definesound CONTROLLERATTACK            sounds/enemy/controller_attack.wav           -80   -80    3     0     0
 definesound ALIENLORDROAM               sounds/enemy/alienlord_roam.wav              -80   -80    3     0     0
 definesound ALIENLORDDEATH              sounds/enemy/alienlord_dead.wav              -80   -80    3     0     0
-
 definesound A_PIGDYING                  sounds/enemy/pigdying.wav              -80   -80    3     0     0
 definesound A_PIGROAM                   sounds/enemy/pigroam.wav              -80   -80    3     0     0
-
-
-
-
+//DN:A Environment/interact
 define A_STEPSOUND 430
+define A_ACTIVATE 431
+define A_TELEPORT 432
+define A_CRUSHER 433
+define A_DOOR 434
+define A_DOOR2A 435
+define A_DOOR2B 436
+define A_DOOR3 437
+define A_HEARTBEAT 438
+define A_PRESSURESTOPHI 439
+define A_PRESSURESTOPLO 440
+define A_SLAM 441
+//define A_SMACK 442
+define A_ALIENSWITCH 443
+define A_SWITCH 444
+define A_VENTBUST 445
+define A_VENTWALK 446
 definesound A_STEPSOUND              sounds/env/footstep.wav              -80   -80    3     0     0
+definesound A_ACTIVATE               sounds/env/activate.wav              -80   -80    3     0     0
+definesound A_TELEPORT               sounds/env/teleport.wav              -80   -80    3     0     0
+definesound A_CRUSHER                sounds/env/crusher.wav               -80   -80    3     0     0
+definesound A_DOOR                   sounds/env/door.wav                  -80   -80    3     0     0
+definesound A_DOOR2A                 sounds/env/door2a.wav                -80   -80    3     0     0
+definesound A_DOOR2B                 sounds/env/door2b.wav                -80   -80    3     0     0
+definesound A_DOOR3                  sounds/env/door3.wav                 -80   -80    3     0     0
+definesound A_HEARTBEAT              sounds/env/heartbeat.wav             -80   -80    3     0     0
+definesound A_PRESSURESTOPHI         sounds/env/pressurestophi.wav        -80   -80    3     0     0
+definesound A_PRESSURESTOPLO         sounds/env/pressurestoplo.wav        -80   -80    3     0     0
+definesound A_SLAM                   sounds/env/slam.wav                  -80   -80    3     0     0
+//definesound A_SMACK                  sounds/env/smack.wav                 -80   -80    3     0     0
+definesound A_ALIENSWITCH            sounds/env/alienswitch.wav            -80   -80    3     0     0
+definesound A_SWITCH                 sounds/env/switch.wav                -80   -80    3     0     0
+definesound A_VENTBUST               sounds/env/ventbust.wav              -80   -80    3     0     0
+definesound A_VENTWALK               sounds/env/ventwalk.wav              -80   -80    3     0     0
+//DN:A Weapons/action
+define A_BOUNCE 450
+define A_EXPLOSION 451
+define A_FREEZE 452
+define A_KICKHIT 453
+define A_MP5FIRE 454
+define A_PICKARMOR 455
+define A_PICKWEAPON 456
+define A_PISTOL 457
+define A_RICOCHET 458
+define A_RPGFIRE 459
+define A_SHATTER 460
+define A_SHOTGUNCOCK 461
+define A_SHOTGUNFIRE 462
+define A_SHRINK 463
+define A_SHRINKER 464
+define A_SQUISH 465
+definesound A_BOUNCE                 sounds/weapon/bounce.wav             -80   -80    3     0     0
+definesound A_EXPLOSION              sounds/weapon/explosion.wav          -80   -80    3     0     0
+definesound A_FREEZE                 sounds/weapon/freeze.wav             -80   -80    3     0     0
+definesound A_KICKHIT                sounds/weapon/kickhit.wav            -80   -80    3     0     0
+definesound A_MP5FIRE                sounds/weapon/mp5fire.wav            -80   -80    3     0     0
+definesound A_PICKARMOR              sounds/weapon/pickarmor.wav          -80   -80    3     0     0
+definesound A_PICKWEAPON             sounds/weapon/pickweapon.wav         -80   -80    3     0     0
+definesound A_PISTOL                 sounds/weapon/pistol.wav             -80   -80    3     0     0
+definesound A_RICOCHET               sounds/weapon/ricochet.wav           -80   -80    3     0     0
+definesound A_RPGFIRE                sounds/weapon/rpgfire.wav            -80   -80    3     0     0
+definesound A_SHATTER                sounds/weapon/shatter.wav            -80   -80    3     0     0
+definesound A_SHOTGUNCOCK            sounds/weapon/shotguncock.wav        -80   -80    3     0     0
+definesound A_SHOTGUNFIRE            sounds/weapon/shotgunfire.wav        -80   -80    3     0     0
+definesound A_SHRINK                 sounds/weapon/shrink.wav             -80   -80    3     0     0
+definesound A_SHRINKER               sounds/weapon/shrinker.wav           -80   -80    3     0     0
+definesound A_SQUISH                 sounds/weapon/squish.wav             -80   -80    3     0     0
+
+
+
+
 
 
 //Ambience
@@ -448,3 +499,41 @@ definelevelname 5 18 maps/MAP19.map 00:00 00:00 Run Your Ass Off!
 music 6 
 //Level 1    Level 2     Level 3    Level 4    Level 5     Level 6    Level 7    Level 8   Level 9      Level 10     Level 11 Level 12  Level 13     Level 14    Level 15   Level 16   Level 17     Level 18     Level 19
 restrict.mid xplasma.mid alienz.mid music/DesertMaze.ogg thecall.mid gloomy.mid ahgeez.mid prepd.mid inhiding.mid watrwld1.mid pob.mid  storm.mid warehaus.mid intents.mid stalag.mid spook.mid  robocrep.mid gutwrnch.mid depart.mid
+
+
+
+
+
+// Overwrites for the main game definitions
+redefinequote 54        MP5!
+redefinequote 63        AMMO FOR MP5!
+
+definesound CAPT_ATTACK                 sounds/weapon/mp5fire.wav            -80   -80    3     0     0
+definesound PISTOL_FIRE                 sounds/weapon/pistol.wav             -80   -80    3     0     0
+definesound SQUISHED                    sounds/weapon/squish.wav             -80   -80    3     0     0
+definesound SHRINKER_FIRE               sounds/weapon/shrink.wav             -80   -80    3     0     0
+definesound ACTOR_SHRINKING             sounds/weapon/shrinker.wav           -80   -80    3     0     0
+definesound PIPEBOMB_BOUNCE             sounds/weapon/bounce.wav             -80   -80    3     0     0
+definesound TELEPORTER                  sounds/env/teleport.wav              -80   -80    3     0     0
+definesound PISTOL_RICOCHET             sounds/weapon/ricochet.wav           -80   -80    3     0     0
+definesound SHOTGUN_COCK                sounds/weapon/shotguncock.wav        -80   -80    3     0     0
+definesound SHOTGUN_FIRE                sounds/weapon/shotgunfire.wav        -80   -80    3     0     0
+definesound SELECT_WEAPON               sounds/weapon/shotguncock.wav        -80   -80    3     0     0
+definesound VENT_BUST                   sounds/env/ventbust.wav              -80   -80    3     0     0
+definesound DUKE_DEAD                   sounds/duke/owwh.wav                 -80   -80    255   4     0
+definesound DUKE_USEMEDKIT              sounds/duke/ahh.wav                  -80   -80    255   4     0
+definesound JIBBED_ACTOR1               sounds/duke/amess.wav                -80   -80    255   4     0
+definesound JIBBED_ACTOR2               sounds/duke/bitchin.wav              -80   -80    255   4     0
+definesound JIBBED_ACTOR3               sounds/duke/holycw.wav               -80   -80    255   4     0
+definesound JIBBED_ACTOR5               sounds/duke/imgood.wav               -80   -80    255   4     0
+definesound JIBBED_ACTOR6               sounds/duke/piece.wav                -80   -80    255   4     0
+definesound JIBBED_ACTOR7               sounds/duke/gothrt.wav               -80   -80    255   4     0
+definesound DUKE_GETWEAPON1             sounds/duke/cool.wav                 -80   -80    255   4     0
+definesound DUKE_GETWEAPON2             sounds/duke/getsom.wav               -80   -80    255   4     0
+definesound DUKE_GETWEAPON4             sounds/duke/wansom.wav               -80   -80    255   4     0
+definesound DUKE_GETWEAPON6             sounds/duke/hail.wav                 -80   -80    255   4     0
+definesound DUKE_KILLED1                sounds/duke/damn.wav                 -80   -80    255   4     0
+definesound BONUS_SPEECH1               sounds/duke/letsrock.wav             -80   -80    255   4     0
+definesound DUKE_CRACK                  sounds/duke/waitin.wav               -80   -80    255   4     0
+definesound DUKE_SEARCH                 sounds/duke/wallhump.wav             -80   -80    255   4     0
+definesound ENDSEQVOL2SND7              sounds/duke/whistle.wav              -80   -80    255   4     0
