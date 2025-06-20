@@ -1,10 +1,10 @@
-//setdefname dna.def
+setdefname dna.def
 
 gamevar dna_localization 0 // 0 is the US script. run 'setvar dna_localization 1' in console while ingame for the EU localization
 gamevar dna_dukecutscenevoc 0 // 0 means no Duke voice lines play in cutscenes, 1 means 3D voice clips are played, 2 means Gianni voice lines are used
 gamevar dna_menu_tutorial 0 
 
-// Enemies and their projectiles
+// Actors and their projectiles
 define GREY 5119
 define GREYSTRENGTH 80
 define GREYPROJECTILE 5165
@@ -25,10 +25,12 @@ define CONTROLLERBOSS 5296
 define CONTROLLERBOSSSTRENGTH 2500
 define CYBERALIEN 3948
 define CYBERALIENSTRENGTH 3000
+define A51ALARM 5600
 define ALIENLORD 4001
 define ALIENLORDSTRENGTH 3000
 define ALIENLORDPROJECTILE 5183
 define ALIENLORDPROJECTILESTRENGTH 20
+
 
 //Cutscene sprites
 define DUKEHEADSPRITE 3923
@@ -68,8 +70,75 @@ gamevar INV_NUM_TEMP 0 2
 
 gamevar SCREENSIZE -1 1
 
+// Moved from dna4pc.con
+gamevar WEAPON1_CLIP 0 0 // Prevent pistol from reloading
+gamevar WEAPON1_TOTALTIME 9 // Increases delay time between each pistol shot
+gamevar temp 0 2
+
+gamevar SCREENALPHA 255 0
+gamevar CUTSCENE_STEP 0 0
+gamevar CUTSCENE_SCREEN 0 0
+gamevar CUTSCENE_DIALOG 0 0
+gamevar CUTSCENE_DIALOG2 0 0
+gamevar CUTSCENE_DUKE 0 0
+gamevar CUTSCENE_DIALOGBOX 3921 0
+gamevar CUTSCENE_SPRITE 0 0
+gamevar y 0 0
+// Moved from dna4pc.con
+
+
+// Common iterators
+var i 0 0
+var u 0 0
+// Corresponds to sprite.ang
+define RIGHT 0
+define DOWN 512
+define LEFT 1024
+define UP 1536
+
+// KEYCARD AND DOOR LOCK RELATED DEFINES
+// Keycard flag bit
+var lockbits 0 0
+define lock_bluekey 1
+define lock_redkey 2
+define lock_yellowkey 4
+define lock_syskey 8
+define lock_cdkey 16
+define lock_chipkey 32
+// Non-pickup lockbits
+define lock_mission 64
+define lock_oneway 128
+define lock_switch 256
+define LOCKQUOTE 1
+// Keycard actors
+define DNA_SYSKEY 3901
+define DNA_CDKEY 3902
+define DNA_CHIPKEY 3903
+define DNA_BLUEKEY 3942
+define DNA_REDKEY 3943
+define DNA_YELLOWKEY 3944
+define DNA_KEYQUOTE 300
+definequote DNA_KEYQUOTE
+
+// EFFECT USE ACTORVARS
+// Mapper placed
+var fx_owner 0 2
+var fx_extra 0 2
+// Otherwise internal (Pretty much like htg_t but without the risks)
+var fx_int 0 2
+
+
+
+
 //gamevar for checking music before playing cutscene
 gamevar currmusic 0
+// Ambience randomizer
+var ambsndtimer 0 0
+// Player bobcounter
+var bobsndtimer 1024 0
+var bobsndinverse 1 0
+// Default 1024, set to -1 to disable bobsounds
+var bobfrequency 1024 0
 
 //Delay vars
 var delayTime 0
@@ -107,24 +176,66 @@ defineprojectile ALIENLORDPROJECTILE PROJ_EXTRA ALIENLORDPROJECTILESTRENGTH
 defineprojectile ALIENLORDPROJECTILE PROJ_HITRADIUS 100
 defineprojectile ALIENLORDPROJECTILE PROJ_OFFSET -128
 
-//DN:A Misc sounds
+
+// Each ripped sound is stored at 8000Hz but in actuality it's very close to 7500Hz.
+// To get the correct pitch use -80 as the base value
+
+//DN:A Enemies
+// Grey
 define GREYATTACK 400
 define GREYDEATH 401
+// Slimer
 define SLIMERATTACK 402
+define SLIMEREGG 403
+// Spider
 define SPIDERLORDROAM 404
 define SPIDERLORDDEATH 405
+// Controller
 define CONTROLLERATTACK 406
+// AlienLord
 define ALIENLORDROAM 407
 define ALIENLORDDEATH 408
-//          SOUND TOKEN               SOUND FILE                        Pitch Low--High   Prio  Type  Distance
-definesound GREYATTACK                sounds/grey_attack.wav                 -80   -80    3     0     7680
-definesound GREYDEATH                 sounds/grey_death.wav                  -100   100   3     0     7680
-definesound SLIMERATTACK              sounds/slimer_attack.wav               -100   100   3     0     7680
-definesound SPIDERLORDROAM            sounds/spiderlord_roam.wav             -80   -80    3     0     0
-definesound SPIDERLORDDEATH           sounds/spiderlord_dead.wav             -80   -80    3     0     0
-definesound CONTROLLERATTACK          sounds/controller_attack.wav           -80   -80    3     0     0
-definesound ALIENLORDROAM             sounds/alienlord_roam.wav              -80   -80    3     0     0
-definesound ALIENLORDDEATH            sounds/alienlord_dead.wav              -80   -80    3     0     0
+
+// Pigcop
+define A_PIGDYING 409
+define A_PIGROAM 410
+// Liztroop
+define A_TROOPDYING 411
+define A_TROOPROAM 412
+// Lizman
+define A_LIZDYING 413
+define A_LIZROAM A_TROOPROAM
+// Octobrain
+define A_OCTODYING GREYDEATH
+define A_OCTOATTACK 415
+define A_OCTOROAM 416
+// Aliencrab
+define A_CRABDYING 418
+define A_CRABATTACK SLIMERATTACK
+
+
+
+//          SOUND TOKEN                 SOUND FILE                        Pitch Low--High   Prio  Type  Distance
+definesound GREYATTACK                  sounds/enemy/greyattack.wav                  -80   -80    3     0     7680
+definesound GREYDEATH                   sounds/enemy/greydying.wav                   -180   20    3     0     7680
+definesound SLIMERATTACK                sounds/enemy/slimer_attack.wav               -180   20    3     0     7680
+definesound SLIMERATTACK                sounds/enemy/slimeregg_hatch.wav             -180   20    3     0     7680
+definesound SPIDERLORDROAM              sounds/enemy/spiderlord_roam.wav             -80   -80    3     0     0
+definesound SPIDERLORDDEATH             sounds/enemy/spiderlord_dead.wav             -80   -80    3     0     0
+definesound CONTROLLERATTACK            sounds/enemy/controller_attack.wav           -80   -80    3     0     0
+definesound ALIENLORDROAM               sounds/enemy/alienlord_roam.wav              -80   -80    3     0     0
+definesound ALIENLORDDEATH              sounds/enemy/alienlord_dead.wav              -80   -80    3     0     0
+
+definesound A_PIGDYING                  sounds/enemy/pigdying.wav              -80   -80    3     0     0
+definesound A_PIGROAM                   sounds/enemy/pigroam.wav              -80   -80    3     0     0
+
+
+
+
+define A_STEPSOUND 430
+definesound A_STEPSOUND              sounds/env/footstep.wav              -80   -80    3     0     0
+
+
 //Ambience
 define AAMB_COMPUTER 560
 define AAMB_FRY 561
@@ -137,17 +248,19 @@ define AAMB_WARAMB 567
 define AAMB_WIND 568
 define AAMB_A51SIRENLOOP 569
 define AAMB_ALIENMACHINERY 570
-definesound AAMB_COMPUTER             sounds/amb/comloop.wav                 -80   -80    0     3     0
-definesound AAMB_FRY                  sounds/amb/fryloop.wav                 -80   -80    0     3     0
-definesound AAMB_LAVA                 sounds/amb/lava06.wav                  -80   -80    0     3     0
-definesound AAMB_MACHINERY            sounds/amb/machinery.wav               -80   -80    0     3     0
-definesound AAMB_RUMBLE               sounds/amb/rumble.wav                  -80   -80    0     3     0
-definesound AAMB_STINGER              sounds/amb/stinger.wav                 -80   -80    0    16     0
-definesound AAMB_TRAIN                sounds/amb/trainloop.wav               -80   -80    0     3     0
-definesound AAMB_WARAMB               sounds/amb/waramb.wav                 -592   -80    0    16     0
-definesound AAMB_WIND                 sounds/amb/wind.wav                    -80   -80    0     3     0
-definesound AAMB_A51SIRENLOOP         sounds/amb/area51_siren.wav            -80   -80    0    16     0
-definesound AAMB_ALIENMACHINERY       sounds/amb/alienmachine.wav            -80   -80    0     3     0
+define AAMB_HISS 571
+definesound AAMB_COMPUTER               sounds/amb/comloop.wav                 -80   -80    0     3     0
+definesound AAMB_FRY                    sounds/amb/fryloop.wav                 -80   -80    0     3     0
+definesound AAMB_LAVA                   sounds/amb/lava06.wav                  -80   -80    0     3     0
+definesound AAMB_MACHINERY              sounds/amb/machinery.wav               -80   -80    0     3     0
+definesound AAMB_RUMBLE                 sounds/amb/rumble.wav                  -80   -80    0     3     0
+definesound AAMB_STINGER                sounds/amb/stinger.wav                 -80   -80    0    16     0
+definesound AAMB_TRAIN                  sounds/amb/trainloop.wav               -80   -80    0     3     0
+definesound AAMB_WARAMB                 sounds/amb/waramb.wav                  -80   -80    0    16     0
+definesound AAMB_WIND                   sounds/amb/wind.wav                    -80   -80    0     3     0
+definesound AAMB_A51SIRENLOOP           sounds/amb/area51_siren.wav            -80   -80    0    16     0
+definesound AAMB_ALIENMACHINERY         sounds/amb/alienmachine.wav            -80   -80    0     3     0
+definesound AAMB_HISS                   sounds/amb/hiss.wav                    -80   -80    0    16     0
 
 
 //Uttered by Duke Nukem
@@ -299,3 +412,39 @@ definesound GM_OVERHEATALIENS         sounds/gianni/GM_OverheatAliens.wav     0 
 definesound GM_KICKINGBUTT            sounds/gianni/GM_KickingButt.wav        0     0     255   4     0
 definesound GM_SCRATCHBUTT            sounds/gianni/GM_ScratchButt.wav        0     0     255   4     0
 definesound GM_FINDMYOWNWAY           sounds/gianni/GM_FindMyOwnWay.wav       0     0     255   4     0
+
+
+
+// Episodes
+undefinevolume 0
+undefinevolume 1
+undefinevolume 2
+undefinevolume 3
+undefinevolume 4
+definevolumename 5 Duke Advance
+
+// Levels
+definelevelname 5 0 maps/MAP01.map  00:00 00:00 Gathering Intel
+definelevelname 5 1 maps/MAP02.map 00:00 00:00 Close Encounter
+definelevelname 5 2 maps/MAP03.map 00:00 00:00 Hybrid Army
+definelevelname 5 3 maps/MAP04.map 00:00 00:00 Temple of Amun
+definelevelname 5 4 maps/MAP05.map 00:00 00:00 Inner Sanctum
+definelevelname 5 5 maps/MAP06.map 00:00 00:00 The Controller
+definelevelname 5 6 maps/MAP07.map 00:00 00:00 Temple Escape
+definelevelname 5 7 maps/MAP08.map 00:00 00:00 Down Under
+definelevelname 5 8 maps/MAP09.map 00:00 00:00 Eating Out
+definelevelname 5 9 maps/MAP10.map 00:00 00:00 Day at the Opera
+definelevelname 5 10 maps/MAP11.map 00:00 00:00 Doomsday Weapon
+definelevelname 5 11 maps/MAP12.map 00:00 00:00 Alien Ship
+definelevelname 5 12 maps/MAP13.map 00:00 00:00 Cloaking Device
+definelevelname 5 13 maps/MAP14.map 00:00 00:00 Mazeframe
+definelevelname 5 14 maps/MAP15.map 00:00 00:00 Seeing Double
+definelevelname 5 15 maps/MAP16.map 00:00 00:00 Clone Saga
+definelevelname 5 16 maps/MAP17.map 00:00 00:00 Deja Vu Encore
+definelevelname 5 17 maps/MAP18.map 00:00 00:00 Alien Lord
+definelevelname 5 18 maps/MAP19.map 00:00 00:00 Run Your Ass Off!
+
+// Music
+music 6 
+//Level 1    Level 2     Level 3    Level 4    Level 5     Level 6    Level 7    Level 8   Level 9      Level 10     Level 11 Level 12  Level 13     Level 14    Level 15   Level 16   Level 17     Level 18     Level 19
+restrict.mid xplasma.mid alienz.mid music/DesertMaze.ogg thecall.mid gloomy.mid ahgeez.mid prepd.mid inhiding.mid watrwld1.mid pob.mid  storm.mid warehaus.mid intents.mid stalag.mid spook.mid  robocrep.mid gutwrnch.mid depart.mid

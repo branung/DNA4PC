@@ -1,0 +1,184 @@
+include scripts/grey.con
+include scripts/slimecrab.con
+include scripts/slimeregg.con
+include scripts/spiderlord.con
+include scripts/controllerboss.con
+include scripts/cyberalien.con
+include scripts/alienlord.con
+
+
+// Moved from GAME.CON
+actor LEAD_CANNON_SPRITE
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifcanseetarget
+      {
+          ifgotweaponce 0
+            break
+
+		      ife player[].curr_weapon SHOTGUN_WEAPON
+          {
+            ife 0 player[].bsubweapon SHOTGUN_WEAPON
+            {
+              sound SHOTGUN_COCK
+              setp[].bsubweapon SHOTGUN_WEAPON 1
+              setvar SHOT_SWITCH 1
+            }
+            else
+            {
+              
+            }
+          }
+          else
+          { 
+              sound SHOTGUN_COCK
+              setp[].bsubweapon SHOTGUN_WEAPON 1
+              setp[].weapon_pos 3
+
+          }
+        
+          ifn player.ammo_amount SHOTGUN_WEAPON MAXSHOTGUNAMMO
+          addweapon SHOTGUN_WEAPON 5
+        
+
+        addweapon SHOTGUN_WEAPON 5
+        
+            quote 125
+          
+
+          ifspawnedby LEAD_CANNON_SPRITE
+            state getweaponcode
+          else
+            state quikweaponget
+        }
+enda
+// Moved from GAME.CON
+
+
+
+//// --------- ALARM ACTOR ---------
+// Starts upon seeing the player. Compatible with RESPAWN
+// Hitag: Counts up from 0 to 10 and dies
+// Extra: If set to 1 then re-usable after ~10s, waits for line of sight. No RESPAWN.
+
+action A51ALARMON 0 0 1 1 1
+action A51ALARMOFF 0 0 1 1 1
+action A51ALARMREADY 0 0 1 1 1
+
+useractor enemy A51ALARM 0 A51ALARMON
+    // First default action, fire the sound on sight
+    ifaction A51ALARMON ifactioncount 35 {
+        geta .hitag temp
+        ife temp 10 {
+            ife fx_extra -1 {
+                killit
+            } else {
+                action A51ALARMOFF
+                resetactioncount
+            }
+        } else {
+            add temp 1
+            seta .hitag temp
+            globalsound AAMB_A51SIRENLOOP
+            resetactioncount
+        }
+    }
+    // If extra was 1, then wait ~10s in a busyloop.
+    ifaction A51ALARMOFF ifactioncount 300 {
+        action A51ALARMREADY
+    }
+    // Re-armed, if the player is seen then restart the alarm!
+    ifaction A51ALARMREADY {
+        ifcansee {
+            action A51ALARMON
+            seta .hitag 0
+        }
+    }
+enda
+
+
+defstate dna_getcode
+// This needs to replace stuff later on!
+    state getcode
+ends
+
+
+//// --------- KEYITEM ACTOR ---------
+// Generic pickup for key items
+// Hitag: Triggered when picked up
+defstate access_shared
+    fall
+    ifmove RESPAWN_ACTOR_FLAG {
+        state respawnit
+    } else {
+        ifp pshrunk {
+            nullop
+        } else {
+            ifp palive {
+                ifpdistl RETRIEVEDISTANCE {
+                    ifcount 6 {
+                        ifcanseetarget {
+                            getplayer[].got_access temp
+                            ifactor DNA_BLUEKEY { 
+                                or temp lock_bluekey
+                                redefinequote DNA_KEYQUOTE Got the blue access card!
+                            }
+                            ifactor DNA_REDKEY {
+                                or temp lock_redkey
+                                redefinequote DNA_KEYQUOTE Got the red access card!
+                            }
+                            ifactor DNA_YELLOWKEY {
+                                or temp lock_yellowkey
+                                redefinequote DNA_KEYQUOTE Got the yellow access card!
+                            }
+                            ifactor DNA_SYSKEY {
+                                or temp lock_syskey
+                                redefinequote DNA_KEYQUOTE Accessed the computer!
+                            }
+                            ifactor DNA_CDKEY {
+                                or temp lock_cdkey
+                                redefinequote DNA_KEYQUOTE Found a data disc!
+                            }
+                            ifactor DNA_CHIPKEY {
+                                or temp lock_chipkey
+                                redefinequote DNA_KEYQUOTE Retreived the microchip!
+                            }
+                            setplayer[].got_access temp
+                            
+                            ifn sprite.hitag 0 { operateactivators sprite.hitag -1 }
+                            quote DNA_KEYQUOTE
+                            addlogvar temp
+                            state getcode
+                        }
+                    }
+                }
+            }
+        }
+    }
+ends
+
+useractor notenemy DNA_SYSKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_CDKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_CHIPKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_BLUEKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_REDKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_YELLOWKEY 0
+    state access_shared
+enda

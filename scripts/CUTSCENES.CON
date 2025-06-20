@@ -112,8 +112,30 @@ define OP_CUTSCENE_DELAY_TIME 3000
 define CUTSCENE_DELAY_TIME 51
 
 
+defstate waste_time
+{
+  ifvarg delayTime 0
+  {
+        setvar RETURN 0
+        getticks curtick
+        ifvare prevtick -1 setvar ticktmp 0 else
+        {
+        setvarvar ticktmp curtick
+        subvarvar ticktmp prevtick
+        }
 
-state cutscene_cleanup
+        subvarvar delayTime ticktmp
+        //addlogvar delayTime
+        
+        setvarvar prevtick curtick
+  }
+  else {
+    setvar prevtick -1
+  }
+}
+ends
+
+defstate cutscene_cleanup
         ifvarn SCREENALPHA 255
                 setvar SCREENALPHA 255
         ifvarn CUTSCENE_STEP 0
