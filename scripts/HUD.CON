@@ -37,12 +37,19 @@
 		ifvarg INV_TEMP 9 { rotatesprite 38 32 NORMALSIZE 0 5384 0 0 256 0 0 xdim ydim }
 
 		rotatesprite 286 29 NORMALSIZE 0 5370 0 0 512 0 0 xdim ydim
-		ifvare currentweapon 10
-		{
-			getplayer[THISACTOR].ammo_amount 5 INV_TEMP
-		}
-		else
-			getplayer[THISACTOR].ammo_amount currentweapon INV_TEMP
+		
+        switch player[THISACTOR].curr_weapon
+            case 10
+                getplayer[THISACTOR].ammo_amount 5 INV_TEMP
+                break
+            //case 7
+            //    getplayer[THISACTOR].ammo_amount 2 INV_TEMP
+            //    break
+            default
+                getplayer[THISACTOR].ammo_amount currentweapon INV_TEMP
+                break
+        endswitch
+        
 			digitalnumber 5386 302 10 INV_TEMP 0 32 512 0 0 xdim ydim
 
 			ifvarand player[THISACTOR].got_access 1 { rotatesprite 294 31 NORMALSIZE 0 5372 0 0 512 0 0 xdim ydim }

@@ -8,20 +8,13 @@ include scripts/dialogdef.con
 include scripts/cutscenes.con
 include scripts/hud.con
 include scripts/effects.con
+// WEAPON DEFINES, I'm too lazy so I stole the sample from sdk/samples/weapons.sample.con
+// Thanks Hendricks!
+include scripts/weapons.con
+
+
 
 damageeventtile 1405
-
-
-// Moved from GAME.CON
-// should go under APLAYER actor's ifhitweapon
-//    ifwasweapon GREYPROJECTILE
-//      palfrom 16 0 32 32
-//    ifwasweapon SLIMECRABPROJECTILE
-//      palfrom 16 0 64
-//    ifwasweapon ALIENLORDPROJECTILE
-//      palfrom 48 32 
-// Moved from GAME.CON
-
 
 
 onevent EVENT_NEWGAME
@@ -43,6 +36,7 @@ endevent
 var viewscreen_spr 0 0
 
 appendevent EVENT_PRELEVEL
+  setp[myconnectindex].max_ammo_amount 12 100
   for viewscreen_spr allsprites
   {
     ifvare sprite[viewscreen_spr].picnum VIEWSCREEN
@@ -79,74 +73,3 @@ onevent EVENT_GAME
         ifvare VOLUME 5 ifvare LEVEL 19 setuserdef .eog 1
     }
     endevent
-
-//Next Events are for handling Lead Cannon 
-// onevent EVENT_WEAPKEY3
-//     ife player[].curr_weapon SHOTGUN_WEAPON
-//     {
-//         ife 1 player[].bsubweapon SHOTGUN_WEAPON
-//         {
-//             ifvare SHOT_SWITCH 0 {
-//                 setvar SHOT_SWITCH 1 
-//             }
-//             else
-//                 setvar SHOT_SWITCH 0
-            
-//         }
-//     }
-// endevent
-
-// appendevent EVENT_GETSHOTRANGE
-
-// 	ife player[].curr_weapon SHOTGUN_WEAPON
-// 	{
-		
-// 	}
-
-// endevent
-
-// appendevent EVENT_DOFIRE 
-// 	ife player[].curr_weapon SHOTGUN_WEAPON {
-// 		ife 1 player[].bsubweapon SHOTGUN_WEAPON
-  
-// 	}
-// endevent
-
-gamevar weapSwitch 0 1
-
-// onevent EVENT_PREVIOUSWEAPON
-//  setvar weapSwitch 1
-// endevent
-
-// onevent EVENT_NEXTWEAPON
-//  setvar weapSwitch 2
-// endevent
-
-// onevent EVENT_SELECTWEAPON
-
-//         ife player[].curr_weapon SHOTGUN_WEAPON
-//         {
-//             ife 1 player[].bsubweapon SHOTGUN_WEAPON
-//             {
-//                 ifvare weapSwitch 1 {
-//                     ifvare SHOT_SWITCH 1 
-//                     {
-//                         setvar SHOT_SWITCH 0
-//                         setvar RETURN -1
-//                     }
-//                 }
-//                 ifvare weapSwitch 2 {
-//                     ifvare SHOT_SWITCH 0
-//                     {
-//                         setvar SHOT_SWITCH 1 
-//                         setvar RETURN -1
-//                     }
-//                 }
-//             }
-//         }
-    
-//     setvar weapSwitch 0
-// endevent
-
-
-

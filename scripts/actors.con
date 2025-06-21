@@ -7,6 +7,12 @@ include scripts/cyberalien.con
 include scripts/alienlord.con
 
 
+defstate transfer_lead_ammo
+    getplayer[].ammo_amount SHOTGUN_WEAPON temp
+    setplayer[].ammo_amount LEAD_WEAPON temp
+ends
+
+
 // Moved from GAME.CON
 actor LEAD_CANNON_SPRITE
   fall
@@ -44,15 +50,16 @@ actor LEAD_CANNON_SPRITE
 
           }
         
-          ifn player.ammo_amount SHOTGUN_WEAPON MAXSHOTGUNAMMO
-          addweapon SHOTGUN_WEAPON 5
+//          ifn player.ammo_amount SHOTGUN_WEAPON MAXSHOTGUNAMMO
+//          addweapon SHOTGUN_WEAPON 5
         
 
-        addweapon SHOTGUN_WEAPON 5
+        addweapon LEAD_WEAPON 5
+        addammo SHOTGUN_WEAPON 10
         
             quote 125
           
-
+        state transfer_lead_ammo
           ifspawnedby LEAD_CANNON_SPRITE
             state getweaponcode
           else

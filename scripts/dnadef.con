@@ -49,7 +49,8 @@ var textQuoteRow4 200
 // Lead Cannon definitions if I somehow manage to get it working
 define LEAD_CANNON_SPRITE 5403
 define LEAD_CANNON 5404
-define LEAD_CANNON_WEAPON 13
+define LEAD_WEAPON 7
+define LEAD_TOTALTIME 31
 gamevar SHOT_SWITCH 0 0
 
 definequote 125       GOT LEAD CANNON!

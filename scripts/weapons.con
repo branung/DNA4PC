@@ -1,7 +1,7 @@
-
 // Note: This file has been directly converted from the EDuke32
 // C source code to CON code, without any fixes or improvements.
 // Further changes to player.c may or may not be reflected here.
+// Original file sdk/samples/weapons.sample.con   -- Thanks to Hendricks266!
 
 /*
 gamevar currentweapon 0 0 //  (system) (pointer)
@@ -462,7 +462,7 @@ state draw_rpg // RPG_WEAPON:
     and hud_orientation -513 // ~512
 ends
 
-state draw_shotgun // SHOTGUN_WEAPON:
+defstate draw_shotgun // SHOTGUN_WEAPON:
     state reset_hud_weapon_coordinates
 
     sub hud_x 8
@@ -603,7 +603,9 @@ state draw_shotgun // SHOTGUN_WEAPON:
     endswitch
 ends
 
-state draw_lead_cannon // LEAD_CANNON_WEAPON:
+
+
+defstate draw_lead // LEAD_WEAPON:
     state reset_hud_weapon_coordinates
 
     sub hud_x 8
@@ -655,24 +657,24 @@ state draw_lead_cannon // LEAD_CANNON_WEAPON:
                 {
                     add hud_y 40
                     add hud_x 20
-
+                
                     set hud_temp4 currentweapon
                     shiftl hud_temp4 1
                     guniqhudid hud_temp4
-
+                
                     add hud_x 178
                     add hud_y 194
-
+                
                     set hud_shade -128
-
+                
                     set hud_tilenum weaponcount
                     sub hud_tilenum 1
                     shiftr hud_tilenum 1
                     add hud_tilenum LEAD_CANNON
                     add hud_tilenum 1
-
+                
                     state G_DrawWeaponTile
-
+                
                     sub hud_x 178
                     sub hud_y 194
                     set hud_shade gs
@@ -681,7 +683,6 @@ state draw_lead_cannon // LEAD_CANNON_WEAPON:
             guniqhudid currentweapon
 
             add hud_x 158
-
             add hud_y 220
 
             set hud_tilenum LEAD_CANNON
@@ -713,10 +714,6 @@ state draw_lead_cannon // LEAD_CANNON_WEAPON:
         case 17
         case 18
         case 19
-        case 24
-        case 25
-        case 26
-        case 27
             guniqhudid currentweapon
 
             add hud_x 234 // 64 + 170
@@ -724,6 +721,21 @@ state draw_lead_cannon // LEAD_CANNON_WEAPON:
 
             set hud_tilenum LEAD_CANNON
             add hud_tilenum 5
+
+            state G_DrawWeaponTile
+            break
+        case 24
+        case 25
+        case 26
+        case 27
+            guniqhudid currentweapon
+
+
+            add hud_x 198 // 64 + 170
+            add hud_y 196
+
+            set hud_tilenum LEAD_CANNON
+            add hud_tilenum 3
 
             state G_DrawWeaponTile
             break
@@ -743,6 +755,7 @@ state draw_lead_cannon // LEAD_CANNON_WEAPON:
             break
     endswitch
 ends
+
 
 state draw_chaingun // CHAINGUN_WEAPON:
     // hud_temp4 = FIREDELAY
@@ -1784,8 +1797,8 @@ onevent EVENT_DISPLAYWEAPON // P_DisplayWeapon
             case GROW_WEAPON
                 set hud_tilenum GROWSPRITEICON
                 break
-            case DEVISTATOR_WEAPON
-                set hud_tilenum DEVISTATORSPRITE
+            case LEAD_CANNON
+                set hud_tilenum LEAD_CANNON
                 break
             case TRIPBOMB_WEAPON
                 set hud_tilenum TRIPBOMBSPRITE
@@ -1795,10 +1808,8 @@ onevent EVENT_DISPLAYWEAPON // P_DisplayWeapon
                 set hud_tilenum HEAVYHBOMB
                 break
             case SHOTGUN_WEAPON
-                set hud_tilenum SHOTGUNSPRITE
-                break
-            case LEAD_CANNON_WEAPON
-                set hud_tilenum SHOTGUNSPRITE
+                ife player[THISACTOR].curr_weapon 7 set hud_tilenum LEAD_CANNON
+                ife player[THISACTOR].curr_weapon 2 set hud_tilenum SHOTGUNSPRITE
                 break
             case KNEE_WEAPON
                 break
@@ -1856,16 +1867,13 @@ onevent EVENT_DISPLAYWEAPON // P_DisplayWeapon
                 state draw_rpg
                 break
             case SHOTGUN_WEAPON
-                set hud_totaltime WEAPON2_TOTALTIME
-                ife 0 player[].bsubweapon SHOTGUN_WEAPON
+                ife player[THISACTOR].curr_weapon LEAD_WEAPON {
+                    set hud_totaltime WEAPON7_TOTALTIME
+                    state draw_lead
+                } else {
+                    set hud_totaltime WEAPON2_TOTALTIME
                     state draw_shotgun
-				else
-					ifvare SHOT_SWITCH 1
-                    {
-                        state draw_lead_cannon
-                    }
-                    else
-					    state draw_shotgun
+                }
                 break
             case CHAINGUN_WEAPON
                 set hud_temp4 WEAPON3_FIREDELAY
@@ -2173,4 +2181,78 @@ onevent EVENT_DISPLAYACCESS
     state G_DrawTileScaled
 
     guniqhudid 0
+endevent
+
+
+
+
+
+
+//LEAD CANNON SPECIFIC SHENANIGANS FROM HERE -oasiz
+
+gamevar WEAPON7_WORKSLIKE 2 1
+gamevar WEAPON7_CLIP 0 1
+gamevar WEAPON7_RELOAD 13 1
+gamevar WEAPON7_FIREDELAY 4 1
+gamevar WEAPON7_TOTALTIME LEAD_TOTALTIME 1
+gamevar WEAPON7_HOLDDELAY 0 1
+gamevar WEAPON7_FLAGS 5120 1
+gamevar WEAPON7_SHOOTS SHOTGUN 1
+gamevar WEAPON7_SPAWNTIME 18 1
+gamevar WEAPON7_SPAWN SHOTGUNSHELL 1
+gamevar WEAPON7_SHOTSPERBURST 16 1
+gamevar WEAPON7_INITIALSOUND 0 1
+gamevar WEAPON7_FIRESOUND 109 1
+gamevar WEAPON7_SOUND2TIME 15 1
+gamevar WEAPON7_SOUND2SOUND 169 1
+
+
+appendevent EVENT_DISPLAYWEAPON
+    // DEBUG
+    redefinequote 1 currentweapon %ld
+    set temp player[THISACTOR].ammo_amount 7
+    qsprintf 1 1 temp
+    quote 1
+    //  
+    ife player[THISACTOR].curr_weapon LEAD_WEAPON {
+        switch weaponcount
+            case 18
+                set WEAPON7_SPAWNTIME 19
+                break
+            case 19
+                set WEAPON7_SPAWNTIME 20
+                break
+            case 20
+                set WEAPON7_SPAWNTIME 21
+                break
+            case 21
+                set WEAPON7_SPAWNTIME 18
+                break
+        endswitch
+        ife weaponcount 24 {
+            set WEAPON7_SPAWNTIME 25
+        }
+        ife weaponcount 25 {
+            set WEAPON7_SPAWNTIME 24
+        }
+    }
+endevent
+
+
+
+appendevent EVENT_FIRE
+    addlogvar player[THISACTOR].curr_weapon
+    addlogvar currentweapon
+    addlogvar player[THISACTOR].kickback_pic
+    ife player[THISACTOR].curr_weapon LEAD_WEAPON {
+        getplayer[THISACTOR].ammo_amount LEAD_WEAPON temp
+        addlogvar player[THISACTOR].ammo_amount LEAD_WEAPON
+        ifl temp 2 {
+            set RETURN -1
+        } else {
+            sub temp 1
+            setplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON temp
+        }
+    }
+    state transfer_lead_ammo
 endevent
