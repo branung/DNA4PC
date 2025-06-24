@@ -6,8 +6,11 @@ DN:A itself runs on the proprietary Southpaw Engine developed by Torus games whi
 The GBA adaptation of Duke in many ways can be thought of as a mod for this engine, making DN:A mechanically and technically quite reminiscent of Doom's gameplay and limitations.
 
 This conversion utilizes original assets such as sounds, graphics and levels with any necessary conversion and fixes to present them inside Build engine.
-Much of the DNA4PC gameplay code is a hybrid of original Duke, which DN:A originally attempted to imitate. This will not result in an exact replication however but much of the relevant DN:A specific experience has been backported and adapted.
+Much of the DNA4PC gameplay code is a hybrid of original Duke (Which DN:A imitates in the first place). 
+This approach will not result in an exact replication but as much of the relevant DN:A specific experience as possible has been backported and adapted.
 You can expect to see all of the major special Enemies, sounds and other gameplay behavior that forms the "DN:A experience" 
+
+TL;DR -- Experience "Duke Nukem : Advance" with all the bells & whistles of today.
 
 # Running
 
@@ -19,3 +22,4 @@ Kind of poorly credited so far, consider this an inaccurate intial credits list 
 - voxelvoid, initial work which had an export of maps & texture assets
 - branung, much of the DN:A specific gameplay code, organizing, map fixes, some sounds and whatnot... Currently leading the efforts
 - oasiz, Additional mapping assistance & Map effects. Jumped in when all the hard work was already done.
+- Dzierzan, Lead cannon HUD recreation
