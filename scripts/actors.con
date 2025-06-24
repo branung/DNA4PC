@@ -13,6 +13,8 @@ defstate transfer_lead_ammo
     setplayer[].ammo_amount SHOTGUN_WEAPON temp
 ends
 
+gamevar explosion_snd 0 1
+
 
 // Moved from GAME.CON
 actor LEAD_CANNON_SPRITE
@@ -323,3 +325,48 @@ appendevent EVENT_DAMAGESPRITE
             palfrom 48 32
     }
 endevent
+
+eventloadactor MBMACHINE
+    seta .cstat 1
+
+enda
+
+move SCVEL 700
+action MBMOVE 0 1 1 1 1
+
+ai MBMSCATTER MBMOVE SCVEL randomangle
+ai MBMSCATTER2 MBMOVE SCVEL fleeenemy
+ai MBMSCATTER3 MBMOVE SCVEL randomangle
+
+useractor notenemy MBMACHINE 0
+    ifaction 0 {
+        seta .xrepeat 32
+        seta .yrepeat 32
+        ai MBMSCATTER
+    }
+    ifai MBMSCATTER {
+        ifcount 1 ai MBMSCATTER2
+    }
+    ifai MBMSCATTER2 {
+        ifcount 5 {
+            ai MBMSCATTER3
+        }
+    }
+    ifai MBMSCATTER3 {
+        ifrnd 20 {
+            ifpdistg 2048 {
+                switch explosion_snd
+                    case 0
+                    case 3
+                    case 5
+                    case 7
+                        actorsound THISACTOR A_EXPLOSION
+                        break
+                endswitch
+                add explosion_snd 1
+                spawn EXPLOSION2
+                killit
+            } else killit
+        }
+    }
+enda
