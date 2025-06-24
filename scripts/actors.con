@@ -10,6 +10,7 @@ include scripts/alienlord.con
 defstate transfer_lead_ammo
     getplayer[].ammo_amount SHOTGUN_WEAPON temp
     setplayer[].ammo_amount LEAD_WEAPON temp
+    setplayer[].ammo_amount SHOTGUN_WEAPON temp
 ends
 
 
@@ -29,13 +30,11 @@ actor LEAD_CANNON_SPRITE
           ifgotweaponce 0
             break
 
-		      ife player[].curr_weapon SHOTGUN_WEAPON
-          {
-            ife 0 player[].bsubweapon SHOTGUN_WEAPON
-            {
+		    ife player[].curr_weapon SHOTGUN_WEAPON {
+                ife 0 player[].bsubweapon SHOTGUN_WEAPON {
               sound SHOTGUN_COCK
-              setp[].bsubweapon SHOTGUN_WEAPON 1
-              setvar SHOT_SWITCH 1
+              //setp[].bsubweapon SHOTGUN_WEAPON 1
+              //setvar SHOT_SWITCH 1
             }
             else
             {
@@ -45,22 +44,18 @@ actor LEAD_CANNON_SPRITE
           else
           { 
               sound SHOTGUN_COCK
-              setp[].bsubweapon SHOTGUN_WEAPON 1
-              setp[].weapon_pos 3
+              //setp[].bsubweapon SHOTGUN_WEAPON 1
+              //setp[].weapon_pos 3
 
           }
-        
-//          ifn player.ammo_amount SHOTGUN_WEAPON MAXSHOTGUNAMMO
-//          addweapon SHOTGUN_WEAPON 5
-        
-
-        addweapon LEAD_WEAPON 5
-        addammo SHOTGUN_WEAPON 10
+        addweapon LEAD_WEAPON 1
+        ifn player.ammo_amount SHOTGUN_WEAPON MAXSHOTGUNAMMO
+            addammo SHOTGUN_WEAPON 10
         
             quote 125
           
         state transfer_lead_ammo
-          ifspawnedby LEAD_CANNON_SPRITE
+        ifspawnedby LEAD_CANNON_SPRITE
             state getweaponcode
           else
             state quikweaponget
