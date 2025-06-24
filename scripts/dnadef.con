@@ -132,10 +132,17 @@ var fx_int2 0 2
 
 //Item Pickups
 define ARMORSHARD 3919
-define ARMORSHARD_AMOUNT 5
+define PISTOLAMMOBOX 3945
+define SHOTGUNSHELLS 3946
+
+define ARMORSHARD_AMOUNT     5
+define PISTOLAMMOBOXAMOUNT   20
+define SHOTGUNSHELLSAMOUNT   4
 
 definequote 126  +5 ARMOR
 definequote 127  +5 ARMOUR
+definequote 128  AMMO BOX
+definequote 129  4 SHELLS
 
 //gamevar for checking music before playing cutscene
 gamevar currmusic 0

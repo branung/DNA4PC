@@ -68,6 +68,50 @@ actor LEAD_CANNON_SPRITE
 enda
 // Moved from GAME.CON
 
+actor PISTOLAMMOBOX
+  fall
+  sizeat 39 40
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifcanseetarget
+      {
+        addammo PISTOL_WEAPON PISTOLAMMOBOXAMOUNT
+        quote 128
+        ifspawnedby PISTOLAMMOBOX
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor SHOTGUNSHELLS
+  fall
+  sizeat 32 32
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifcanseetarget
+      {
+        addammo SHOTGUN_WEAPON SHOTGUNSHELLSAMOUNT
+        quote 129
+        ifspawnedby SHOTGUNSHELLS
+          state getcode
+        else
+          state quikget
+      }
+enda
+
 actor ARMORSHARD
   fall
   ifmove RESPAWN_ACTOR_FLAG

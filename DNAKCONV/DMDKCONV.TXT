@@ -1,0 +1,349 @@
+Documentation for DMDKCONV V1.30 (960901):
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+(For the WHATS NEW section scroll down to end of file.)
+
+                                 Author:
+                             Olaf Wendlandt
+                   email: 100754.2513@compuserve.com
+     WorldWideWeb: http://ourworld.compuserve.com/homepages/o_wendlandt
+
+Short Discription:
+~~~~~~~~~~~~~~~~~~
+DMDKCONV is a DOOM/Heretic to Duke Nukem 3D level converter, now allowing
+you to run Duke with the original DOOM textures.
+The textures can be used in BUILD for levels from scratch too.
+
+History:
+~~~~~~~~
+I myself was bored about the poor job which WAD2MAP (on the Duke Nukem 3D CD)
+does when trying to convert a Doom or Heretic Level. It does not support PWADS
+at all, and only very few of the linedef/sector types are supported. Even by
+modifing its datafile it was not possible to get satisfying results. So i tried
+to write my own converter. Unfortionately the Duke engine has a lot of bugs so
+it was not possible to do the conversion as good as i hoped when starting this
+project. I was planning to do a fully featured converter and to release it as
+shareware. Now it gives a good base for further editing and its freeware.
+I dont know if i can do further development on it, probably only a bit.
+
+Original DOOM textures in Duke3D:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+DMDKCONV now allows you to run Duke Nukem 3D with many of the original DOOM II
+textures. These have been extracted from the DOOM2.WAD file. The DOOM texture
+creation is very complex and so it is not possible to do an exact conversion.
+But it looks really unbelievable great! I put the DOOM textures into three
+files, TILES013.ART, TILES014.ART and TILES015.ART. Because they contain stuff
+which is copyrighted by id, only owners of DOOM II may use them. For that
+reason i have encrypted the DMDKTXTR.ZIP file with a password, and it can be
+decypted only after the correct password has been entered. To get the password,
+you need DOOM II V1.9. If you have an older version, get the upgrade patch(es)
+first. The password is the filesize of the DOOM2.WAD (V1.9). (I dont think
+thats a problem, because most of you already own DOOM II.)  To decrypt, enter:
+                     PKUNZIP DMDKTXTR -S????????
+The ???????? stands for the file size. If youre not using PKUNZIP, the
+method of extraction may differ. Some ZIP extractors do not support encrypted
+archives at all, or they may prompt you for the password. Read its DOC !
+The extracted TILES01?.ART need to be present in your Duke directory. They
+simply extend the Duke sprites/textures database by the DOOM II textures.
+None of the original Duke sprites/textures are overwritten, so existing Duke
+levels wont be affected. You can use the new textures even with BUILD, so you
+can create your own levels from scratch using (some) DOOM textures (if BUILD
+is not in your Duke directory, dont forget to copy the three tile files into
+BUILDs dir). Note that if you view/run levels which make use of the DOOM
+textures without having those tile files in your dir, your display will be
+messed up. For that reason, if you distribute any of these maps, make clear
+that DMDKCONV.ZIP is required and where it can be downloaded (for example my
+homepage). You should not include the DMDKCONV.ZIP itself, because nobody wants
+to download levels, which are each 2MEGs in size :-) .
+The WALLPATCH and FLATS entries (all between F_START and F_END resp. P_START
+and P_END) have been extraced (616 pieces), adapted to the Duke pallete (this
+is the reason of those small color differences) and put into the tile files.
+The tiles 3456-3582 and 3586-4071 have been used (the three sky's were omitted).
+
+Which WADs can be converted ?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+I did a quick conversion attempt with 300+ PWADs. About 75% could be converted
+directly, without editing them prior. With about 5% the converter crashed,
+in all other cases it displayed an error. Sorry, but i cant protect the
+converter against all possible errors one can put in a WAD. WADs which are
+up to the specs (see "The Unofficial Doom Specs" below) should work fine. So
+if you cant convert, use a good editor (like WADAUTHOR) and try to find and
+fix the bug(s). The likelihood of a WAD to be convertable seems to be affected
+by two things: The person who made it (and how precise and careful he was) and
+the editor(s) he used. Here are some of the results of my conversion attempt:
+ - None of the Levels created with an editor called "Renegade Graphics
+   Doomed Deluxe" (i never heard of it) could be converted.
+ - None of the 32 ICARUS levels could be converted.
+ - All "Oddessa" levels (created by Bob Evans) were convertable.
+ - All 11 "The Journey Into Hell" levels (by Mike Boyle and Jon Camis)
+   could be converted without any error.
+ - All of the 24 "Demonfear" levels (by Adam Windsor) were convertable.
+On some levels WADAUTHOR reported several hundreds of errors.
+I also tried the 27 levels from DOOM 1 and the 32 of Doom 2 (both V1.9).
+The converter never crashed and 26 Doom 1 and 29 Doom2 levels could be
+converted. E3M2,MAP18,MAP19,MAP22 were not convertable due to severe errors.
+If you change Byte #1C7180 from 15 to 16 in DOOM.WAD V1.9, then even E3M2
+can be converted.
+E4M9 of Heretic V1.3 is not convertable, the converter hangs in an endless
+loop, but the other 35 levels work fine.
+
+Requirements for DMDKCONV:
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+You need at least a 386. DMDKCONV is a 16bit real mode program, so runs
+with 640k Memory. The larger the level, the more memory is needed. With about
+600k free you should be able to convert even the largest PWADS, without running
+into memory problems (I converted some with 4000 sidedefs). But beware: The
+"Out of Memory" exceptions are disabled, so if you do not have enough memory,
+the program may crash. The largest Doom2 level, MAP15, took a few secs on
+my P5-166, so usually you wont fall asleep while converting. When several
+errors are in the map then the conversion may take significantly longer.
+
+DMDKCONV Usage:
+~~~~~~~~~~~~~~~
+DMDKCONV <doom or heretic PWAD or IWAD file> <mapname> [options]
+
+The first commandline parameter must be the name of the WAD, the second the
+name of the level (usually E?M? or MAP??). These are required.
+You can add "-r", "-h" and "-o" as options, they have the following meanings:
+ -r : sets the converter in random mode, in which it assures that that ugly
+      brown texture (zero) does no longer appear. After reading the datafile
+      it looks which texturereplacments are set to zero. Then they are replaced
+      by a texture randomly selected out of about 10 or so. This implies that
+      on every conversion run those textures most likely will differ, so if you
+      dislike one result, just do it again.
+ -h : simply selects heretic mode. One effect is that only [HERETIC] sections
+      in the datafile are used, others are different aligned switches, door
+      rendering attributes (unpegging) and others.
+ -o : This selects original DOOM texture mode. The level is converted so
+      that it runs with the original textures. The files TILES013.ART-
+      TILES015.ART need to be present in the Duke directory at runtime.
+      If not you will get a messup screen in BUILD or Duke. If you want
+      to distribute a level which makes use of DOOM textures, read
+      "Original DOOM textures in Duke3D" above.
+
+The "-o" cant be used with "-h" or "-r".
+
+DMDKCONV features/limitations:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ - lindefs which are triggered by walking over them mostly dont work well
+   (cant be resolved by touchplates, just try jumping repeatedly on one)
+   This includes all remote doors/lifts/stairs with the "W" walk type.
+ - correct conversion of upper/mid/lower texture is sometimes not possible,
+   because Duke virtually only supports two textures on one wall.
+ - teleporters are usually correctly converted, with one limitation:
+   if they move up/down they do not work in most cases, because the duke
+   teleport sprite is only activated when then the player is exactly at the
+   same heigth, usually the ground of the sector at conversion time. So
+   lifts with telporters on it probably wont work. This is a limitation
+   of the Duke enginge, a workaround is hardly possible.
+ - some kind of stairs work, others mess up the level (the algorithm for
+   determining the stairs which move is not fully implemented)
+ - due to geometrical errors in many WADs the converter aborts when it
+   finds an severe error. It would be possible to overcome even some of them,
+   but this would require a complete rewrite of the algorithm. So the only way
+   is to correct the error by using a good WAD editor, which can check WADs
+   and allows editing of raw data, like WADAUTHOR. Even some of the original
+   Doom2 Levels (MAP18,19,22) have these bugs, so cant be handled by DMDKCONV
+   without prior fixing. Many PWADs will have some of those severe bugs too,
+   the only way is to debug them. Sorry. But several minor errors can now be
+   handled by the algorithm. The converter displays a "*" when encountering
+   one of them. Unfortionately the sorting/errordetection/correction has to
+   be restarted, so the conversion may take significantly longer. If within
+   20 recursions the bug(s) cant be eliminated, the converter aborts,
+   because it most likely wont be able to resolve it and thus not terminate.
+   If there were errors and the conversion was successful, a warning is
+   displayed, because it might be possible that the level is messed up.
+   Some very severe errors can crash the converter, beware !
+ - Duke has two hurting textures (floorplasma/slime), dont use them in the
+   DMDKCONV.DAT file, because the Doom "sector hurt" is converted into them.
+ - remote doors, lifts, etc. with switches: sometimes switches are inserted,
+   sometimes a switching texture (tile 395, DOORTILE22) is used.
+ - most key doors are supported, although the access switch may be misplaced.
+ - the 4 secs lift "autoup" cant be resolved in Duke, all lifts move up and
+   down all the time. But when removed, some lifts cant be used at all. Sorry.
+ - difficulty settings are supported for the usual cases
+ - multiplayer weapons/monsters appear in single player too, its not possible
+   to set a monster to appear only in coop mode, so i leaved the weapons too.
+ - some kind of moving floors are supported
+
+How to improve conversion:
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can modify the DMDKCONV.DAT file to improve the conversion:
+ 
+ - Only half of the textures have their equivalent, the rest is set to 0, so
+   it gives the ugly brown texture (if not using "-r"). You can easily search
+   for replacement textures and put them in the data file. The original DOOM
+   levels only make use of about half of the textures it has. Many PWADs make
+   full use of them, so they currently will be rarely textured.
+ - the aliases have been taken from the PNAMES/TEXTURE resoures out of the
+   DOOM2.WAD file, and the first entry has been used for each texture.
+   This may result is some bad converted textures. You can overcome this
+   by changing the alias, or better by removing the alias and adding
+   a new textureconversion entry in the section above. The advanage
+   is a better "tuned" texture.
+ - some of the thing conversions still need improvement. Some monsters are
+   converted into bosses, which results in a level end when one of them is
+   killed.
+
+The format of the DMDKCONV.DAT data file:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Here is the format of the DMDKCONV.DAT file (its just a pure text file).
+Each line contains one entry, this entry can be one of the following:
+
+1) Section definition:
+To allow different parts in the data file to be used for different conversion
+options, sections are beeing used. Sections begin with a line starting with the
+character "[" and end with either the end of the file or the start of a new
+section.  There are three section names, "HERETIC", "DOOM" , "DOOMOT". The
+"DOOM" is used if neither "-o" nor "-h" is specified, "HERETIC" is used if "-h"
+is given and "DOOMOT" if the option "-o" is used. The strings can be combined
+in an section definition entry, they then have to be separated by "," .
+The section definition entry is terminated by a "]", so the following line
+[DOOM,HERETIC,DOOMOT]
+would indicate a section which is used for all three modes. Currently Heretic
+and Doom do no have a common section, but "DOOM" and "DOOMOT" do (the things
+and the aliases).
+
+2) The direct texture conversion:
+FORMAT: <doomtexturename> <duketexturenumber> <palette> <compresstexture>
+palette can be omitted, then 0 (normal palette) is used
+EXAMPLE: W46_39,128,7
+This would convert the Doom texture W46_39 to Duke texture 128 with palette 7
+Warning: do not use the palette very often, i.e. leave them at 0, because
+there can only be one palette on a wall and if both textures have different
+palette entries in the datafile, the wall wont look as you would like.
+Also there is the possibility of using three different textures on a wall.
+If lower/upper/mid texture can be seen on a wall, then the back side has only
+its main texture visible and Duke3D stores one of the front lower/upper in the
+lower/upper value of the back side of the wall. But all attributes are taken
+from the back side, so the above palette problem appears on the back side too.
+Even back wall shading and backsector lighteffects are then interfering.
+On floors the palette can be set without limitations, so if you can assure that
+your texture will only be used for floor/ceiling, this would improve conversion.
+But this would require that the alias section in the data file is replaced
+by direct texture conversion entries, with palette set to 0, and then the
+direct conversion entries for the floor/ceiling can make full use of the 
+palette. I used the palette only for the "doorkey colored walls". The value
+"compresstexture" only has the values 0 and 1. 1 means that the texture is
+compressed by a factor of 2, also called "double smoothness". See the "E"
+key in build. This value only works with floor/ceiling textures and is
+ignored for wall textures.
+
+3) The alias texture conversion
+FORMAT: <doomtexturename> <doomtexturename>
+EXAMPLE: DOORYEL,W46_39;
+This sets the conversion for the first entry to the same as the second one.
+The second one must be defined in the data file before. In the examples this
+results in replacing all DOORYEL textures by the walltile 128 with palette 7
+(yellow). You could also write "DOORYEL,128,7". The aliases in DMDKCONV.DAT
+have been taken from the PNAMES/TEXURE resources in the DOOM2.WAD file.
+Replacing the aliases would allow a better texture replacement, but is is
+a lot of work to do.
+
+4) The things conversion
+FORMAT: <doomthingnumber> <dukepicnum> <palette> <cstat> <xrepeat> <yrepeat>
+EXAMPLE: 3001,2001,21,2,20,100
+This converts the Doom IMP into a Duke PIGCOP with palette 21, ORes the 2
+with the cstat field of the sprite (in this case sets it to transluscence)
+and sets the xsize to 20 and the ysize to 100. This results in an orange,
+transparent, slim, tall PIGCOP. Note when using bosses, the level usually
+ends when you kill one of them (surprisingly not always). A special entry is
+the 9XXX (like player starts). They all require additional conversion and are
+reserved. The doom thing numbers are listed in the "Unofficial Doom Specs"
+(see below).
+
+I tried to group the different kinds of entries together.
+This is not necessary, but improves readability.
+
+Currently the DMDKCONV.DAT file requires a lot of modification, to get good
+conversions, but i dont have time to do that. Maybe some of you will do this
+and if you really make a good DAT file, send me it so that i can release it
+with the next version of DMDKCONV (i dont know if i will have the time,
+maybe when Duke V1.4 is out) or standalone on my web page. Please do not
+distibute modified DAT files, and not distribute DMDKCONV with modified
+DAT files.
+
+DISTRIBUTION of DMDKCONV / COPYRIGHT / DISCLAIMER:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+DMDKCONV may be distributed freely, as long as it remains unmodified and
+complete. This version consists of the following files:
+   DMDKCONV.EXE
+   DMDKCONV.DAT
+   DMDKCONV.TXT
+   FILE_ID .DIZ
+   DMDKTXTR.ZIP
+all files have date/time stamp of the current version.
+
+The converter program DMDKCONV and its documentation is Copyright
+Olaf Wendlandt, 100754.2513@compuserve.com
+and may be used without of charge (freeware).
+Your only fee is to make good Duke Levels and upload them :-)
+
+Use it at your own risk (usual DISCLAIMER), im not responsible for anything.
+(like converted textures burning into your retina, or whatelse)
+
+Where to get DMDKCONV:
+~~~~~~~~~~~~~~~~~~~~~~
+Compuserve: Action Games Forum (GO ACTION), Apogee Forum (GO APOGEE),
+            search for DMDKCONV.ZIP or DMDKC???.ZIP
+
+WorldWideWeb: http://ourworld.compuserve.com/homepages/o_wendlandt
+
+The Webpage will often be several days more actual.
+
+
+Credits:
+~~~~~~~~
+  - Mathew S. Fell (msfell@aol.com) for the "Unofficial Doom Specs"
+  - My friend Harvey Gerbl for playing and testing WADs/MAPs with me.
+  - Apogee/3DRealms for an excellent game
+  - id Software for DOOM and its sequels
+
+
+----------------------------------------------------------------------
+
+W H A T S    N E W
+--------------------
+V1.20 (960819):
+
+- several bugs were eliminated ( V1.00 was very buggy, sorry)
+
+- improved algorithm to handle minor errors, which often occure in WADs,
+  thus allowing to convert most WADs without editing them prior
+
+- now converts even the largest WADs (several 1000's of sidedefs)
+
+- Texturebase of data file is larger, resulting in better textured levels
+
+- monster/weapon/powerup conversion much better
+
+- added support for some kinds of moving floors
+
+- changed touchplate mechanism for remote doors
+
+- blinking light effects supported
+--------------------
+V1.30 (960901):
+
+- added support for Heretic ("-h"). In fact Heretic could be handled before,
+  but only the pure geometrical data. Now textures and things are converted
+  and the switches are correctly aligned.
+
+- added possibility of using many of the original Doom textures in the
+  converted Duke Maps, resulting in very original looking levels ("-o").
+  The textures are usable in BUILD too.
+
+- Texturebase of data file is larger, resulting in better textured levels
+
+- added option switch ("-r") to randomly replace unassigned textures. This
+  eliminates the ugly brown texture once and for all.
+
+- monster/weapon/powerup conversion further improved
+
+- much better texture alignment by implementing x-offsets
+
+- improved sector illumination by adding gamma correction
+  hmm... maybe the converted MAP is brighter than the original WAD, but i hate
+  dark levels. I did not buy a monitor for my PC to play levels which are to
+  dark to see anything. If you dislike, why not switch off your monitor ?  :-)
+--------------------
+EOF
