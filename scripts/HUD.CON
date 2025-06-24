@@ -42,9 +42,9 @@
             case 10
                 getplayer[THISACTOR].ammo_amount 5 INV_TEMP
                 break
-            //case 7
-            //    getplayer[THISACTOR].ammo_amount 2 INV_TEMP
-            //    break
+            case 7
+                getplayer[THISACTOR].ammo_amount 2 INV_TEMP
+                break
             default
                 getplayer[THISACTOR].ammo_amount currentweapon INV_TEMP
                 break
