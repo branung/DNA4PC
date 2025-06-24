@@ -29,7 +29,7 @@ define pre_enable 2
 define pre_disable 1
 define disabled 0
 
-var rot_target -200 1
+var rot_target -100 1
 var rot_current 0 1
 var rot_fine 0 1
 
@@ -338,14 +338,14 @@ defstate do_se72
         spawn MBMACHINE
         setu[].vm_sprite i
         set explosion_snd 0
-        ife rot_target -200 set rot_target 0
+        ife rot_target -100 set rot_target 0
         quake temp
     }
     sub fx_int 1
     
     ife rot_target rot_current {
-        rand rot_target 100
-        sub rot_target 50
+        rand rot_target 50
+        sub rot_target 25
     }
 ends
 
@@ -442,7 +442,7 @@ appendevent EVENT_WORLD
     // Hardcoded level ambience sounds which play randomly on a timer
     state ambience_sound_handler
     
-    ifn rot_target -200 {
+    ifn rot_target -100 {
         rand temp 10
         set rot_current rot_fine
         div rot_current 3
