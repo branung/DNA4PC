@@ -279,6 +279,7 @@ define A_SHOTGUNFIRE 462
 define A_SHRINK 463
 define A_SHRINKER 464
 define A_SQUISH 465
+define A_LEADFIRE 466
 definesound A_BOUNCE                 sounds/weapon/bounce.wav             -80   -80    3     0     0
 definesound A_EXPLOSION              sounds/weapon/explosion.wav          -80   -80    3     0     0
 definesound A_FREEZE                 sounds/weapon/freeze.wav             -80   -80    3     0     0
@@ -295,7 +296,7 @@ definesound A_SHOTGUNFIRE            sounds/weapon/shotgunfire.wav        -80   
 definesound A_SHRINK                 sounds/weapon/shrink.wav             -80   -80    3     0     0
 definesound A_SHRINKER               sounds/weapon/shrinker.wav           -80   -80    3     0     0
 definesound A_SQUISH                 sounds/weapon/squish.wav             -80   -80    3     0     0
-
+definesound A_LEADFIRE            sounds/weapon/shotgunfire.wav        -240   -240    3     0     0
 
 
 

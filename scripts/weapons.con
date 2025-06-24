@@ -237,7 +237,6 @@ case 0
     guniqhudid 0
     break
 case 1
-case 2
     //Gun
     set hud_shade gs
     guniqhudid currentweapon
@@ -246,26 +245,65 @@ case 2
     set hud_tilenum LEAD_CANNON
     state G_DrawWeaponTile
     guniqhudid 0
-    //Muzzle
+    //Muzzle2
     set hud_temp4 currentweapon
     shiftl hud_temp4 1
     guniqhudid hud_temp4
-    //add hud_x -43
-    //add hud_y -5
     add hud_x -42
     add hud_y -4
-    add hud_x muzx
-    add hud_y muzy
     set hud_shade -128
     set hud_tilenum LEAD_CANNON
     add hud_tilenum 1
     state G_DrawWeaponTile
-    sub hud_x 43
-    sub hud_y 5
+    break
+case 2
+    //Muzzle1
+    set hud_temp4 currentweapon
+    shiftl hud_temp4 1
+    guniqhudid hud_temp4
+    add hud_x 88
+    add hud_y 98
+    set hud_shade -128
+    set hud_tilenum LEAD_CANNON
+    add hud_tilenum 2
+    state G_DrawWeaponTile
+    sub hud_x 88
+    sub hud_y 98
+    //Gun
+    set hud_shade gs
+    guniqhudid currentweapon
+    add hud_x 146
+    add hud_y 202
+    set hud_tilenum LEAD_CANNON
+    state G_DrawWeaponTile
+    guniqhudid 0
+    //Muzzle2
+    set hud_temp4 currentweapon
+    shiftl hud_temp4 1
+    guniqhudid hud_temp4
+    add hud_x -42
+    add hud_y -4
+    set hud_shade -128
+    set hud_tilenum LEAD_CANNON
+    add hud_tilenum 1
+    state G_DrawWeaponTile
 
     break
 case 3
 case 4
+    //Muzzle2
+    add hud_x 125
+    add hud_y 140
+    set hud_shade -128
+    set hud_tilenum weaponcount
+    sub hud_tilenum 1
+    shiftr hud_tilenum 1
+    set hud_tilenum LEAD_CANNON
+    add hud_tilenum 2
+    state G_DrawWeaponTile
+    sub hud_x 125
+    sub hud_y 140
+    set hud_shade gs
     //Gun
     add hud_y 40
     add hud_x 20
@@ -368,13 +406,20 @@ case 19
                     break
 case 20
 case 21
+                        guniqhudid currentweapon
+                        add hud_x 240 // 64 + 176
+                        add hud_y 196
+                        set hud_tilenum LEAD_CANNON
+                        add hud_tilenum 6
+                        state G_DrawWeaponTile
+                        break
 case 22
 case 23
                         guniqhudid currentweapon
                         add hud_x 240 // 64 + 176
                         add hud_y 196
                         set hud_tilenum LEAD_CANNON
-                        add hud_tilenum 6
+                        add hud_tilenum 7
                         state G_DrawWeaponTile
                         break
 case 24
@@ -477,31 +522,34 @@ gamevar WEAPON7_SPAWNTIME 18 1
 gamevar WEAPON7_SPAWN SHOTGUNSHELL 1
 gamevar WEAPON7_SHOTSPERBURST 16 1
 gamevar WEAPON7_INITIALSOUND 0 1
-gamevar WEAPON7_FIRESOUND 109 1
+gamevar WEAPON7_FIRESOUND A_LEADFIRE 1
 gamevar WEAPON7_SOUND2TIME 15 1
 gamevar WEAPON7_SOUND2SOUND 169 1
 
 
-//appendevent EVENT_DRAWWEAPON 
-    // DEBUG
+appendevent EVENT_DRAWWEAPON 
+    ////DEBUG
     //redefinequote 1 currentweapon %ld
-    ////set temp player[THISACTOR].ammo_amount 7
-    ////set temp player[THISACTOR].weapon_pos
-    //set temp player[THISACTOR].last_weapon
+    //set temp player[THISACTOR].ammo_amount 7
+    //set temp player[THISACTOR].weapon_pos
+    //set temp player[THISACTOR].kickback_pic
     //qsprintf 1 1 temp
     //quote 1
     //ifn arg1 -1 setplayer[THISACTOR].kickback_pic arg1
-    //  
-//endevent
+      
+endevent
 
 appendevent EVENT_GAME
-    // This hack is to ensure that:
+    // First hack is to ensure that:
     // Ammo from SHOTGUN is transferred to LEAD
     // CONDITION: LEAD was just fired OR another weapon is selected
     // In case LEAD was fired, wait some kickbackpicks to ensure that animation goes halfway
     // If under 4 ammo for next blast, "fakeswap" to zero (gets corrected on next tick)
     // This is a hack to force a weapon swap when below 4, as if it was emtpy.
     ife player[THISACTOR].curr_weapon LEAD_WEAPON { 
+        
+        // --- This is to handle the swapping ---
+
         ife weaponcount 3 state transfer_lead_ammo
         ifg weaponcount 20 {
             getplayer[THISACTOR].ammo_amount LEAD_WEAPON temp
@@ -511,9 +559,21 @@ appendevent EVENT_GAME
             getplayer[THISACTOR].ammo_amount LEAD_WEAPON temp
             ifl temp 4 setplayer[THISACTOR].ammo_amount LEAD_WEAPON 0
         }
+        
+        // This is to handle shell spawning from the weapon
+        ifactor APLAYER {
+            ife weaponcount 20 {
+                spawn SHOTGUNSHELL
+                spawn SHOTGUNSHELL
+            }
+        }
+        
+        
     } else {
         state transfer_lead_ammo
     }
+    
+    
 endevent
 
 appendevent EVENT_FIRE
