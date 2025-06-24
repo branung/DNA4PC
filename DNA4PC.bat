@@ -1,0 +1,1 @@
+eduke32.exe -mx scripts/dna4pc.con
