@@ -130,7 +130,12 @@ var fx_int 0 2
 var fx_int2 0 2
 
 
+//Item Pickups
+define ARMORSHARD 3919
+define ARMORSHARD_AMOUNT 5
 
+definequote 126  +5 ARMOR
+definequote 127  +5 ARMOUR
 
 //gamevar for checking music before playing cutscene
 gamevar currmusic 0
