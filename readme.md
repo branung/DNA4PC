@@ -19,7 +19,8 @@ git clone this repo and run as `eduke32.exe -mx scripts/dna4pc.con`, no user-fri
 # Credits
 
 Kind of poorly credited so far, consider this an inaccurate intial credits list which is better than nothing
-- voxelvoid, initial work which had an export of maps & texture assets
-- branung, much of the DN:A specific gameplay code, organizing, map fixes, some sounds and whatnot... Currently leading the efforts
-- oasiz, Additional mapping assistance & Map effects. Jumped in when all the hard work was already done.
-- Dzierzan, Lead cannon HUD recreation
+- Voxelvoid - Initial work which had an export of maps & texture assets.
+- branung - Much of the DN:A specific gameplay code, organizing, map fixes, some sounds and whatnot... Currently leading the efforts.
+- oasiz - Additional mapping assistance & Map effects. Jumped in when all the hard work was already done.
+- Dzierzan, Lead cannon HUD recreation ART
+- Gianni Matragrano - Voice actor for Duke's lines in cutscenes when enabled.
