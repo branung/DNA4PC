@@ -27,6 +27,7 @@ define CYBERALIEN 3948
 define CYBERALIENSTRENGTH 3000
 define A51ALARM 5600
 define MBMACHINE 5601
+define CUTCAM 5602
 define ALIENLORD 4001
 define ALIENLORDSTRENGTH 3000
 define ALIENLORDPROJECTILE 5183
@@ -86,6 +87,10 @@ gamevar CUTSCENE_DUKE 0 0
 gamevar CUTSCENE_DIALOGBOX 3921 0
 gamevar CUTSCENE_SPRITE 0 0
 gamevar y 0 0
+var cutscene_num 0 0
+var cutscene_i 0 0
+var cutscene_temp 0 0
+var in_cutscene 0 0
 // Moved from dna4pc.con
 
 
@@ -122,6 +127,9 @@ define DNA_YELLOWKEY 3944
 define DNA_KEYQUOTE 300
 definequote DNA_KEYQUOTE
 
+// For cutscene cameras
+define STAT_CUTCAM 70
+
 // EFFECT USE ACTORVARS
 // Mapper placed
 var fx_owner 0 2
@@ -129,6 +137,19 @@ var fx_extra 0 2
 // Otherwise internal (Pretty much like htg_t but without the risks)
 var fx_int 0 2
 var fx_int2 0 2
+
+// For displayrooms stuff & Quake
+var undisplayrooms 0 1
+var kcsunshinemode 0 1
+var renderman_get -1 1
+var renderman_sprite -1 1
+var r_x 0 1
+var r_y 0 1
+var r_z 0 1
+var r_sect 0 1
+var r_horiz 0 1
+var r_ang 0 1
+
 
 
 //Item Pickups

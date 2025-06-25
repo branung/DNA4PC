@@ -5,9 +5,9 @@ include scripts/dnadef.con
 include scripts/actors.con
 include scripts/breakable.con
 include scripts/dialogdef.con
+include scripts/effects.con
 include scripts/cutscenes.con
 include scripts/hud.con
-include scripts/effects.con
 // WEAPON DEFINES, I'm too lazy so I stole the sample from sdk/samples/weapons.sample.con
 // Thanks Hendricks!
 include scripts/weapons.con

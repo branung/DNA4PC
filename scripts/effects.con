@@ -33,6 +33,19 @@ var rot_target -100 1
 var rot_current 0 1
 var rot_fine 0 1
 
+var oview 0 1
+var oyx 0 1
+
+var quake_x 0 1
+var quake_x_inc 0 1
+var quake_x_target 0 1
+var quake_y 0 1
+var quake_y_inc 0 1
+var quake_y_target 0 1
+var quake_z 0 1
+var quake_z_inc 32 1
+var quake_z_target 0 1
+
 
 
 
@@ -65,6 +78,11 @@ eventloadactor SECTOREFFECTOR
         }
     }
 enda
+eventloadactor CUTCAM
+    seta [THISACTOR].cstat 32768
+    changespritestat THISACTOR STAT_CUTCAM
+enda
+
 
 //// --------- RAN ON ACTOR SPAWN ---------
 // Probably will be moved to respective eventloadactors
@@ -339,13 +357,45 @@ defstate do_se72
         setu[].vm_sprite i
         set explosion_snd 0
         ife rot_target -100 set rot_target 0
-        quake temp
+    //    quake temp
     }
     sub fx_int 1
     
+    set kcsunshinemode 1
+    set undisplayrooms 1
+    
+    ife kcsunshinemode 1 {
+        
+        mul quake_z_inc 10
+        div quake_z_inc 16
+        //div quake_z_inc 2
+        add quake_z_inc 8
+        
+        ifl quake_z quake_z_target {
+            add quake_z quake_z_inc
+            ifg quake_z quake_z_target {
+                rand temp 256
+                sub temp 128
+                set quake_z_target temp
+                abs temp
+                set quake_z_inc temp
+            }
+        } else { 
+            sub quake_z quake_z_inc
+            ifl quake_z quake_z_target {
+                rand temp 256
+                sub temp 128
+                set quake_z_target temp
+                abs temp
+                set quake_z_inc temp
+            }
+        }
+        
+    }
+    
     ife rot_target rot_current {
-        rand rot_target 50
-        sub rot_target 25
+        rand rot_target 30
+        sub rot_target 15
     }
 ends
 
@@ -411,6 +461,10 @@ appendevent EVENT_ENTERLEVEL
         mul ambsndtimer 120
         add ambsndtimer totalclock
     }
+    setu .vm_player myconnectindex
+    getactor[THISACTOR].mdflags temp
+    or temp 16
+    setactor[THISACTOR].mdflags temp
 endevent
 
 //// --------- LEVEL MAINLOOP --------
@@ -450,10 +504,91 @@ appendevent EVENT_WORLD
             ifg rot_current rot_target sub rot_fine -5
             ifl rot_current rot_target add rot_fine -5
         } else {
-            ifg rot_current rot_target sub rot_fine 1
-            ifl rot_current rot_target add rot_fine 1
+            ifg rot_current rot_target sub rot_fine 2
+            ifl rot_current rot_target add rot_fine 2
         }
         setplayer[].rotscrnang rot_current
     }
     
+endevent
+
+
+
+
+defstate renderman_getcoords
+    ife renderman_get -1 terminate
+    set r_x 0
+    set r_y 0
+    set r_z 0
+    set r_sect 0
+    set r_horiz 0
+    set r_ang 0
+    // 1 player - 2 sprite ID
+    ife renderman_get 1 {
+        set r_x player[myconnectindex].posx
+        set r_y player[myconnectindex].posy
+        set r_z player[myconnectindex].posz
+        set r_sect player[myconnectindex].cursectnum
+        set r_horiz cameraq16horiz
+        set r_ang cameraq16ang
+    }
+    ife renderman_get 2 {
+        set r_x sprite[renderman_sprite].x
+        set r_y sprite[renderman_sprite].y
+        set r_z sprite[renderman_sprite].z
+        ifn sprite[renderman_sprite].shade 0 set r_sect sprite[renderman_sprite].shade
+        set r_horiz 100
+        set r_ang sprite[renderman_sprite].ang
+    }
+ends
+
+defstate renderman_render
+    ife renderman_get -1 terminate
+    showviewq16unbiased r_x r_y r_z r_ang r_horiz r_sect 0 0 319 199
+ends
+
+
+defstate cutcam_render
+    for u sprofstat STAT_CUTCAM {
+        ife sprite[u].lotag cutscene_num set renderman_sprite u
+    }
+    ifn renderman_sprite -1 {
+        set renderman_get 2
+        set oview viewingrange
+        set oyx yxaspect
+        setaspect oview 78643
+        state renderman_getcoords
+        shiftvarl r_ang 16
+        shiftvarl r_horiz 16
+        state renderman_render
+        setaspect oview oyx
+    }
+ends
+
+
+
+appendevent EVENT_DISPLAYROOMS
+    ife undisplayrooms 0 break
+    
+    // Shake Shake Shake...
+    ife kcsunshinemode 1 {
+        set renderman_get 1
+        state renderman_getcoords
+        set temp quake_z
+        mul temp 5
+        add r_z temp
+        add r_ang temp
+        div temp 100
+        add r_x temp
+        add r_y rot_fine
+        state renderman_render
+    }
+    
+    set renderman_sprite -1
+    set undisplayrooms 0
+    set RETURN 1
+endevent
+
+appendevent EVENT_ANIMATESPRITES
+    settspr[THISACTOR].tsprpicnum 13
 endevent
