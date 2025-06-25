@@ -2224,13 +2224,13 @@ ZZZFACE9,RWDMON10
   22,1957                ;Dead cacodemon
   23,1734                ;Dead lost soul, invisible (they blow up when killed)
 
-  21001, 40				 ;Duke Advance Pistol Ammo Box
+  21001, 3945			 ;Duke Advance Pistol Ammo Box
   21002, 40				 ;Duke Advance Pistol Ammo
   21003, 46				 ;Duke Advance Energy Pack
   21004, 46				 ;Duke Advance Energy Clip
   21005, 44				 ;Duke Advance Rocket Box
   21006, 49				 ;Duke Advance Shotgun Box
-  21007, 49				 ;Duke Advance Shotgun Shells
+  21007, 3946			 ;Duke Advance Shotgun Shells
   21008, 40
   21009, 41				 ;Duke Advance Chaingun Ammo	 
   21010, 54
@@ -2238,28 +2238,32 @@ ZZZFACE9,RWDMON10
   21012, 3919      ;Armor Bonus
   21013, 1062
   21014, 916
-  21015, 1247
-  21016, 556
-  21017, 1227
-  ;
+  21015, 4056      ;Duke Advance Explosive Tank
+  21016, 556       ;Duke Advance Office Chair
+  21017, 4050      ;Duke Advance Barrel
+  21018, 3939      ;Duke Advance Gas Pump
   21019, 969
   21020, 569
   21021, 571
-  21022, 51
-  21023, 52
+  21022, 3918        ;Duke Advance Health Pack Small
+  21023, 52        ;Duke Advance Health Pack Large
   21024, 100
-  21025, 51
-  21026, 60 			 ;Duke Advance Blue Key
-  21027, 60, 21 	 ;Duke Advance Red Key
-  21028, 60, 23 	 ;Duke Advance Yellow Key
-  ;
+  21025, 51        ;Duke Advance Health Pack Medium
+  21026, 3942 			 ;Duke Advance Blue Key
+  21027, 3943 	 ;Duke Advance Red Key
+  21028, 3944 	 ;Duke Advance Yellow Key
+  21029, 3902 	 ;Duke Advance Data Disk
+  21030, 3901 	 ;Duke Advance Laptop
+  21031, 3903 	 ;Duke Advance Plans
   21032, 1160      ;Duke Advance Bottle1
-  21033, 1321
+  21033, 3936      ;Duke Advance Jenny
   21034, 1161      ;Duke Advance Bottle2
   21035, 4540      ;Duke Advance Burger
   21036, 4548      ;Duke Advance Noodle Bowl  
   21037, 2185      ;Duke Advance Enforcer Body  
   ;
+  21039, 3906      ;Duke Advance Potted Plant
+  21040, 3902      ;Duke Advance Potted Plant 2
   21041, 1162      ;Duke Advance Bottle3
   21042, 3908   
   21043, 3909   
@@ -2276,17 +2280,17 @@ ZZZFACE9,RWDMON10
   21054, 23 			 ;Duke Advance RPG
   21055, 28 			 ;Duke Advance Shotgun
   21056, 25 			 ;Duke Advance Shrinker
-  21057, 28 			 ;Duke Advance Lead Cannon
+  21057, 5403 		 ;Duke Advance Lead Cannon
   21058, 5188			 ;Duke Advance SlimeCrab
   21059, 2120			 ;Duke Advance Enforcer
   21060, 1820			 ;Duke Advance Octobrain
-  ;
+  21061, 5296			 ;Duke Advance Boss2
   21062, 5255			 ;Duke Advance Boss1
-  ;
+  21063, 5255			 ;Duke Advance Boss3
   21064, 5119			 ;Duke Advance Grey
   21065, 1681			 ;Duke Advance Troopers
   21066, 2000			 ;Duke Advance Pig Cops
-  ;
+  21067, 3948			 ;Duke Advance Boss3
   21068, 5228			
   21069, 5119			
 
