@@ -112,6 +112,12 @@
 	}
 	ends
 
+	defstate draw_dna_timer
+	{
+		rotatesprite 160 11 NORMALSIZE 0 5374 0 0 256 0 0 xdim ydim
+	}
+	ends
+
 defstate dna_camera_hud
 	setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
     rotatesprite 160 170 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
@@ -409,6 +415,7 @@ onevent EVENT_DISPLAYREST
 		ifvarg SCREENSIZE 0
 		{
 			state draw_dna_hud
+			//state draw_dna_timer
 		}
 	}
 }
