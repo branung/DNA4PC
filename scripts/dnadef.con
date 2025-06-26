@@ -77,6 +77,7 @@ gamevar SCREENSIZE -1 1
 gamevar WEAPON1_CLIP 0 0 // Prevent pistol from reloading
 gamevar WEAPON1_TOTALTIME 9 // Increases delay time between each pistol shot
 gamevar temp 0 2
+gamevar temp2 0 2
 
 gamevar SCREENALPHA 255 0
 gamevar CUTSCENE_STEP 0 0
@@ -150,7 +151,11 @@ var r_sect 0 1
 var r_horiz 0 1
 var r_ang 0 1
 
-
+// Eggtimer
+define DNA_EGGQUOTE_ON 301
+definequote DNA_EGGQUOTE_ON Timer on!
+define DNA_EGGQUOTE_FAIL 302
+definequote DNA_EGGQUOTE_FAIL You're dead!
 
 //Item Pickups
 define ARMORSHARD 3919

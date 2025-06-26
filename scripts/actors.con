@@ -327,7 +327,7 @@ appendevent EVENT_DAMAGESPRITE
 endevent
 
 eventloadactor MBMACHINE
-    seta .cstat 1
+    seta .cstat 32768
 
 enda
 
@@ -342,6 +342,7 @@ useractor notenemy MBMACHINE 0
     ifaction 0 {
         seta .xrepeat 32
         seta .yrepeat 32
+        seta .cstat 32768
         ai MBMSCATTER
     }
     ifai MBMSCATTER {

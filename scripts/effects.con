@@ -46,6 +46,7 @@ var quake_z 0 1
 var quake_z_inc 32 1
 var quake_z_target 0 1
 
+var eggtimer -1 1
 
 
 
@@ -399,6 +400,67 @@ defstate do_se72
     }
 ends
 
+//// -- SE73: Deadly egg timer --
+// Presence triggers a countdown timer, bad things happen upon reaching zero.
+// Hitag: Toggle tag to turn on
+// Extra: Time in seconds
+// fx_int 0= idle, 1=Arm, 2=running, 3=failed
+// fx_int2 = Schmitt trigger, timer must be active for 2s before it can be stopped
+defstate do_se73
+    switch fx_int
+        case 0
+            ifg fx_int2 0 sub fx_int2 1
+            ife fx_int2 0 {
+                checkactivatormotion sprite.hitag
+                ife RETURN 1 {
+                    set fx_int 1
+                    set fx_int2 0
+                }
+            }
+            break
+        case 1
+            set eggtimer fx_extra
+            mul eggtimer 30
+            set fx_int 2
+            break
+        case 2
+            sub eggtimer 1
+            redefinequote DNA_EGGQUOTE_ON TIMER: %ld:%ld
+            set temp eggtimer
+            div temp 30
+            mod temp 3600
+            set temp2 temp
+            mod temp2 60
+            div temp 60
+            
+            
+            qsprintf DNA_EGGQUOTE_ON DNA_EGGQUOTE_ON temp temp2
+            quote DNA_EGGQUOTE_ON
+            ife eggtimer 0 {
+                set eggtimer -1
+                set fx_int 3
+            }
+            ifn fx_int2 60 add fx_int2 1
+            ife fx_int2 60 checkactivatormotion sprite.hitag
+            ife RETURN 1 {
+                set fx_int 0
+                set eggtimer -1
+                redefinequote DNA_EGGQUOTE_ON TIMER OFFLINE!
+            }
+            break
+        case 3
+            quote DNA_EGGQUOTE_FAIL
+            palfrom 32 63 63 63
+            state standard_pjibs
+            //cstat 32768
+            //sound SQUISHED
+            //sound DUKE_DEAD
+            addphealth -500
+            set fx_int 0
+            break
+    endswitch
+ends
+
 
 //// --------- IDLE TIMER HANDLER ---------
 // Disables the stock idle timer and handles it on it's own.
@@ -486,6 +548,7 @@ appendevent EVENT_WORLD
                 ife sprite[i].lotag 70 state do_se70
                 ife sprite[i].lotag 71 state do_se71
                 ife sprite[i].lotag 72 state do_se72
+                ife sprite[i].lotag 73 state do_se73
                 break
         endswitch
     }
@@ -525,10 +588,10 @@ defstate renderman_getcoords
     set r_ang 0
     // 1 player - 2 sprite ID
     ife renderman_get 1 {
-        set r_x player[myconnectindex].posx
-        set r_y player[myconnectindex].posy
-        set r_z player[myconnectindex].posz
-        set r_sect player[myconnectindex].cursectnum
+        set r_x camerax
+        set r_y cameray
+        set r_z cameraz
+        set r_sect camerasect
         set r_horiz cameraq16horiz
         set r_ang cameraq16ang
     }
@@ -585,7 +648,7 @@ appendevent EVENT_DISPLAYROOMS
     }
     
     set renderman_sprite -1
-    set undisplayrooms 0
+    //set undisplayrooms 0
     set RETURN 1
 endevent
 
