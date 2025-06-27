@@ -355,7 +355,13 @@ useractor notenemy MBMACHINE 0
     }
     ifai MBMSCATTER3 {
         ifrnd 20 {
-            ifpdistg 2048 {
+            set temp 0
+            ife player[myconnectindex].dead_flag 0 {
+                ifpdistg 2048 set temp 1
+            } else {
+                set temp 1
+            }
+            ife temp 1 {
                 switch explosion_snd
                     case 0
                     case 3

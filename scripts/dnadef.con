@@ -77,7 +77,7 @@ gamevar SCREENSIZE -1 1
 gamevar WEAPON1_CLIP 0 0 // Prevent pistol from reloading
 gamevar WEAPON1_TOTALTIME 9 // Increases delay time between each pistol shot
 gamevar temp 0 2
-gamevar temp2 0 2
+gamevar temp2 0 1
 
 gamevar SCREENALPHA 255 0
 gamevar CUTSCENE_STEP 0 0
@@ -106,7 +106,7 @@ define UP 1536
 
 // KEYCARD AND DOOR LOCK RELATED DEFINES
 // Keycard flag bit
-var lockbits 0 0
+var lockbits 0 1
 define lock_bluekey 1
 define lock_redkey 2
 define lock_yellowkey 4
@@ -138,6 +138,7 @@ var fx_extra 0 2
 // Otherwise internal (Pretty much like htg_t but without the risks)
 var fx_int 0 2
 var fx_int2 0 2
+var fx_state 0 2
 
 // For displayrooms stuff & Quake
 var undisplayrooms 0 1
@@ -156,6 +157,15 @@ define DNA_EGGQUOTE_ON 301
 definequote DNA_EGGQUOTE_ON Timer on!
 define DNA_EGGQUOTE_FAIL 302
 definequote DNA_EGGQUOTE_FAIL You're dead!
+var eggtimer -1 1
+
+// SE74 - Actorcounter
+define DNA_COUNTQUOTE 303
+definequote DNA_COUNTQUOTE Enemies left:
+
+// SE75 - Switch counter
+var triggercounter
+
 
 //Item Pickups
 define ARMORSHARD 3919
@@ -225,7 +235,7 @@ defineprojectile ALIENLORDPROJECTILE PROJ_OFFSET -128
 define GREYATTACK 400
 define GREYDEATH 401
 define SLIMERATTACK 402
-define SLIMEREGG 403
+define S_SLIMEREGG 403
 define SPIDERLORDROAM 404
 define SPIDERLORDDEATH 405
 define CONTROLLERATTACK 406

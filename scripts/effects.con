@@ -7,7 +7,9 @@
 // (6) New keycards: blue/red/yellow/computer/disc/microchip
 // (7)
 
-
+/// =============================================================================================
+///   VARIABLE DEFINITIONS
+/// =============================================================================================
 
 // AUTOSHADE VARIABLES AND DEFINES
 // Temp junk
@@ -28,8 +30,11 @@ define enabled 3
 define pre_enable 2
 define pre_disable 1
 define disabled 0
+define completed 4
+// "pre" reserved for possible transitions
+// "completed" is when actor needs to remain dormant for variables, i.e. small NOP loop
 
-var rot_target -100 1
+var rot_target 0 1
 var rot_current 0 1
 var rot_fine 0 1
 
@@ -46,10 +51,9 @@ var quake_z 0 1
 var quake_z_inc 32 1
 var quake_z_target 0 1
 
-var eggtimer -1 1
-
-
-
+/// =============================================================================================
+///   STATES: GENERAL HELPER STATES - METASTATES
+/// =============================================================================================
 
 //// --------- SAVE MAPTAGS TO ACTORVARS ---------
 // This is necessary for saving various tags not intended for mapper use.
@@ -60,61 +64,8 @@ defstate get_fxtags
     geta .extra fx_extra
     seta .owner -1
     seta .extra -1
+    set fx_state disabled
 ends
-eventloadactor A51ALARM
-    state get_fxtags
-    seta .cstat 32768
-enda
-eventloadactor ACTIVATOR
-    state get_fxtags
-enda
-eventloadactor SECTOREFFECTOR
-    state get_fxtags
-    ife sprite.lotag 71 {
-        ifn fx_extra -1 {
-            espawn ACTIVATOR
-            geta [RETURN].sectnum temp
-            add temp 9999
-            seta [RETURN].lotag temp
-        }
-    }
-enda
-eventloadactor CUTCAM
-    seta [THISACTOR].cstat 32768
-    changespritestat THISACTOR STAT_CUTCAM
-enda
-
-
-//// --------- RAN ON ACTOR SPAWN ---------
-// Probably will be moved to respective eventloadactors
-
-appendevent EVENT_SPAWN
-    switch sprite.picnum
-        case ACTIVATORLOCKED
-            // If extra is 1 then reverse AL functionality (open on spawn)
-            state get_fxtags
-            ife fx_extra 1 {
-                gets[sprite[].sectnum].lotag temp
-                xor temp 16384
-                sets[sprite[].sectnum].lotag temp
-            }
-            break
-        //case A51ALARM
-        //    seta .cstat 0
-        //    break
-        case DNA_SYSKEY
-        case DNA_CDKEY
-        case DNA_CHIPKEY
-        case DNA_BLUEKEY
-        case DNA_REDKEY
-        case DNA_YELLOWKEY
-            //seta .cstat 0
-            seta .xrepeat 48
-            seta .yrepeat 48
-            seta .shade -17
-            break
-    endswitch
-endevent
 
 //// --------- WALL ANGLE HELPER ---------
 // Gets wall angle to s_temp3, expects u to contain wallpoint 1
@@ -130,13 +81,17 @@ defstate getwallang
     sin s_temp3 s_temp3
 ends
 
+/// =============================================================================================
+///   STATES: GAMEPLAY FUNCTIONALITY
+/// =============================================================================================
 
+//// --------- WALKBOB SOUNDS ---------
+// player[].bobcounter stores a running number from 0 -> 32767 -> -32768.
+// bobsndtimer is offset +1024 from this each time it catches up.
+// Problem is that bobcounter is not bound to tickrate so bobinverse exists for tracking and
+// is used whenever bobcounter has overflowed so that bobsndtimer behaves properly.
 defstate walkbob_sound_handler
     ifn bobfrequency -1 {
-        // player[].bobcounter stores a running number from 0 -> 32767 -> -32768.
-        // bobsndtimer is offset +1024 from this each time it catches up.
-        // Problem is that bobcounter is not bound to tickrate so bobinverse exists for tracking and
-        // is used whenever bobcounter has overflowed so that bobsndtimer behaves properly.
         ife bobsndinverse 1 {
             ifg player[].bobcounter bobsndtimer {
                 add bobsndtimer 1024
@@ -153,8 +108,7 @@ defstate walkbob_sound_handler
     }
 ends
 
-
-//// --------- AUTOSHADE ---------
+//// --------- AUTOSHADING ---------
 // Used to apply basic directional shading to a map.
 // Sector shade is used as a reference 's_sectshade'
 // Walls are a global angle based negative offset from this and the ceiling a hardcoded one
@@ -206,7 +160,6 @@ defstate enable_autoshade
         }
     set s_state enabled
 ends
-
 // This is fairly straightforward as it just resets walls to sector.floorshade and vis to 0.
 defstate disable_autoshade
     for i allsectors {
@@ -220,7 +173,7 @@ defstate disable_autoshade
     set s_state disabled
 ends
 
-//// --------- CHECK ACCESS PERMISSIONS ---------
+//// --------- DOOR LOCK CHECKER (KEYCARD/ETC) ---------
 // Helper state for checking if the player has sufficient access against fx_extra (keys/objectives)
 // FOUND=Actor's temp is set to 1, NOT FOUND=temp remains 0 and sets LOCKQUOTE appropriately.
 defstate checklock
@@ -279,6 +232,158 @@ defstate checklock
         set temp 1
     }
 ends
+
+//// --------- IDLE SOUND TIMER HANDLER ---------
+// Disables the stock idle timer and handles it on it's own.
+// Only two sounds exist unfortunately!
+defstate idle_handler
+    // Game tracks this with 'crack_time' internally, 777 is default. We need 900.
+    // This hack counts from 777 -> 902-778 and 775-1. Giving roughly ~900t/30s.
+    ife player[].crack_time 776 {
+        setp[].crack_time 902
+    }
+    ife player[].crack_time 778 {
+        setp[].crack_time 775
+    }
+    ife player[].crack_time 1 {
+        rand temp 1
+        ife temp 1 globalsound ADUKE_ENDSEQVOL2SND7 else globalsound ADUKE_CRACK
+        setp[].crack_time 902
+    }
+ends
+
+//// --------- LEVLE AMBIENCE SOUND HANDLER ---------
+// All maps except sydney 1/2 play either STINGER or WOOSH
+// Sydney replaces both with WARAMB.
+// Frequency is random between ~15-210s with some convergence at ~120s
+defstate ambience_sound_handler
+    // Only play on DN:A episode
+    ifn VOLUME 5 terminate
+    ifl ambsndtimer totalclock {
+        rand temp 5
+        ife temp 0 set ambsndtimer 15
+        ife temp 1 set ambsndtimer 120
+        ife temp 2 set ambsndtimer 120
+        ife temp 3 set ambsndtimer 130
+        ife temp 4 set ambsndtimer 190
+        ife temp 5 set ambsndtimer 200
+        mul ambsndtimer 120
+        add ambsndtimer totalclock
+        // Special case for Syndey
+        switch LEVEL
+            case 7
+            case 8
+                globalsound AAMB_WARAMB
+                break
+            default
+                rand temp 1
+                ife temp 1 globalsound AAMB_STINGER else globalsound AAMB_HISS
+                break
+        endswitch
+    }
+ends
+
+//// --------- QUAKE SHAKE HANDLER ---------
+// Handles the screen rotation and shaking, also sets "disable regular drawing" for this
+defstate rot_quake_handler
+    set undisplayrooms 1
+    mul quake_z_inc 10
+    div quake_z_inc 16
+    add quake_z_inc 8
+    ifl quake_z quake_z_target {
+        add quake_z quake_z_inc
+        ifg quake_z quake_z_target {
+            rand temp 256
+            sub temp 128
+            set quake_z_target temp
+            abs temp
+            set quake_z_inc temp
+        }
+    } else {
+        sub quake_z quake_z_inc
+        ifl quake_z quake_z_target {
+            rand temp 256
+            sub temp 128
+            set quake_z_target temp
+            abs temp
+            set quake_z_inc temp
+        }
+    }
+    ife rot_target rot_current {
+    rand rot_target 30
+    sub rot_target 15
+    }
+    
+    rand temp 10
+    set rot_current rot_fine
+    div rot_current 3
+    ife temp 1 {
+        ifg rot_current rot_target sub rot_fine -5
+        ifl rot_current rot_target add rot_fine -5
+    } else {
+        ifg rot_current rot_target sub rot_fine 2
+        ifl rot_current rot_target add rot_fine 2
+    }
+    ife player[myconnectindex].dead_flag 0 setplayer[].rotscrnang rot_current
+    
+ends
+
+//// --------- SCREEN RENDERING (Showview) HELPER ---------
+// renderman_getcoords -> `renderman_get` 1=Player, 2=Sprite ID of `renderman_sprite`
+// renderman_render -> Perform screen render once final values are in
+// cutcam_render -> Cutscene cameras, pair with lotag to cutscene trigger
+defstate renderman_getcoords
+    ife renderman_get -1 terminate
+    set r_x 0
+    set r_y 0
+    set r_z 0
+    set r_sect 0
+    set r_horiz 0
+    set r_ang 0
+    // 1 player - 2 sprite ID
+    ife renderman_get 1 {
+        set r_x camerax
+        set r_y cameray
+        set r_z cameraz
+        set r_sect camerasect
+        set r_horiz cameraq16horiz
+        set r_ang cameraq16ang
+    }
+    ife renderman_get 2 {
+        set r_x sprite[renderman_sprite].x
+        set r_y sprite[renderman_sprite].y
+        set r_z sprite[renderman_sprite].z
+        ifn sprite[renderman_sprite].shade 0 set r_sect sprite[renderman_sprite].shade
+        set r_horiz 100
+        set r_ang sprite[renderman_sprite].ang
+    }
+ends
+
+defstate renderman_render
+    ife renderman_get -1 terminate
+    showviewq16unbiased r_x r_y r_z r_ang r_horiz r_sect 0 0 319 199
+ends
+
+defstate cutcam_render
+    for u sprofstat STAT_CUTCAM {
+        ife sprite[u].lotag cutscene_num set renderman_sprite u
+    }
+    ifn renderman_sprite -1 {
+        set renderman_get 2
+        set oview viewingrange
+        set oyx yxaspect
+        setaspect oview 78643
+        state renderman_getcoords
+        shiftvarl r_ang 16
+        shiftvarl r_horiz 16
+        state renderman_render
+        setaspect oview oyx
+    }
+ends
+
+/// =============================================================================================
+///   STATES: SECTOREFFECTORS
+/// =============================================================================================
 
 //// -- SE70: Sink/bridge effect for floor (single use) --
 // Hitag: Monitor this activator
@@ -340,64 +445,54 @@ ends
 // Extra: Default -1 will do nothing, 1 just explosions, 2 just quack
 // Currently does none of above
 defstate do_se72
-    ife fx_int 0 {
-        rand temp 90
-        add temp 30
-        set fx_int temp
-        setu[].vm_sprite player[].I
-        spawn MBMACHINE
-        spawn MBMACHINE
-        spawn MBMACHINE
-        spawn MBMACHINE
-        spawn MBMACHINE
-        spawn MBMACHINE
-        spawn MBMACHINE
-        spawn MBMACHINE
-        spawn MBMACHINE
-        spawn MBMACHINE
-        setu[].vm_sprite i
-        set explosion_snd 0
-        ife rot_target -100 set rot_target 0
-    //    quake temp
-    }
-    sub fx_int 1
-    
-    set kcsunshinemode 1
-    set undisplayrooms 1
-    
-    ife kcsunshinemode 1 {
-        
-        mul quake_z_inc 10
-        div quake_z_inc 16
-        //div quake_z_inc 2
-        add quake_z_inc 8
-        
-        ifl quake_z quake_z_target {
-            add quake_z quake_z_inc
-            ifg quake_z quake_z_target {
-                rand temp 256
-                sub temp 128
-                set quake_z_target temp
-                abs temp
-                set quake_z_inc temp
+    switch fx_state
+        case disabled
+            // Check if we need to enable
+            ifg fx_int2 0 sub fx_int2 1
+            ife fx_int2 0 {
+                checkactivatormotion sprite.hitag
+                ife RETURN 1 {
+                    set fx_state enabled
+                    ifand fx_extra 2 set kcsunshinemode 1
+                }
             }
-        } else { 
-            sub quake_z quake_z_inc
-            ifl quake_z quake_z_target {
-                rand temp 256
-                sub temp 128
-                set quake_z_target temp
-                abs temp
-                set quake_z_inc temp
+            break
+        case enabled
+            ifand fx_extra 1 {
+                ife fx_int 0 {
+                    rand temp 90
+                    add temp 30
+                    set fx_int temp
+                    setu[].vm_sprite player[].I
+                    spawn MBMACHINE
+                    spawn MBMACHINE
+                    spawn MBMACHINE
+                    spawn MBMACHINE
+                    spawn MBMACHINE
+                    spawn MBMACHINE
+                    spawn MBMACHINE
+                    spawn MBMACHINE
+                    spawn MBMACHINE
+                    spawn MBMACHINE
+                    setu[].vm_sprite i
+                    set explosion_snd 0
+                }
+                sub fx_int 1
             }
-        }
-        
-    }
-    
-    ife rot_target rot_current {
-        rand rot_target 30
-        sub rot_target 15
-    }
+            
+            // Check if we need to disabled
+            ifn fx_int2 60 add fx_int2 1
+            ife fx_int2 60 {
+                checkactivatormotion sprite.hitag
+                ife RETURN 1 {
+                    set fx_state disabled
+                    set fx_int2 60
+                    set kcsunshinemode 0
+                    set undisplayrooms 0
+                }
+            }
+            break
+    endswitch
 ends
 
 //// -- SE73: Deadly egg timer --
@@ -406,6 +501,7 @@ ends
 // Extra: Time in seconds
 // fx_int 0= idle, 1=Arm, 2=running, 3=failed
 // fx_int2 = Schmitt trigger, timer must be active for 2s before it can be stopped
+// Any existing SE72 (Michael Bay Machine) will be slightly affected when timer runs out.
 defstate do_se73
     switch fx_int
         case 0
@@ -437,7 +533,6 @@ defstate do_se73
             qsprintf DNA_EGGQUOTE_ON DNA_EGGQUOTE_ON temp temp2
             quote DNA_EGGQUOTE_ON
             ife eggtimer 0 {
-                set eggtimer -1
                 set fx_int 3
             }
             ifn fx_int2 60 add fx_int2 1
@@ -450,86 +545,192 @@ defstate do_se73
             break
         case 3
             quote DNA_EGGQUOTE_FAIL
-            palfrom 32 63 63 63
-            state standard_pjibs
-            //cstat 32768
-            //sound SQUISHED
-            //sound DUKE_DEAD
-            addphealth -500
+            setu[].vm_sprite player[].I
+            spawn MBMACHINE
+            setu[].vm_sprite i
+            addphealth -5
+            palfrom 32 64
+            ifn player[myconnectindex].dead_flag 0 {
+                set fx_int 4
+                state standard_pjibs
+                state standard_pjibs
+                state standard_pjibs
+                set fx_int2 1
+            }
+            break
+        case 4
+            
+            ife fx_int2 1 {
+                setu[].vm_sprite player[].I
+                spawn MBMACHINE
+                setu[].vm_sprite i
+            }
+            inv fx_int2
+            break
+    endswitch
+ends
+
+//// -- SE74: Mission killcount counter --
+// Counts the alive matching actors and fires a mission lockbit when none are left
+// HITAG Which actor to check for
+defstate do_se74
+    switch fx_state
+        case disabled
+            ifl fx_int2 15 add fx_int2 1
+            ife fx_int2 15 set fx_state enabled
+            break
+        case enabled
             set fx_int 0
+            for u sprofstat STAT_ACTOR {
+                ife sprite[u].picnum sprite.hitag {
+                    ifn sprite[u].extra 0 {
+                        add fx_int 1
+                    }
+                }
+            }
+            for u sprofstat STAT_ZOMBIEACTOR {
+                ife sprite[u].picnum sprite.hitag {
+                    ifn sprite[u].extra 0 {
+                        add fx_int 1
+                    }
+                }
+            }
+            redefinequote DNA_COUNTQUOTE Enemies left: %ld
+            qsprintf DNA_COUNTQUOTE DNA_COUNTQUOTE fx_int
+            quote DNA_COUNTQUOTE
+            ife fx_int 0 {
+                set fx_state completed
+                getplayer[].got_access lockbits
+                or lockbits lock_mission
+                setplayer[].got_access lockbits
+                killit
+            }
+            set fx_state disabled
+            break
+    endswitch
+ends
+
+//// -- SE75: Button counter --
+// A counter which fires an output trigger when all peers are "on"
+// Place this SE in the same sector as an activator & moving sector
+// Monitors activators with A lotag == SE hitag, sends Extra once last.
+// HITAG Tied to this activator
+// EXTRA What to trigger if the triggercounter is zero
+defstate do_se75
+    switch fx_state
+        case disabled
+            checkactivatormotion sprite.hitag
+            ife RETURN 1 {
+                set fx_state enabled
+            }
+            break
+        case enabled
+            sub triggercounter 1
+            ifg triggercounter 0 {
+                ifg triggercounter 1 {
+                    redefinequote DNA_COUNTQUOTE %ld switches left
+                } else {
+                    redefinequote DNA_COUNTQUOTE %ld switch left
+                }
+                qsprintf DNA_COUNTQUOTE DNA_COUNTQUOTE triggercounter
+                quote DNA_COUNTQUOTE
+            }
+            ife triggercounter 0 {
+                ifn fx_extra -1 {
+                    addlogvar fx_extra
+                    operateactivators fx_extra 0
+                }
+                getplayer[].got_access lockbits
+                or lockbits lock_mission
+                setplayer[].got_access lockbits
+            }
+            set fx_state completed
+            break
+        case completed
+            // For some reason killit breaks these??
+            seta[i].xrepeat 0
+            seta[i].yrepeat 0
             break
     endswitch
 ends
 
 
-//// --------- IDLE TIMER HANDLER ---------
-// Disables the stock idle timer and handles it on it's own.
-// Only two sounds exist unfortunately!
-defstate idle_handler
-    // Game tracks this with 'crack_time' internally, 777 is default. We need 900.
-    // This hack counts from 777 -> 902-778 and 775-1. Giving roughly ~900t/30s.
-    ife player[].crack_time 776 {
-        setp[].crack_time 902
-    }
-    ife player[].crack_time 778 {
-        setp[].crack_time 775
-    }
-    ife player[].crack_time 1 {
-        rand temp 1
-        ife temp 1 globalsound ADUKE_ENDSEQVOL2SND7 else globalsound ADUKE_CRACK
-        setp[].crack_time 902
-    }
-ends
-
-//// --------- AMBIENCE SOUND HANDLER ---------
-// All maps except sydney 1/2 play either STINGER or WOOSH
-// Sydney replaces both with WARAMB.
-// Frequency is random between ~15-210s with some convergence at ~120s
-defstate ambience_sound_handler
-    // Only play on DN:A episode
-    ifn VOLUME 5 terminate
-    ifl ambsndtimer totalclock {
-        rand temp 5
-        ife temp 0 set ambsndtimer 15
-        ife temp 1 set ambsndtimer 120
-        ife temp 2 set ambsndtimer 120
-        ife temp 3 set ambsndtimer 130
-        ife temp 4 set ambsndtimer 190
-        ife temp 5 set ambsndtimer 200
-        mul ambsndtimer 120
-        add ambsndtimer totalclock
-        // Special case for Syndey
-        switch LEVEL
-            case 7
-            case 8
-                globalsound AAMB_WARAMB
-                break
-            default
-                rand temp 1
-                ife temp 1 globalsound AAMB_STINGER else globalsound AAMB_HISS
-                break
-        endswitch
-    }
-ends
-
-//// --------- LEVEL STARTUP ---------
-
-appendevent EVENT_ENTERLEVEL
-    // For now, always autoshade on map load.
-    state enable_autoshade
-    // Emable level specific ambience sounds only if our episode has been selected.
+/// =============================================================================================
+///   LEVEL STARTUP: PRELEVEL -> ACTORS -> ENTERLEVEL
+/// =============================================================================================
+// Ran before level data is fully loaded: Sectors/Actors/etc..
+appendevent EVENT_PRELEVEL
     ife VOLUME 5 {
         set ambsndtimer 120
         mul ambsndtimer 120
         add ambsndtimer totalclock
     }
+    // Reset some evil flags
+    set eggtimer -1
+    set kcsunshinemode 0
+    set undisplayrooms 0
+    set triggercounter 0
+    // Bobsound
+    set bobsndtimer 1024
+    set bobsndinverse 1
+endevent
+
+// Quickly do things to actors before they get muddled by the game code
+eventloadactor A51ALARM
+    state get_fxtags
+    seta .cstat 32768
+enda
+eventloadactor ACTIVATOR
+    state get_fxtags
+enda
+eventloadactor SECTOREFFECTOR
+    state get_fxtags
+    
+    ife sprite.lotag 71 {
+        ifn fx_extra -1 {
+            espawn ACTIVATOR
+            geta [RETURN].sectnum temp
+            add temp 9999
+            seta [RETURN].lotag temp
+            addlogvar RETURN
+        }
+    }
+    
+    
+    ife sprite.lotag 72 {
+        ifn fx_extra -1 {
+            ifand fx_extra 2 { set rot_target 0 }
+        } else {
+            set fx_extra 0
+        }
+    }
+    
+    ife sprite.lotag 75 {
+        add triggercounter 1
+        addlogvar triggercounter
+    }
+    
+enda
+eventloadactor CUTCAM
+    seta [THISACTOR].cstat 32768
+    changespritestat THISACTOR STAT_CUTCAM
+enda
+
+// Once everything is ready and player is just about to enter in
+appendevent EVENT_ENTERLEVEL
+    // For now, always autoshade on map load.
+    state enable_autoshade
+    // Emable level specific ambience sounds only if our episode has been selected.
     setu .vm_player myconnectindex
     getactor[THISACTOR].mdflags temp
     or temp 16
     setactor[THISACTOR].mdflags temp
 endevent
 
-//// --------- LEVEL MAINLOOP --------
+
+/// =============================================================================================
+///   LEVEL MAIN LOOP (These are run on loop)
+/// =============================================================================================
 // (THE WHOLE LOOP !!!)
 
 appendevent EVENT_WORLD
@@ -549,87 +750,57 @@ appendevent EVENT_WORLD
                 ife sprite[i].lotag 71 state do_se71
                 ife sprite[i].lotag 72 state do_se72
                 ife sprite[i].lotag 73 state do_se73
+                ife sprite[i].lotag 74 state do_se74
+                ife sprite[i].lotag 75 state do_se75
                 break
         endswitch
     }
+    
     // Player idle state when not moving
     state idle_handler
     // Player walking sounds when moving
     state walkbob_sound_handler
     // Hardcoded level ambience sounds which play randomly on a timer
     state ambience_sound_handler
+    // Handle screenshake & rotation for quake, enabled from SE72. THIS WILL OVERWRITE DRAWROOMS!
+    ife kcsunshinemode 1 state rot_quake_handler
     
-    ifn rot_target -100 {
-        rand temp 10
-        set rot_current rot_fine
-        div rot_current 3
-        ife temp 1 {
-            ifg rot_current rot_target sub rot_fine -5
-            ifl rot_current rot_target add rot_fine -5
-        } else {
-            ifg rot_current rot_target sub rot_fine 2
-            ifl rot_current rot_target add rot_fine 2
-        }
-        setplayer[].rotscrnang rot_current
-    }
-    
+    //// DEBUGDEBUGDEBUG
+    //redefinequote 1 triggercounter: %ld
+    //qsprintf 1 1 triggercounter
+    //quote 1
 endevent
 
+//// --------- RAN ON ACTOR SPAWN ---------
+// Probably will be moved to respective eventloadactors
+appendevent EVENT_SPAWN
+    switch sprite.picnum
+        case ACTIVATORLOCKED
+            // If extra is 1 then reverse AL functionality (open on spawn)
+            state get_fxtags
+            ife fx_extra 1 {
+                gets[sprite[].sectnum].lotag temp
+                xor temp 16384
+                sets[sprite[].sectnum].lotag temp
+            }
+            break
+        case DNA_SYSKEY
+        case DNA_CDKEY
+        case DNA_CHIPKEY
+        case DNA_BLUEKEY
+        case DNA_REDKEY
+        case DNA_YELLOWKEY
+            seta .cstat 0
+            seta .xrepeat 48
+            seta .yrepeat 48
+            seta .shade -17
+            break
+    endswitch
+endevent
 
-
-
-defstate renderman_getcoords
-    ife renderman_get -1 terminate
-    set r_x 0
-    set r_y 0
-    set r_z 0
-    set r_sect 0
-    set r_horiz 0
-    set r_ang 0
-    // 1 player - 2 sprite ID
-    ife renderman_get 1 {
-        set r_x camerax
-        set r_y cameray
-        set r_z cameraz
-        set r_sect camerasect
-        set r_horiz cameraq16horiz
-        set r_ang cameraq16ang
-    }
-    ife renderman_get 2 {
-        set r_x sprite[renderman_sprite].x
-        set r_y sprite[renderman_sprite].y
-        set r_z sprite[renderman_sprite].z
-        ifn sprite[renderman_sprite].shade 0 set r_sect sprite[renderman_sprite].shade
-        set r_horiz 100
-        set r_ang sprite[renderman_sprite].ang
-    }
-ends
-
-defstate renderman_render
-    ife renderman_get -1 terminate
-    showviewq16unbiased r_x r_y r_z r_ang r_horiz r_sect 0 0 319 199
-ends
-
-
-defstate cutcam_render
-    for u sprofstat STAT_CUTCAM {
-        ife sprite[u].lotag cutscene_num set renderman_sprite u
-    }
-    ifn renderman_sprite -1 {
-        set renderman_get 2
-        set oview viewingrange
-        set oyx yxaspect
-        setaspect oview 78643
-        state renderman_getcoords
-        shiftvarl r_ang 16
-        shiftvarl r_horiz 16
-        state renderman_render
-        setaspect oview oyx
-    }
-ends
-
-
-
+//// --------- MAIN 3D RENDERING ---------
+// Set `undisplayrooms 1` and regular 3D rendering is stopped.
+// Use `showview` to display anything of 3D instead
 appendevent EVENT_DISPLAYROOMS
     ife undisplayrooms 0 break
     
@@ -646,12 +817,16 @@ appendevent EVENT_DISPLAYROOMS
         add r_y rot_fine
         state renderman_render
     }
-    
     set renderman_sprite -1
-    //set undisplayrooms 0
     set RETURN 1
 endevent
 
+//// --------- SPRITE PRE-DRAW SETUP ---------
+// Any visible sprites are cloned to temporary "TheSprites"
+// From there we can do all sort of temporary changes to them.
 appendevent EVENT_ANIMATESPRITES
-    settspr[THISACTOR].tsprpicnum 13
+    // Disable drawing Duke if we're doing quakemode
+    ife kcsunshinemode 1 {
+        settspr[THISACTOR].tsprpicnum 13
+    }
 endevent
