@@ -290,5 +290,8 @@ ifhitweapon
         guts JIBS6 1
 }
 
+enda
 
+eventloadactor CYBERALIEN
+    sizeat 64 64
 enda

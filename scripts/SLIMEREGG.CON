@@ -288,5 +288,8 @@ ifhitweapon
         }
 
 }
+enda
 
+eventloadactor SLIMEREGG
+    sizeat 48 40
 enda
