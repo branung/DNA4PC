@@ -1,6 +1,8 @@
 dynamicremap
 
 // Variables, statics and sound/level/music definitions
+include scripts/redefs.con
+include game.con
 include scripts/dnadef.con
 include scripts/actors.con
 include scripts/breakable.con
@@ -11,8 +13,6 @@ include scripts/hud.con
 // WEAPON DEFINES, I'm too lazy so I stole the sample from sdk/samples/weapons.sample.con
 // Thanks Hendricks!
 include scripts/weapons.con
-
-
 
 damageeventtile 1405
 

@@ -655,6 +655,31 @@ defstate do_se75
 ends
 
 
+//// -- SE76: DOOM style elevators --
+// Goes down at a fixed speed, waits, returns
+// Goes up at a fixed speed, waits, returns
+// disabled is player distance polling, if close by then do more frequent checks
+// fx_int2 = timers, fx_int = internal tracking
+defstate do_se76
+    switch fx_state
+        case disabled
+            ifl fx_int2 15 add fx_int2 1
+            ife fx_int2 1 {
+                dist temp THISACTOR player[].i
+                ifl temp 10240 {
+                    set fx_state enabled
+                    set fx_int2 0
+                }
+            }
+            break
+        //case pre_enable
+        //    neartag player.posx player.posy player.posz player.cursectnum player.ang sprite.sectnum temp temp temp 256 1
+        //    
+        //case completed
+    endswitch
+ends
+
+
 /// =============================================================================================
 ///   LEVEL STARTUP: PRELEVEL -> ACTORS -> ENTERLEVEL
 /// =============================================================================================
@@ -692,7 +717,6 @@ eventloadactor SECTOREFFECTOR
             geta [RETURN].sectnum temp
             add temp 9999
             seta [RETURN].lotag temp
-            addlogvar RETURN
         }
     }
     
@@ -708,6 +732,33 @@ eventloadactor SECTOREFFECTOR
     ife sprite.lotag 75 {
         add triggercounter 1
         addlogvar triggercounter
+    }
+    
+    ife sprite.lotag 76 {
+        // Places the SE in the middle x/y of the sector (Pretty surely a rectangle)
+        set i sprite.sectnum
+        set temp 0
+        set temp2 0
+        set fx_int 0
+        set fx_int2 0
+        for u wallsofsector i {
+            getw[u].x temp
+            add fx_int temp
+            getw[u].y temp
+            add fx_int2 temp
+            add temp2 1
+        }
+        div fx_int temp2
+        div fx_int2 temp2
+        seta[THISACTOR].x fx_int
+        seta[THISACTOR].y fx_int2
+        addlogvar fx_int
+        addlogvar fx_int2
+        
+        espawn ACTIVATOR
+        geta [RETURN].sectnum temp
+        add temp 9999
+        seta [RETURN].lotag temp
     }
     
 enda
