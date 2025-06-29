@@ -14,7 +14,7 @@ TL;DR -- Experience "Duke Nukem : Advance" with all the bells & whistles of toda
 
 # Running
 
-git clone this repo and run as `eduke32.exe -mx scripts/dna4pc.con`, no user-friendly setup yet
+git clone this repo and run as `eduke32.exe -x scripts/dna4pc.con`, no user-friendly setup yet
 
 # Credits
 
