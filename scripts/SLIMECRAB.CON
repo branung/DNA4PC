@@ -287,6 +287,8 @@ ifhitweapon
         }
 
 }
+enda
 
-
+eventloadactor SLIMECRAB
+    sizeat 24 20
 enda

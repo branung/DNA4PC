@@ -285,6 +285,8 @@ ifhitweapon
         guts JIBS6 1
 
 }
+enda
 
-
+eventloadactor SPIDERLORD
+    sizeat 32 32
 enda

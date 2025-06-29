@@ -330,6 +330,8 @@ ifhitweapon
           }
 
 }
+enda
 
-
+eventloadactor GREY
+    sizeat 48 40
 enda

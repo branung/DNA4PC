@@ -129,6 +129,30 @@ actor ARMORSHARD
             }
 enda
 
+actor HEALTHPACKSMALL
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifphealthl MAXPLAYERATOMICHEALTH
+              ifcanseetarget
+      {
+        setplayer[THISACTOR].max_player_health MAXPLAYERATOMICHEALTH
+        addphealth 5
+        setplayer[THISACTOR].max_player_health MAXPLAYERHEALTH
+        quote 130
+        ifspawnedby HEALTHPACKSMALL
+          state getcode
+        else
+          state quikget
+      }
+enda
+
 
 //// --------- ALARM ACTOR ---------
 // Starts upon seeing the player. Compatible with RESPAWN

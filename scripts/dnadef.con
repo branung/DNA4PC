@@ -171,6 +171,7 @@ var triggercounter
 define ARMORSHARD 3919
 define PISTOLAMMOBOX 3945
 define SHOTGUNSHELLS 3946
+define HEALTHPACKSMALL 3918
 
 define ARMORSHARD_AMOUNT     5
 define PISTOLAMMOBOXAMOUNT   20
@@ -180,6 +181,7 @@ definequote 126  +5 ARMOR
 definequote 127  +5 ARMOUR
 definequote 128  AMMO BOX
 definequote 129  4 SHELLS
+definequote 130  +5 HEALTH
 
 //gamevar for checking music before playing cutscene
 gamevar currmusic 0

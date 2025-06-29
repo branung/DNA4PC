@@ -310,6 +310,8 @@ ifhitweapon
         guts JIBS6 1
 
 }
+enda
 
-
+eventloadactor ALIENLORD
+    sizeat 64 64
 enda
