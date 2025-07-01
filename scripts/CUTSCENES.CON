@@ -4472,13 +4472,13 @@ onevent EVENT_SCREEN
         state cutcam_render
         rotatesprite 160 170 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
         rotatesprite 31 170 65536 0 CUTSCENE_SPRITE 0 0 2 0 0 xdim ydim
-        screentext 2822 110 y 65536 0 0 textQuoteRow1 0 0 272 0 4 0 0 0 0 0 0 xdim ydim
+        screentext 2822 60 y 65536 0 0 textQuoteRow1 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
         addvar y 10
-        screentext 2822 110 y 65536 0 0 textQuoteRow2 0 0 272 0 4 0 0 0 0 0 0 xdim ydim
+        screentext 2822 60 y 65536 0 0 textQuoteRow2 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
         addvar y 10
-        screentext 2822 110 y 65536 0 0 textQuoteRow3 0 0 272 0 4 0 0 0 0 0 0 xdim ydim
+        screentext 2822 60 y 65536 0 0 textQuoteRow3 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
         addvar y 10
-        screentext 2822 110 y 65536 0 0 textQuoteRow4 0 0 272 0 4 0 0 0 0 0 0 xdim ydim
+        screentext 2822 60 y 65536 0 0 textQuoteRow4 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
         // For original Dialogbox 
         // rotatesprite 160 100 65536 0 CUTSCENE_SCREEN 0 0 2 0 0 xdim ydim
