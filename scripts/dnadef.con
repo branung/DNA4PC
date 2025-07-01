@@ -74,7 +74,7 @@ gamevar INV_NUM_TEMP 0 2
 gamevar SCREENSIZE -1 1
 
 // Moved from dna4pc.con
-gamevar WEAPON1_CLIP 0 0 // Prevent pistol from reloading
+//gamevar WEAPON1_CLIP 0 0 // Prevent pistol from reloading
 gamevar WEAPON1_TOTALTIME 9 // Increases delay time between each pistol shot
 gamevar temp 0 2
 gamevar temp2 0 1
@@ -463,60 +463,60 @@ define GM_KICKINGBUTT 651
 define GM_SCRATCHBUTT 652
 define GM_FINDMYOWNWAY 653
 //          SOUND TOKEN               SOUND FILE                        Pitch Low--High   Prio  Type  Distance
-definesound GM_THATSGOTTAHURT         sounds/gianni/GM_ThatsGottaHurt.wav     0     0     255   4     0
-definesound GM_BACONBITS              sounds/gianni/GM_BaconBits.wav          0     0     255   4     0
-definesound GM_TIMEMORE               sounds/gianni/GM_TimeMore.wav           0     0     255   4     0
-definesound GM_LETSROCK               sounds/gianni/GM_LetsRock.wav           0     0     255   4     0
-definesound GM_NEWHARDWARE            sounds/gianni/GM_NewHardware.wav        0     0     255   4     0
-definesound GM_LETSROCK2              sounds/gianni/GM_LetsRock2.wav          0     0     255   4     0
-definesound GM_PLENTYTOKICK           sounds/gianni/GM_PlentyToKick.wav       0     0     255   4     0
-definesound GM_DUKEOUT                sounds/gianni/GM_DukeOut.wav            0     0     255   4     0
-definesound GM_ALGAEEATERS            sounds/gianni/GM_AlgaeEaters.wav        0     0     255   4     0
-definesound GM_WRONGPLANET            sounds/gianni/GM_WrongPlanet.wav        0     0     255   4     0
-definesound GM_CLOSEENCOUNTER         sounds/gianni/GM_CloseEncounter.wav     0     0     255   4     0
-definesound GM_BUBBLEGUM              sounds/gianni/GM_BubbleGum.wav          0     0     255   4     0
-definesound GM_PIECEOFCAKE            sounds/gianni/GM_PieceOfCake.wav        0     0     255   4     0
-definesound GM_COMEGETSOME            sounds/gianni/GM_ComeGetSome.wav        0     0     255   4     0
-definesound GM_EGYPTIAN               sounds/gianni/GM_Egyptian.wav           0     0     255   4     0
-definesound GM_ROCKIN                 sounds/gianni/GM_Rockin.wav             0     0     255   4     0
-definesound GM_SWITCHFLIPPER          sounds/gianni/GM_SwitchFlipper.wav      0     0     255   4     0
-definesound GM_SCORPIONKING           sounds/gianni/GM_ScorpionKing.wav       0     0     255   4     0
-definesound GM_CASEOFCRABS            sounds/gianni/GM_CaseOfCrabs.wav        0     0     255   4     0
-definesound GM_DAMNIMGOOD             sounds/gianni/GM_DamnImGood.wav         0     0     255   4     0
-definesound GM_TWOWONDERS             sounds/gianni/GM_TwoWonders.wav         0     0     255   4     0
-definesound GM_ALIENTELE              sounds/gianni/GM_AlienTele.wav          0     0     255   4     0
-definesound GM_HENDRIX                sounds/gianni/GM_Hendrix.wav            0     0     255   4     0
-definesound GM_JAMSSIGNAL             sounds/gianni/GM_JamsSignal.wav         0     0     255   4     0
-definesound GM_MOTHERLODE             sounds/gianni/GM_MotherLode.wav         0     0     255   4     0
-definesound GM_EGGCRACKINTIME         sounds/gianni/GM_EggCrackinTime.wav     0     0     255   4     0
-definesound GM_HURRYUP                sounds/gianni/GM_HurryUp.wav            0     0     255   4     0
-definesound GM_SHAKEITBABY            sounds/gianni/GM_ShakeItBaby.wav        0     0     255   4     0
-definesound GM_ENGAGEMENTS            sounds/gianni/GM_Engagements.wav        0     0     255   4     0
-definesound GM_HAILTOKING             sounds/gianni/GM_HailToKing.wav         0     0     255   4     0
-definesound GM_COOL                   sounds/gianni/GM_Cool.wav               0     0     255   4     0
-definesound GM_WHOWANTSSOME           sounds/gianni/GM_WhoWantsSome.wav       0     0     255   4     0
-definesound GM_HOTBABE                sounds/gianni/GM_HotBabe.wav            0     0     255   4     0
-definesound GM_DONTWORRY              sounds/gianni/GM_DontWorry.wav          0     0     255   4     0
-definesound GM_HOTFOOT                sounds/gianni/GM_HotFoot.wav            0     0     255   4     0
-definesound GM_ASSGOBLIN              sounds/gianni/GM_AssGoblin.wav          0     0     255   4     0
-definesound GM_URANUS                 sounds/gianni/GM_Uranus.wav             0     0     255   4     0
-definesound GM_BETONDUKE              sounds/gianni/GM_BetOnDuke.wav          0     0     255   4     0
-definesound GM_GONNAPAY               sounds/gianni/GM_GonnaPay.wav           0     0     255   4     0
-definesound GM_SIGNCHECKS             sounds/gianni/GM_SignChecks.wav         0     0     255   4     0
-definesound GM_ONMYWAY                sounds/gianni/GM_OnMyWay.wav            0     0     255   4     0
-definesound GM_FAIRFIGHT              sounds/gianni/GM_FairFight.wav          0     0     255   4     0
-definesound GM_STACKEDODDS            sounds/gianni/GM_StackedOdds.wav        0     0     255   4     0
-definesound GM_RESURRECTOVERTIME      sounds/gianni/GM_ResurrectOvertime.wav  0     0     255   4     0
-definesound GM_DERAILED               sounds/gianni/GM_Derailed.wav           0     0     255   4     0
-definesound GM_BULLETSTOKILL          sounds/gianni/GM_BulletsToKill.wav      0     0     255   4     0
-definesound GM_SHOOTMYWAY             sounds/gianni/GM_ShootMyWay.wav         0     0     255   4     0
-definesound GM_TUXEDO                 sounds/gianni/GM_Tuxedo1.wav            0     0     255   4     0
-definesound GM_LAYFINGERS             sounds/gianni/GM_LayFingers.wav         0     0     255   4     0
-definesound GM_IMDUKE                 sounds/gianni/GM_ImDuke.wav             0     0     255   4     0
-definesound GM_OVERHEATALIENS         sounds/gianni/GM_OverheatAliens.wav     0     0     255   4     0
-definesound GM_KICKINGBUTT            sounds/gianni/GM_KickingButt.wav        0     0     255   4     0
-definesound GM_SCRATCHBUTT            sounds/gianni/GM_ScratchButt.wav        0     0     255   4     0
-definesound GM_FINDMYOWNWAY           sounds/gianni/GM_FindMyOwnWay.wav       0     0     255   4     0
+definesound GM_THATSGOTTAHURT         sounds/gianni/GM_ThatsGottaHurt.ogg     0     0     255   4     0
+definesound GM_BACONBITS              sounds/gianni/GM_BaconBits.ogg          0     0     255   4     0
+definesound GM_TIMEMORE               sounds/gianni/GM_TimeMore.ogg           0     0     255   4     0
+definesound GM_LETSROCK               sounds/gianni/GM_LetsRock.ogg           0     0     255   4     0
+definesound GM_NEWHARDWARE            sounds/gianni/GM_NewHardware.ogg        0     0     255   4     0
+definesound GM_LETSROCK2              sounds/gianni/GM_LetsRock2.ogg          0     0     255   4     0
+definesound GM_PLENTYTOKICK           sounds/gianni/GM_PlentyToKick.ogg       0     0     255   4     0
+definesound GM_DUKEOUT                sounds/gianni/GM_DukeOut.ogg            0     0     255   4     0
+definesound GM_ALGAEEATERS            sounds/gianni/GM_AlgaeEaters.ogg        0     0     255   4     0
+definesound GM_WRONGPLANET            sounds/gianni/GM_WrongPlanet.ogg        0     0     255   4     0
+definesound GM_CLOSEENCOUNTER         sounds/gianni/GM_CloseEncounter.ogg     0     0     255   4     0
+definesound GM_BUBBLEGUM              sounds/gianni/GM_BubbleGum.ogg          0     0     255   4     0
+definesound GM_PIECEOFCAKE            sounds/gianni/GM_PieceOfCake.ogg        0     0     255   4     0
+definesound GM_COMEGETSOME            sounds/gianni/GM_ComeGetSome.ogg        0     0     255   4     0
+definesound GM_EGYPTIAN               sounds/gianni/GM_Egyptian.ogg           0     0     255   4     0
+definesound GM_ROCKIN                 sounds/gianni/GM_Rockin.ogg             0     0     255   4     0
+definesound GM_SWITCHFLIPPER          sounds/gianni/GM_SwitchFlipper.ogg      0     0     255   4     0
+definesound GM_SCORPIONKING           sounds/gianni/GM_ScorpionKing.ogg       0     0     255   4     0
+definesound GM_CASEOFCRABS            sounds/gianni/GM_CaseOfCrabs.ogg        0     0     255   4     0
+definesound GM_DAMNIMGOOD             sounds/gianni/GM_DamnImGood.ogg         0     0     255   4     0
+definesound GM_TWOWONDERS             sounds/gianni/GM_TwoWonders.ogg         0     0     255   4     0
+definesound GM_ALIENTELE              sounds/gianni/GM_AlienTele.ogg          0     0     255   4     0
+definesound GM_HENDRIX                sounds/gianni/GM_Hendrix.ogg            0     0     255   4     0
+definesound GM_JAMSSIGNAL             sounds/gianni/GM_JamsSignal.ogg         0     0     255   4     0
+definesound GM_MOTHERLODE             sounds/gianni/GM_MotherLode.ogg         0     0     255   4     0
+definesound GM_EGGCRACKINTIME         sounds/gianni/GM_EggCrackinTime.ogg     0     0     255   4     0
+definesound GM_HURRYUP                sounds/gianni/GM_HurryUp.ogg            0     0     255   4     0
+definesound GM_SHAKEITBABY            sounds/gianni/GM_ShakeItBaby.ogg        0     0     255   4     0
+definesound GM_ENGAGEMENTS            sounds/gianni/GM_Engagements.ogg        0     0     255   4     0
+definesound GM_HAILTOKING             sounds/gianni/GM_HailToKing.ogg         0     0     255   4     0
+definesound GM_COOL                   sounds/gianni/GM_Cool.ogg               0     0     255   4     0
+definesound GM_WHOWANTSSOME           sounds/gianni/GM_WhoWantsSome.ogg       0     0     255   4     0
+definesound GM_HOTBABE                sounds/gianni/GM_HotBabe.ogg            0     0     255   4     0
+definesound GM_DONTWORRY              sounds/gianni/GM_DontWorry.ogg          0     0     255   4     0
+definesound GM_HOTFOOT                sounds/gianni/GM_HotFoot.ogg            0     0     255   4     0
+definesound GM_ASSGOBLIN              sounds/gianni/GM_AssGoblin.ogg          0     0     255   4     0
+definesound GM_URANUS                 sounds/gianni/GM_Uranus.ogg             0     0     255   4     0
+definesound GM_BETONDUKE              sounds/gianni/GM_BetOnDuke.ogg          0     0     255   4     0
+definesound GM_GONNAPAY               sounds/gianni/GM_GonnaPay.ogg           0     0     255   4     0
+definesound GM_SIGNCHECKS             sounds/gianni/GM_SignChecks.ogg         0     0     255   4     0
+definesound GM_ONMYWAY                sounds/gianni/GM_OnMyWay.ogg            0     0     255   4     0
+definesound GM_FAIRFIGHT              sounds/gianni/GM_FairFight.ogg          0     0     255   4     0
+definesound GM_STACKEDODDS            sounds/gianni/GM_StackedOdds.ogg        0     0     255   4     0
+definesound GM_RESURRECTOVERTIME      sounds/gianni/GM_ResurrectOvertime.ogg  0     0     255   4     0
+definesound GM_DERAILED               sounds/gianni/GM_Derailed.ogg           0     0     255   4     0
+definesound GM_BULLETSTOKILL          sounds/gianni/GM_BulletsToKill.ogg      0     0     255   4     0
+definesound GM_SHOOTMYWAY             sounds/gianni/GM_ShootMyWay.ogg         0     0     255   4     0
+definesound GM_TUXEDO                 sounds/gianni/GM_Tuxedo1.ogg            0     0     255   4     0
+definesound GM_LAYFINGERS             sounds/gianni/GM_LayFingers.ogg         0     0     255   4     0
+definesound GM_IMDUKE                 sounds/gianni/GM_ImDuke.ogg             0     0     255   4     0
+definesound GM_OVERHEATALIENS         sounds/gianni/GM_OverheatAliens.ogg     0     0     255   4     0
+definesound GM_KICKINGBUTT            sounds/gianni/GM_KickingButt.ogg        0     0     255   4     0
+definesound GM_SCRATCHBUTT            sounds/gianni/GM_ScratchButt.ogg        0     0     255   4     0
+definesound GM_FINDMYOWNWAY           sounds/gianni/GM_FindMyOwnWay.ogg       0     0     255   4     0
 
 
 
