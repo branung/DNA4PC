@@ -1,1 +1,1 @@
-mapster32.exe -mx scripts/dna4pc.con
+mapster32.exe -x scripts/dna4pc.con

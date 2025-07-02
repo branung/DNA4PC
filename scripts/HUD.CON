@@ -114,7 +114,18 @@
 
 	defstate draw_dna_timer
 	{
-		rotatesprite 160 11 NORMALSIZE 0 5374 0 0 256 0 0 xdim ydim
+		ifvarg eggtimer 0
+		{
+			rotatesprite 139 0 NORMALSIZE 0 5374 0 0 16 0 0 xdim ydim
+			set temp eggtimer
+			div temp 30
+			mod temp 3600
+			set temp2 temp
+			mod temp2 60
+			div temp 60
+			digitalnumber 5386 150 6 temp 0 32 16 0 0 xdim ydim
+			digitalnumber 5386 166 6 temp2 0 32 16 0 0 xdim ydim
+		}
 	}
 	ends
 
@@ -415,7 +426,7 @@ onevent EVENT_DISPLAYREST
 		ifvarg SCREENSIZE 0
 		{
 			state draw_dna_hud
-			//state draw_dna_timer
+			state draw_dna_timer
 		}
 	}
 }
