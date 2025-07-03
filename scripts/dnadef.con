@@ -462,6 +462,129 @@ define GM_OVERHEATALIENS 650
 define GM_KICKINGBUTT 651
 define GM_SCRATCHBUTT 652
 define GM_FINDMYOWNWAY 653
+define GM_ACTIVATEDWEAPON 654
+define GM_ALIENANDSCHOOLGIRL 655
+define GM_ALIENAUTOPSY 656
+define GM_ALIENAUTOPSYEU 657
+define GM_ALIENSANDCAPTIVES 658
+define GM_ALMOSTTOOEASY 659
+define GM_ALOTTATALK 660
+define GM_BEFOREHEDIED 661
+define GM_BEFOREHEDIEDEU 662
+define GM_BETTERGETATEAM 663
+define GM_BETTERGETATEAMEU 664
+define GM_BIGBOSS 665
+define GM_BLOWISTHISSHIP 666
+define GM_BRAINSANDBRAWN 667
+define GM_BREEDINGSTOCK 668
+define GM_CANYOUREADME 669
+define GM_CANYOUREADMEEU 670
+define GM_CHARGINGUP 671
+define GM_CLAMBAKE 672
+define GM_CLOAKINGDEVICE 673
+define GM_CLOAKINGDEVICEEU 674
+define GM_CLONEBAKE 675
+define GM_CONTAINSDETAILS 676
+define GM_CRABCAKES 677
+define GM_CRUSTACEANCRETIN 678
+define GM_CRYINGTOMUMMY 679
+define GM_DAMNTELEMALFUNC 680
+define GM_DATADISK 681
+define GM_DATADISKEU 682
+define GM_DEBRIEFING 683
+define GM_DEJAVU 684
+define GM_DERAILPLANS 685
+define GM_DISTRESSCALL 686
+define GM_DISTRESSCALLEU 687
+define GM_DONTTELLME 688
+define GM_DOYOUREADME 689
+define GM_ENTIREARMYEU 690
+define GM_ENTIREARMY 691
+define GM_EVERYSECPRECIOUS 692
+define GM_FOLLOWTHEIRTRAIL 693
+define GM_FOUNDSCHEMATICS 694
+define GM_FOUNDSCHEMATICSEU 695
+define GM_GOINGTOSTOPTHEM 696
+define GM_GONNAGETOUTTAHERE 697
+define GM_GOTMYHANDSFULL 698
+define GM_GUTSTOMPINTIME 699
+define GM_HAVEABLAST 700
+define GM_HEARDTHATBEFORE 701
+define GM_HELLOFAPARTY 702
+define GM_HELLOFAPARTYEU 703
+define GM_HESINCONTROL 704
+define GM_HOOKEDINTOSYSTEMS 705
+define GM_ILLCONTACTYOU 706
+define GM_ILLFINDSOMEANSWERS 707
+define GM_IMCOMINGFORYOU 708
+define GM_IMIN 709
+define GM_IMINEU 710
+define GM_IMONIT 711
+define GM_INBREDALIENS 712
+define GM_ISEETHEIRPLAN 713
+define GM_ISEETHEIRPLANS2 714
+define GM_ISHUTITDOWN 715
+define GM_JENNY2STANDBY 716
+define GM_JENNY4 717
+define GM_JENNY5ENERGIZE 718
+define GM_KEEPANEYEOUT 719
+define GM_KNOWIMHERE 720
+define GM_LIFEEXPECTANCY 721
+define GM_LIKETHEIDEA 722
+define GM_LOTTASECURITY 723
+define GM_MOSTIMPRESSIVE 724
+define GM_MUSTBETHEWEAPON 725
+define GM_MUTANTMAGGOT 726
+define GM_MYPLACE 727
+define GM_NEVERLEARN 728
+define GM_NICKOFTIME 729
+define GM_NICKOFTIMEEU 730
+define GM_NOPROBLEMO 731
+define GM_NOTGONNABEEASY 732
+define GM_NOTHINGLIKECHALLENGE 733
+define GM_ONEBABEREADY 734
+define GM_OPERAHOUSE 735
+define GM_OPERAHOUSEEU 736
+define GM_OVERANDOUT 737
+define GM_PERMANENTHIBERNATION 738
+define GM_READYTODEFROST 739
+define GM_RESTOFTHEPARTY 740
+define GM_RODGERTHAT 741
+define GM_SATLINK 742
+define GM_SATLINKEU 743
+define GM_SEEWHEREITLEADS 744
+define GM_SELFDESTRUCT 745
+define GM_SHIPORBITINGEARTH 746
+define GM_SHIPORBITINGEARTHEU 747
+define GM_SHOWEREARTHWITHDUKE 748
+define GM_SIGNALJAMMED 749
+define GM_SIZE15BOOT 750
+define GM_SLIPPERYSNAKE 751
+define GM_SOURCEOFINFESTATION 752
+define GM_STARTDOWNLOADING 753
+define GM_STARTDOWNLOADINGEU 754
+define GM_STARTINGTOHEATUP 755
+define GM_STARTINGTOHEATUPEU 756
+define GM_SUBWAYSYSTEM 757
+define GM_SUBWAYSYSTEMEU 758
+define GM_TAKEHERAWAY 759
+define GM_TALKONOTHERSIDE 760
+define GM_TELEBROKE 761
+define GM_TICKTOCK 762
+define GM_TIPOFICEBERG 763
+define GM_TIPOFICEBERGEU 764
+define GM_TOOBUSYDYIN 765
+define GM_TOOLATE 766
+define GM_UNDEROURNOSES 767
+define GM_UNDEROURNOSESEU 768
+define GM_WATCHTHEFIREWORKS 769
+define GM_WHATPARTISBAD 770
+define GM_WHATYOUASKEDFOR 771
+define GM_WHEREHIDING 772
+define GM_WORKOVERTIME 773
+define GM_YOUANDWHATARMY 774
+define GM_YOULOOKFAMILIAR 775
+define GM_YOULOOKFAMILIAREU 776
 //          SOUND TOKEN               SOUND FILE                        Pitch Low--High   Prio  Type  Distance
 definesound GM_THATSGOTTAHURT         sounds/gianni/GM_ThatsGottaHurt.ogg     0     0     255   4     0
 definesound GM_BACONBITS              sounds/gianni/GM_BaconBits.ogg          0     0     255   4     0
@@ -517,7 +640,129 @@ definesound GM_OVERHEATALIENS         sounds/gianni/GM_OverheatAliens.ogg     0 
 definesound GM_KICKINGBUTT            sounds/gianni/GM_KickingButt.ogg        0     0     255   4     0
 definesound GM_SCRATCHBUTT            sounds/gianni/GM_ScratchButt.ogg        0     0     255   4     0
 definesound GM_FINDMYOWNWAY           sounds/gianni/GM_FindMyOwnWay.ogg       0     0     255   4     0
-
+definesound GM_ACTIVATEDWEAPON        sounds/gianni/GM_ActivatedWeapon.ogg    0     0     255   4     0
+definesound GM_ALIENANDSCHOOLGIRL     sounds/gianni/GM_AlienAndSchoolGirl.ogg 0     0     255   4     0
+definesound GM_ALIENAUTOPSY           sounds/gianni/GM_AlienAutopsy.ogg       0     0     255   4     0
+definesound GM_ALIENAUTOPSYEU         sounds/gianni/GM_AlienAutopsyEU.ogg     0     0     255   4     0
+definesound GM_ALIENSANDCAPTIVES      sounds/gianni/GM_AliensAndCaptives.ogg  0     0     255   4     0
+definesound GM_ALMOSTTOOEASY          sounds/gianni/GM_AlmostTooEasy.ogg      0     0     255   4     0
+definesound GM_ALOTTATALK             sounds/gianni/GM_AlottaTalk.ogg         0     0     255   4     0
+definesound GM_BEFOREHEDIED           sounds/gianni/GM_BeforeHeDied.ogg       0     0     255   4     0
+definesound GM_BEFOREHEDIEDEU         sounds/gianni/GM_BeforeHeDiedEU.ogg     0     0     255   4     0
+definesound GM_BETTERGETATEAM         sounds/gianni/GM_BetterGetATeam.ogg     0     0     255   4     0
+definesound GM_BETTERGETATEAMEU       sounds/gianni/GM_BetterGetATeamEU.ogg   0     0     255   4     0
+definesound GM_BIGBOSS                sounds/gianni/GM_BigBoss.ogg            0     0     255   4     0
+definesound GM_BLOWISTHISSHIP         sounds/gianni/GM_BlowIsThisShip.ogg     0     0     255   4     0
+definesound GM_BRAINSANDBRAWN         sounds/gianni/GM_BrainsAndBrawn.ogg     0     0     255   4     0
+definesound GM_BREEDINGSTOCK          sounds/gianni/GM_BreedingStock.ogg      0     0     255   4     0
+definesound GM_CANYOUREADME           sounds/gianni/GM_CanYouReadMe.ogg       0     0     255   4     0
+definesound GM_CANYOUREADMEEU         sounds/gianni/GM_CanYouReadMeEU.ogg     0     0     255   4     0
+definesound GM_CHARGINGUP             sounds/gianni/GM_ChargingUp.ogg         0     0     255   4     0
+definesound GM_CLAMBAKE               sounds/gianni/GM_ClamBake.ogg           0     0     255   4     0
+definesound GM_CLOAKINGDEVICE         sounds/gianni/GM_CloakingDevice.ogg     0     0     255   4     0
+definesound GM_CLOAKINGDEVICEEU       sounds/gianni/GM_CloakingDeviceEU.ogg   0     0     255   4     0
+definesound GM_CLONEBAKE              sounds/gianni/GM_CloneBake.ogg          0     0     255   4     0
+definesound GM_CONTAINSDETAILS        sounds/gianni/GM_ContainsDetails.ogg    0     0     255   4     0
+definesound GM_CRABCAKES              sounds/gianni/GM_CrabCakes.ogg          0     0     255   4     0
+definesound GM_CRUSTACEANCRETIN       sounds/gianni/GM_CrustaceanCretin.ogg   0     0     255   4     0
+definesound GM_CRYINGTOMUMMY          sounds/gianni/GM_CryingToMummy.ogg      0     0     255   4     0
+definesound GM_DAMNTELEMALFUNC        sounds/gianni/GM_DamnTeleMalfunc.ogg    0     0     255   4     0
+definesound GM_DATADISK               sounds/gianni/GM_DataDisk.ogg           0     0     255   4     0
+definesound GM_DATADISKEU             sounds/gianni/GM_DataDiskEU.ogg         0     0     255   4     0
+definesound GM_DEBRIEFING             sounds/gianni/GM_Debriefing.ogg         0     0     255   4     0
+definesound GM_DEJAVU                 sounds/gianni/GM_DejaVu.ogg             0     0     255   4     0
+definesound GM_DERAILPLANS            sounds/gianni/GM_DerailPlans.ogg        0     0     255   4     0
+definesound GM_DISTRESSCALL           sounds/gianni/GM_DistressCall.ogg       0     0     255   4     0
+definesound GM_DISTRESSCALLEU         sounds/gianni/GM_DistressCallEU.ogg     0     0     255   4     0
+definesound GM_DONTTELLME             sounds/gianni/GM_DontTellMe.ogg         0     0     255   4     0
+definesound GM_DOYOUREADME            sounds/gianni/GM_DoYouReadMe.ogg        0     0     255   4     0
+definesound GM_ENTIREARMYEU           sounds/gianni/GM_EntireArmyEU.ogg       0     0     255   4     0
+definesound GM_ENTIREARMY             sounds/gianni/GM_EntireArmy.ogg         0     0     255   4     0
+definesound GM_EVERYSECPRECIOUS       sounds/gianni/GM_EverySecPrecious.ogg   0     0     255   4     0
+definesound GM_FOLLOWTHEIRTRAIL       sounds/gianni/GM_FollowTheirTrail.ogg   0     0     255   4     0
+definesound GM_FOUNDSCHEMATICS        sounds/gianni/GM_FoundSchematics.ogg    0     0     255   4     0
+definesound GM_FOUNDSCHEMATICSEU      sounds/gianni/GM_FoundSchematicsEU.ogg  0     0     255   4     0
+definesound GM_GOINGTOSTOPTHEM        sounds/gianni/GM_GoingToStopThem.ogg    0     0     255   4     0
+definesound GM_GONNAGETOUTTAHERE      sounds/gianni/GM_GonnaGetOuttaHere.ogg  0     0     255   4     0
+definesound GM_GOTMYHANDSFULL         sounds/gianni/GM_GotMyHandsFull.ogg     0     0     255   4     0
+definesound GM_GUTSTOMPINTIME         sounds/gianni/GM_GutStompinTime.ogg     0     0     255   4     0
+definesound GM_HAVEABLAST             sounds/gianni/GM_HaveABlast.ogg         0     0     255   4     0
+definesound GM_HEARDTHATBEFORE        sounds/gianni/GM_HeardThatBefore.ogg    0     0     255   4     0
+definesound GM_HELLOFAPARTY           sounds/gianni/GM_HellOfAParty.ogg       0     0     255   4     0
+definesound GM_HELLOFAPARTYEU         sounds/gianni/GM_HellOfAPartyEU.ogg     0     0     255   4     0
+definesound GM_HESINCONTROL           sounds/gianni/GM_HesInControl.ogg       0     0     255   4     0
+definesound GM_HOOKEDINTOSYSTEMS      sounds/gianni/GM_HookedIntoSystems.ogg  0     0     255   4     0
+definesound GM_ILLCONTACTYOU          sounds/gianni/GM_IllContactYou.ogg      0     0     255   4     0
+definesound GM_ILLFINDSOMEANSWERS     sounds/gianni/GM_IllFindSomeAnswers.ogg 0     0     255   4     0
+definesound GM_IMCOMINGFORYOU         sounds/gianni/GM_ImComingForYou.ogg     0     0     255   4     0
+definesound GM_IMIN                   sounds/gianni/GM_ImIn.ogg               0     0     255   4     0
+definesound GM_IMINEU                 sounds/gianni/GM_ImInEU.ogg             0     0     255   4     0
+definesound GM_IMONIT                 sounds/gianni/GM_ImOnIt.ogg             0     0     255   4     0
+definesound GM_INBREDALIENS           sounds/gianni/GM_InbredAliens.ogg       0     0     255   4     0
+definesound GM_ISEETHEIRPLAN          sounds/gianni/GM_ISeeTheirPlan.ogg      0     0     255   4     0
+definesound GM_ISEETHEIRPLANS2        sounds/gianni/GM_ISeeTheirPlans2.ogg    0     0     255   4     0
+definesound GM_ISHUTITDOWN            sounds/gianni/GM_IShutItDown.ogg        0     0     255   4     0
+definesound GM_JENNY2STANDBY          sounds/gianni/GM_Jenny2StandBy.ogg      0     0     255   4     0
+definesound GM_JENNY4                 sounds/gianni/GM_Jenny4.ogg             0     0     255   4     0
+definesound GM_JENNY5ENERGIZE         sounds/gianni/GM_Jenny5Energize.ogg     0     0     255   4     0
+definesound GM_KEEPANEYEOUT           sounds/gianni/GM_KeepAnEyeOut.ogg       0     0     255   4     0
+definesound GM_KNOWIMHERE             sounds/gianni/GM_KnowImHere.ogg         0     0     255   4     0
+definesound GM_LIFEEXPECTANCY         sounds/gianni/GM_LifeExpectancy.ogg     0     0     255   4     0
+definesound GM_LIKETHEIDEA            sounds/gianni/GM_LikeTheIdea.ogg        0     0     255   4     0
+definesound GM_LOTTASECURITY          sounds/gianni/GM_LottaSecurity.ogg      0     0     255   4     0
+definesound GM_MOSTIMPRESSIVE         sounds/gianni/GM_MostImpressive.ogg     0     0     255   4     0
+definesound GM_MUSTBETHEWEAPON        sounds/gianni/GM_MustBeTheWeapon.ogg    0     0     255   4     0
+definesound GM_MUTANTMAGGOT           sounds/gianni/GM_MutantMaggot.ogg       0     0     255   4     0
+definesound GM_MYPLACE                sounds/gianni/GM_MyPlace.ogg            0     0     255   4     0
+definesound GM_NEVERLEARN             sounds/gianni/GM_NeverLearn.ogg         0     0     255   4     0
+definesound GM_NICKOFTIME             sounds/gianni/GM_NickOfTime.ogg         0     0     255   4     0
+definesound GM_NICKOFTIMEEU           sounds/gianni/GM_NickOfTimeEU.ogg       0     0     255   4     0
+definesound GM_NOPROBLEMO             sounds/gianni/GM_NoProblemo.ogg         0     0     255   4     0
+definesound GM_NOTGONNABEEASY         sounds/gianni/GM_NotGonnaBeEasy.ogg     0     0     255   4     0
+definesound GM_NOTHINGLIKECHALLENGE   sounds/gianni/GM_NothingLikeChallenge.ogg  0     0     255   4     0
+definesound GM_ONEBABEREADY           sounds/gianni/GM_OneBabeReady.ogg       0     0     255   4     0
+definesound GM_OPERAHOUSE             sounds/gianni/GM_OperaHouse.ogg         0     0     255   4     0
+definesound GM_OPERAHOUSEEU           sounds/gianni/GM_OperaHouseEU.ogg       0     0     255   4     0
+definesound GM_OVERANDOUT             sounds/gianni/GM_OverAndOut.ogg         0     0     255   4     0
+definesound GM_PERMANENTHIBERNATION   sounds/gianni/GM_PermanentHibernation.ogg    0     0     255   4     0
+definesound GM_READYTODEFROST         sounds/gianni/GM_ReadyToDefrost.ogg     0     0     255   4     0
+definesound GM_RESTOFTHEPARTY         sounds/gianni/GM_RestOfTheParty.ogg     0     0     255   4     0
+definesound GM_RODGERTHAT             sounds/gianni/GM_RodgerThat.ogg         0     0     255   4     0
+definesound GM_SATLINK                sounds/gianni/GM_Satlink.ogg            0     0     255   4     0
+definesound GM_SATLINKEU              sounds/gianni/GM_SatlinkEU.ogg          0     0     255   4     0
+definesound GM_SEEWHEREITLEADS        sounds/gianni/GM_SeeWhereItLeads.ogg    0     0     255   4     0
+definesound GM_SELFDESTRUCT           sounds/gianni/GM_SelfDestruct.ogg       0     0     255   4     0
+definesound GM_SHIPORBITINGEARTH      sounds/gianni/GM_ShipOrbitingEarth.ogg  0     0     255   4     0
+definesound GM_SHIPORBITINGEARTHEU    sounds/gianni/GM_ShipOrbitingEarthEU.ogg  0     0     255   4     0
+definesound GM_SHOWEREARTHWITHDUKE    sounds/gianni/GM_ShowerEarthWithDuke.ogg  0     0     255   4     0
+definesound GM_SIGNALJAMMED           sounds/gianni/GM_SignalJammed.ogg       0     0     255   4     0
+definesound GM_SIZE15BOOT             sounds/gianni/GM_Size15Boot.ogg         0     0     255   4     0
+definesound GM_SLIPPERYSNAKE          sounds/gianni/GM_SlipperySnake.ogg      0     0     255   4     0
+definesound GM_SOURCEOFINFESTATION    sounds/gianni/GM_SourceOfInfestation.ogg  0     0     255   4     0
+definesound GM_STARTDOWNLOADING       sounds/gianni/GM_StartDownloading.ogg   0     0     255   4     0
+definesound GM_STARTDOWNLOADINGEU     sounds/gianni/GM_StartDownloadingEU.ogg 0     0     255   4     0
+definesound GM_STARTINGTOHEATUP       sounds/gianni/GM_StartingToHeatUp.ogg   0     0     255   4     0
+definesound GM_STARTINGTOHEATUPEU     sounds/gianni/GM_StartingToHeatUpEU.ogg 0     0     255   4     0
+definesound GM_SUBWAYSYSTEM           sounds/gianni/GM_SubwaySystem.ogg       0     0     255   4     0
+definesound GM_SUBWAYSYSTEMEU         sounds/gianni/GM_SubwaySystemEU.ogg     0     0     255   4     0
+definesound GM_TAKEHERAWAY            sounds/gianni/GM_TakeHerAway.ogg        0     0     255   4     0
+definesound GM_TALKONOTHERSIDE        sounds/gianni/GM_TalkOnOtherSide.ogg    0     0     255   4     0
+definesound GM_TELEBROKE              sounds/gianni/GM_TeleBroke.ogg          0     0     255   4     0
+definesound GM_TICKTOCK               sounds/gianni/GM_TickTock.ogg           0     0     255   4     0
+definesound GM_TIPOFICEBERG           sounds/gianni/GM_TipOfIceberg.ogg       0     0     255   4     0
+definesound GM_TIPOFICEBERGEU         sounds/gianni/GM_TipOfIcebergEU.ogg     0     0     255   4     0
+definesound GM_TOOBUSYDYIN            sounds/gianni/GM_TooBusyDyin.ogg        0     0     255   4     0
+definesound GM_TOOLATE                sounds/gianni/GM_TooLate.ogg            0     0     255   4     0
+definesound GM_UNDEROURNOSES          sounds/gianni/GM_UnderOurNoses.ogg      0     0     255   4     0
+definesound GM_UNDEROURNOSESEU        sounds/gianni/GM_UnderOurNosesEU.ogg    0     0     255   4     0
+definesound GM_WATCHTHEFIREWORKS      sounds/gianni/GM_WatchTheFireworks.ogg  0     0     255   4     0
+definesound GM_WHATPARTISBAD          sounds/gianni/GM_WhatPartIsBad.ogg      0     0     255   4     0
+definesound GM_WHATYOUASKEDFOR        sounds/gianni/GM_WhatYouAskedFor.ogg    0     0     255   4     0
+definesound GM_WHEREHIDING            sounds/gianni/GM_WhereHiding.ogg        0     0     255   4     0
+definesound GM_WORKOVERTIME           sounds/gianni/GM_WorkOvertime.ogg       0     0     255   4     0
+definesound GM_YOUANDWHATARMY         sounds/gianni/GM_YouAndWhatArmy.ogg     0     0     255   4     0
+definesound GM_YOULOOKFAMILIAR        sounds/gianni/GM_YouLookFamiliar.ogg    0     0     255   4     0
+definesound GM_YOULOOKFAMILIAREU      sounds/gianni/GM_YouLookFamiliarEU.ogg  0     0     255   4     0
 
 
 // Episodes
