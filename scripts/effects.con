@@ -30,6 +30,7 @@ define enabled 3
 define pre_enable 2
 define pre_disable 1
 define disabled 0
+define pre_complete 5
 define completed 4
 // "pre" reserved for possible transitions
 // "completed" is when actor needs to remain dormant for variables, i.e. small NOP loop
@@ -392,7 +393,7 @@ defstate do_se70
     // Check if we're moving
     checkactivatormotion sprite.hitag
     // Have we already been started?
-    ife temp 1 {
+    ife fx_state enabled {
         // But are we actually stil moving?
         ife RETURN 0 {
             // We've stopped
@@ -402,7 +403,7 @@ defstate do_se70
     } else {
         // We've now stared motion, yes?!
         ife RETURN 1 {
-            set temp 1
+            set fx_state enabled
             ife sector[sprite.sectnum].lotag 17 sets[sprite.sectnum].floorpicnum fx_extra
         }
     }
@@ -503,23 +504,23 @@ ends
 // fx_int2 = Schmitt trigger, timer must be active for 2s before it can be stopped
 // Any existing SE72 (Michael Bay Machine) will be slightly affected when timer runs out.
 defstate do_se73
-    switch fx_int
-        case 0
+    switch fx_state
+        case disabled
             ifg fx_int2 0 sub fx_int2 1
             ife fx_int2 0 {
                 checkactivatormotion sprite.hitag
                 ife RETURN 1 {
-                    set fx_int 1
+                    set fx_state pre_enable
                     set fx_int2 0
                 }
             }
             break
-        case 1
+        case pre_enable
             set eggtimer fx_extra
             mul eggtimer 30
-            set fx_int 2
+            set fx_state enabled
             break
-        case 2
+        case enabled
             sub eggtimer 1
             redefinequote DNA_EGGQUOTE_ON TIMER: %ld:%ld
             set temp eggtimer
@@ -533,17 +534,17 @@ defstate do_se73
             qsprintf DNA_EGGQUOTE_ON DNA_EGGQUOTE_ON temp temp2
             quote DNA_EGGQUOTE_ON
             ife eggtimer 0 {
-                set fx_int 3
+                set fx_state pre_complete
             }
             ifn fx_int2 60 add fx_int2 1
             ife fx_int2 60 checkactivatormotion sprite.hitag
             ife RETURN 1 {
-                set fx_int 0
+                set fx_state disabled
                 set eggtimer -1
                 redefinequote DNA_EGGQUOTE_ON TIMER OFFLINE!
             }
             break
-        case 3
+        case pre_complete
             quote DNA_EGGQUOTE_FAIL
             setu[].vm_sprite player[].I
             spawn MBMACHINE
@@ -551,14 +552,14 @@ defstate do_se73
             addphealth -5
             palfrom 32 64
             ifn player[myconnectindex].dead_flag 0 {
-                set fx_int 4
+                set fx_state completed
                 state standard_pjibs
                 state standard_pjibs
                 state standard_pjibs
                 set fx_int2 1
             }
             break
-        case 4
+        case completed
             
             ife fx_int2 1 {
                 setu[].vm_sprite player[].I

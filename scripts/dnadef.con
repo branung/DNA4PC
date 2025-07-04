@@ -136,9 +136,12 @@ define STAT_CUTCAM 70
 var fx_owner 0 2
 var fx_extra 0 2
 // Otherwise internal (Pretty much like htg_t but without the risks)
+// int int2 = Internal temps, trig = triggered bit, state = which modal state
 var fx_int 0 2
 var fx_int2 0 2
+var fx_trig 0 2
 var fx_state 0 2
+
 
 // For displayrooms stuff & Quake
 var undisplayrooms 0 1
