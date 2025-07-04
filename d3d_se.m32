@@ -556,6 +556,37 @@ ife sprite[h].picnum SECTOREFFECTOR {
             redefinequote  Q_NOTE1 This effect is single use only!
             ifin3dmode { nullop } else { drawcircle16b sprite[h].x sprite[h].y 1536 32 }
             break
+        case 72
+            redefinequote  Q_MENU1 SE %ld : [DN:A] Michael Bay Machine
+                qsprintf Q_MENU1 Q_MENU1 sprite[h].lotag
+            redefinequote  Q_MENU2 Controls quake and explosions, perfect for a dramatic escape sequence!
+            redefinequote  Q_HITAG Pair with activator's LOTAG
+            redefinequote  Q_EXTRA -1 Do notrhing | 1 Just explosions | 2 Just quake | 3 Both
+            redefinequote  Q_NOTE1 If paired with a timer that runs out then it will do gratuitious explosions upon death
+            break
+        case 73
+            redefinequote  Q_MENU1 SE %ld : [DN:A] Deadly egg timer
+                qsprintf Q_MENU1 Q_MENU1 sprite[h].lotag
+            redefinequote  Q_MENU2 Enables a countdown timer, bad things happen upon it reaching zero.
+            redefinequote  Q_MENU3 In DN:A this is paired with SE72 (MBM)
+            redefinequote  Q_HITAG Pair with activator's LOTAG
+            redefinequote  Q_EXTRA Time in seconds
+            break
+            
+        case 74
+            redefinequote  Q_MENU1 SE %ld : [DN:A] Mission killcount counter
+                qsprintf Q_MENU1 Q_MENU1 sprite[h].lotag
+            redefinequote  Q_MENU2 Counts the alive matching actors and fires the hardcoded mission lockbit when none are left
+            redefinequote  Q_HITAG Actor picnum to check for
+            break
+        case 75
+            redefinequote  Q_MENU1 SE %ld : [DN:A] Button counter
+                qsprintf Q_MENU1 Q_MENU1 sprite[h].lotag
+            redefinequote  Q_MENU2 Counts buttons and outputs a trigger once all have been pressed
+            redefinequote  Q_HITAG Pair with activator's LOTAG
+            redefinequote  Q_EXTRA What to trigger once all have been used
+            break
+            
         case 128:
             redefinequote  Q_MENU1 SE 128 : [!RESERVED!] Adjust wall 0 
             redefinequote  Q_MENU2 Adjusts wall 0 by increasing overtile texture by one and remove most cstat bits

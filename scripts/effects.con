@@ -449,13 +449,9 @@ defstate do_se72
     switch fx_state
         case disabled
             // Check if we need to enable
-            ifg fx_int2 0 sub fx_int2 1
-            ife fx_int2 0 {
-                checkactivatormotion sprite.hitag
-                ife RETURN 1 {
-                    set fx_state enabled
-                    ifand fx_extra 2 set kcsunshinemode 1
-                }
+            ife fx_activate[sprite[].hitag] 1 {
+                set fx_state enabled
+                ifand fx_extra 2 set kcsunshinemode 1
             }
             break
         case enabled
@@ -482,15 +478,11 @@ defstate do_se72
             }
             
             // Check if we need to disabled
-            ifn fx_int2 60 add fx_int2 1
-            ife fx_int2 60 {
-                checkactivatormotion sprite.hitag
-                ife RETURN 1 {
-                    set fx_state disabled
-                    set fx_int2 60
-                    set kcsunshinemode 0
-                    set undisplayrooms 0
-                }
+            ife fx_activate[fx_owner] 1 {
+                set fx_state disabled
+                set fx_int2 60
+                set kcsunshinemode 0
+                set undisplayrooms 0
             }
             break
     endswitch
@@ -506,14 +498,7 @@ ends
 defstate do_se73
     switch fx_state
         case disabled
-            ifg fx_int2 0 sub fx_int2 1
-            ife fx_int2 0 {
-                checkactivatormotion sprite.hitag
-                ife RETURN 1 {
-                    set fx_state pre_enable
-                    set fx_int2 0
-                }
-            }
+            ife fx_activate[sprite[].hitag] 1 set fx_state pre_enable
             break
         case pre_enable
             set eggtimer fx_extra
@@ -530,15 +515,12 @@ defstate do_se73
             mod temp2 60
             div temp 60
             
-            
             qsprintf DNA_EGGQUOTE_ON DNA_EGGQUOTE_ON temp temp2
             quote DNA_EGGQUOTE_ON
             ife eggtimer 0 {
                 set fx_state pre_complete
             }
-            ifn fx_int2 60 add fx_int2 1
-            ife fx_int2 60 checkactivatormotion sprite.hitag
-            ife RETURN 1 {
+            ife fx_activate[fx_owner] 1 {
                 set fx_state disabled
                 set eggtimer -1
                 redefinequote DNA_EGGQUOTE_ON TIMER OFFLINE!
@@ -560,7 +542,6 @@ defstate do_se73
             }
             break
         case completed
-            
             ife fx_int2 1 {
                 setu[].vm_sprite player[].I
                 spawn MBMACHINE
@@ -620,8 +601,7 @@ ends
 defstate do_se75
     switch fx_state
         case disabled
-            checkactivatormotion sprite.hitag
-            ife RETURN 1 {
+            ife fx_activate[sprite[].hitag] 1 {
                 set fx_state enabled
             }
             break
@@ -638,7 +618,7 @@ defstate do_se75
             }
             ife triggercounter 0 {
                 ifn fx_extra -1 {
-                    addlogvar fx_extra
+                    //addlogvar fx_extra
                     operateactivators fx_extra 0
                 }
                 getplayer[].got_access lockbits
@@ -817,11 +797,24 @@ appendevent EVENT_WORLD
     // Handle screenshake & rotation for quake, enabled from SE72. THIS WILL OVERWRITE DRAWROOMS!
     ife kcsunshinemode 1 state rot_quake_handler
     
+    // Emtpy arrays
+    resizearray fx_activate 0
+    resizearray fx_activate 65535
+
     //// DEBUGDEBUGDEBUG
     //redefinequote 1 triggercounter: %ld
     //qsprintf 1 1 triggercounter
     //quote 1
 endevent
+
+//// --------- RAN AGAINST MATCHING STAT_ACTIVATOR ---------
+// When lotag of a sprite with STAT_ACTIVATOR gets matched. i.e. buttons/touchplates
+appendevent EVENT_OPERATEACTIVATORS
+    setarray fx_activate[sprite[].lotag] 1
+    addlogvar fx_activate[sprite[].lotag]
+endevent
+
+
 
 //// --------- RAN ON ACTOR SPAWN ---------
 // Probably will be moved to respective eventloadactors
