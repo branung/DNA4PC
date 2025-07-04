@@ -114,7 +114,18 @@
 
 	defstate draw_dna_timer
 	{
-		rotatesprite 160 11 NORMALSIZE 0 5374 0 0 256 0 0 xdim ydim
+		ifvarg eggtimer 0
+		{
+			rotatesprite 139 0 NORMALSIZE 0 5374 0 0 16 0 0 xdim ydim
+			set temp eggtimer
+			div temp 30
+			mod temp 3600
+			set temp2 temp
+			mod temp2 60
+			div temp 60
+			digitalnumber 5386 150 6 temp 0 32 16 0 0 xdim ydim
+			digitalnumber 5386 166 6 temp2 0 32 16 0 0 xdim ydim
+		}
 	}
 	ends
 
@@ -122,10 +133,10 @@ defstate dna_camera_hud
 	setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
     rotatesprite 160 170 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
     rotatesprite 31 170 65536 0 CUTSCENE_SPRITE 0 0 2 0 0 xdim ydim
-    screentext 2822 60 153 65536 0 0 291 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
-    screentext 2822 60 163 65536 0 0 292 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
-    screentext 2822 60 173 65536 0 0 293 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
-    screentext 2822 60 183 65536 0 0 294 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
+    screentext 2822 55 153 65536 0 0 291 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
+    screentext 2822 55 163 65536 0 0 292 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
+    screentext 2822 55 173 65536 0 0 293 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
+    screentext 2822 55 183 65536 0 0 294 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
 ends
 
 
@@ -415,7 +426,7 @@ onevent EVENT_DISPLAYREST
 		ifvarg SCREENSIZE 0
 		{
 			state draw_dna_hud
-			//state draw_dna_timer
+			state draw_dna_timer
 		}
 	}
 }
