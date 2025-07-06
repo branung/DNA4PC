@@ -138,6 +138,7 @@ var fx_extra 0 2
 // Otherwise internal (Pretty much like htg_t but without the risks)
 // int int2 = Internal temps, state = which modal state
 array fx_activate 65536 GAMEARRAY_RESTORE GAMEARRAY_BOOLEAN
+array fx_preactivate 65536 GAMEARRAY_RESTORE GAMEARRAY_BOOLEAN
 var fx_int 0 2
 var fx_int2 0 2
 var fx_state 0 2

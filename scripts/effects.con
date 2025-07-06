@@ -507,7 +507,7 @@ defstate do_se73
             break
         case enabled
             sub eggtimer 1
-            redefinequote DNA_EGGQUOTE_ON TIMER: %ld:%ld
+            //redefinequote DNA_EGGQUOTE_ON TIMER: %ld:%ld
             set temp eggtimer
             div temp 30
             mod temp 3600
@@ -515,15 +515,15 @@ defstate do_se73
             mod temp2 60
             div temp 60
             
-            qsprintf DNA_EGGQUOTE_ON DNA_EGGQUOTE_ON temp temp2
-            quote DNA_EGGQUOTE_ON
+            //qsprintf DNA_EGGQUOTE_ON DNA_EGGQUOTE_ON temp temp2
+            //quote DNA_EGGQUOTE_ON
             ife eggtimer 0 {
                 set fx_state pre_complete
             }
             ife fx_activate[fx_owner] 1 {
                 set fx_state disabled
                 set eggtimer -1
-                redefinequote DNA_EGGQUOTE_ON TIMER OFFLINE!
+                //redefinequote DNA_EGGQUOTE_ON TIMER OFFLINE!
             }
             break
         case pre_complete
@@ -644,20 +644,71 @@ ends
 defstate do_se76
     switch fx_state
         case disabled
-            ifl fx_int2 15 add fx_int2 1
-            ife fx_int2 1 {
+            ifl fx_int2 30 add fx_int2 1
+            ife fx_int2 30 {
                 dist temp THISACTOR player[].i
-                ifl temp 10240 {
-                    set fx_state enabled
+                ifl temp 5120 {
+                    set fx_state pre_enable
                     set fx_int2 0
                 }
             }
             break
-        //case pre_enable
-        //    neartag player.posx player.posy player.posz player.cursectnum player.ang sprite.sectnum temp temp temp 256 1
-        //    
-        //case completed
+        case pre_enable
+            set fx_int -1
+            set temp player.posz
+            add temp 256
+            ifl temp sector[fx_owner].floorz {
+                ife player.cursectnum fx_owner set fx_int 1
+            } else {
+                neartag player.posx player.posy player.posz player.cursectnum player.ang fx_int temp temp temp 256 1
+            }
+            
+            ifg fx_int -1 {
+                set fx_state enabled
+                operatesectors fx_owner 0
+                sound sprite[].hitag
+                set fx_int2 0
+                set temp sector[fx_owner].floorz
+                nextsectorneighborz fx_owner sector[fx_owner].floorz 1 1
+                sub temp sector[RETURN].floorz
+                abs temp
+                div temp 1200
+                sub fx_int2 temp
+            }
+            break
+        case enabled
+            ifl fx_int2 fx_extra add fx_int2 1
+            ife fx_int2 fx_extra {
+                quote 2
+                operatesectors fx_owner 0
+                sound sprite[].hitag
+                set fx_int2 0
+                set fx_state pre_disable
+                
+                set temp sector[fx_owner].floorz
+                nextsectorneighborz fx_owner sector[fx_owner].floorz 1 -1
+                sub temp sector[RETURN].floorz
+                abs temp
+                div temp 1200
+                sub fx_int2 temp
+            }
+            break
+        case pre_disable
+            add fx_int2 1
+            ifl fx_int2 fx_extra add fx_int2 1
+            ife fx_int2 fx_extra {
+                set fx_state disabled
+                set fx_int2 0
+            }
+            ifn player.cursectnum fx_owner {
+                set fx_state disabled
+                set fx_int2 0
+            }
+            break
     endswitch
+    //redefinequote 1 Thisvalue %ld
+    //qsprintf 1 1 fx_int
+    //quote 1
 ends
 
 
@@ -671,14 +722,6 @@ appendevent EVENT_PRELEVEL
         mul ambsndtimer 120
         add ambsndtimer totalclock
     }
-    // Reset some evil flags
-    set eggtimer -1
-    set kcsunshinemode 0
-    set undisplayrooms 0
-    set triggercounter 0
-    // Bobsound
-    set bobsndtimer 1024
-    set bobsndinverse 1
 endevent
 
 // Quickly do things to actors before they get muddled by the game code
@@ -740,6 +783,13 @@ eventloadactor SECTOREFFECTOR
         geta [RETURN].sectnum temp
         add temp 9999
         seta [RETURN].lotag temp
+        set fx_int 0
+        set fx_int2 0
+        set fx_owner i
+        
+        ife fx_extra -1 set fx_extra 90
+        sets[i].extra 300
+        ife sprite.hitag 0 seta[THISACTOR].hitag 436
     }
     
 enda
@@ -757,6 +807,14 @@ appendevent EVENT_ENTERLEVEL
     getactor[THISACTOR].mdflags temp
     or temp 16
     setactor[THISACTOR].mdflags temp
+    // Reset some evil flags
+    set eggtimer -1
+    set kcsunshinemode 0
+    set undisplayrooms 0
+    set triggercounter 0
+    // Bobsound
+    set bobsndtimer 1024
+    set bobsndinverse 1
 endevent
 
 
@@ -784,6 +842,7 @@ appendevent EVENT_WORLD
                 ife sprite[i].lotag 73 state do_se73
                 ife sprite[i].lotag 74 state do_se74
                 ife sprite[i].lotag 75 state do_se75
+                ife sprite[i].lotag 76 state do_se76
                 break
         endswitch
     }
@@ -797,21 +856,19 @@ appendevent EVENT_WORLD
     // Handle screenshake & rotation for quake, enabled from SE72. THIS WILL OVERWRITE DRAWROOMS!
     ife kcsunshinemode 1 state rot_quake_handler
     
-    // Emtpy arrays
-    resizearray fx_activate 0
-    resizearray fx_activate 65535
-
-    //// DEBUGDEBUGDEBUG
-    //redefinequote 1 triggercounter: %ld
-    //qsprintf 1 1 triggercounter
-    //quote 1
+    
+    
+    // Empty arrays
+    swaparrays fx_preactivate fx_activate
+    resizearray fx_preactivate 0
+    resizearray fx_preactivate 65535
 endevent
 
 //// --------- RAN AGAINST MATCHING STAT_ACTIVATOR ---------
 // When lotag of a sprite with STAT_ACTIVATOR gets matched. i.e. buttons/touchplates
 appendevent EVENT_OPERATEACTIVATORS
-    setarray fx_activate[sprite[].lotag] 1
-    addlogvar fx_activate[sprite[].lotag]
+    setarray fx_preactivate[sprite[].lotag] 1
+    addlogvar fx_preactivate[sprite[].lotag]
 endevent
 
 
