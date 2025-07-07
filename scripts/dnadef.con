@@ -808,8 +808,21 @@ restrict.mid xplasma.mid alienz.mid music/DesertMaze.ogg thecall.mid gloomy.mid 
 
 
 // Overwrites for the main game definitions
-redefinequote 54        MP5!
-redefinequote 63        AMMO FOR MP5!
+definequote 19        +100 HEALTH
+//definequote 38        +50 ARMOR //Armor value needs to be changed to reflect this 
+definequote 54        MP5
+definequote 55        PIPE BOMB
+definequote 56        RPG
+definequote 59        FREEZE GUN
+definequote 60        SHRINK RAY
+definequote 61        +10 HEALTH
+//definequote 62        +25 HEALTH //Health value needs to be changed from default +30 to reflect this
+definequote 63        MP5 AMMO
+definequote 64        5 ROCKETS
+definequote 65        AMMO CLIP
+//definequote 66        AMMO FOR FREEZETHROWER! //Freeze and Shrink Rays share the same ENERGY CLIP ammo in orignal. Quotes can be updated to that or a seperate version of each
+definequote 69        10 SHELLS
+//definequote 78        AMMO FOR SHRINKER
 
 definesound CAPT_ATTACK                 sounds/weapon/mp5fire.wav            -80   -80    3     0     0
 definesound PISTOL_FIRE                 sounds/weapon/pistol.wav             -80   -80    3     0     0
@@ -819,6 +832,7 @@ definesound ACTOR_SHRINKING             sounds/weapon/shrinker.wav           -80
 definesound PIPEBOMB_BOUNCE             sounds/weapon/bounce.wav             -80   -80    3     0     0
 definesound TELEPORTER                  sounds/env/teleport.wav              -80   -80    3     0     0
 definesound PISTOL_RICOCHET             sounds/weapon/ricochet.wav           -80   -80    3     0     0
+definesound CHAINGUN_FIRE               sounds/weapon/mp5fire.wav            -80   -80    3     0     0
 definesound SHOTGUN_COCK                sounds/weapon/shotguncock.wav        -80   -80    3     0     0
 definesound SHOTGUN_FIRE                sounds/weapon/shotgunfire.wav        -80   -80    3     0     0
 definesound SELECT_WEAPON               sounds/weapon/shotguncock.wav        -80   -80    3     0     0
