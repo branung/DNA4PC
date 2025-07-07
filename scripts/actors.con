@@ -15,6 +15,11 @@ ends
 
 gamevar explosion_snd 0 1
 
+defstate dna_getcode
+// This needs to replace stuff later on!
+    state getcode
+ends
+
 
 // Moved from GAME.CON
 actor LEAD_CANNON_SPRITE
@@ -195,10 +200,7 @@ useractor enemy A51ALARM 0 A51ALARMON
 enda
 
 
-defstate dna_getcode
-// This needs to replace stuff later on!
-    state getcode
-ends
+
 
 
 //// --------- KEYITEM ACTOR ---------
@@ -245,7 +247,6 @@ defstate access_shared
                             
                             ifn sprite.hitag 0 { operateactivators sprite.hitag -1 }
                             quote DNA_KEYQUOTE
-                            addlogvar temp
                             state getcode
                         }
                     }
@@ -401,3 +402,112 @@ useractor notenemy MBMACHINE 0
         }
     }
 enda
+
+// extra = -1 single use, Positive number is ticks to wait until re-trigger is allowed (+30t recommended)
+// owner = set positive to autoclose immediately after extra
+// fx_int = auto-forced toggle counter
+// fx_int2 = touch toggler allower
+// temp = use has been requested for this tick
+
+defstate switchcode
+    switch fx_state
+        case disabled
+            // If player touches or presses space then approve change
+            set temp 0
+            ifpdistg 1024 set fx_int2 0
+            ifpdistl 768 ifp pfacing ife fx_int2 0 set temp 1
+            ifpdistl 1024 ifp pfacing ifhitspace set temp 1
+            ife temp 1 set fx_state pre_enable
+            break
+        case pre_enable
+            ifhitspace {
+                nullop
+            } else {
+                // Visuals & Audio
+                sound fx_hitag
+                geta .picnum temp
+                add temp 1
+                seta .picnum temp
+                // Activation
+                operateactivators fx_lotag 0
+                // Setup delays to wait for force-return or imposed wait
+                ife fx_extra -1 {
+                    set fx_state completed
+                } else {
+                    ifn fx_owner -1 set fx_int fx_extra else set fx_int 0
+                    set fx_int2 30
+                    set fx_state enabled
+                }
+            }
+            break
+        case enabled
+            // Have timers ran out?
+            set temp 0
+            ifpdistg 1024 set fx_int2 0
+            ifpdistl 512 ifp pfacing ife fx_int2 0 set temp 1
+            ifn fx_owner -1 {
+                ifg fx_int 0 sub fx_int 1
+                ife fx_int 0 set temp 1
+            }
+            ifpdistl 1024 ifp pfacing ife fx_int 0 ifhitspace set temp 1
+            ife temp 1 set fx_state pre_disable
+            break
+        case pre_disable
+            ifhitspace {
+                nullop
+            } else {
+                sound fx_hitag
+                set fx_state disabled
+                geta .picnum temp
+                sub temp 1
+                seta .picnum temp
+                operateactivators fx_lotag 0
+                set fx_int2 30
+                set fx_state disabled
+            }
+            break
+        case completed
+            break
+    endswitch
+ends
+
+
+defstate switchload
+    geta .cstat temp
+    ifand temp 2 seta .cstat 32768
+    geta .owner fx_owner
+    geta .extra fx_extra
+    seta .owner -1
+    seta .extra -1
+    set fx_state disabled
+    set fx_int2 30
+    set fx_int fx_owner
+    geta .hitag temp
+    ife temp 0 {
+        set fx_hitag 431
+    } else {
+        set fx_hitag temp
+    }
+    seta .hitag 0
+    geta .lotag fx_lotag
+    seta .lotag 0
+ends
+
+action ACTION_SWOFF 1 1 1 1 1
+
+eventloadactor DNA_SWITCH1A state switchload enda
+eventloadactor DNA_SWITCH1B state switchload enda
+eventloadactor DNA_SWITCH2A state switchload enda
+eventloadactor DNA_SWITCH2B state switchload enda
+eventloadactor DNA_SWITCH3A state switchload enda
+eventloadactor DNA_SWITCH3B state switchload enda
+eventloadactor DNA_SWITCH4A state switchload enda
+eventloadactor DNA_SWITCH4B state switchload enda
+useractor notenemy DNA_SWITCH1A 0 state switchcode enda
+useractor notenemy DNA_SWITCH1B 0 state switchcode enda
+useractor notenemy DNA_SWITCH2A 0 state switchcode enda
+useractor notenemy DNA_SWITCH2B 0 state switchcode enda
+useractor notenemy DNA_SWITCH3A 0 state switchcode enda
+useractor notenemy DNA_SWITCH3B 0 state switchcode enda
+useractor notenemy DNA_SWITCH4A 0 state switchcode enda
+useractor notenemy DNA_SWITCH4B 0 state switchcode enda

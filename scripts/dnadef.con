@@ -94,6 +94,15 @@ var cutscene_temp 0 0
 var in_cutscene 0 0
 // Moved from dna4pc.con
 
+// Effect state
+var s_state 0 0
+define enabled 3
+define pre_enable 2
+define pre_disable 1
+define disabled 0
+define pre_complete 5
+define completed 4
+
 
 // Common iterators
 var i 0 0
@@ -128,13 +137,28 @@ define DNA_YELLOWKEY 3944
 define DNA_KEYQUOTE 300
 definequote DNA_KEYQUOTE
 
+// Switch/Button actors
+define DNA_SWITCH1A 5671
+define DNA_SWITCH1B 5672
+define DNA_SWITCH2A 5673
+define DNA_SWITCH2B 5674
+define DNA_SWITCH3A 5675
+define DNA_SWITCH3B 5676
+define DNA_SWITCH4A 5677
+define DNA_SWITCH4B 5678
+
 // For cutscene cameras
 define STAT_CUTCAM 70
 
 // EFFECT USE ACTORVARS
 // Mapper placed
+var fx_hitag 0 2
+var fx_lotag 0 2
 var fx_owner 0 2
 var fx_extra 0 2
+var fx_xvel 0 2
+var fx_yvel 0 2
+var fx_zvel 0 2
 // Otherwise internal (Pretty much like htg_t but without the risks)
 // int int2 = Internal temps, state = which modal state
 array fx_activate 65536 GAMEARRAY_RESTORE GAMEARRAY_BOOLEAN

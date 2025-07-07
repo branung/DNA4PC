@@ -24,14 +24,7 @@ var s_wang 0 0
 var s_sectshade 0 0
 var s_tempshade 0 0
 var s_tempvis 0 0
-// Effect state
-var s_state 0 0
-define enabled 3
-define pre_enable 2
-define pre_disable 1
-define disabled 0
-define pre_complete 5
-define completed 4
+
 // "pre" reserved for possible transitions
 // "completed" is when actor needs to remain dormant for variables, i.e. small NOP loop
 
@@ -638,7 +631,6 @@ ends
 
 //// -- SE76: DOOM style elevators --
 // Goes down at a fixed speed, waits, returns
-// Goes up at a fixed speed, waits, returns
 // disabled is player distance polling, if close by then do more frequent checks
 // fx_int2 = timers, fx_int = internal tracking
 defstate do_se76
@@ -706,9 +698,6 @@ defstate do_se76
             }
             break
     endswitch
-    //redefinequote 1 Thisvalue %ld
-    //qsprintf 1 1 fx_int
-    //quote 1
 ends
 
 
@@ -755,7 +744,6 @@ eventloadactor SECTOREFFECTOR
     
     ife sprite.lotag 75 {
         add triggercounter 1
-        addlogvar triggercounter
     }
     
     ife sprite.lotag 76 {
@@ -776,8 +764,6 @@ eventloadactor SECTOREFFECTOR
         div fx_int2 temp2
         seta[THISACTOR].x fx_int
         seta[THISACTOR].y fx_int2
-        addlogvar fx_int
-        addlogvar fx_int2
         
         espawn ACTIVATOR
         geta [RETURN].sectnum temp
@@ -868,7 +854,7 @@ endevent
 // When lotag of a sprite with STAT_ACTIVATOR gets matched. i.e. buttons/touchplates
 appendevent EVENT_OPERATEACTIVATORS
     setarray fx_preactivate[sprite[].lotag] 1
-    addlogvar fx_preactivate[sprite[].lotag]
+    //addlogvar fx_preactivate[sprite[].lotag]
 endevent
 
 
