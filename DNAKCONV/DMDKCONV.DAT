@@ -2072,13 +2072,13 @@ ZZZFACE9,RWDMON10
 ; Note: all 9XXX require additional conversion by the converter
 
    1,9999                ;Player 1 start
-   1,  57                ;
+   1,  1405                ;
    2,9998                ;Player 2 start
-   2,  57                ;
+   2,  1405                ;
    3,9998                ;Player 3 start
-   3,  57                ;
+   3,  1405                ;
    4,9998                ;Player 4 start
-   4,  57                ;
+   4,  1405                ;
   14,9997                ;Teleport landing. Where things land when teleport to its SECTOR
   11,1405, 0,  2         ;Deathmatch start positions. Should have >= 4/level
 3004,1682                ;FORMER HUMAN: regular pistol-shooting zombieman
@@ -2236,13 +2236,13 @@ ZZZFACE9,RWDMON10
   21010, 54
   21011, 54
   21012, 3919      ;Armor Bonus
-  21013, 1062
+  21013, 4060      ;Duke Advance Trash Can
   21014, 916
   21015, 4056      ;Duke Advance Explosive Tank
   21016, 556       ;Duke Advance Office Chair
   21017, 4050      ;Duke Advance Barrel
   21018, 3939      ;Duke Advance Gas Pump
-  21019, 969
+  21019, 3659      ;Duke Advance Hydro Plant
   21020, 569
   21021, 571
   21022, 3918        ;Duke Advance Health Pack Small
@@ -2286,7 +2286,7 @@ ZZZFACE9,RWDMON10
   21060, 1820			 ;Duke Advance Octobrain
   21061, 5296			 ;Duke Advance Boss2
   21062, 5255			 ;Duke Advance Boss1
-  21063, 5255			 ;Duke Advance Boss3
+  21063, 4001			 ;Duke Advance Boss4
   21064, 5119			 ;Duke Advance Grey
   21065, 1681			 ;Duke Advance Troopers
   21066, 2000			 ;Duke Advance Pig Cops

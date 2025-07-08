@@ -24,6 +24,8 @@ define LONGMONITORBROKE 3696
 define GASPUMP 3939
 define DNANUKEBARREL 4050
 define DNAGASCYLINDER 4056
+define DNAHYDROPLANT 3659
+define DNATRASHCAN 4060
 
 damageeventtilerange TERMINAL1 TERMINALBROKE
 damageeventtilerange TERMINAL2 TERMINALBROKE
@@ -136,4 +138,54 @@ actor DNAGASCYLINDER 26
   }
   ifhitweapon
     action DNAGASCYLINDERFRAME
+enda
+
+action TRASHCANBROKE     1   1   1   1  10
+actor DNATRASHCAN 26
+  fall
+  sizeat 48 48
+  cstator 257 
+  ifaction TRASHCANBROKE
+  {
+      break
+  }
+  ifsquished
+  {
+    debris SCRAP1 5
+    break
+  }
+  ifhitweapon
+  {
+    //sound PIPEBOMB_EXPLODE
+    action TRASHCANBROKE
+  }
+enda
+
+action DNAHYDROPLANTBREAKING     0   5   1   1  15
+action DNAHYDROPLANTBROKE        4   1   1   1  10
+actor DNAHYDROPLANT 26
+  fall
+  sizeat 48 48
+  cstator 257 
+  ifaction DNAHYDROPLANTBREAKING
+  {
+      ifactioncount 4
+      {
+        action DNAHYDROPLANTBROKE
+      }
+  }
+  ifaction DNAHYDROPLANTBROKE
+  {
+      break
+  }
+  ifsquished
+  {
+    debris SCRAP1 5
+    break
+  }
+  ifhitweapon
+  {
+    //sound PIPEBOMB_EXPLODE
+    action DNAHYDROPLANTBREAKING
+  }
 enda
