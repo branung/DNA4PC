@@ -2,7 +2,8 @@ setdefname dna.def
 
 gamevar dna_localization 0 // 0 is the US script. run 'setvar dna_localization 1' in console while ingame for the EU localization
 gamevar dna_dukecutscenevoc 0 // 0 means no Duke voice lines play in cutscenes, 1 means 3D voice clips are played, 2 means Gianni voice lines are used
-gamevar dna_menu_tutorial 0 
+gamevar dna_menu_tutorial 0 // 0 tells the game to show the prompt telling the player to open the mod menu. Once pressed it is set to 1 so it never shows up again
+gamevar dna_level_music 0 // 0 means the music specifically for the levels will play. Setting it to 1 disables level music, meaning only menus and cutscenes will have music like in the original 
 
 // Actors and their projectiles
 define GREY 5119
@@ -213,6 +214,7 @@ definequote 130  +5 HEALTH
 
 //gamevar for checking music before playing cutscene
 gamevar currmusic 0
+gamevar currmusiclv 0
 // Ambience randomizer
 var ambsndtimer 0 0
 // Player bobcounter

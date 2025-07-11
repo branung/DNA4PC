@@ -11,7 +11,7 @@
 		ifvarn dna_menu_tutorial 0 nullop
 		else
 		{
-			gametextz 2822 120 48 1020 0 0 16 0 0 xdim ydim 49152
+			screentext 2822 60 48 49152 0 0 1020 0 0 16 0 5 0 0 0 0 0 0 xdim ydim
 		}
 	}
 	ends
@@ -179,7 +179,7 @@ setvar RETURN -1
 endevent
 
 definequote 1001 Localization
-definequote 1002 ------------
+definequote 1002 Level Music
 definequote 1003 Cutscene Duke Voice
 definequote 1004 Exit
 definequote 1005 US
@@ -207,36 +207,46 @@ onevent EVENT_DISPLAYREST
 
 		ifvare dna_menu 1 // main menu
 		{
+			setvar y 48
 			rotatesprite 160 12 32768 0 2498 0 0 2 0 0 xdim ydim // Advance graphic
 			rotatesprite 160 30 65536 0 3934 0 0 2 0 0 xdim ydim // Options graphic
 			rotatespritea 160 90 81920 0 3933 0 0 2 80 0 0 xdim ydim // Menu graphic
 
 			//Control hint graphic
 			rotatespritea 160 200 65536 0 CUTSCENE_DIALOGBOX 0 0 2 80 0 0 xdim ydim
-			gametextz 2822 125 177 1010 0 0 16 0 0 xdim ydim 49152
-			gametextz 2822 40 187 1011 0 0 16 0 0 xdim ydim 49152
+			screentext 2822 65 177 49152 0 0 1010 shade 0 16 0 5 0 0 0 0 0 0 xdim ydim
+			screentext 2822 20 187 49152 0 0 1011 shade 0 16 0 5 0 0 0 0 0 0 xdim ydim
 
 			ifvare dna_menu_selected 0 setvar shade 15 else setvar shade 0 // Localization
-			gametextz 2822 130 48 1001 shade 0 16 0 0 xdim ydim 49152
+			screentext 2822 65 y 49152 0 0 1001 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			ifvare dna_localization 0 redefinequote 1005 US 
 			else redefinequote 1005 EU
 			ifvare dna_menu_selected 0 setvar shade 15 else setvar shade 0 // Localization Selection
-			gametextz 2822 460 48 1005 shade 0 16 0 0 xdim ydim 49152
+			screentext 2822 230 y 49152 0 0 1005 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
-			ifvare dna_menu_selected 1 setvar shade 15 else setvar shade 0 // Audio Mix
-			gametextz 2822 130 56 1002 shade 0 16 0 0 xdim ydim 49152
+			addvar y 8
+			ifvare dna_menu_selected 1 setvar shade 15 else setvar shade 0 // Level Music
+			screentext 2822 65 y 49152 0 0 1002 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+			ifvare dna_level_music 0 redefinequote 1006 ON 
+			else redefinequote 1006 OFF
+			ifvare dna_menu_selected 1 setvar shade 15 else setvar shade 0 // Level Music Selection
+			screentext 2822 230 y 49152 0 0 1006 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+			addvar y 8
 			ifvare dna_menu_selected 2 setvar shade 15 else setvar shade 0 // Cutscene Duke Voice
-			gametextz 2822 130 64 1003 shade 0 16 0 0 xdim ydim 49152
+			screentext 2822 65 y 49152 0 0 1003 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			ifvare dna_dukecutscenevoc 0 redefinequote 1007 OFF 
 			else ifvare dna_dukecutscenevoc 1 redefinequote 1007 3D
 			else redefinequote 1007 GIANNI
 			ifvare dna_menu_selected 2 setvar shade 15 else setvar shade 0 // Cutscene Duke Voice Selection
-			gametextz 2822 460 64 1007 shade 0 16 0 0 xdim ydim 49152
+			screentext 2822 230 y 49152 0 0 1007 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
+			addvar y 8
 			ifvare dna_menu_selected 3 setvar shade 15 else setvar shade 0 // Exit
-			gametextz 2822 130 72 1004 shade 0 16 0 0 xdim ydim 49152
+			screentext 2822 65 y 49152 0 0 1004 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 			
 
 			ifvare dna_menu_selected 0
@@ -289,10 +299,10 @@ onevent EVENT_DISPLAYREST
 			}
 
 			setvar shade 0 
-			gametextz 2822 100 88 1006 shade 0 16 0 0 xdim ydim 49152 // Setting Info 1
-			gametextz 2822 100 96 1007 shade 0 16 0 0 xdim ydim 49152 // Setting Info 2
-			gametextz 2822 100 104 1008 shade 0 16 0 0 xdim ydim 49152 // Setting Info 3
-			gametextz 2822 100 112 1009 shade 0 16 0 0 xdim ydim 49152 // Setting Info 3
+			screentext 2822 50 88 49152 0 0 1006 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 1
+			screentext 2822 50 96 49152 0 0 1007 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 2
+			screentext 2822 50 104 49152 0 0 1008 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 3
+			screentext 2822 50 112 49152 0 0 1009 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 4
 
 			getinput[THISACTOR].extbits tempm
 
@@ -355,7 +365,26 @@ onevent EVENT_DISPLAYREST
 						}
 						savegamevar dna_localization
 					}
-					else ifvare dna_menu_selected 1 nullop
+					else ifvare dna_menu_selected 1
+					{
+						ifvare dna_level_music 0
+						{
+							setvar delayTime MENU_DELAY_TIME
+							setvar dna_level_music 1
+							savegamevar dna_level_music
+							stopallmusic   
+							starttrackslot 5 20
+						}
+						else {
+							setvar delayTime MENU_DELAY_TIME
+							setvar dna_level_music 0
+							savegamevar dna_level_music
+							getuserdef[].music_episode currmusic
+							getuserdef[].music_level currmusiclv
+							starttrackslot currmusic currmusiclv
+						}
+						//savegamevar dna_level_music
+					}
 					else ifvare dna_menu_selected 2
 					{
 						ifvare dna_dukecutscenevoc 2
@@ -395,7 +424,26 @@ onevent EVENT_DISPLAYREST
 						}
 						savegamevar dna_localization
 					}
-					else ifvare dna_menu_selected 1 nullop
+					else ifvare dna_menu_selected 1
+					{
+						ifvare dna_level_music 0
+						{
+							setvar delayTime MENU_DELAY_TIME
+							setvar dna_level_music 1
+							savegamevar dna_level_music
+							stopallmusic   
+							starttrackslot 5 20
+						}
+						else {
+							setvar delayTime MENU_DELAY_TIME
+							setvar dna_level_music 0
+							savegamevar dna_level_music
+							getuserdef[].music_episode currmusic
+							getuserdef[].music_level currmusiclv
+							starttrackslot currmusic currmusiclv
+						}
+						//savegamevar dna_level_music
+					}
 					else ifvare dna_menu_selected 2
 					{
 						ifvare dna_dukecutscenevoc 0
