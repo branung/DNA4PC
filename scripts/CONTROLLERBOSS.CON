@@ -133,7 +133,6 @@ state controllerbosschecksquished
     sound SQUISHED
     state standard_jibs
     state random_ooz
-    spawn ACCESSCARD
     killit
   }
 ends
