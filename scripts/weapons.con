@@ -181,6 +181,56 @@ ends
 
 // other EVENT_DISPLAYWEAPON code
 // weapon code
+
+state draw_quick_kick // Quick Kick
+    set hud_temp 14
+    sub hud_temp player[].quick_kick
+
+    set hud_temp2 0
+    ifn hud_temp 14 set hud_temp2 1
+    ifn player[].last_quick_kick 0 set hud_temp2 1
+    ife hud_temp2 1
+    {
+        getplayer[].hudpal hud_pal
+        ife hud_pal 0
+            getplayer[].palookup hud_pal
+
+        guniqhudid 100
+
+        // common calculations
+        state reset_hud_weapon_coordinates
+
+        set hud_tilenum KNEE
+
+        set hud_orientation 262148 // o|4|262144
+
+        set hud_temp3 0
+
+        ifg hud_temp 5
+            ifl hud_temp 13
+            {
+                add hud_x 144 // 160-16
+
+                add hud_y 214
+
+                add hud_tilenum 1
+
+                state G_DrawTileScaled
+
+                set hud_temp3 1
+            }
+
+        ife hud_temp3 0
+        {
+            add hud_x 80
+
+            add hud_y 250
+
+            state G_DrawTileScaled
+        }
+    }
+ends
+
 state draw_pistol // PISTOL_WEAPON:
     // hud_temp4 = FIREDELAY
     // hud_temp3 = RELOAD
@@ -598,6 +648,21 @@ onevent EVENT_DISPLAYWEAPON // P_DisplayWeapon
         state draw_pistol
         set RETURN -1
     }
+
+    ifn hud_temp 1 break // If we are not displaying the actual HUD weapons, stop processing.
+
+    // these gamevars can get changed in the states up above, so reset them now.
+    set hud_scale 65536
+    set hud_orientation 0
+    set hud_angle 0
+    set hud_shade gs
+
+    state draw_quick_kick
+
+    // cleanup
+    set hud_orientation 0
+    set hud_angle 0
+    guniqhudid 0
 endevent
 
 //LEAD CANNON SPECIFIC SHENANIGANS FROM HERE -oasiz
