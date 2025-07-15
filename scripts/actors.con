@@ -116,6 +116,7 @@ enda
 
 actor ARMORSHARD
   fall
+  sizeat 48 40
   ifmove RESPAWN_ACTOR_FLAG
     state respawnit
   else
