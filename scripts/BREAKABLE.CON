@@ -67,6 +67,7 @@ endevent
 action GASPUMPFRAME     0   3   1   1   15
 actor GASPUMP 26
   fall
+  cstator 257 
   ifaction GASPUMPFRAME
   {
     ifactioncount 2
@@ -92,6 +93,7 @@ enda
 action NUKEBARRELFRAME     0   5   1   1   15
 actor DNANUKEBARREL 26
   fall
+  cstator 257 
   ifaction NUKEBARRELFRAME
   {
     ifactioncount 2
@@ -118,6 +120,7 @@ action DNAGASCYLINDERFRAME     0   3   1   1   15
 actor DNAGASCYLINDER 26
   sizeat 36 36
   fall
+  cstator 257
   ifaction DNAGASCYLINDERFRAME
   {
     ifactioncount 2
