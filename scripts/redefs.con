@@ -19,17 +19,13 @@
 // define ATOMICHEALTH 5650
 // define ACCESSSWITCH 5667
 // define ACCESSSWITCH2 5669
-// define SLOTDOOR 5671
-// define LIGHTSWITCH 5673
-// define SPACEDOORSWITCH 5675
-// define SPACELIGHTSWITCH 5677
 // define CHAIR1 5680
 // define CHAIR2 5681
 // define BROKENCHAIR 5682
 // define PANNEL1 3585
 // define FLOORPLASMA 5684
-// define GRATE1 5640
-// define BGRATE1 5641
+// define GRATE1 3640
+// define BGRATE1 3641
 // define CIRCLEPANNEL 5685
 // define CIRCLEPANNELBROKE 5686
 // define FIREEXT 5688
@@ -45,8 +41,9 @@
 define CROSSHAIR 5743
 // define FIRSTGUN 5763
 // define FIRSTGUNRELOAD 5767
-// define CHAINGUN 5772
+//define CHAINGUN 5772
 // define STARTALPHANUM 5887
+// define ENDALPHANUM 5980
 // define LIZTROOP 6206
 // define HEADJIB1 6294
 // define ARMJIB1 6298
@@ -77,8 +74,6 @@ define CROSSHAIR 5743
 // define WALLBLOOD6 6625
 // define WALLBLOOD7 6626
 // define WALLBLOOD8 6627
-
-// Not sure if these are necessary, but defining them here in case
 // define LIZTROOPRUNNING 6207
 // define LIZTROOPSTAYPUT 6208
 // define LIZTOP 6231
