@@ -28,7 +28,7 @@ define DNAHYDROPLANT 3659
 define DNATRASHCAN 4060
 define DNATOILET 5701
 define DNASTALL 5706
-define DNACHAIR 5680
+define DNACHAIR 5729
 
 damageeventtilerange TERMINAL1 TERMINALBROKE
 damageeventtilerange TERMINAL2 TERMINALBROKE
@@ -242,7 +242,7 @@ enda
 action DNACHAIRBROKE        1   1   1   1  10
 actor DNACHAIR
   fall
-  sizeat 48 48
+  sizeat 54 54
   cstator 257 
   ifaction DNACHAIRBROKE
   {

@@ -19,7 +19,7 @@ do for i allsprites { ifvare sprite[i].picnum 51 { setvar sprite[i].picnum 5641 
 do for i allsprites { ifvare sprite[i].picnum 52 { setvar sprite[i].picnum 5642 } } //Sixpak aka big health pickup
 do for i allsprites { ifvare sprite[i].picnum 54 { setvar sprite[i].picnum 5643 } } //Big health pickup
 do for i allsprites { ifvare sprite[i].picnum 100 { setvar sprite[i].picnum 5650 } } //Atomic health
-do for i allsprites { ifvare sprite[i].picnum 556 { setvar sprite[i].picnum 5680 } } //Chair
+do for i allsprites { ifvare sprite[i].picnum 556 { setvar sprite[i].picnum 5729 } } //Chair
 do for i allsectors { ifvare sector[i].floorpicnum 342 { setvar sector[i].floorpicnum 3585 } } //Panel1 on floor
 do for i allwalls { ifvare wall[i].picnum 342 { setvar wall[i].picnum 3585 } } //Panel1 on wall
 do for i allsectors { ifvare sector[i].ceilingpicnum 342 { setvar sector[i].ceilingpicnum 3585 } } //Panel1 on ceiling
