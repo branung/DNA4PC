@@ -58,6 +58,14 @@ defstate get_fxtags
     geta .extra fx_extra
     seta .owner -1
     seta .extra -1
+    
+    geta .xvel fx_xvel
+    geta .yvel fx_yvel
+    geta .zvel fx_zvel
+    seta .xvel 0
+    seta .yvel 0
+    seta .zvel 0
+    
     set fx_state disabled
 ends
 
