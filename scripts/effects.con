@@ -700,6 +700,30 @@ defstate do_se76
     endswitch
 ends
 
+//// -- SE77: Bulk hybrid texture swap  --
+// Specifically for use in mission 3, where flipping a switch destroys all hybrid capsules in the map
+// Simply set its hitag as the same value as the lotag of the switch being flipped
+// Elements are hardcoded since this is a one time effect in the campaign
+defstate do_se77
+    switch fx_state
+        case disabled
+            ife fx_activate[sprite[].hitag] 1 {
+                set fx_state enabled
+            }
+            break
+        case enabled
+            for i allwalls { 
+                ife wall[i].picnum 3648 { 
+                    setw[i].picnum 3649 
+                } 
+            }
+            sound VENT_BUST 
+            sound GREYDEATH
+            killit
+            break
+    endswitch
+ends
+
 
 /// =============================================================================================
 ///   LEVEL STARTUP: PRELEVEL -> ACTORS -> ENTERLEVEL
@@ -829,6 +853,7 @@ appendevent EVENT_WORLD
                 ife sprite[i].lotag 74 state do_se74
                 ife sprite[i].lotag 75 state do_se75
                 ife sprite[i].lotag 76 state do_se76
+                ife sprite[i].lotag 77 state do_se77
                 break
         endswitch
     }
