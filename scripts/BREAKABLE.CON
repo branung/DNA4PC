@@ -28,6 +28,7 @@ define DNAHYDROPLANT 3659
 define DNATRASHCAN 4060
 define DNATOILET 5701
 define DNASTALL 5706
+define DNACHAIR 5680
 
 damageeventtilerange TERMINAL1 TERMINALBROKE
 damageeventtilerange TERMINAL2 TERMINALBROKE
@@ -235,5 +236,28 @@ actor DNASTALL
   ifhitweapon
   {
     action DNASTALLWATER
+  }
+enda
+
+action DNACHAIRBROKE        1   1   1   1  10
+actor DNACHAIR
+  fall
+  sizeat 48 48
+  cstator 257 
+  ifaction DNACHAIRBROKE
+  {
+    cstat 0
+    break
+  }
+  ifsquished
+  {
+    debris SCRAP1 5
+    killit
+    break
+  }
+  ifhitweapon
+  {
+    //sound PIPEBOMB_EXPLODE
+    action DNACHAIRBROKE
   }
 enda
