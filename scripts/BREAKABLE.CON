@@ -26,6 +26,8 @@ define DNANUKEBARREL 4050
 define DNAGASCYLINDER 4056
 define DNAHYDROPLANT 3659
 define DNATRASHCAN 4060
+define DNATOILET 5701
+define DNASTALL 5706
 
 damageeventtilerange TERMINAL1 TERMINALBROKE
 damageeventtilerange TERMINAL2 TERMINALBROKE
@@ -144,7 +146,7 @@ actor DNAGASCYLINDER 26
 enda
 
 action TRASHCANBROKE     1   1   1   1  10
-actor DNATRASHCAN 26
+actor DNATRASHCAN
   fall
   sizeat 48 48
   cstator 257 
@@ -155,6 +157,7 @@ actor DNATRASHCAN 26
   ifsquished
   {
     debris SCRAP1 5
+    killit
     break
   }
   ifhitweapon
@@ -166,7 +169,7 @@ enda
 
 action DNAHYDROPLANTBREAKING     0   5   1   1  15
 action DNAHYDROPLANTBROKE        4   1   1   1  10
-actor DNAHYDROPLANT 26
+actor DNAHYDROPLANT 
   fall
   sizeat 48 48
   cstator 257 
@@ -179,16 +182,58 @@ actor DNAHYDROPLANT 26
   }
   ifaction DNAHYDROPLANTBROKE
   {
-      break
+    cstat 0
+    break
   }
   ifsquished
   {
     debris SCRAP1 5
+    killit
     break
   }
   ifhitweapon
   {
     //sound PIPEBOMB_EXPLODE
     action DNAHYDROPLANTBREAKING
+  }
+enda
+
+action DNATOILETWATER     1   4   1   1   1
+actor DNATOILET
+  fall
+  cstator 257 
+  ifaction DNATOILETWATER
+  {
+    cstat 0
+    break
+  }
+  ifsquished
+  {
+    killit
+    break
+  }
+  ifhitweapon
+  {
+    action DNATOILETWATER
+  }
+enda
+
+action DNASTALLWATER     1   4   1   1   1
+actor DNASTALL
+  fall
+  cstator 257 
+  ifaction DNASTALLWATER
+  {
+    cstat 0
+    break
+  }
+  ifsquished
+  {
+    killit
+    break
+  }
+  ifhitweapon
+  {
+    action DNASTALLWATER
   }
 enda

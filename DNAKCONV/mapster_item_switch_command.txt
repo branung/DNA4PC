@@ -35,11 +35,8 @@ do for i allsprites { ifvare sprite[i].picnum 1160 { setvar sprite[i].picnum 569
 do for i allsprites { ifvare sprite[i].picnum 1161 { setvar sprite[i].picnum 5691 } } //Bottle14
 do for i allsprites { ifvare sprite[i].picnum 1162 { setvar sprite[i].picnum 5692 } } //Bottle15
 do for i allsprites { ifvare sprite[i].picnum 1163 { setvar sprite[i].picnum 5693 } } //Bottle16
-do for i allsprites { ifvare sprite[i].picnum 569 { setvar sprite[i].picnum 5701 } } //Toilet
-do for i allsprites { ifvare sprite[i].picnum 615 { setvar sprite[i].picnum 5702 } } //Toilet broke
-do for i allsprites { ifvare sprite[i].picnum 571 { setvar sprite[i].picnum 5703 } } //Stall
-do for i allsprites { ifvare sprite[i].picnum 573 { setvar sprite[i].picnum 5704 } } //Stall broke
-do for i allsprites { ifvare sprite[i].picnum 921 { setvar sprite[i].picnum 5705 } } //Toilet water
+do for i allsprites { ifvare sprite[i].picnum 569 { setvar sprite[i].picnum 5701 setvar sprite[i].xrepeat 64 setvar sprite[i].yrepeat 54 } } //Toilet
+do for i allsprites { ifvare sprite[i].picnum 571 { setvar sprite[i].picnum 5706 setvar sprite[i].xrepeat 64 setvar sprite[i].yrepeat 54 } } //Stall
 do for i allsprites { ifvare sprite[i].picnum 4540 { setvar sprite[i].picnum 5694 } } //Food object 11
 do for i allsprites { ifvare sprite[i].picnum 4548 { setvar sprite[i].picnum 5695 } } //Food object 19
 do for i allsprites { ifvare sprite[i].picnum 1680 { setvar sprite[i].picnum 6206 } } //Liztroop
