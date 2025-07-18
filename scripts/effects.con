@@ -61,9 +61,9 @@ defstate get_fxtags
     geta .zvel fx_zvel
     seta .owner -1
     seta .extra -1
-    seta .xvel -1
-    seta .yvel -1
-    seta .zvel -1
+    seta .xvel 0
+    seta .yvel 0
+    seta .zvel 0
     set fx_state disabled
 ends
 
@@ -709,7 +709,7 @@ ends
 //// -- SE77: Bulk hybrid texture swap  --
 // Specifically for use in mission 3, where flipping a switch destroys all hybrid capsules in the map
 // Set its hitag as the same value as the lotag of the switch being flipped
-// Extra and Owner to the before and after texture picnums respectively, vel values dictate which sounds play 
+// Extra and Owner to the before and after texture picnums respectively, Velocity values dictate which sounds play 
 defstate do_se77
     switch fx_state
         case disabled
