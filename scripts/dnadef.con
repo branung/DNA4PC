@@ -80,6 +80,7 @@ gamevar SCREENSIZE -1 1
 gamevar WEAPON1_TOTALTIME 9 // Increases delay time between each pistol shot
 gamevar temp 0 2
 gamevar temp2 0 1
+gamevar player_health 0 1
 
 gamevar SCREENALPHA 255 0
 gamevar CUTSCENE_STEP 0 0
