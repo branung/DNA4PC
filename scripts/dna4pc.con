@@ -116,9 +116,14 @@ prependstate random_ooz
     {
       stopactorsound THISACTOR SQUISHED
       seta[THISACTOR].extra player_health
-      addphealth -2
+      addphealth -4
       sound ADUKE_SEARCH
       palfrom 32 64
+      // Check if Squish! message is displayed to prevent it from showing
+      ife player[].ftq 10 
+      {
+        setp[].fta 0
+      }
       terminate
     }
 ends
