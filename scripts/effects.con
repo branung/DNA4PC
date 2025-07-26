@@ -413,30 +413,47 @@ ends
 // Extra: Use following lockbits, each comes with a hardcoded message
 // lock_bluekey | lock_redkey | lock_yellowkey | lock_mission | lock_oneway | lock_switch
 defstate do_se71
-        // Check SE proximity to player with `dist`
-        dist temp THISACTOR player[].i
-        ifl temp 1536 { 
-            // Free to do a more expensive sector precision check with `neartag`
-            neartag player.posx player.posy player.posz player.cursectnum player.ang fx_int temp temp temp 256 1
-            ife fx_int sprite[].sectnum {
-                // Check locking status.. do normal ST20 operation if OK.
-                state checklock
-                ife temp 1 {
-                    ife sector[fx_int].lotag 20 operatesectors fx_int player[].i
-                    ife sector[fx_int].lotag 16 operatesectors fx_int player[].i
-                } else {
-                    ife fx_int2 1 {
-                    ifand sector[fx_int].lotag 20 ife sector[fx_int].ceilingz sector[fx_int].floorz {
-                        quote LOCKQUOTE
-                        globalsound ADUKE_KILLED1
-                        set fx_int2 0
+    switch fx_state
+        case disabled
+            set fx_state enabled
+            break
+        case enabled
+            // Check SE proximity to player with `dist`
+            dist temp THISACTOR player[].i
+            ifl temp 1536 { 
+                // Free to do a more expensive sector precision check with `neartag`
+                neartag player.posx player.posy player.posz player.cursectnum player.ang fx_int temp temp temp 256 1
+                ife fx_int sprite[].sectnum {
+                    // Check locking status.. do normal ST20 operation if OK.
+                    state checklock
+                    ife temp 1 {
+                        ife sector[fx_int].lotag 20 operatesectors fx_int player[].i
+                        ife sector[fx_int].lotag 16 operatesectors fx_int player[].i
+                        
+                        ifn fx_xvel 0 soundonce fx_xvel
+                        
+                        ifand sprite[].hitag 1 {
+                            set fx_state completed
+                            killit
+                        }
+                        
+                    } else {
+                        ife fx_int2 1 {
+                        ifand sector[fx_int].lotag 20 ife sector[fx_int].ceilingz sector[fx_int].floorz {
+                            quote LOCKQUOTE
+                            globalsound ADUKE_KILLED1
+                            set fx_int2 0
+                            }
                         }
                     }
                 }
+            } else {
+                ife fx_int2 0 set fx_int2 1
             }
-        } else {
-            ife fx_int2 0 set fx_int2 1
-        }
+            break
+        case completed
+            break
+    endswitch
 ends
 
 //// -- SE72: The Michael Bay machine --
