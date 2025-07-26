@@ -49,8 +49,15 @@ appendevent EVENT_PRELEVEL
   }
 endevent
 
-// For dna_level_music - check if level music is set to off and if so set level's theme out of bounds so that nothing plays
-appendevent EVENT_ENTERLEVEL 
+
+appendevent EVENT_ENTERLEVEL
+    // Prevent knuckle cracking animation at level start
+    getplayer[THISACTOR].knuckle_incs temp
+	ifvarg temp 0 
+	{
+		setplayer[THISACTOR].knuckle_incs 0
+	}
+    // For dna_level_music - check if level music is set to off and if so set level's theme out of bounds so that nothing plays
     ifvare dna_level_music 1
     {
         stopallmusic   
@@ -94,5 +101,29 @@ onevent EVENT_GAME
         // Override for episode endings
         setuserdef .eog 0
         ifvare VOLUME 5 ifvare LEVEL 19 setuserdef .eog 1
+
+        geta[THISACTOR].extra temp
+        ifvarg temp 0 
+        {
+            set player_health temp
+        }
     }
-    endevent
+endevent
+
+// Prepending this state to override player insta kill when being crushed
+prependstate random_ooz
+    ifactor APLAYER 
+    {
+      stopactorsound THISACTOR SQUISHED
+      seta[THISACTOR].extra player_health
+      addphealth -4
+      sound ADUKE_SEARCH
+      palfrom 32 64
+      // Check if Squish! message is displayed to prevent it from showing
+      ife player[].ftq 10 
+      {
+        setp[].fta 0
+      }
+      terminate
+    }
+ends

@@ -56,16 +56,14 @@ var quake_z_target 0 1
 defstate get_fxtags
     geta .owner fx_owner
     geta .extra fx_extra
-    seta .owner -1
-    seta .extra -1
-    
     geta .xvel fx_xvel
     geta .yvel fx_yvel
     geta .zvel fx_zvel
+    seta .owner -1
+    seta .extra -1
     seta .xvel 0
     seta .yvel 0
     seta .zvel 0
-    
     set fx_state disabled
 ends
 
@@ -710,8 +708,8 @@ ends
 
 //// -- SE77: Bulk hybrid texture swap  --
 // Specifically for use in mission 3, where flipping a switch destroys all hybrid capsules in the map
-// Simply set its hitag as the same value as the lotag of the switch being flipped
-// Elements are hardcoded since this is a one time effect in the campaign
+// Set its hitag as the same value as the lotag of the switch being flipped
+// Extra and Owner to the before and after texture picnums respectively, Velocity values dictate which sounds play 
 defstate do_se77
     switch fx_state
         case disabled
@@ -721,12 +719,13 @@ defstate do_se77
             break
         case enabled
             for i allwalls { 
-                ife wall[i].picnum 3648 { 
-                    setw[i].picnum 3649 
+                ife wall[i].picnum fx_owner { 
+                    setw[i].picnum fx_extra
                 } 
             }
-            sound VENT_BUST 
-            sound GREYDEATH
+            ifn fx_xvel 0 sound fx_xvel else sound VENT_BUST
+            ifn fx_yvel 0 sound fx_yvel else sound GREYDEATH
+            ifn fx_yvel 0 sound fx_zvel
             killit
             break
     endswitch

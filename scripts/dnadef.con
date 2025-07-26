@@ -80,6 +80,7 @@ gamevar SCREENSIZE -1 1
 gamevar WEAPON1_TOTALTIME 9 // Increases delay time between each pistol shot
 gamevar temp 0 2
 gamevar temp2 0 1
+gamevar player_health 0 1
 
 gamevar SCREENALPHA 255 0
 gamevar CUTSCENE_STEP 0 0
@@ -861,6 +862,8 @@ definesound TELEPORTER                  sounds/env/teleport.wav              -80
 definesound PISTOL_RICOCHET             sounds/weapon/ricochet.wav           -80   -80    3     0     0
 definesound CHAINGUN_FIRE               sounds/weapon/mp5fire.wav            -80   -80    3     0     0
 definesound SHOTGUN_COCK                sounds/weapon/shotguncock.wav        -80   -80    3     0     0
+definesound EJECT_CLIP                  sounds/weapon/shotguncock.wav          0     0    0     0     0     0  
+definesound INSERT_CLIP                 sounds/weapon/shotguncock.wav        -80   -80    3     0     0
 definesound SHOTGUN_FIRE                sounds/weapon/shotgunfire.wav        -80   -80    3     0     0
 definesound SELECT_WEAPON               sounds/weapon/shotguncock.wav        -80   -80    3     0     0
 definesound VENT_BUST                   sounds/env/ventbust.wav              -80   -80    3     0     0
