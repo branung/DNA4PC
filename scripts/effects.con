@@ -418,7 +418,7 @@ defstate do_se71
         ifl temp 1536 { 
             // Free to do a more expensive sector precision check with `neartag`
             neartag player.posx player.posy player.posz player.cursectnum player.ang fx_int temp temp temp 256 1
-            ifn fx_int -1 {
+            ife fx_int sprite[].sectnum {
                 // Check locking status.. do normal ST20 operation if OK.
                 state checklock
                 ife temp 1 {
@@ -656,12 +656,20 @@ defstate do_se76
             set temp player.posz
             add temp 256
             ifl temp sector[fx_owner].floorz {
-                ife player.cursectnum fx_owner set fx_int 1
+                ife player.cursectnum fx_owner set fx_int 16385
             } else {
-                neartag player.posx player.posy player.posz player.cursectnum player.ang fx_int temp temp temp 256 1
+                neartag player.posx player.posy player.posz player.cursectnum player.ang fx_int temp temp fx_xvel 256 1
+            }
+            set temp 0
+            ife fx_int 16385 {
+                set temp 1
+            } else {
+                ife fx_int sprite[].sectnum {
+                    set temp 1
+                }
             }
             
-            ifg fx_int -1 {
+            ife temp 1 {
                 set fx_state enabled
                 operatesectors fx_owner 0
                 sound sprite[].hitag
@@ -873,6 +881,8 @@ appendevent EVENT_WORLD
     state ambience_sound_handler
     // Handle screenshake & rotation for quake, enabled from SE72. THIS WILL OVERWRITE DRAWROOMS!
     ife kcsunshinemode 1 state rot_quake_handler
+    
+    
     
     
     
