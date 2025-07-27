@@ -22,5 +22,6 @@ Kind of poorly credited so far, consider this an inaccurate intial credits list 
 - Voxelvoid - Initial work which had an export of maps & texture assets.
 - branung - Much of the DN:A specific gameplay code, organizing, map fixes, some sounds and whatnot... Currently leading the efforts.
 - oasiz - Additional mapping assistance & Map effects. Jumped in when all the hard work was already done.
-- Dzierzan, Lead cannon HUD recreation ART
+- Dzierzan - Lead cannon HUD recreation ART
+- Jimmy Gnosis - Pipebomb HUD tile fixes
 - Gianni Matragrano - Voice actor for Duke's lines in cutscenes when enabled.
