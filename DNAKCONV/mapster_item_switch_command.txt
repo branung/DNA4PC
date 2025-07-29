@@ -22,6 +22,7 @@ do for i allsprites { ifvare sprite[i].picnum 100 { setvar sprite[i].picnum 5650
 do for i allsprites { ifvare sprite[i].picnum 556 { setvar sprite[i].picnum 5729 } } //Chair
 do for i allsectors { ifvare sector[i].floorpicnum 342 { setvar sector[i].floorpicnum 3585 } } //Panel1 on floor
 do for i allwalls { ifvare wall[i].picnum 342 { setvar wall[i].picnum 3585 } } //Panel1 on wall
+do for i allwalls { ifvare wall[i].picnum 343 { setvar wall[i].picnum 3885 } }
 do for i allsectors { ifvare sector[i].ceilingpicnum 342 { setvar sector[i].ceilingpicnum 3585 } } //Panel1 on ceiling
 do for i allsectors { ifvare sector[i].floorpicnum 1082 { setvar sector[i].floorpicnum 5684 } } //Floor plasma
 do for i allsprites { ifvare sprite[i].picnum 595 { setvar sprite[i].picnum 3640 } } //Grate1

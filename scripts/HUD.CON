@@ -11,7 +11,7 @@
 		ifvarn dna_menu_tutorial 0 nullop
 		else
 		{
-			screentext 2822 60 48 49152 0 0 1020 0 0 16 0 5 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 60 48 49152 0 0 1020 0 0 16 0 5 0 0 0 0 0 0 xdim ydim
 		}
 	}
 	ends
@@ -63,7 +63,7 @@
 				{
 					rotatesprite INV_X INV_Y NORMALSIZE 0 2460 0 0 512 0 0 xdim ydim
 					getplayer[THISACTOR].firstaid_amount INV_NUM_TEMP
-					digitalnumber 2837 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
+					digitalnumber 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
 				}
 
 			ifvare INV_TEMP 2 // Steroids
@@ -71,42 +71,42 @@
 					rotatesprite INV_X INV_Y NORMALSIZE 0 2469 0 0 512 0 0 xdim ydim
 					getplayer[THISACTOR].steroids_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 4
-					digitalnumber 2837 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
+					digitalnumber 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
 				}
 			ifvare INV_TEMP 3 // Holoduke
 				{
 					rotatesprite INV_X INV_Y NORMALSIZE 0 2470 0 0 512 0 0 xdim ydim
 					getplayer[THISACTOR].holoduke_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 24
-					digitalnumber 2837 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
+					digitalnumber 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
 				}
 			ifvare INV_TEMP 4 // Jetpack
 				{
 					rotatesprite INV_X INV_Y NORMALSIZE 0 2467 0 0 512 0 0 xdim ydim
 					getplayer[THISACTOR].jetpack_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 16
-					digitalnumber 2837 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
+					digitalnumber 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
 				}
 			ifvare INV_TEMP 5 // Night Vision
 				{
 					rotatesprite INV_X INV_Y NORMALSIZE 0 2461 0 0 512 0 0 xdim ydim
 					getplayer[THISACTOR].heat_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 12
-					digitalnumber 2837 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
+					digitalnumber 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
 				}
 			ifvare INV_TEMP 6 // Scuba Gear
 				{
 					rotatesprite INV_X INV_Y NORMALSIZE 0 2468 0 0 512 0 0 xdim ydim
 					getplayer[THISACTOR].scuba_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 64
-					digitalnumber 2837 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
+					digitalnumber 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
 				}
 			ifvare INV_TEMP 7 // Boots
 				{
 					rotatesprite INV_X INV_Y NORMALSIZE 0 2463 0 0 512 0 0 xdim ydim
 					getplayer[THISACTOR].boot_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 2
-					digitalnumber 2837 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
+					digitalnumber 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim
 				}
 		}
 	}
@@ -133,10 +133,10 @@ defstate dna_camera_hud
 	setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
     rotatesprite 160 170 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
     rotatesprite 31 170 65536 0 CUTSCENE_SPRITE 0 0 2 0 0 xdim ydim
-    screentext 2822 55 153 65536 0 0 291 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
-    screentext 2822 55 163 65536 0 0 292 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
-    screentext 2822 55 173 65536 0 0 293 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
-    screentext 2822 55 183 65536 0 0 294 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
+    screentext STARTALPHANUM 55 153 65536 0 0 291 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
+    screentext STARTALPHANUM 55 163 65536 0 0 292 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
+    screentext STARTALPHANUM 55 173 65536 0 0 293 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
+    screentext STARTALPHANUM 55 183 65536 0 0 294 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
 ends
 
 
@@ -208,45 +208,45 @@ onevent EVENT_DISPLAYREST
 		ifvare dna_menu 1 // main menu
 		{
 			setvar y 48
-			rotatesprite 160 12 32768 0 2498 0 0 2 0 0 xdim ydim // Advance graphic
+			rotatesprite 160 5 32768 0 5741 0 0 2 0 0 xdim ydim // Advance graphic
 			rotatesprite 160 30 65536 0 3934 0 0 2 0 0 xdim ydim // Options graphic
 			rotatespritea 160 90 81920 0 3933 0 0 2 80 0 0 xdim ydim // Menu graphic
 
 			//Control hint graphic
 			rotatespritea 160 200 65536 0 CUTSCENE_DIALOGBOX 0 0 2 80 0 0 xdim ydim
-			screentext 2822 65 177 49152 0 0 1010 shade 0 16 0 5 0 0 0 0 0 0 xdim ydim
-			screentext 2822 20 187 49152 0 0 1011 shade 0 16 0 5 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 65 177 49152 0 0 1010 shade 0 16 0 5 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 20 187 49152 0 0 1011 shade 0 16 0 5 0 0 0 0 0 0 xdim ydim
 
 			ifvare dna_menu_selected 0 setvar shade 15 else setvar shade 0 // Localization
-			screentext 2822 65 y 49152 0 0 1001 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 65 y 49152 0 0 1001 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			ifvare dna_localization 0 redefinequote 1005 US 
 			else redefinequote 1005 EU
 			ifvare dna_menu_selected 0 setvar shade 15 else setvar shade 0 // Localization Selection
-			screentext 2822 230 y 49152 0 0 1005 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 230 y 49152 0 0 1005 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			addvar y 8
 			ifvare dna_menu_selected 1 setvar shade 15 else setvar shade 0 // Level Music
-			screentext 2822 65 y 49152 0 0 1002 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 65 y 49152 0 0 1002 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			ifvare dna_level_music 0 redefinequote 1006 ON 
 			else redefinequote 1006 OFF
 			ifvare dna_menu_selected 1 setvar shade 15 else setvar shade 0 // Level Music Selection
-			screentext 2822 230 y 49152 0 0 1006 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 230 y 49152 0 0 1006 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			addvar y 8
 			ifvare dna_menu_selected 2 setvar shade 15 else setvar shade 0 // Cutscene Duke Voice
-			screentext 2822 65 y 49152 0 0 1003 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 65 y 49152 0 0 1003 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			ifvare dna_dukecutscenevoc 0 redefinequote 1007 OFF 
 			else ifvare dna_dukecutscenevoc 1 redefinequote 1007 3D
 			else redefinequote 1007 GIANNI
 			ifvare dna_menu_selected 2 setvar shade 15 else setvar shade 0 // Cutscene Duke Voice Selection
-			screentext 2822 230 y 49152 0 0 1007 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 230 y 49152 0 0 1007 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			addvar y 8
 			ifvare dna_menu_selected 3 setvar shade 15 else setvar shade 0 // Exit
-			screentext 2822 65 y 49152 0 0 1004 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 65 y 49152 0 0 1004 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 			
 
 			ifvare dna_menu_selected 0
@@ -299,10 +299,10 @@ onevent EVENT_DISPLAYREST
 			}
 
 			setvar shade 0 
-			screentext 2822 50 88 49152 0 0 1006 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 1
-			screentext 2822 50 96 49152 0 0 1007 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 2
-			screentext 2822 50 104 49152 0 0 1008 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 3
-			screentext 2822 50 112 49152 0 0 1009 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 4
+			screentext STARTALPHANUM 50 88 49152 0 0 1006 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 1
+			screentext STARTALPHANUM 50 96 49152 0 0 1007 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 2
+			screentext STARTALPHANUM 50 104 49152 0 0 1008 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 3
+			screentext STARTALPHANUM 50 112 49152 0 0 1009 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 4
 
 			getinput[THISACTOR].extbits tempm
 

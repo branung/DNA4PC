@@ -1,1 +1,11 @@
 // Duke Nukem : Advance extra sound/gfx definitions
+
+tilefromtexture 26 { file "tiles/26.png" xoffset 0 yoffset -4 }
+tilefromtexture 2536 { file "tiles/2536.png" xoffset -25 yoffset 15 }
+tilefromtexture 2537 { file "tiles/2537.png" xoffset 15 yoffset 11 }
+tilefromtexture 2538 { file "tiles/2538.png" xoffset 15 yoffset 11 }
+tilefromtexture 2539 { file "tiles/2539.png" xoffset 15 yoffset 11 }
+tilefromtexture 2540 { file "tiles/2540.png" xoffset 15 yoffset 11 }
+tilefromtexture 2541 { file "tiles/2541.png" }
+tilefromtexture 2542 { file "tiles/2542.png" }
+tilefromtexture 2543 { file "tiles/2543.png" }
