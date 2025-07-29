@@ -107,6 +107,7 @@ actor SHOTGUNSHELLS
       {
         addammo SHOTGUN_WEAPON SHOTGUNSHELLSAMOUNT
         quote 129
+        state transfer_lead_ammo
         ifspawnedby SHOTGUNSHELLS
           state getcode
         else
@@ -159,7 +160,7 @@ actor HEALTHPACKSMALL
       }
 enda
 
-//Redefining health and armor actors to change values to match DNA
+//Redefining game.con actors below to change values to match DNA
 actor SIXPAK
   fall
   ifmove RESPAWN_ACTOR_FLAG
@@ -301,27 +302,27 @@ defstate access_shared
                             getplayer[].got_access temp
                             ifactor DNA_BLUEKEY { 
                                 or temp lock_bluekey
-                                redefinequote DNA_KEYQUOTE Got the blue access card!
+                                redefinequote DNA_KEYQUOTE Blue key card
                             }
                             ifactor DNA_REDKEY {
                                 or temp lock_redkey
-                                redefinequote DNA_KEYQUOTE Got the red access card!
+                                redefinequote DNA_KEYQUOTE Red key card
                             }
                             ifactor DNA_YELLOWKEY {
                                 or temp lock_yellowkey
-                                redefinequote DNA_KEYQUOTE Got the yellow access card!
+                                redefinequote DNA_KEYQUOTE Yellow key card
                             }
                             ifactor DNA_SYSKEY {
                                 or temp lock_syskey
-                                redefinequote DNA_KEYQUOTE Accessed the computer!
+                                redefinequote DNA_KEYQUOTE Accessed the computer
                             }
                             ifactor DNA_CDKEY {
                                 or temp lock_cdkey
-                                redefinequote DNA_KEYQUOTE Found a data disc!
+                                redefinequote DNA_KEYQUOTE Data Disc
                             }
                             ifactor DNA_CHIPKEY {
                                 or temp lock_chipkey
-                                redefinequote DNA_KEYQUOTE Retreived the microchip!
+                                redefinequote DNA_KEYQUOTE Schematics
                             }
                             setplayer[].got_access temp
                             
@@ -413,7 +414,6 @@ appendstate checksquished
         }
     }
 ends
-
 
 //// --------- EXTRA SCREENFLASH FOR THE PLAYER ---------
 // This hijacks into the common "checksquished" state from original GAME.CON

@@ -184,17 +184,17 @@ defstate checklock
         ifand fx_extra lock_bluekey { 
             ifand lockbits lock_bluekey    { 
                 set temp 1
-            } else redefinequote LOCKQUOTE NEEDS BLUE KEY
+            } else redefinequote LOCKQUOTE DAMN..I NEED A BLUE KEY CARD!!
         }
         ifand fx_extra lock_redkey { 
             ifand lockbits lock_redkey { 
                 set temp 1 
-            } else redefinequote LOCKQUOTE NEEDS RED KEY
+            } else redefinequote LOCKQUOTE DAMN..I NEED A RED KEY CARD!!
         }
         ifand fx_extra lock_yellowkey {
             ifand lockbits lock_yellowkey {
                 set temp 1
-            } else redefinequote LOCKQUOTE NEEDS YELLOW KEY
+            } else redefinequote LOCKQUOTE DAMN..I NEED A YELLOW KEY CARD!!
         }
         ifand fx_extra lock_syskey {
             ifand lockbits lock_syskey {
