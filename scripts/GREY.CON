@@ -20,6 +20,10 @@ move GREYSHRUNKVELS 32
 gamevar greyprojpos 0 0
 gamevar greycurrpos 0 0
 
+gamevar angvar 0 0
+gamevar my_cos 0 0
+gamevar my_sin 0 0
+
 ai AIGREYWAIT               GREYSTANDING GREYSTOPPED geth
 ai AIGREYSEEK               GREYWALKING GREYWALKVEL seekplayer
 ai AIGREYATTACKPLAYER       GREYATTACKING GREYSTOPPED faceplayer
@@ -169,6 +173,7 @@ ends
 useractor enemy GREY GREYSTRENGTH
 
 fall
+state checksquished
 ifai 0
 {
 	// play alert sound here
@@ -178,7 +183,8 @@ ifai 0
 
 ifai AIGREYDYING
 {
-        strength 0
+
+    strength 0
         
 		ifwasweapon RPG
 		{
@@ -197,13 +203,13 @@ ifai AIGREYDYING
         
         ifaction GREYDYING
         {
-                ifactioncount 5
-                {
+            ifactioncount 5
+            {
 						cstat 0
 						globalsound THUD
-                        action GREYDEADBODY
-                        break
-                }
+                action GREYDEADBODY
+                break
+            }
         }    
         ifaction GREYDEADBODY
           {
@@ -259,11 +265,11 @@ ifai AIGREYATTACKPLAYER state greyattackstate else
 ifai AIGREYREVIVING state greyrevivestate else
 ifai AIGREYSEEK state greyseekstate
 
-
 ifhitweapon
 {
     //guts JIBS6 1
     spawn BLOOD
+
     ifwasweapon SHRINKSPARK
         {
                 ifstrength 600
@@ -292,10 +298,10 @@ ifhitweapon
                 }
                 ifwasweapon GROWSPARK
                 {
-					cstat 0
-					sound ACTOR_GROWING
-					ai AIGREYGROW
-					break
+                  cstat 0
+                  sound ACTOR_GROWING
+                  ai AIGREYGROW
+                  break
                 }
                 addkills 1
                 sound GREYDEATH

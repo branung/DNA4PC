@@ -1,3 +1,4 @@
+// DNA enemy initialization
 include scripts/grey.con
 include scripts/slimecrab.con
 include scripts/slimeregg.con
@@ -6,6 +7,55 @@ include scripts/controllerboss.con
 include scripts/cyberalien.con
 include scripts/alienlord.con
 
+// Knockback state for enemies
+// Thanks to Dan G's DukePlus mod - whose genericknockcode state was referenced for this
+defstate enemyknockback
+
+  ifaction ATROOPDYING addvar knockbackvel 20
+  else ifaction GREYDYING addvar knockbackvel 20
+  else ifaction APIGDYING addvar knockbackvel 20
+  else ifaction ALIZDYING addvar knockbackvel 20
+  else ifaction AOCTADYING addvar knockbackvel 20
+  else ifaction CRABDYING addvar knockbackvel 20
+  else ifaction SLIMEREGGDYING addvar knockbackvel 20
+  else ifaction ANEWBEASTDYING addvar knockbackvel 20
+  ifvarg knockbackvel 0
+  {
+    cos xvel knockbackang
+    sin yvel knockbackang
+    setvarvar temp knockbackvel
+    ifvarg temp 768 setvar temp 768
+    mulvarvar xvel temp
+    mulvarvar yvel temp
+    shiftvarr xvel 13
+    shiftvarr yvel 13
+    movesprite THISACTOR xvel yvel 0 CLIPMASK0 RETURN
+    shiftvarr knockbackvel 1
+    ifvarl knockbackvel 3 setvar knockbackvel 0
+  }
+  else
+  {
+    ifg sprite[].htextra 0
+    {
+      geta[].htextra knockbackforce
+      ifl knockbackforce 32 set knockbackforce 32
+      geta[].htowner temp
+      ife temp player[].i {
+        //Checks the current weapon and forces certain knockback power if defined
+        ife player[].curr_weapon DEVISTATOR_WEAPON ifwasweapon SHOTSPARK1 setvar knockbackforce 200
+        else ife player[].curr_weapon FREEZE_WEAPON ifwasweapon FREEZEBLAST setvar knockbackforce 0
+        else ife player[].curr_weapon SHRINKER_WEAPON ifwasweapon SHRINKSPARK setvar knockbackforce 0 else ifwasweapon GROWSPARK setvar knockbackforce 0
+      }
+      geta[].htang knockbackang 
+      setvarvar knockbackvel knockbackforce
+      mulvarvar knockbackvel 2 
+      setvarvar temp 2
+      shiftvarl temp 1
+      subvarvar knockbackvel temp
+      ifvarl knockbackvel 0 setvar knockbackvel 0
+    }
+  }
+ends
 
 defstate transfer_lead_ammo
     getplayer[].ammo_amount SHOTGUN_WEAPON temp
@@ -363,6 +413,7 @@ enda
 // This hijacks into the common "checksquished" state from original GAME.CON
 // The enemy currently supports reviving trooper/pigcop/octa/newbeast.
 appendstate checksquished
+    
     ifaction ATROOPDEAD {
         findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
         ifn temp -1 {
@@ -413,6 +464,16 @@ appendstate checksquished
             ai AINEWBEASTGETENEMY
         }
     }
+ends
+
+// Knockback state added here to effect nearly all enemies
+prependstate checksquished
+    state enemyknockback
+ends
+
+// Liztroop gets special treatment
+prependstate troopcode
+  state enemyknockback
 ends
 
 //// --------- EXTRA SCREENFLASH FOR THE PLAYER ---------

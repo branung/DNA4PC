@@ -35,6 +35,13 @@ define ALIENLORDSTRENGTH 3000
 define ALIENLORDPROJECTILE 5183
 define ALIENLORDPROJECTILESTRENGTH 20
 
+// Enemy knockback vars
+gamevar knockbackvel 0 2
+gamevar knockbackang 0 2
+gamevar knockbackforce 0 0
+gamevar knockbacktemp 0 0
+gamevar xvel 0 0
+gamevar yvel 0 0
 
 //Cutscene sprites
 define DUKEHEADSPRITE 3923
