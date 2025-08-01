@@ -39,7 +39,6 @@ define ALIENLORDPROJECTILESTRENGTH 20
 gamevar knockbackvel 0 2
 gamevar knockbackang 0 2
 gamevar knockbackforce 0 0
-gamevar knockbacktemp 0 0
 gamevar xvel 0 0
 gamevar yvel 0 0
 

@@ -20,10 +20,6 @@ move GREYSHRUNKVELS 32
 gamevar greyprojpos 0 0
 gamevar greycurrpos 0 0
 
-gamevar angvar 0 0
-gamevar my_cos 0 0
-gamevar my_sin 0 0
-
 ai AIGREYWAIT               GREYSTANDING GREYSTOPPED geth
 ai AIGREYSEEK               GREYWALKING GREYWALKVEL seekplayer
 ai AIGREYATTACKPLAYER       GREYATTACKING GREYSTOPPED faceplayer
