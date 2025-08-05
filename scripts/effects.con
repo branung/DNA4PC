@@ -81,6 +81,14 @@ defstate getwallang
     sin s_temp3 s_temp3
 ends
 
+//// --------- SAFE SPRITE KILLER ---------
+// Workaround for scary SE
+defstate killme
+    seta .xrepeat 0
+    seta .yrepeat 0
+    changespritestat i STAT_MISC
+ends
+
 /// =============================================================================================
 ///   STATES: GAMEPLAY FUNCTIONALITY
 /// =============================================================================================
@@ -389,23 +397,33 @@ ends
 // Hitag: Monitor this activator
 // Extra: Change to this picnum once motion is complete
 defstate do_se70
-    // Check if we're moving
-    checkactivatormotion sprite.hitag
-    // Have we already been started?
-    ife fx_state enabled {
-        // But are we actually stil moving?
-        ife RETURN 0 {
-            // We've stopped
-            sets[sprite.sectnum].floorpicnum fx_extra
-            killit
-        }
-    } else {
-        // We've now stared motion, yes?!
-        ife RETURN 1 {
-            set fx_state enabled
-            ife sector[sprite.sectnum].lotag 17 sets[sprite.sectnum].floorpicnum fx_extra
-        }
-    }
+    switch fx_state
+        case disabled
+            ife fx_activate[sprite[].hitag] 1 set fx_state enabled
+            break
+        case enabled
+            // Check if we're moving
+            checkactivatormotion sprite.hitag
+            // Have we already been started?
+            // But are we actually stil moving?
+            ife RETURN 0 {
+                // We've stopped
+                sets[sprite.sectnum].floorpicnum fx_extra
+                seta .xrepeat 0
+                seta .yrepeat 0
+                set fx_state completed
+            } else {
+                // We've now stared motion, yes?!
+                ife RETURN 1 {
+                    set fx_state enabled
+                    ife sector[sprite.sectnum].lotag 17 sets[sprite.sectnum].floorpicnum fx_extra
+                }
+            }
+            break
+        case completed
+            changespritestat i STAT_MISC
+            break
+    endswitch
 ends
 
 //// -- SE71: Door controller --
@@ -645,8 +663,7 @@ defstate do_se75
             break
         case completed
             // For some reason killit breaks these??
-            seta[i].xrepeat 0
-            seta[i].yrepeat 0
+            state killme
             break
     endswitch
 ends
