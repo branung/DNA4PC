@@ -1,4 +1,4 @@
-// Redefinitions from hardcoded tiles:
+// Redefinitions from hardcoded tiles
 define CHAINGUNSPRITE 5626
 define RPGSPRITE 5627
 define FREEZESPRITE 5628
@@ -37,6 +37,7 @@ define FOODOBJECT19 5695
 define SMALLSMOKE 5719
 define SMALLSMOKEMAKER 5720
 define BLOOD 5724
+define TRANSPORTERSTAR 6696
 define MENUSCREEN 5753
 define BETASCREEN 5740
 define DUKENUKEM 5756
