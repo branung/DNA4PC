@@ -842,6 +842,7 @@ restrict.mid xplasma.mid alienz.mid music/DesertMaze.ogg thecall.mid gloomy.mid 
 
 
 // Overwrites for the main game definitions
+definequote 9         YOU HAVE DISCOVERED A SECRET!
 definequote 19        +100 HEALTH
 definequote 38        +50 ARMOR
 definequote 54        MP5
