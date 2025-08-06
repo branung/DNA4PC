@@ -208,7 +208,7 @@ onevent EVENT_DISPLAYREST
 		ifvare dna_menu 1 // main menu
 		{
 			setvar y 48
-			rotatesprite 160 5 32768 0 5741 0 0 2 0 0 xdim ydim // Advance graphic
+			rotatesprite 160 11 32768 0 5741 0 0 2 0 0 xdim ydim // Advance graphic
 			rotatesprite 160 30 65536 0 3934 0 0 2 0 0 xdim ydim // Options graphic
 			rotatespritea 160 90 81920 0 3933 0 0 2 80 0 0 xdim ydim // Menu graphic
 
