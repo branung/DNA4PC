@@ -129,6 +129,79 @@
 	}
 	ends
 
+	// Thanks to Mblackwell for this text override suggestion
+	// leave a blank quote
+	definequote 400 
+	// have "display quotes" for seprate screentexts
+	definequote 401  
+	definequote 402  
+	gamevar quote_y 0 0
+	gamevar mid_quote_timer 0 0
+	appendevent EVENT_DISPLAYSTART // before anything shows up on screen
+		ifge player.fta 99 // if the player had the quote timer bumped
+		{
+			ifn player.ftq 400 
+			{
+				// quotes pertaining to secrets or locks are checked
+				// if one of these quotes are found the seperate quote display is triggered
+				ife player.ftq 9 {
+					ifrnd 128
+						soundonce DUKE_GETWEAPON1
+					else 
+						soundonce JIBBED_ACTOR2
+					qstrcpy 402 player.ftq
+					// setting timer here will display the midscreen quote display
+					setvar mid_quote_timer 3000
+				}
+				else ife player.ftq LOCKQUOTE {
+					qstrcpy 402 player.ftq
+					setvar mid_quote_timer 3000
+				}
+				else
+				qstrcpy 401 player.ftq
+				// set the quote the game will try and display to our blank one
+				setp[].ftq 400
+			}
+			
+		}
+	endevent
+
+	defstate draw_dna_quotes
+	ifn userdef.fta_on 0 // if messages are not disabled
+	{
+		ifg player.fta 0 // if the message timer is still going
+		{
+			// some screentext to draw the quote message 401 (also you can emulate the fade-in/out based on the value of player.fta)
+			ifvarg eggtimer 0 { setvar quote_y 30 }
+			else setvar quote_y 1
+			
+			screentext STARTALPHANUM 160 quote_y 65536 0 0 401 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+		}
+
+		ifg mid_quote_timer 0 // if the mid-screen message timer is still going
+		{
+			
+			screentext STARTALPHANUM 160 70 65536 0 0 402 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+
+			// timer added to keep track of seperate message display
+			getticks curtick
+			ifvare prevtick -1 setvar ticktmp 0 else
+			{
+				setvarvar ticktmp curtick
+				subvarvar ticktmp prevtick
+			}
+
+			subvarvar mid_quote_timer ticktmp
+						
+			setvarvar prevtick curtick
+		}
+		else 
+		{
+			setvar prevtick -1
+		}
+	}
+	ends
+
 defstate dna_camera_hud
 	setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
     rotatesprite 160 170 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
@@ -194,6 +267,7 @@ definequote 1013
 
 onevent EVENT_DISPLAYREST
 {	
+
 	ifvarn dna_menu_tutorial 0 nullop
 	else
 	{
@@ -476,6 +550,7 @@ onevent EVENT_DISPLAYREST
 			state draw_dna_hud
 			state draw_dna_timer
 		}
+		state draw_dna_quotes
 	}
 }
 endevent
@@ -534,78 +609,4 @@ onevent EVENT_DISPLAYCAMERAOSD
 	state get_script
 	state dna_camera_hud
 }
-endevent
-
-// Thanks to Mblackwell for this text override suggestion
-// leave a blank quote
-definequote 400 
-// have "display quotes" for seprate screentexts
-definequote 401  
-definequote 402  
-gamevar quote_y 0 0
-gamevar mid_quote_timer 0 0
-appendevent EVENT_DISPLAYSTART // before anything shows up on screen
-	ifge player.fta 99 // if the player had the quote timer bumped
-	{
-		ifn player.ftq 400 
-		{
-			// quotes pertaining to secrets or locks are checked
-			// if one of these quotes are found the seperate quote display is triggered
-			ife player.ftq 9 {
-				ifrnd 128
-					soundonce DUKE_GETWEAPON1
-				else 
-					soundonce JIBBED_ACTOR2
-				qstrcpy 402 player.ftq
-				// setting timer here will display the midscreen quote display
-				setvar mid_quote_timer 3000
-			}
-			else ife player.ftq LOCKQUOTE {
-				qstrcpy 402 player.ftq
-				setvar mid_quote_timer 3000
-			}
-			else
-			qstrcpy 401 player.ftq
-			// set the quote the game will try and display to our blank one
-			setp[].ftq 400
-		}
-		
-	}
-endevent
-
-appendevent EVENT_DISPLAYREST // after other drawing
-	ifn userdef.fta_on 0 // if messages are not disabled
-	{
-		ifg player.fta 0 // if the message timer is still going
-		{
-			// some screentext to draw the quote message 401 (also you can emulate the fade-in/out based on the value of player.fta)
-			ifvarg eggtimer 0 { setvar quote_y 30 }
-			else setvar quote_y 1
-			
-			screentext STARTALPHANUM 160 quote_y 65536 0 0 401 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
-		}
-
-		ifg mid_quote_timer 0 // if the mid-screen message timer is still going
-		{
-			
-			screentext STARTALPHANUM 160 70 65536 0 0 402 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
-
-			// timer added to keep track of seperate message display
-			getticks curtick
-			ifvare prevtick -1 setvar ticktmp 0 else
-			{
-				setvarvar ticktmp curtick
-				subvarvar ticktmp prevtick
-			}
-
-			subvarvar mid_quote_timer ticktmp
-						
-			setvarvar prevtick curtick
-		}
-		else 
-		{
-			setvar prevtick -1
-		}
-	}
-
 endevent
