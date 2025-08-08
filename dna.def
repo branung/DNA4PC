@@ -1,5 +1,8 @@
 // Duke Nukem : Advance extra sound/gfx definitions
 
+basepalette 3 { raw { file "/palette/dna_3dr_pal.raw" } }
+artfile { file "dna_3dr.art" }
+
 tilefromtexture 26 { file "tiles/26.png" xoffset 0 yoffset -4 }
 tilefromtexture 2482 { file "tiles/2482.png" }
 tilefromtexture 2483 { file "tiles/2483.png" }
