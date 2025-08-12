@@ -4,7 +4,7 @@ spriteflags SLIMEREGG 4194304
 
 action SLIMEREGGWAIT 0
 action SLIMEREGGHATCH 2
-action SLIMEREGGATTACKING 2  2  1  1  30
+action SLIMEREGGATTACKING        2  2  1  1  30
 action SLIMEREGGDYING            11  5  1  1  8
 action SLIMEREGGDEADBODY         16  1  1  1  10
 action SLIMEREGGFROZEN           0   1  0  1  10
@@ -39,7 +39,7 @@ state slimereggwaitstate
         ifcansee ifpdistl 6144
         ifp palive
         {
-			ifrnd 8 
+			    ifrnd 12 
             { 
                 ai AISLIMEREGGATTACKPLAYER 
                 sound SLIMERATTACK
@@ -50,13 +50,13 @@ state slimereggwaitstate
 ends
 
 state slimereggattackstate
-  ifcount 25
+  ifcount 12
   {
-    ifcount 27
+    ifcount 14
       ai AISLIMEREGGWAIT
   }
   else
-	ifcount 24
+	ifcount 11
   {
       geta[THISACTOR].z slimereggprojpos
       setvarvar slimereggcurrpos slimereggprojpos
@@ -66,7 +66,7 @@ state slimereggattackstate
       seta[THISACTOR].z slimereggcurrpos
   }
    else
-	 ifactioncount 6
+	 ifactioncount 2
 	   resetactioncount
 ends
 
