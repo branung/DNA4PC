@@ -189,20 +189,20 @@
 
 			// timer added to keep track of seperate message display
 			getticks curtick
-			ifvare prevtick -1 setvar ticktmp 0 else
+			ifvare quote_prevtick -1 setvar ticktmp 0 else
 			{
 				setvarvar ticktmp curtick
-				subvarvar ticktmp prevtick
+				subvarvar ticktmp quote_prevtick
 			}
 
 			subvarvar mid_quote_timer ticktmp
 						
-			setvarvar prevtick curtick
+			setvarvar quote_prevtick curtick
 		}
 		else 
 		{
 			qstrcpy 402 400
-			setvar prevtick -1
+			setvar quote_prevtick -1
 		}
 	}
 	ends

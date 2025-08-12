@@ -239,6 +239,9 @@ gamevar curtick   0 0
 gamevar ticktmp   0 0 
 gamevar ticktmp2  0 0
 
+// Additional pretick for quotes to prevent conflict with cutscene timer
+gamevar quote_prevtick -1 0
+
 defineprojectile GREYPROJECTILE PROJ_WORKSLIKE 36866
 defineprojectile GREYPROJECTILE PROJ_VEL 500
 defineprojectile GREYPROJECTILE PROJ_EXTRA GREYPROJECTILESTRENGTH
