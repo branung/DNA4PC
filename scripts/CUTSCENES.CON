@@ -174,9 +174,6 @@ defstate cutscene_timer //same as waste_time but without input restriction
                 
                 setvarvar prevtick curtick
         }
-        else {
-        setvar prevtick -1
-        }
 }
 ends
 
@@ -930,7 +927,11 @@ appendevent EVENT_GAME
                                         stopallsounds
                                         startscreen    
                                         startscreen  
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { nullop } else ifvare dna_localization 1 { screensound GM_ISEETHEIRPLAN }
                                         startscreen
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { nullop } else ifvare dna_localization 1 { screensound GM_ISEETHEIRPLANS2 }
                                         startscreen  
                                         startscreen
                                         state end_cutscene
@@ -939,28 +940,43 @@ appendevent EVENT_GAME
                                 {
                                         stopallsounds
                                         startscreen    
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_ACTIVATEDWEAPON } else ifvare dna_localization 1 { screensound GM_TOOLATE }
                                         startscreen 
-                                        startscreen    
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_CHARGINGUP } else ifvare dna_localization 1 { nullop }
+                                        startscreen     
+                                        stopallsounds
                                         startscreen  
                                         startscreen
                                         startscreen  
-                                        startscreen  
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_TICKTOCK } else ifvare dna_localization 1 { nullop }
+                                        startscreen    
+                                        stopallsounds
                                         startscreen 
                                         state end_cutscene
                                 }
                                 ifvare cutscene_num 1003
                                 {
                                         stopallsounds
-                                        startscreen    
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_NICKOFTIME } else ifvare dna_localization 1 { screensound GM_NICKOFTIMEEU }
+                                        startscreen      
                                         state end_cutscene
                                 }
                                 ifvare cutscene_num 1004
                                 {
                                         stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_BETTERGETATEAM } else ifvare dna_localization 1 { screensound GM_BETTERGETATEAMEU }
                                         startscreen    
+                                        stopallsounds  
                                         startscreen 
-                                        startscreen    
-                                        startscreen  
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_SIZE15BOOT } else ifvare dna_localization 1 { screensound GM_SOURCEOFINFESTATION }
+                                        startscreen         
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_GUTSTOMPINTIME } else ifvare dna_localization 1 { screensound GM_GOINGTOSTOPTHEM }
+                                        startscreen      
                                         state end_cutscene
                                 }
                         }
@@ -969,7 +985,9 @@ appendevent EVENT_GAME
                                 ifvare cutscene_num 1001
                                 {
                                         stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_CANYOUREADME } else ifvare dna_localization 1 { screensound GM_CANYOUREADMEEU }
                                         startscreen    
+                                        stopallsounds     
                                         startscreen  
                                         ifvare dna_localization 0
                                         {
@@ -978,7 +996,8 @@ appendevent EVENT_GAME
                                         } 
                                         else
                                         {
-                                                nullop  
+                                                ifvare dna_dukecutscenevoc 2 screensound GM_SIGNALJAMMED
+                                                else nullop  
                                         }
                                         startscreen
                                         state end_cutscene
@@ -993,7 +1012,8 @@ appendevent EVENT_GAME
                                         } 
                                         else
                                         {
-                                                nullop  
+                                                ifvare dna_dukecutscenevoc 2 screensound GM_INBREDALIENS
+                                                else nullop  
                                         }
                                         startscreen
                                         stopallsounds    
@@ -1004,7 +1024,8 @@ appendevent EVENT_GAME
                                         } 
                                         else
                                         {
-                                                nullop  
+                                                ifvare dna_dukecutscenevoc 2 screensound GM_LIFEEXPECTANCY
+                                                else nullop  
                                         }
                                         startscreen 
                                         state end_cutscene
@@ -1015,17 +1036,28 @@ appendevent EVENT_GAME
                                 ifvare cutscene_num 1001
                                 {
                                         stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_SHIPORBITINGEARTH } else ifvare dna_localization 1 { screensound GM_SHIPORBITINGEARTHEU }
                                         startscreen    
-                                        startscreen  
-                                        startscreen
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_CLOAKINGDEVICE } else ifvare dna_localization 1 { screensound GM_CLOAKINGDEVICEEU }
+                                        startscreen    
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_COMMUNICADO } else ifvare dna_localization 1 { screensound GM_COMMUNICADOEU }
+                                        startscreen    
+                                        stopallsounds 
                                         state end_cutscene
                                 }
                                 ifvare cutscene_num 1002
                                 {
                                         stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_DOYOUREADME } else ifvare dna_localization 1 { screensound GM_DOYOUREADME }
                                         startscreen    
+                                        stopallsounds    
                                         startscreen
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_ISHUTITDOWN } else ifvare dna_localization 1 { screensound GM_ISHUTITDOWN }
                                         startscreen    
+                                        stopallsounds
                                         startscreen
                                         state end_cutscene
                                 }
@@ -1042,7 +1074,10 @@ appendevent EVENT_GAME
                                 ifvare cutscene_num 1002
                                 {
                                         stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_HOOKEDINTOSYSTEMS } else ifvare dna_localization 1 { screensound GM_WHATYOUASKEDFOR }
                                         startscreen    
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_GOTMYHANDSFULL } else ifvare dna_localization 1 { screensound GM_GONNAGETOUTTAHERE }
                                         startscreen
                                         state end_cutscene
                                 }
@@ -1053,7 +1088,10 @@ appendevent EVENT_GAME
                                 {
                                         stopallsounds
                                         startscreen    
-                                        startscreen  
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_KEEPANEYEOUT } else ifvare dna_localization 1 { screensound GM_WHATPARTISBAD }
+                                        startscreen
+                                        stopallsounds
                                         startscreen    
                                         startscreen  
                                         startscreen    
@@ -1076,11 +1114,12 @@ appendevent EVENT_GAME
                                         startscreen    
                                         ifvare dna_localization 1
                                         {
-                                                nullop
+                                                ifvare dna_dukecutscenevoc 2 screensound GM_YOULOOKFAMILIAREU
+                                                else nullop
                                         }
                                         else
                                         {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_SHAKEITBABY
+                                                ifvare dna_dukecutscenevoc 2 screensound GM_YOULOOKFAMILIAR
                                                 else ifvare dna_dukecutscenevoc 1 screensound DUKE_TIP2 //Shake it Baby
                                                 else nullop
                                         }   
@@ -1089,8 +1128,13 @@ appendevent EVENT_GAME
                                         startscreen  
                                         startscreen    
                                         startscreen  
-                                        startscreen    
-                                        startscreen  
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_ILLFINDTHEM } else ifvare dna_localization 1 { screensound GM_CLAMBAKE }
+                                        startscreen     
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_JENNY2STANDBY } else ifvare dna_localization 1 { screensound GM_CLONEBAKE }
+                                        startscreen
+                                        stopallsounds  
                                         state end_cutscene
                                 }
                         }
@@ -1100,10 +1144,18 @@ appendevent EVENT_GAME
                                 {
                                         stopallsounds
                                         startscreen    
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { nullop } else ifvare dna_localization 1 { screensound GM_LIKETHEIDEA }
+                                        startscreen       
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_BREEDINGSTOCK } else ifvare dna_localization 1 { nullop }
+                                        startscreen     
+                                        stopallsounds
                                         startscreen  
-                                        startscreen    
-                                        startscreen  
-                                        startscreen    
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_NEVERLEARN } else ifvare dna_localization 1 { screensound GM_KNOWIMHERE }
+                                        startscreen     
+                                        stopallsounds    
                                         startscreen  
                                         ifvare dna_dukecutscenevoc 2 screensound GM_ENGAGEMENTS
                                         else 
@@ -1116,17 +1168,26 @@ appendevent EVENT_GAME
                                 ifvare cutscene_num 1002
                                 {
                                         stopallsounds
-                                        startscreen    
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_NOTGONNABEEASY } else ifvare dna_localization 1 { screensound GM_NOTGONNABEEASY }
+                                        startscreen        
                                         state end_cutscene
                                 }
                                 ifvare cutscene_num 1003
                                 {
                                         stopallsounds
-                                        startscreen    
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_HAILTOKING } else ifvare dna_localization 1 { screensound GM_DONTTELLME }
+                                        else ifvare dna_dukecutscenevoc 1 ifvare dna_localization 0 { screensound DUKE_GETWEAPON6 } else ifvare dna_localization 1 { nullop }
+                                        else nullop
+                                        startscreen     
+                                        stopallsounds    
                                         startscreen    
                                         startscreen  
-                                        startscreen    
-                                        startscreen  
+                                        stopallsounds
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_ALIENANDSCHOOLGIRL } else ifvare dna_localization 1 { screensound GM_ALIENSANDCAPTIVES }
+                                        startscreen     
+                                        stopallsounds     
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_ONEBABEREADY } else ifvare dna_localization 1 { screensound GM_RESTOFTHEPARTY }
+                                        startscreen        
                                         state end_cutscene
                                 }
                         }
@@ -1148,12 +1209,15 @@ appendevent EVENT_GAME
                                 ifvare cutscene_num 1002
                                 {
                                         stopallsounds
-                                        startscreen    
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_JENNY4 } else ifvare dna_localization 1 { screensound GM_DEJAVU }
+                                        startscreen       
+                                        stopallsounds  
                                         startscreen
                                         startscreen
                                         ifvare dna_localization 0
                                         {
-                                                nullop
+                                                ifvare dna_dukecutscenevoc 2 screensound GM_SLIPPERYSNAKE
+                                                else nullop
                                         }
                                         else
                                         {
@@ -1162,7 +1226,9 @@ appendevent EVENT_GAME
                                         } 
                                         startscreen
                                         stopallsounds    
-                                        startscreen
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_TAKEHERAWAY } else ifvare dna_localization 1 { nullop }
+                                        startscreen       
+                                        stopallsounds 
                                         startscreen    
                                         state end_cutscene
                                 }
@@ -1202,8 +1268,10 @@ appendevent EVENT_GAME
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        stopallsounds
-                                        startscreen    
+                                        stopallsounds    
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_STARTINGTOHEATUP } else ifvare dna_localization 1 { screensound GM_STARTINGTOHEATUPEU }
+                                        startscreen       
+                                        stopallsounds    
                                         startscreen
                                         startscreen    
                                         startscreen
@@ -1236,7 +1304,11 @@ appendevent EVENT_GAME
                                 {
                                         stopallsounds
                                         startscreen    
-                                        startscreen
+                                        stopallsounds    
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_BLOWISTHISSHIP } else ifvare dna_localization 1 { screensound GM_SHOWEREARTHWITHDUKE }
+                                        startscreen       
+                                        stopallsounds    
+                                        ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_JENNY5ENERGIZE } else ifvare dna_localization 1 { screensound GM_MYPLACE }
                                         startscreen
                                         state end_cutscene
                                 }
@@ -1255,7 +1327,8 @@ appendevent EVENT_GAME
                                         }
                                         else
                                         {
-                                                nullop
+                                                ifvare dna_dukecutscenevoc 2 screensound GM_WATCHTHEFIREWORKS
+                                                else nullop
                                         }  
                                         startscreen
                                         stopallsounds

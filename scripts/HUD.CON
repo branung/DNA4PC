@@ -177,6 +177,10 @@
 			
 			screentext STARTALPHANUM 160 quote_y 65536 0 0 401 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
 		}
+		else
+		{
+			qstrcpy 401 400
+		}
 
 		ifg mid_quote_timer 0 // if the mid-screen message timer is still going
 		{
@@ -197,6 +201,7 @@
 		}
 		else 
 		{
+			qstrcpy 402 400
 			setvar prevtick -1
 		}
 	}
