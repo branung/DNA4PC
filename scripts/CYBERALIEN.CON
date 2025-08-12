@@ -2,7 +2,8 @@ spriteflags CYBERALIEN 4194304
 
 action CYBERALIENWALKING          0   3  5  1  22
 action CYBERALIENSTANDING         0   1  5  1  10
-action CYBERALIENLOBBING        16  6  1  1  30
+action CYBERALIENSHOOTING        16  6  1  1  30
+action CYBERALIENLOBBING         35  4  1  1  25
 action CYBERALIENDYING            29  5  1  1  8
 action CYBERALIENDEADBODY         33  1  1  1  10
 action CYBERALIENFROZEN           0   1  5  1  10
@@ -53,7 +54,7 @@ ends
 state cyberalienlobstate
 ifcansee
   {
-    ifactioncount 2
+    ifactioncount 3
     {
       resetactioncount
       sound BOS1_ATTACK2

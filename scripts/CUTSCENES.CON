@@ -1177,7 +1177,6 @@ appendevent EVENT_GAME
                                         stopallsounds
                                         ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_HAILTOKING } else ifvare dna_localization 1 { screensound GM_DONTTELLME }
                                         else ifvare dna_dukecutscenevoc 1 ifvare dna_localization 0 { screensound DUKE_GETWEAPON6 } else ifvare dna_localization 1 { nullop }
-                                        else nullop
                                         startscreen     
                                         stopallsounds    
                                         startscreen    
