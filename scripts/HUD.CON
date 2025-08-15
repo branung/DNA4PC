@@ -6,12 +6,17 @@
 	definequote 1021
 	definequote 1022
 	
-	defstate draw_tutorial
+	defstate draw_hud_text
 	{
 		ifvarn dna_menu_tutorial 0 nullop
 		else
 		{
 			screentext STARTALPHANUM 60 48 49152 0 0 1020 0 0 16 0 5 0 0 0 0 0 0 xdim ydim
+		}
+
+		ifvarg mission_count 0 
+		{
+			screentext STARTALPHANUM 4 48 32768 0 0 DNA_COUNTQUOTE 0 0 256 0 5 0 0 0 0 0 0 xdim ydim
 		}
 	}
 	ends
@@ -19,7 +24,7 @@
 	defstate draw_dna_hud
 	{
 		
-		state draw_tutorial
+		state draw_hud_text
 		rotatesprite 39 20 NORMALSIZE 0 5369 0 0 256 0 0 xdim ydim
 		getactor[THISACTOR].extra INV_TEMP
 		digitalnumber 5386 24 10 INV_TEMP 0 32 256 0 0 xdim ydim
@@ -134,7 +139,7 @@
 	definequote 400 
 	// have "display quotes" for seprate screentexts
 	definequote 401  
-	definequote 402  
+	definequote 402
 	gamevar quote_y 0 0
 	gamevar mid_quote_timer 0 0
 	appendevent EVENT_DISPLAYSTART // before anything shows up on screen
@@ -179,7 +184,10 @@
 		}
 		else
 		{
-			qstrcpy 401 400
+			ifn 401 400
+			{
+				qstrcpy 401 400
+			}
 		}
 
 		ifg mid_quote_timer 0 // if the mid-screen message timer is still going
@@ -201,8 +209,11 @@
 		}
 		else 
 		{
-			qstrcpy 402 400
-			setvar quote_prevtick -1
+			ifn 402 400
+			{
+				qstrcpy 402 400
+				setvar quote_prevtick -1
+			}	
 		}
 	}
 	ends

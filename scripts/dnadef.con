@@ -199,6 +199,7 @@ var eggtimer -1 1
 // SE74 - Actorcounter
 define DNA_COUNTQUOTE 303
 definequote DNA_COUNTQUOTE Enemies left:
+var mission_count -1 1
 
 // SE75 - Switch counter
 var triggercounter

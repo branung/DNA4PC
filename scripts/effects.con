@@ -221,6 +221,11 @@ defstate checklock
         }
         ifand fx_extra lock_mission { 
             ifand lockbits lock_mission {
+            ife mission_count 0 {
+                redefinequote LOCKQUOTE OBJECTIVE COMPLETED.
+                quote LOCKQUOTE
+                set mission_count -1
+            }
             set temp 1
             } else redefinequote LOCKQUOTE COMPLETE MISSION OBJECTIVE!
         }
@@ -611,9 +616,9 @@ defstate do_se74
                     }
                 }
             }
+            set mission_count fx_int
             redefinequote DNA_COUNTQUOTE Enemies left: %ld
             qsprintf DNA_COUNTQUOTE DNA_COUNTQUOTE fx_int
-            quote DNA_COUNTQUOTE
             ife fx_int 0 {
                 set fx_state completed
                 getplayer[].got_access lockbits
@@ -874,6 +879,7 @@ appendevent EVENT_ENTERLEVEL
     // Bobsound
     set bobsndtimer 1024
     set bobsndinverse 1
+    set mission_count -1
 endevent
 
 
