@@ -566,6 +566,7 @@ defstate switchcode
             ifn xvel 0 ifl xvel 0 set temp 0
             ife temp 1 set fx_state pre_enable
             ifg fx_int3 0 sub fx_int3 1
+            ifg fx_yvel 0 ife fx_activate[fx_yvel] 1 set fx_int3 30
             break
         case pre_enable
             ifhitspace {
@@ -628,6 +629,7 @@ defstate switchcode
                     sub temp 1
                     seta .picnum temp
                     set fx_state disabled
+                    set fx_int3 30
                 }
             }
             break
