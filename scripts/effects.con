@@ -404,29 +404,37 @@ ends
 defstate do_se70
     switch fx_state
         case disabled
-            ife fx_activate[sprite[].hitag] 1 set fx_state enabled
+            // Next direction of travel, -1 down 1 up
+            ife sector[sprite.sectnum].lotag 16 set fx_int2 -1
+            ife sector[sprite.sectnum].lotag 17 set fx_int2 1
+            set fx_state pre_enable
             break
-        case enabled
-            // Check if we're moving
+        case pre_enable
             checkactivatormotion sprite.hitag
-            // Have we already been started?
-            // But are we actually stil moving?
-            ife RETURN 0 {
-                // We've stopped
-                sets[sprite.sectnum].floorpicnum fx_extra
-                seta .xrepeat 0
-                seta .yrepeat 0
-                set fx_state completed
-            } else {
-                // We've now stared motion, yes?!
-                ife RETURN 1 {
-                    set fx_state enabled
-                    ife sector[sprite.sectnum].lotag 17 sets[sprite.sectnum].floorpicnum fx_extra
+            ife RETURN 1 {
+                set fx_state enabled
+                // Store our picnum
+                set fx_int sector[sprite.sectnum].floorpicnum
+                ife fx_int2 1 {
+                    // Do the picnum swap instnatly if rising up
+                    sets[sprite.sectnum].floorpicnum fx_extra
                 }
             }
             break
-        case completed
-            changespritestat i STAT_MISC
+        case enabled
+            // Check if we've stopped
+            checkactivatormotion sprite.hitag
+            ife RETURN 0 {
+                // We've stopped
+                sets[sprite.sectnum].floorpicnum fx_extra
+                inv fx_int2
+                set fx_state pre_disable
+                
+            }
+            break
+        case pre_disable
+            set fx_extra fx_int
+            set fx_state pre_enable
             break
     endswitch
 ends
