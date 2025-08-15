@@ -65,6 +65,14 @@ appendevent EVENT_ENTERLEVEL
     }
 endevent
 
+appendevent EVENT_LOADGAME
+    ifvare dna_level_music 1
+    {
+        stopallmusic   
+        starttrackslot 5 20
+    }
+endevent
+
 onevent EVENT_DISPLAYCROSSHAIR
     ifvare dna_crosshair 1 { setvar RETURN 5744 }
     else ifvare dna_crosshair 2 { setvar RETURN 5745 }
