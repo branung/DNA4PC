@@ -549,7 +549,7 @@ enda
 defstate activate_lotag
     operateactivators fx_lotag 0
     for u sprofstat STAT_EFFECTOR {
-        ife sprite[u].lotag 25 {
+        ife sprite[u].lotag 25 ife sprite[u].hitag fx_lotag {
             geta [u].htg_t 4 temp
             ife temp 1 seta [u].htg_t 4 0 else seta [u].htg_t 4 1
         }

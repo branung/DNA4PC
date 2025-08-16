@@ -667,6 +667,12 @@ defstate do_se75
                 ifn fx_extra -1 {
                     //addlogvar fx_extra
                     operateactivators fx_extra 0
+                     for u sprofstat STAT_EFFECTOR {
+                         ife sprite[u].lotag 25 ife sprite[u].hitag fx_extra {
+                             geta [u].htg_t 4 temp
+                             ife temp 1 seta [u].htg_t 4 0 else seta [u].htg_t 4 1
+                         }
+                     }
                 }
                 getplayer[].got_access lockbits
                 or lockbits lock_mission
