@@ -671,6 +671,8 @@ defstate do_se75
                 getplayer[].got_access lockbits
                 or lockbits lock_mission
                 setplayer[].got_access lockbits
+                redefinequote DNA_COUNTQUOTE Sequence completed!
+                quote DNA_COUNTQUOTE
             }
             set fx_state completed
             break
@@ -732,7 +734,6 @@ defstate do_se76
         case enabled
             ifl fx_int2 fx_extra add fx_int2 1
             ife fx_int2 fx_extra {
-                quote 2
                 operatesectors fx_owner 0
                 sound sprite[].hitag
                 set fx_int2 0
@@ -828,9 +829,7 @@ eventloadactor SECTOREFFECTOR
         }
     }
     
-    ife sprite.lotag 75 {
-        add triggercounter 1
-    }
+
     
     ife sprite.lotag 76 {
         // Places the SE in the middle x/y of the sector (Pretty surely a rectangle)
@@ -888,6 +887,24 @@ appendevent EVENT_ENTERLEVEL
     set bobsndtimer 1024
     set bobsndinverse 1
     set mission_count -1
+    
+    
+    // These get mangled around this point in time
+    for i sprofstat STAT_EFFECTOR {
+         ife sprite[i].lotag 25 {
+            // Crusher should start stopped if pal was red
+            ife sprite[i].pal 2 {
+                seta [i].htg_t 4 0
+                geta [i].htg_t 3 temp
+                sets[sprite[i].sectnum].ceilingz temp
+            }
+         }
+        
+        ife sprite[i].lotag 75 {
+        add triggercounter 1
+        addlogvar triggercounter
+        }
+    }
 endevent
 
 
