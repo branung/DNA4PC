@@ -124,46 +124,54 @@ ends
 // 's_state' has four values: enabled/disabled and 'pre' variants for transitioning a state
 defstate enable_autoshade
         for i allsectors {
-            gets[i].floorshade s_sectshade
-            // Do basic shading if we're not fullbright
-            ifg s_sectshade -1 {
-                for u wallsofsector i {
-                    state getwallang
-                    shiftr s_temp3 13
-                    set s_temp1 s_sectshade
-                    add s_temp1 s_temp3
-                    shiftl s_temp3 1
-                    abs s_temp3
-                    add s_temp1 s_temp3
-                    setw[u].shade s_temp1
-                    set s_tempvis 8
-                    
+            gets[i].floorpal s_temp1
+            ifl s_temp1 140 {
+                gets[i].floorshade s_sectshade
+                // Do basic shading if we're not fullbright
+                ifg s_sectshade -1 {
+                    for u wallsofsector i {
+                        state getwallang
+                        shiftr s_temp3 13
+                        set s_temp1 s_sectshade
+                        add s_temp1 s_temp3
+                        shiftl s_temp3 1
+                        abs s_temp3
+                        add s_temp1 s_temp3
+                        setw[u].shade s_temp1
+                        set s_tempvis 8
+                        
+                    }
+                    // Increase darkness (vis) if areas are darker
+                    ifg s_sectshade 2 shiftl s_tempvis 1
+                    ifg s_sectshade 8 shiftl s_tempvis 1
+                    ifg s_sectshade 16 shiftl s_tempvis 1
                 }
-                // Increase darkness (vis) if areas are darker
-                ifg s_sectshade 2 shiftl s_tempvis 1
-                ifg s_sectshade 8 shiftl s_tempvis 1
-                ifg s_sectshade 16 shiftl s_tempvis 1
-            }
-            else {
-                // For bright sectors it should be slightly less intense (and full vis)
-                for u wallsofsector i {
-                    state getwallang
-                    shiftr s_temp3 13
-                    abs s_temp3
-                    set s_temp1 s_sectshade
-                    add s_temp1 s_temp3
-                    setw[u].shade s_temp1
-                    set s_tempvis 240
+                else {
+                    // For bright sectors it should be slightly less intense (and full vis)
+                    for u wallsofsector i {
+                        state getwallang
+                        shiftr s_temp3 13
+                        abs s_temp3
+                        set s_temp1 s_sectshade
+                        add s_temp1 s_temp3
+                        setw[u].shade s_temp1
+                        set s_tempvis 240
+                    }
                 }
-            }
-            // Apply final visibility and darken the ceiling a bit for better three-dee
-            sets[i].visibility s_tempvis
-            set s_temp1 s_sectshade
-            add s_temp1 6
-            ifand sector[i].ceilingstat 1 {
-                sets[i].ceilingshade -32
-            } else {
-                sets[i].ceilingshade s_temp1
+                // Apply final visibility and darken the ceiling a bit for better three-dee
+                sets[i].visibility s_tempvis
+                set s_temp1 s_sectshade
+                add s_temp1 6
+                ifand sector[i].ceilingstat 1 {
+                    sets[i].ceilingshade -32
+                } else {
+                    sets[i].ceilingshade s_temp1
+                }
+                gets[i].floorpicnum s_temp1
+                set s_temp2 0
+                // Bright ones
+                ife s_temp1 5684 set s_temp2 1
+                ife s_temp2 1 sets[i].visibility 0
             }
         }
     set s_state enabled
@@ -179,6 +187,72 @@ defstate disable_autoshade
         sets[i].ceilingshade s_sectshade
     }
     set s_state disabled
+ends
+
+
+// Checks if the sector is simply dark due to cycler presence
+defstate apply_pal
+    
+    // Check for cycler presence, if valid then this isn't the sector you're looking for...
+    //for u spritesofsector i {
+    //    ife sprite[u].picnum 7 addlogvar i
+    //}
+    // Change walls to corret PAL and SHADE
+    for u wallsofsector i {
+        setw[u].pal s_temp1
+        ife s_temp1 140 setw[u].shade 4
+        ife s_temp1 141 setw[u].shade 8
+        ife s_temp1 142 setw[u].shade 12
+    }
+    // Change sectors to corret PAL and SHADE
+    sets[i].floorpal s_temp1
+    sets[i].ceilingpal s_temp1
+    ife s_temp1 140 sets[i].floorshade 4
+    ife s_temp1 141 sets[i].floorshade 8
+    ife s_temp1 142 sets[i].floorshade 12
+    ife s_temp1 140 sets[i].ceilingshade 4
+    ife s_temp1 141 sets[i].ceilingshade 8
+    ife s_temp1 142 sets[i].ceilingshade 12
+    
+    sets[u].visibility 241
+ends
+
+//// --------- PALETTE FIX ---------
+// This enables palette edge cases for maps that are meant to have alernative "fog palette" setups
+// PAL140 = 6=>22, "tan", lavaroom map4
+    // floor/ceiling/wall 5
+
+// PAL141 = 13=>21, "piss yellow", map5/7 lava cracks and map17/18 lava sections
+    // Floor is 4
+    // Ceiling is 8
+    // Walls 8
+// PAL142 = 1=>23, "reddish tan", map8 backstage / map16 rightmost room
+    // Floor is 6
+    // Ceiling 12
+    // Walls 12
+// Since the game barely uses darker shades, these were hardcoded to be PAL overrides and appear "bright" ingame.
+
+defstate enable_palfix
+    for i allsectors {
+        gets[i].floorshade s_sectshade
+        switch s_sectshade
+            // Piss yellow
+            case 21
+                set s_temp1 141
+                state apply_pal
+                break
+            // Tan
+            case 22
+                set s_temp1 140
+                state apply_pal
+                break
+            // Reddish tan
+            case 23
+                set s_temp1 141
+                state apply_pal
+                break
+        endswitch
+    }
 ends
 
 //// --------- DOOR LOCK CHECKER (KEYCARD/ETC) ---------
@@ -667,10 +741,18 @@ defstate do_se75
                 ifn fx_extra -1 {
                     //addlogvar fx_extra
                     operateactivators fx_extra 0
+                     for u sprofstat STAT_EFFECTOR {
+                         ife sprite[u].lotag 25 ife sprite[u].hitag fx_extra {
+                             geta [u].htg_t 4 temp
+                             ife temp 1 seta [u].htg_t 4 0 else seta [u].htg_t 4 1
+                         }
+                     }
                 }
                 getplayer[].got_access lockbits
                 or lockbits lock_mission
                 setplayer[].got_access lockbits
+                redefinequote DNA_COUNTQUOTE Sequence completed!
+                quote DNA_COUNTQUOTE
             }
             set fx_state completed
             break
@@ -732,7 +814,6 @@ defstate do_se76
         case enabled
             ifl fx_int2 fx_extra add fx_int2 1
             ife fx_int2 fx_extra {
-                quote 2
                 operatesectors fx_owner 0
                 sound sprite[].hitag
                 set fx_int2 0
@@ -792,6 +873,9 @@ ends
 /// =============================================================================================
 // Ran before level data is fully loaded: Sectors/Actors/etc..
 appendevent EVENT_PRELEVEL
+    // Palette fix trick -- Disabled for now due to nasty edge cases
+    //state enable_palfix
+    
     ife VOLUME 5 {
         set ambsndtimer 120
         mul ambsndtimer 120
@@ -807,6 +891,7 @@ enda
 eventloadactor ACTIVATOR
     state get_fxtags
 enda
+
 eventloadactor SECTOREFFECTOR
     state get_fxtags
     
@@ -828,9 +913,7 @@ eventloadactor SECTOREFFECTOR
         }
     }
     
-    ife sprite.lotag 75 {
-        add triggercounter 1
-    }
+
     
     ife sprite.lotag 76 {
         // Places the SE in the middle x/y of the sector (Pretty surely a rectangle)
@@ -888,6 +971,23 @@ appendevent EVENT_ENTERLEVEL
     set bobsndtimer 1024
     set bobsndinverse 1
     set mission_count -1
+    
+    
+    // These get mangled around this point in time
+    for i sprofstat STAT_EFFECTOR {
+         ife sprite[i].lotag 25 {
+            // Crusher should start stopped if pal was red
+            ife sprite[i].pal 2 {
+                seta [i].htg_t 4 0
+                geta [i].htg_t 3 temp
+                sets[sprite[i].sectnum].ceilingz temp
+            }
+         }
+        
+        ife sprite[i].lotag 75 {
+        add triggercounter 1
+        }
+    }
 endevent
 
 

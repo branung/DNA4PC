@@ -544,6 +544,18 @@ useractor notenemy MBMACHINE 0
     }
 enda
 
+
+// Expects output tag to be in sprite.lotag
+defstate activate_lotag
+    operateactivators fx_lotag 0
+    for u sprofstat STAT_EFFECTOR {
+        ife sprite[u].lotag 25 ife sprite[u].hitag fx_lotag {
+            geta [u].htg_t 4 temp
+            ife temp 1 seta [u].htg_t 4 0 else seta [u].htg_t 4 1
+        }
+    }
+ends
+
 // extra = -1 single use, Positive number is ticks to wait until re-trigger is allowed (+30t recommended)
 // owner = set positive to autoclose immediately after extra
 // fx_int = auto-forced toggle counter
@@ -578,7 +590,7 @@ defstate switchcode
                 add temp 1
                 seta .picnum temp
                 // Activation
-                operateactivators fx_lotag 0
+                state activate_lotag
                 // Setup delays to wait for force-return or imposed wait
                 ife fx_extra -1 {
                     set fx_state completed
@@ -615,7 +627,7 @@ defstate switchcode
                 geta .picnum temp
                 sub temp 1
                 seta .picnum temp
-                operateactivators fx_lotag 0
+                state activate_lotag
                 set fx_int2 30
                 set fx_int3 fx_extra
                 set fx_state disabled
