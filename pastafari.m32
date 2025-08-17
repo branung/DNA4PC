@@ -1,7 +1,40 @@
+
+// Copypaste multifunction script, lazy edition 1.0
 // Purpose of this helpfully named script is to store sprites in a map to an array and then allow you to selectively restore/paste in another map
+
+// 
+// >include d3d
+// >include pastafari
+// 
+// Then you can do stuff with following vars
+// pastesprite = picnum to paste
+// pastelolo = Lotag must be greater than this
+// pastelohi = Lotag must be lower than this
+// 
+// Typical workflow:
+// - Open source map
+// > do copy_sprites
+// 
+// - Open target map
+// > do set pastesprite X
+// > do paste_sprites
+// 
+// You can clean all three vars with
+// > do paste_clean
+// 
+// 
+// Other helper functions exist for SPECIFIC things
+// > do paste_ambient -- Will paste sounds 560-571 (ambient ones)
+// > do paste_newse -- Will paste any SE70-89
+// 
+// 
+// You might get errors on sprite sector numbers, this is normal. They should fix themselves.
+
 gamevar pastesprite -1 0
 gamevar pastelolo -1 0
 gamevar pastelohi -1 0
+
+
 
 // I stole some of the code we had in Ion Fury for this (Don't tell Jon!)
 gamearray cp_x 16384
