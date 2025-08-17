@@ -571,12 +571,12 @@ defstate switchcode
     switch fx_state
         case disabled
             // If player touches or presses space then approve change
-            set temp 0
+            set temp2 0
             ifpdistg 1024 set fx_int2 0
-            ifpdistl 768 ifp pfacing ife fx_int2 0 ife fx_int3 0 set temp 1
-            ifpdistl 1024 ifp pfacing ife fx_int3 0 ifhitspace set temp 1
-            ifn xvel 0 ifl xvel 0 set temp 0
-            ife temp 1 set fx_state pre_enable
+            ifpdistl 768 ifp pfacing ife fx_int2 0 ife fx_int3 0 set temp2 1
+            ifpdistl 1024 ifp pfacing ife fx_int3 0 ifhitspace set temp2 1
+            ifn fx_xvel 0 ifl fx_xvel 0 set temp2 0
+            ife temp2 1 set fx_state pre_enable
             ifg fx_int3 0 sub fx_int3 1
             ifg fx_yvel 0 ife fx_activate[fx_yvel] 1 set fx_int3 30
             break
@@ -586,9 +586,9 @@ defstate switchcode
             } else {
                 // Visuals & Audio
                 sound fx_hitag
-                geta .picnum temp
-                add temp 1
-                seta .picnum temp
+                geta .picnum temp2
+                add temp2 1
+                seta .picnum temp2
                 // Activation
                 state activate_lotag
                 // Setup delays to wait for force-return or imposed wait
@@ -607,15 +607,15 @@ defstate switchcode
             break
         case enabled
             // Have timers ran out?
-            set temp 0
+            set temp2 0
             ifpdistg 1024 set fx_int2 0
-            ifpdistl 512 ifp pfacing ife fx_int2 0 ife fx_int3 0 set temp 1
+            ifpdistl 512 ifp pfacing ife fx_int2 0 ife fx_int3 0 set temp2 1
             ifn fx_owner -1 {
                 ifg fx_int 0 sub fx_int 1
-                ife fx_int 0 set temp 1
+                ife fx_int 0 set temp2 1
             }
-            ifpdistl 1024 ifp pfacing ife fx_int 0 ife fx_int3 0 ifhitspace set temp 1
-            ife temp 1 set fx_state pre_disable
+            ifpdistl 1024 ifp pfacing ife fx_int 0 ife fx_int3 0 ifhitspace set temp2 1
+            ife temp2 1 set fx_state pre_disable
             ifg fx_int3 0 sub fx_int3 1
             break
         case pre_disable
@@ -624,9 +624,9 @@ defstate switchcode
             } else {
                 sound fx_hitag
                 set fx_state disabled
-                geta .picnum temp
-                sub temp 1
-                seta .picnum temp
+                geta .picnum temp2
+                sub temp2 1
+                seta .picnum temp2
                 state activate_lotag
                 set fx_int2 30
                 set fx_int3 fx_extra
@@ -637,9 +637,9 @@ defstate switchcode
             // In case yvel gets triggered, re-enable it
             ifg fx_yvel 0 {
                 ife fx_activate[fx_yvel] 1 {
-                    geta .picnum temp
-                    sub temp 1
-                    seta .picnum temp
+                    geta .picnum temp2
+                    sub temp2 1
+                    seta .picnum temp2
                     set fx_state disabled
                     set fx_int3 30
                 }
