@@ -1,3 +1,92 @@
+// I'll merge this file to other things later on..
+
+
+
+// Checks if the sector is simply dark due to cycler presence
+defstate apply_pal
+    redefinequote txt Found sector %ld with palshade %ld - 
+    qsprintf txt txt i temp
+    set temp3 0
+    // Check for cycler presence, if valid then this isn't the sector you're looking for...
+    for u spritesofsector i {
+        ife sprite[u].picnum 7 {
+            set temp3 1
+            redefinequote txt2 skipping due to cyclers!
+            qstrcat txt txt2
+        }
+    }
+    ife temp3 0 {
+        // Change walls to corret PAL and SHADE
+        for u wallsofsector i {
+            set wall[u].pal temp
+            ife temp 140 set wall[u].shade 12
+            ife temp 141 set wall[u].shade 8
+            ife temp 142 set wall[u].shade 12
+        }
+        // Change sectors to corret PAL and SHADE
+        set sector[i].floorpal temp
+        set sector[i].ceilingpal temp
+        ife temp 140 set sector[i].floorshade 4
+        ife temp 141 set sector[i].floorshade 8
+        ife temp 142 set sector[i].floorshade 12
+        ife temp 140 set sector[i].ceilingshade 12
+        ife temp 141 set sector[i].ceilingshade 8
+        ife temp 142 set sector[i].ceilingshade 12
+        
+        ife temp 140 {
+            set sector[i].visibility 0
+        } else ife temp 141 {
+            set sector[i].visibility 241
+        } else ife temp 142 {
+            set sector[i].visibility 241
+        }
+        redefinequote txt2 redone!
+        qstrcat txt txt2
+    }
+    print txt
+ends
+
+//// --------- PALETTE FIX ---------
+// This enables palette edge cases for maps that are meant to have alernative "fog palette" setups
+// PAL140 = 6=>22, "tan", lavaroom map4
+    // floor/ceiling/wall 5
+
+// PAL141 = 13=>21, "piss yellow", map5/7 lava cracks and map17/18 lava sections
+    // Floor is 4
+    // Ceiling is 8
+    // Walls 8
+// PAL142 = 1=>23, "reddish tan", map8 backstage / map16 rightmost room
+    // Floor is 6
+    // Ceiling 12
+    // Walls 12
+// Since the game barely uses darker shades, these were hardcoded to be PAL overrides and appear "bright" ingame.
+
+defstate enable_palfix
+    for i allsectors {
+        set temp2 sector[i].floorshade
+        switch temp2
+            // Piss yellow
+            case 21
+                set temp 141
+                state apply_pal
+                break
+            // Tan
+            case 22
+                set temp 140
+                state apply_pal
+                break
+            // Reddish tan
+            case 23
+                set temp 142
+                state apply_pal
+                break
+        endswitch
+    }
+ends
+
+
+
+
 
 // Copypaste multifunction script, lazy edition 1.0
 // Purpose of this helpfully named script is to store sprites in a map to an array and then allow you to selectively restore/paste in another map
