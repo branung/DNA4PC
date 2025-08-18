@@ -268,3 +268,218 @@ defstate paste_newse
     state paste_sprites
     state paste_clean
 ends
+
+
+
+
+defstate doorfx
+    ifn searchsector -1 {
+        // Sector coords
+        set i searchsector
+        set temp 0
+        set temp2 0
+        set temp3 0
+        for u wallsofsector i {
+            add temp wall[u].x
+            add temp2 wall[u].y
+            add temp3 1
+        }
+        div temp temp3
+        div temp2 temp3
+        set temp3 -1
+        
+        // SE71 CHECK
+        for u spritesofsector i {
+            ife sprite[u].picnum 1 ife sprite[u].lotag 71 set temp3 u
+        }
+        ife temp3 -1 {
+            insertsprite 0
+            set .picnum 1
+            set .lotag 71
+            set .x temp
+            set .y temp2
+            set .z sector[i].floorz
+            set .cstat 0
+            set .xrepeat 32
+            set .yrepeat 32
+            set .pal 0
+            set .extra -1
+            set temp4 i
+            updatesectorz .x .y .z temp4
+            ifn temp2 -1 set .sectnum temp4
+        }
+        // MusicAndFX
+        set temp3 -1
+        for u spritesofsector i {
+            ife sprite[u].picnum 5 {
+                set sprite[u].lotag 434
+                set sprite[u].hitag 0
+                set temp3 u
+            }
+        }
+        add temp 16
+        add temp2 16
+        ife temp3 -1 {
+            insertsprite 0
+            set .picnum 5
+            set .x temp
+            set .y temp2
+            set .z sector[i].floorz
+            set .lotag 434
+            set .cstat 0
+            set .xrepeat 32
+            set .yrepeat 32
+            set .pal 0
+            set .extra -1
+            set temp4 i
+            updatesectorz .x .y .z temp4
+            ifn temp2 -1 set .sectnum temp4
+        }
+        // Auto-close SE
+        set temp3 -1
+        for u spritesofsector i {
+            ife sprite[u].picnum 1 ife sprite[u].lotag 10 {
+                set sprite[u].lotag 10
+                set sprite[u].hitag 128
+                set temp3 u
+            }
+        }
+        sub temp 32
+        ife temp3 -1 {
+            insertsprite 0
+            set .picnum 1
+            set .x temp
+            set .y temp2
+            set .z sector[i].floorz
+            set .lotag 10
+            set .hitag 128
+            set .cstat 0
+            set .xrepeat 32
+            set .yrepeat 32
+            set .pal 0
+            set .extra -1
+            set temp4 i
+            updatesectorz .x .y .z temp4
+            ifn temp2 -1 set .sectnum temp4
+        }
+    }
+ends
+
+defstate elevatorfx
+    ifn searchsector -1 {
+        // Sector coords
+        set i searchsector
+        set temp 0
+        set temp2 0
+        set temp3 0
+        for u wallsofsector i {
+            add temp wall[u].x
+            add temp2 wall[u].y
+            add temp3 1
+        }
+        div temp temp3
+        div temp2 temp3
+        set temp3 -1
+        
+        // SE76 CHECK
+        for u spritesofsector i {
+            ife sprite[u].picnum 1 ife sprite[u].lotag 76 set temp3 u
+        }
+        ife temp3 -1 {
+            insertsprite 0
+            set .picnum 1
+            set .lotag 76
+            set .x temp
+            set .y temp2
+            set .z sector[i].floorz
+            set .cstat 0
+            set .xrepeat 32
+            set .yrepeat 32
+            set .pal 0
+            set .extra -1
+            set temp4 i
+            updatesectorz .x .y .z temp4
+            ifn temp2 -1 set .sectnum temp4
+        }
+        // MusicAndFX
+        set temp3 -1
+        for u spritesofsector i {
+            ife sprite[u].picnum 5 {
+                deletesprite u
+            }
+        }
+        // Autoclose
+        set temp3 -1
+        for u spritesofsector i {
+            ife sprite[u].picnum 1 ife sprite[u].lotag 10 {
+                deletesprite u
+            }
+        }
+        // Activator
+        set temp3 -1
+        for u spritesofsector i {
+            ife sprite[u].picnum 2 {
+                deletesprite u
+            }
+        }
+    }
+ends
+
+
+defstate fixfx
+    ifn searchsector -1 {
+        ife sector[searchsector].lotag 20 state doorfx
+        ife sector[searchsector].lotag 16 state elevatorfx
+    }
+ends
+
+
+
+
+onevent EVENT_DRAW2DSCREEN
+    // Check for doors
+    for i allsectors {
+        ife sector[i].lotag 20 {
+            set temp3 0
+            for u spritesofsector i {
+                ife sprite[u].picnum 1 ife sprite[u].lotag 71 set temp3 1
+            }
+            ife temp3 0 {
+                set temp 0
+                set temp2 0
+                for u wallsofsector i {
+                    add temp wall[u].x
+                    add temp2 wall[u].y
+                    add temp3 1
+                }
+                div temp temp3
+                div temp2 temp3
+                drawcircle16b temp temp2 1536 -245
+            }
+        }
+    }
+    // Check for elevators
+    for i allsectors {
+        ife sector[i].lotag 16 {
+            set temp3 0
+            for u spritesofsector i {
+                ife sprite[u].picnum 1 ife sprite[u].lotag 76 set temp3 1
+            }
+            ife temp3 0 {
+                set temp 0
+                set temp2 0
+                for u wallsofsector i {
+                    add temp wall[u].x
+                    add temp2 wall[u].y
+                    add temp3 1
+                }
+                div temp temp3
+                div temp2 temp3
+                drawcircle16b temp temp2 1536 -215
+            }
+        }
+    }
+    
+    
+    state drawloop
+endevent
