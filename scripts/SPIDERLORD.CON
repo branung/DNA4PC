@@ -233,7 +233,7 @@ ifhitweapon
 		guts JIBS2 1
         ifdead
         {
-              spawn ACCESSCARD
+              spawn DNA_REDKEY
                 ifwasweapon FREEZEBLAST
                 {
                   sound SOMETHINGFROZE

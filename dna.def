@@ -11,8 +11,6 @@ fogpal 141 48 40 0
 // Shade1, "reddish tan", map8 backstage / map16 rightmost room
 fogpal 142 32 8 4
 
-
-
 tilefromtexture 26 { file "tiles/26.png" xoffset 0 yoffset -4 }
 tilefromtexture 2482 { file "tiles/2482.png" }
 tilefromtexture 2483 { file "tiles/2483.png" }
@@ -24,3 +22,23 @@ tilefromtexture 2540 { file "tiles/2540.png" xoffset 15 yoffset 11 }
 tilefromtexture 2541 { file "tiles/2541.png" }
 tilefromtexture 2542 { file "tiles/2542.png" }
 tilefromtexture 2543 { file "tiles/2543.png" }
+
+//Sky texture fixes
+multipsky 3699 {
+    lognumtiles 1
+    yscale 65535
+    yoffset 154
+    horizfrac 65536
+}
+multipsky 3914 {
+    lognumtiles 1
+    yscale 65535
+    yoffset 154
+    horizfrac 65536
+}
+multipsky 3915 {
+    lognumtiles 1
+    yscale 65535
+    yoffset 154
+    horizfrac 65536
+}
