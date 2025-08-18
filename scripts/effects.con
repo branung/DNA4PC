@@ -474,6 +474,7 @@ defstate do_se71
                         ife sector[fx_int].lotag 16 operatesectors fx_int player[].i
                         
                         ifn fx_xvel 0 soundonce fx_xvel
+                        set fx_xvel 0
                         
                         ifand sprite[].hitag 1 {
                             set fx_state completed
