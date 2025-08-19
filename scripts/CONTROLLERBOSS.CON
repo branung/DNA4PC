@@ -230,5 +230,5 @@ ifai AICONTROLLERBOSSSEEK state controllerbossseekstate
 enda
 
 eventloadactor CONTROLLERBOSS
-    sizeat 64 64
+    sizeat 48 48
 enda
