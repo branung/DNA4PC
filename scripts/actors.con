@@ -71,6 +71,19 @@ defstate dna_getcode
 ends
 
 
+
+defstate enemy_fxload
+    // For now just process HTIAG to fx_hitag for enemies!
+    geta .hitag fx_hitag
+    seta .hitag 0
+ends
+
+defstate enemy_deathtrigger
+    ifn fx_lotag 0 {
+        setarray fx_preactivate[fx_hitag] 1
+    }
+ends
+
 // Moved from GAME.CON
 actor LEAD_CANNON_SPRITE
   fall

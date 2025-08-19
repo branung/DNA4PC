@@ -183,38 +183,53 @@ defstate cutscene_getscene
         getactor[].lotag cutscene_myvar
         setactor[].lotag 0
     }
+    geta .hitag fx_hitag
+    seta .hitag 0
 ends
 
 useractor notenemy CUTSCENEINDICATOR 0
 
-    ifpdistl 1266
-    ifp pfacing
-    {
-        ifhitspace
-            move SPACEPRESSED
-        else ifmove SPACEPRESSED
-        {
-            move 0
-            for cutscene_i allsprites
-            {
-                cactor CUTSCENEINDICATOR_ACTIVE
-                
-                ifvare sprite[cutscene_i].picnum CUTSCENEINDICATOR_ACTIVE
-                {
-                        getactorvar[cutscene_i].cutscene_myvar cutscene_num
-                    
-                }
-            }
-            
-            setvar in_cutscene 1
-            break
+    geta .cstat temp
+    ifand temp 32768 {
+        ife fx_activate[fx_hitag] 1 {
+            set cutscene_num cutscene_myvar
+            set in_cutscene 1
+            addlogvar in_cutscene
         }
+    } else {
+
+        ifpdistl 1266
+        ifp pfacing
+        {
+            ifhitspace
+                move SPACEPRESSED
+            else ifmove SPACEPRESSED
+            {
+                move 0
+                for cutscene_i allsprites
+                {
+                    cactor CUTSCENEINDICATOR_ACTIVE
+                    
+                    ifvare sprite[cutscene_i].picnum CUTSCENEINDICATOR_ACTIVE
+                    {
+                            getactorvar[cutscene_i].cutscene_myvar cutscene_num
+                        
+                    }
+                }
+                
+                setvar in_cutscene 1
+                break
+            }
+        }
+        else
+            move 0
     }
-    else
-        move 0
 enda
 eventloadactor CUTSCENEINDICATOR
     state cutscene_getscene
+    geta .cstat temp
+    ifand temp 2 seta .cstat 32768
+    
 enda
 
 useractor notenemy CUTSCENEINDICATOR_OFF 0
@@ -262,7 +277,6 @@ for cutscene_i allsprites
 enda
 
 eventloadactor CUTSCENEINDICATOR_ACTIVE
-
 enda
 
 defstate end_cutscene
