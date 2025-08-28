@@ -4986,7 +4986,13 @@ onevent EVENT_SCREEN
                                 {
                                         setvar SCREENALPHA 255
                                         screensound TELEPORTER
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                                        ifvare dna_dukecutscenevoc 2 { 
+                                                screensound GM_HAVEABLAST
+                                                setvar delayTime 3100
+                                        }
+                                        else {
+                                                setvar delayTime OP_CUTSCENE_DELAY_TIME
+                                        }
                                         setvar CUTSCENE_STEP 3     
                                 }
                         }
@@ -5089,6 +5095,7 @@ onevent EVENT_SCREEN
                                 {
                                         setvar SCREENALPHA 255
                                         setvar CUTSCENE_DIALOG 5400
+                                        ifvare dna_dukecutscenevoc 2 screensound GM_DEBRIEFING
                                         setvar delayTime OP_CUTSCENE_DELAY_TIME
                                         setvar CUTSCENE_STEP 7
                                 }
@@ -5105,7 +5112,7 @@ onevent EVENT_SCREEN
                                 {
                                         setvar CUTSCENE_SCREEN 5400
                                         setvar CUTSCENE_DIALOG 5400
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                                        ifvare dna_dukecutscenevoc 2 { setvar delayTime 5000 } else { setvar delayTime OP_CUTSCENE_DELAY_TIME }
                                         setvar RETURN 0
                                         getticks curtick
                                         ifvare prevtick -1 setvar ticktmp 0 else
