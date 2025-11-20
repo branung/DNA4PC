@@ -1,3 +1,9 @@
+//Ammo size redefinitions
+define MAXSHOTGUNAMMO          100
+define MAXCHAINGUNAMMO         300
+define MAXRPGAMMO               20
+define MAXHANDBOMBAMMO          20
+
 // Redefinitions from hardcoded tiles
 define CHAINGUNSPRITE 5626
 define RPGSPRITE 5627
