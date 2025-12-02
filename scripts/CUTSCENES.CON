@@ -4691,7 +4691,7 @@ onevent EVENT_SCREEN
                                 else
                                 {
                                         setvar SCREENALPHA 255
-                                        screensound ACTOR_SHRINKING // SHRINKER FIRE
+                                        screensound A_SHRINK // SHRINKER FIRE
                                         setvar delayTime OP_CUTSCENE_DELAY_TIME
                                         setvar CUTSCENE_STEP 2     
                                 }
@@ -4948,7 +4948,7 @@ onevent EVENT_SCREEN
                                 else
                                 {
                                         setvar SCREENALPHA 255
-                                        screensound AAMB_A51SIRENLOOP 
+                                        screensound A51SIRENLOOP_CUTSCENE 
                                         setvar delayTime OP_CUTSCENE_DELAY_TIME
                                         setvar CUTSCENE_STEP 1
                                 }

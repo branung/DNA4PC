@@ -399,6 +399,7 @@ define AAMB_WIND 568
 define AAMB_A51SIRENLOOP 569
 define AAMB_ALIENMACHINERY 570
 define AAMB_HISS 571
+define A51SIRENLOOP_CUTSCENE 591 // Alternate definition for Area51 siren to have it easily play on repeat during a cutscene panel
 definesound AAMB_COMPUTER               sounds/amb/comloop.wav                 -80   -80    0     3     0
 definesound AAMB_FRY                    sounds/amb/fryloop.wav                 -80   -80    0     3     0
 definesound AAMB_LAVA                   sounds/amb/lava06.wav                  -80   -80    0     3     0
@@ -411,6 +412,7 @@ definesound AAMB_WIND                   sounds/amb/wind.wav                    -
 definesound AAMB_A51SIRENLOOP           sounds/amb/area51_siren.wav            -80   -80    0    16     0
 definesound AAMB_ALIENMACHINERY         sounds/amb/alienmachine.wav            -80   -80    0     3     0
 definesound AAMB_HISS                   sounds/amb/hiss.wav                    -80   -80    0    16     0
+definesound A51SIRENLOOP_CUTSCENE       sounds/amb/area51_siren.wav            -80   -80    0     3     0
 
 
 //Uttered by Duke Nukem
