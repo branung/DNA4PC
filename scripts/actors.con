@@ -278,7 +278,7 @@ actor SHIELD
       ifp palive
         ifcount 6
           ifpdistl RETRIEVEDISTANCE
-            ifpinventory GET_SHIELD 50
+            ifpinventory GET_SHIELD SHIELD_AMOUNT
               ifcanseetarget
       {
         ifspawnedby PIGCOP
