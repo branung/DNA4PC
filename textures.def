@@ -1,8 +1,6 @@
 // Definitions to make textures ignore palette limitations
-texture 1001 { pal 0 { file "tiles/1001.png" } }
-
-texture 1001 { pal 0 { file "tiles/1013.png" } }
-
+texture 2929 { pal 0 { file "tiles/2929.png" } }
+texture 2930 { pal 0 { file "tiles/2930.png" } }
 texture 2931 { pal 0 { file "tiles/2931.png" } }
 texture 2932 { pal 0 { file "tiles/2932.png" } }
 texture 2933 { pal 0 { file "tiles/2933.png" } }
