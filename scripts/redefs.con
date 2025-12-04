@@ -4,6 +4,9 @@ define MAXCHAINGUNAMMO         300
 define MAXRPGAMMO               20
 define MAXHANDBOMBAMMO          20
 
+//Ammo spawn odds redefinitions
+define SPAWNAMMOODDS           256
+
 // Redefinitions from hardcoded tiles
 define CHAINGUNSPRITE 5626
 define RPGSPRITE 5627
