@@ -306,12 +306,13 @@ define A_OCTODYING GREYDEATH
 define A_OCTOATTACK 415
 define A_OCTOROAM 416
 define A_CRABDYING 418
+define EGGHATCH 419
 define A_CRABATTACK SLIMERATTACK
 //          SOUND TOKEN                 SOUND FILE                        Pitch Low--High   Prio  Type  Distance
 definesound GREYATTACK                  sounds/enemy/greyattack.wav                  -80   -80    3     0     7680
 definesound GREYDEATH                   sounds/enemy/greydying.wav                   -180   20    3     0     7680
 definesound SLIMERATTACK                sounds/enemy/slimer_attack.wav               -180   20    3     0     7680
-definesound SLIMERATTACK                sounds/enemy/slimeregg_hatch.wav             -180   20    3     0     7680
+definesound EGGHATCH                    sounds/enemy/slimeregg_hatch.wav             -180   20    3     0     7680
 definesound SPIDERLORDROAM              sounds/enemy/spiderlord_roam.wav             -80   -80    3     0     0
 definesound SPIDERLORDDEATH             sounds/enemy/spiderlord_dead.wav             -80   -80    3     0     0
 definesound CONTROLLERATTACK            sounds/enemy/controller_attack.wav           -80   -80    3     0     0

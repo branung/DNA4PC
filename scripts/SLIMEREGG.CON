@@ -134,7 +134,7 @@ useractor enemy SLIMEREGG SLIMEREGGSTRENGTH
   ifai 0
   {
     action SLIMEREGGHATCH
-    sound SLIM_HATCH
+    sound EGGHATCH
     // play alert sound here
     cstat 257
     ai AISLIMEREGGWAIT
