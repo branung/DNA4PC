@@ -462,6 +462,25 @@ texture 5160 { pal 0 { file "tiles/5160.png" } }
 texture 5161 { pal 0 { file "tiles/5161.png" } }
 texture 5162 { pal 0 { file "tiles/5162.png" } }
 
+texture 5165 { pal 0 { file "tiles/5165.png" } }
+texture 5166 { pal 0 { file "tiles/5166.png" } }
+texture 5167 { pal 0 { file "tiles/5167.png" } }
+texture 5168 { pal 0 { file "tiles/5168.png" } }
+texture 5169 { pal 0 { file "tiles/5169.png" } }
+texture 5170 { pal 0 { file "tiles/5170.png" } }
+texture 5171 { pal 0 { file "tiles/5171.png" } }
+texture 5172 { pal 0 { file "tiles/5172.png" } }
+texture 5173 { pal 0 { file "tiles/5173.png" } }
+texture 5174 { pal 0 { file "tiles/5174.png" } }
+
+texture 5177 { pal 0 { file "tiles/5177.png" } }
+texture 5178 { pal 0 { file "tiles/5178.png" } }
+texture 5179 { pal 0 { file "tiles/5179.png" } }
+texture 5180 { pal 0 { file "tiles/5180.png" } }
+
+texture 5183 { pal 0 { file "tiles/5183.png" } }
+texture 5184 { pal 0 { file "tiles/5184.png" } }
+
 texture 5369 { pal 0 { file "tiles/5369.png" } }
 texture 5370 { pal 0 { file "tiles/5370.png" } }
 texture 5371 { pal 0 { file "tiles/5371.png" } }
