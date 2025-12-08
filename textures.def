@@ -574,7 +574,26 @@ texture 5732 { pal 0 { file "tiles/5732.png" } }
 texture 5733 { pal 0 { file "tiles/5733.png" } }
 texture 5734 { pal 0 { file "tiles/5734.png" } }
 
+texture 5740 { pal 0 { file "tiles/5740.png" } }
+texture 5741 { pal 0 { file "tiles/5741.png" } }
+texture 5742 { pal 0 { file "tiles/5742.png" } }
+texture 5743 { pal 0 { file "tiles/5743.png" } }
+texture 5744 { pal 0 { file "tiles/5744.png" } }
+texture 5745 { pal 0 { file "tiles/5745.png" } }
+texture 5746 { pal 0 { file "tiles/5746.png" } }
+texture 5747 { pal 0 { file "tiles/5747.png" } }
+texture 5748 { pal 0 { file "tiles/5748.png" } }
+texture 5749 { pal 0 { file "tiles/5749.png" } }
+texture 5750 { pal 0 { file "tiles/5750.png" } }
+texture 5751 { pal 0 { file "tiles/5751.png" } }
+
 texture 5753 { pal 0 { file "tiles/5753.png" } }
+texture 5754 { pal 0 { file "tiles/5754.png" } }
+texture 5755 { pal 0 { file "tiles/5755.png" } }
+
+texture 5758 { pal 0 { file "tiles/5758.png" } }
+texture 5759 { pal 0 { file "tiles/5759.png" } }
+texture 5760 { pal 0 { file "tiles/5760.png" } }
 
 texture 5763 { pal 0 { file "tiles/5763.png" } }
 texture 5764 { pal 0 { file "tiles/5764.png" } }
@@ -589,6 +608,21 @@ texture 5784 { pal 0 { file "tiles/5784.png" } }
 texture 5785 { pal 0 { file "tiles/5785.png" } }
 texture 5786 { pal 0 { file "tiles/5786.png" } }
 texture 5787 { pal 0 { file "tiles/5787.png" } }
+
+texture 5789 { pal 0 { file "tiles/5789.png" } }
+texture 5790 { pal 0 { file "tiles/5790.png" } }
+texture 5791 { pal 0 { file "tiles/5791.png" } }
+texture 5792 { pal 0 { file "tiles/5792.png" } }
+texture 5793 { pal 0 { file "tiles/5793.png" } }
+texture 5794 { pal 0 { file "tiles/5794.png" } }
+texture 5795 { pal 0 { file "tiles/5795.png" } }
+
+texture 5809 { pal 0 { file "tiles/5809.png" } }
+texture 5810 { pal 0 { file "tiles/5810.png" } }
+texture 5811 { pal 0 { file "tiles/5811.png" } }
+
+texture 5813 { pal 0 { file "tiles/5813.png" } }
+texture 5814 { pal 0 { file "tiles/5814.png" } }
 
 texture 5887 { pal 0 { file "tiles/5887.png" } }
 texture 5888 { pal 0 { file "tiles/5888.png" } }
