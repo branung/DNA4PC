@@ -23,7 +23,7 @@ gamevar greycurrpos 0 0
 ai AIGREYWAIT               GREYSTANDING GREYSTOPPED geth
 ai AIGREYSEEK               GREYWALKING GREYWALKVEL seekplayer
 ai AIGREYATTACKPLAYER       GREYATTACKING GREYSTOPPED faceplayer
-ai AIGREYREVIVING           GREYREVIVING GREYSTOPPED randomangle //figure out direction for this
+ai AIGREYREVIVING           GREYREVIVING GREYSTOPPED faceplayer //figure out direction for this
 ai AIGREYDYING	            GREYDYING GREYSTOPPED geth
 ai AIGREYHIT                GREYFLINCH GREYSTOPPED faceplayer
 ai AIGREYFROZEN             GREYFROZEN GREYSTOPPED geth
@@ -96,18 +96,16 @@ state greyrevivestate
   }
   else
 	ifcount 24
+  {
       //findnearspritez GREYPROJECTILE 5120 20480 temp
       //Need to find a way to look for multiple enemy fallen sprites and have grey face it 
-            ifn temp -1
-            {
-              geta[THISACTOR].z greyprojpos
-              setvarvar greycurrpos greyprojpos
-              subvar greyprojpos 3000
-              seta[THISACTOR].z greyprojpos
-              shoot GREYREVIVEPROJECTILE
-              seta[THISACTOR].z greycurrpos
-            }
-      
+      geta[THISACTOR].z greyprojpos
+      setvarvar greycurrpos greyprojpos
+      subvar greyprojpos 3000
+      seta[THISACTOR].z greyprojpos
+      shoot GREYREVIVEPROJECTILE
+      seta[THISACTOR].z greycurrpos    
+  }
    else
 	 ifactioncount 6
 	   resetactioncount
