@@ -288,5 +288,5 @@ ifhitweapon
 enda
 
 eventloadactor SPIDERLORD
-    sizeat 32 32
+    sizeat 64 64
 enda
