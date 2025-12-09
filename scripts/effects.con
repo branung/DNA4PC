@@ -1043,4 +1043,8 @@ appendevent EVENT_ANIMATESPRITES
     ife kcsunshinemode 1 {
         settspr[THISACTOR].tsprpicnum 13
     }
+    // Disable drawing Duke if we're in cutscene
+    ife in_cutscene 1 {
+        settspr[THISACTOR].tsprpicnum 13
+    }
 endevent
