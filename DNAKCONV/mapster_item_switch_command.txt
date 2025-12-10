@@ -40,6 +40,7 @@ do for i allsprites { ifvare sprite[i].picnum 4540 { setvar sprite[i].picnum 569
 do for i allsprites { ifvare sprite[i].picnum 4548 { setvar sprite[i].picnum 5695 } } //Food object 19
 do for i allsprites { ifvare sprite[i].picnum 1680 { setvar sprite[i].picnum 6206 } } //Liztroop
 do for i allsprites { ifvare sprite[i].picnum 2000 { setvar sprite[i].picnum 6321 } } //Pigcop
+do for i allsprites { ifvare sprite[i].picnum 1820 { setvar sprite[i].picnum 6393 } } //Octobrain
 do for i allsprites { ifvare sprite[i].picnum 2120 { setvar sprite[i].picnum 6439 } } //Lizman aka Enforcer
 do for i allsprites { ifvare sprite[i].picnum 1681 { setvar sprite[i].picnum 6207 } } //Liztroop running
 do for i allsprites { ifvare sprite[i].picnum 1682 { setvar sprite[i].picnum 6208 } } //Liztroop stay put
