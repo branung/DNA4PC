@@ -27,7 +27,7 @@ ai AIALIENLORDSHRUNK             ALIENLORDWALKING ALIENLORDSHRUNKVELS fleeenemy
 ai AIALIENLORDGROW               ALIENLORDGROW ALIENLORDSTOPPED geth
 
 state alienlordhitstate
-        ifcount 9 ai AIALIENLORDWAIT
+        ifcount 3 ai AIALIENLORDWAIT
 ends
 
 state alienlordwaitstate
@@ -302,7 +302,7 @@ ifhitweapon
 		    ifai AIALIENLORDHIT nullop else
         ifai AIALIENLORDSHRUNK nullop else
         {
-          ifrnd 32 
+          ifrnd 4
           ai AIALIENLORDHIT        
         }
         
