@@ -16,7 +16,6 @@ include scripts/weapons.con
 
 damageeventtile 1405
 
-
 onevent EVENT_NEWGAME
     readgamevar dna_localization
     readgamevar dna_dukecutscenevoc

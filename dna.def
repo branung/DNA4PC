@@ -1,4 +1,5 @@
 // Duke Nukem : Advance extra sound/gfx definitions
+animsounds logo { 6 471  34 472 }
 
 basepalette 3 { raw { file "/palette/dna_3dr_pal.raw" } }
 artfile { file "dna_3dr.art" }

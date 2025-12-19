@@ -6,6 +6,11 @@ gamevar dna_menu_tutorial 0 // 0 tells the game to show the prompt telling the p
 gamevar dna_level_music 0 // 0 means the music specifically for the levels will play. Setting it to 1 disables level music, meaning only menus and cutscenes will have music like in the original 
 gamevar dna_crosshair 0 // 0 is the default crosshair in DNA. Set it anywhere from 0-8 for all variations
 
+define GBA_INTRO1 471
+define GBA_INTRO2 472
+definesound GBA_INTRO1         sounds/intro/gba_intro1.ogg     0     0     255   4     0
+definesound GBA_INTRO2         sounds/intro/gba_intro2.ogg     0     0     255   4     0
+
 // Actors and their projectiles
 define GREY 5119
 define GREYSTRENGTH 80
