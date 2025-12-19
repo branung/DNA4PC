@@ -189,14 +189,15 @@ actor ARMORSHARD
       ifp palive
         ifcount 6
           ifpdistl RETRIEVEDISTANCE
-            ifcanseetarget
-            {
-                addinventory GET_SHIELD ARMORSHARD_AMOUNT
-                ifvare dna_localization 0 quote 126     
-                else quote 127
-                ifspawnedby ARMORSHARD
-                state getcode
-            }
+            ifpinventory GET_SHIELD SHIELD_AMOUNT
+              ifcanseetarget
+              {
+                  addinventory GET_SHIELD ARMORSHARD_AMOUNT
+                  ifvare dna_localization 0 quote 126     
+                  else quote 127
+                  ifspawnedby ARMORSHARD
+                  state getcode
+              }
 enda
 
 actor HEALTHPACKSMALL
