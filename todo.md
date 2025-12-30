@@ -18,6 +18,6 @@
 - [ ] toggle to use gba hud weapon art only(?)
 
 ### Possible Changes:
-- [ ] Shrinker and Freezer share an ammo type in the original
+- [ ] Shrinker and Freezer share an ammo type and ammo count in the original
 - [ ] Shrinker has a wider attack field that can cause you to shrink yourself
 - [ ] Freezer works identical to the shrinker, one shot that simply freezes an enemy rather than shrinks, but without any wide attack field
