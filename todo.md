@@ -1,9 +1,10 @@
-## TODO
+# TODO
 
 ### Bugs:
 - [ ] The elevator secret in level 2 is broken
 - [ ] The Lead Cannon sometimes uses 5 bullets in a shot rather than 4, and new shotgun ammo getting picked up will seemingly not be taken into account for the next shot sometimes
 - [ ] Greys' projectile that revives dead enemies currently is fired in a random direction when it should home in on the nearest dead body.
+- [ ] Securty monitors don't work with proximity trigger (should proximity trigger logic be updated or should monitor screen be changed to cutscenes?)
 
 ### Menu/Settings:
 - [ ] toggle for whistling frequency
