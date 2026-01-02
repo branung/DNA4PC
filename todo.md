@@ -18,6 +18,7 @@
 - [ ] toggle to use gba hud weapon art only(?)
 
 ### Possible Changes:
+- [ ] There's a strobing effect to lighting in certain areas of DNA that currently isn't replicated (ex: in the projector room in map08 should have a strobing effect that's currently not there) 
 - [ ] Shrinker and Freezer share an ammo type and ammo count in the original
 - [ ] Shrinker has a wider attack field that can cause you to shrink yourself
 - [ ] Freezer works identical to the shrinker, one shot that simply freezes an enemy rather than shrinks, but without any wide attack field
