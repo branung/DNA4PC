@@ -491,6 +491,7 @@ onevent EVENT_DISPLAYREST
 			screentext STARTALPHANUM 230 y 49152 0 0 1006 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			addvar y 8
+			
 			addvar y 8
 
 			ifvare dna_dukecutscenevoc 0 redefinequote 1007 OFF 
@@ -498,6 +499,16 @@ onevent EVENT_DISPLAYREST
 			else redefinequote 1007 GIANNI
 			ifvare dna_menu_selected 3 setvar shade 15 else setvar shade 0 // Cutscene Duke Voice Selection
 			screentext STARTALPHANUM 230 y 49152 0 0 1007 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+			addvar y 8
+
+			redefinequote 1008 Type %d
+			setvarvar temp dna_crosshair
+			addvar temp 1
+			qsprintf 1008 1008 temp
+			ifvare dna_menu_selected 4 setvar shade 15 else setvar shade 0 // Crosshair Type Selection
+			screentext STARTALPHANUM 230 y 49152 0 0 1008 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
 			}
 
 			state dna_menu_refresh_descriptions
@@ -609,6 +620,20 @@ onevent EVENT_DISPLAYREST
 							}
 							savegamevar dna_dukecutscenevoc
 						}
+						else ifvare dna_menu_selected 4
+						{
+							ifvarg dna_crosshair 0
+								{
+									setvar delayTime MENU_DELAY_TIME
+									subvar dna_crosshair 1
+								}
+								else
+								{
+									setvar delayTime MENU_DELAY_TIME
+									setvar dna_crosshair 8
+								}
+							savegamevar dna_crosshair
+						}
 					}
 					else ifvare dna_menu_page 1
 					{
@@ -690,6 +715,20 @@ onevent EVENT_DISPLAYREST
 								setvar dna_dukecutscenevoc 0
 							}
 							savegamevar dna_dukecutscenevoc
+						}
+						else ifvare dna_menu_selected 4
+						{
+							ifvarl dna_crosshair 8
+								{
+									setvar delayTime MENU_DELAY_TIME
+									addvar dna_crosshair 1
+								}
+								else
+								{
+									setvar delayTime MENU_DELAY_TIME
+									setvar dna_crosshair 0
+								}
+							savegamevar dna_crosshair
 						}
 					}
 					else ifvare dna_menu_page 1
