@@ -286,7 +286,7 @@ ends
 
 onevent EVENT_PRELEVEL
         state cutscene_cleanup
-        ifvare VOLUME 5
+        ifvare VOLUME 0
         {
                 ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
                 {
@@ -305,7 +305,7 @@ endevent
 
 appendevent EVENT_ENDLEVELSCREEN
         state cutscene_cleanup
-        ifvare VOLUME 5
+        ifvare VOLUME 0
         {
                 ifvare LEVEL 19 
                 {
@@ -329,7 +329,7 @@ appendevent EVENT_GAME
 
         state get_script
         state cutscene_cleanup
-                ifvare VOLUME 5
+                ifvare VOLUME 0
                 {
                         ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
                         {
@@ -1390,7 +1390,7 @@ onevent EVENT_SCREEN
                                 subvar SCREENALPHA 10
                 }
 
-        ifvare VOLUME 5
+        ifvare VOLUME 0
         {
                 setvar CUTSCENE_DIALOGBOX 3921
 	        setvar y 153
@@ -4634,7 +4634,7 @@ onevent EVENT_SCREEN
     }
     else
     {
-        ifvare VOLUME 5
+        ifvare VOLUME 0
         {
                 ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
                 {

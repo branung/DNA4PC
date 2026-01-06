@@ -283,7 +283,7 @@ ends
 // Frequency is random between ~15-210s with some convergence at ~120s
 defstate ambience_sound_handler
     // Only play on DN:A episode
-    ifn VOLUME 5 terminate
+    ifn VOLUME 0 terminate
     ifl ambsndtimer totalclock {
         rand temp 5
         ife temp 0 set ambsndtimer 15
@@ -812,7 +812,7 @@ ends
 // Ran before level data is fully loaded: Sectors/Actors/etc..
 appendevent EVENT_PRELEVEL
     
-    ife VOLUME 5 {
+    ife VOLUME 0 {
         set ambsndtimer 120
         mul ambsndtimer 120
         add ambsndtimer totalclock

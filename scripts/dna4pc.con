@@ -107,7 +107,7 @@ onevent EVENT_GAME
 		}
         // Override for episode endings
         setuserdef .eog 0
-        ifvare VOLUME 5 ifvare LEVEL 19 setuserdef .eog 1
+        ifvare VOLUME 0 ifvare LEVEL 19 setuserdef .eog 1
 
         geta[THISACTOR].extra temp
         ifvarg temp 0 
