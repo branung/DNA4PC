@@ -245,6 +245,7 @@ setvar RETURN -1
 	ifvare dna_menu 0 
 	{
 		setvar delayTime 600
+		screensound A_ALIENSWITCH
 		ifvarn dna_menu_tutorial 0 nullop
 		else
 		{
@@ -537,11 +538,13 @@ onevent EVENT_DISPLAYREST
 						ifvarg dna_menu_selected 0
 						{
 							setvar delayTime MENU_DELAY_TIME
+							screensound A_KICKHIT
 							subvar dna_menu_selected 1	
 						}
 						else
 						{
 							setvar delayTime MENU_DELAY_TIME
+							screensound A_KICKHIT
 							setvar dna_menu_selected 6
 						}
 							
@@ -556,11 +559,13 @@ onevent EVENT_DISPLAYREST
 				ifvarl dna_menu_selected 6
 				{
 					setvar delayTime MENU_DELAY_TIME
+					screensound A_KICKHIT
 					addvar dna_menu_selected 1
 				}
 				else
 				{
 					setvar delayTime MENU_DELAY_TIME
+					screensound A_KICKHIT
 					setvar dna_menu_selected 0
 				}
 					
@@ -579,10 +584,12 @@ onevent EVENT_DISPLAYREST
 							ifvare dna_localization 0
 							{
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_localization 1
 							}
 							else {
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_localization 0
 							}
 							savegamevar dna_localization
@@ -592,6 +599,7 @@ onevent EVENT_DISPLAYREST
 							ifvare dna_level_music 0
 							{
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_level_music 1
 								savegamevar dna_level_music
 								stopallmusic   
@@ -599,6 +607,7 @@ onevent EVENT_DISPLAYREST
 							}
 							else {
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_level_music 0
 								savegamevar dna_level_music
 								getuserdef[].music_episode currmusic
@@ -612,10 +621,12 @@ onevent EVENT_DISPLAYREST
 							ifvare dna_cutscenes 0
 							{
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_cutscenes 1
 							}
 							else {
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_cutscenes 0
 							}
 							savegamevar dna_cutscenes
@@ -625,15 +636,18 @@ onevent EVENT_DISPLAYREST
 							ifvare dna_dukecutscenevoc 2
 							{
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_dukecutscenevoc 1
 							}
 							else ifvare dna_dukecutscenevoc 1
 							{
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_dukecutscenevoc 0
 							}
 							else {
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_dukecutscenevoc 2
 							}
 							savegamevar dna_dukecutscenevoc
@@ -643,11 +657,13 @@ onevent EVENT_DISPLAYREST
 							ifvarg dna_crosshair 0
 								{
 									setvar delayTime MENU_DELAY_TIME
+									screensound A_PICKARMOR
 									subvar dna_crosshair 1
 								}
 								else
 								{
 									setvar delayTime MENU_DELAY_TIME
+									screensound A_PICKARMOR
 									setvar dna_crosshair 8
 								}
 							savegamevar dna_crosshair
@@ -664,11 +680,13 @@ onevent EVENT_DISPLAYREST
 						ifvarg dna_menu_page 0
 						{
 							setvar delayTime MENU_DELAY_TIME
+							screensound A_SWITCH
 							subvar dna_menu_page 1
 						}
 						else
 						{
 							setvar delayTime MENU_DELAY_TIME
+							screensound A_SWITCH
 							setvar dna_menu_page 0
 						}
 					}
@@ -688,10 +706,12 @@ onevent EVENT_DISPLAYREST
 							ifvare dna_localization 0
 							{
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_localization 1
 							}
 							else {
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_localization 0
 							}
 							savegamevar dna_localization
@@ -701,6 +721,7 @@ onevent EVENT_DISPLAYREST
 							ifvare dna_level_music 0
 							{
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_level_music 1
 								savegamevar dna_level_music
 								stopallmusic   
@@ -708,6 +729,7 @@ onevent EVENT_DISPLAYREST
 							}
 							else {
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_level_music 0
 								savegamevar dna_level_music
 								getuserdef[].music_episode currmusic
@@ -721,10 +743,12 @@ onevent EVENT_DISPLAYREST
 							ifvare dna_cutscenes 0
 							{
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_cutscenes 1
 							}
 							else {
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_cutscenes 0
 							}
 							savegamevar dna_cutscenes
@@ -734,15 +758,18 @@ onevent EVENT_DISPLAYREST
 							ifvare dna_dukecutscenevoc 0
 							{
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_dukecutscenevoc 1
 							}
 							else ifvare dna_dukecutscenevoc 1
 							{
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_dukecutscenevoc 2
 							}
 							else {
 								setvar delayTime MENU_DELAY_TIME
+								screensound A_PICKARMOR
 								setvar dna_dukecutscenevoc 0
 							}
 							savegamevar dna_dukecutscenevoc
@@ -752,11 +779,13 @@ onevent EVENT_DISPLAYREST
 							ifvarl dna_crosshair 8
 								{
 									setvar delayTime MENU_DELAY_TIME
+									screensound A_PICKARMOR
 									addvar dna_crosshair 1
 								}
 								else
 								{
 									setvar delayTime MENU_DELAY_TIME
+									screensound A_PICKARMOR
 									setvar dna_crosshair 0
 								}
 							savegamevar dna_crosshair
@@ -772,11 +801,13 @@ onevent EVENT_DISPLAYREST
 						ifvarl dna_menu_page 1
 						{
 							setvar delayTime MENU_DELAY_TIME
+							screensound A_SWITCH
 							addvar dna_menu_page 1
 						}
 						else
 						{
 							setvar delayTime MENU_DELAY_TIME
+							screensound A_SWITCH
 							setvar dna_menu_page 1
 						}
 					}
@@ -833,6 +864,7 @@ appendevent EVENT_USE
 			ifvare dna_menu_selected 6
 			{
 				setvar delayTime 300
+				screensound A_PISTOL
 				setvar dna_menu_selected 0
 				setplayer[THISACTOR].movement_lock 0
 				setvar dna_menu 0

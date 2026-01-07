@@ -25,6 +25,11 @@ onevent EVENT_NEWGAME
     readgamevar dna_crosshair
 endevent
 
+//Replace D3D loading screen
+onevent EVENT_GETLOADTILE
+    setvar RETURN 5753
+endevent
+
 //Set all Liztroops to blue on spawn rather than the hardcoded green 
 onevent EVENT_SPAWN
     switch sprite[].picnum
