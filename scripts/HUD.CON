@@ -271,7 +271,7 @@ endevent
 
 definequote 1001 Localization
 definequote 1002 Level Music
-definequote 1003 Cutscenes
+definequote 1003 Level Cutscenes
 definequote 1004 Cutscene Duke Voice
 definequote 1005 Crosshair Type
 definequote 1006 0
@@ -289,7 +289,7 @@ defstate dna_menu_refresh_page_options
 		{
 			redefinequote 1001 Localization
 			redefinequote 1002 Level Music
-			redefinequote 1003 Cutscenes
+			redefinequote 1003 Level Cutscenes
 			redefinequote 1004 Cutscene Duke Voice
 			redefinequote 1005 Crosshair Type
 			redefinequote 1014 Change Page (1/2) 
@@ -324,7 +324,7 @@ defstate dna_menu_refresh_descriptions
 		}
 		else ifvare dna_menu_selected 2
 		{
-			redefinequote 1006 Cutscenes
+			redefinequote 1006 Level Cutscenes
 			redefinequote 1007 Choose between having level
 			redefinequote 1008 cutscenes during gameplay
 			redefinequote 1009 or disabling them.
@@ -491,23 +491,28 @@ onevent EVENT_DISPLAYREST
 			screentext STARTALPHANUM 230 y 49152 0 0 1006 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			addvar y 8
+
+			ifvare dna_cutscenes 0 redefinequote 1007 ON 
+			else redefinequote 1007 OFF
+			ifvare dna_menu_selected 2 setvar shade 15 else setvar shade 0 // Cutscenes Selection
+			screentext STARTALPHANUM 230 y 49152 0 0 1007 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 			
 			addvar y 8
 
-			ifvare dna_dukecutscenevoc 0 redefinequote 1007 OFF 
-			else ifvare dna_dukecutscenevoc 1 redefinequote 1007 3D
-			else redefinequote 1007 GIANNI
+			ifvare dna_dukecutscenevoc 0 redefinequote 1008 OFF 
+			else ifvare dna_dukecutscenevoc 1 redefinequote 1008 3D
+			else redefinequote 1008 GIANNI
 			ifvare dna_menu_selected 3 setvar shade 15 else setvar shade 0 // Cutscene Duke Voice Selection
-			screentext STARTALPHANUM 230 y 49152 0 0 1007 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 230 y 49152 0 0 1008 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			addvar y 8
 
-			redefinequote 1008 Type %d
+			redefinequote 1009 Type %d
 			setvarvar temp dna_crosshair
 			addvar temp 1
-			qsprintf 1008 1008 temp
+			qsprintf 1009 1009 temp
 			ifvare dna_menu_selected 4 setvar shade 15 else setvar shade 0 // Crosshair Type Selection
-			screentext STARTALPHANUM 230 y 49152 0 0 1008 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 230 y 49152 0 0 1009 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 			}
 
@@ -601,6 +606,19 @@ onevent EVENT_DISPLAYREST
 								starttrackslot currmusic currmusiclv
 							}
 							//savegamevar dna_level_music
+						}
+						else ifvare dna_menu_selected 2
+						{
+							ifvare dna_cutscenes 0
+							{
+								setvar delayTime MENU_DELAY_TIME
+								setvar dna_cutscenes 1
+							}
+							else {
+								setvar delayTime MENU_DELAY_TIME
+								setvar dna_cutscenes 0
+							}
+							savegamevar dna_cutscenes
 						}
 						else ifvare dna_menu_selected 3
 						{
@@ -697,6 +715,19 @@ onevent EVENT_DISPLAYREST
 								starttrackslot currmusic currmusiclv
 							}
 							//savegamevar dna_level_music
+						}
+						else ifvare dna_menu_selected 2
+						{
+							ifvare dna_cutscenes 0
+							{
+								setvar delayTime MENU_DELAY_TIME
+								setvar dna_cutscenes 1
+							}
+							else {
+								setvar delayTime MENU_DELAY_TIME
+								setvar dna_cutscenes 0
+							}
+							savegamevar dna_cutscenes
 						}
 						else ifvare dna_menu_selected 3
 						{

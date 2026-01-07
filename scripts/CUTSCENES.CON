@@ -326,9 +326,10 @@ appendevent EVENT_GAME
     {
         ifvarn cutscene_num 0
         {
-
         state get_script
         state cutscene_cleanup
+        ifvare dna_cutscenes 1 { state end_cutscene }
+        else ifvare dna_cutscenes 0 {
                 ifvare VOLUME 0
                 {
                         ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
@@ -1373,6 +1374,7 @@ appendevent EVENT_GAME
                                 }
                         }
                 }
+        }
         }
     }
 endevent

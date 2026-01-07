@@ -18,6 +18,7 @@ damageeventtile 1405
 
 onevent EVENT_NEWGAME
     readgamevar dna_localization
+    readgamevar dna_cutscenes
     readgamevar dna_dukecutscenevoc
     readgamevar dna_menu_tutorial
     readgamevar dna_level_music
@@ -62,6 +63,9 @@ appendevent EVENT_ENTERLEVEL
         stopallmusic   
         starttrackslot 5 20
     }
+
+    // Disable monster respawn
+    setvar RESPAWN_MONSTERS 0
 endevent
 
 appendevent EVENT_LOADGAME
@@ -105,6 +109,13 @@ onevent EVENT_GAME
 		{
 			setplayer[THISACTOR].jumping_counter 0 //Limit jump height
 		}
+
+        getplayer[THISACTOR].on_ground temp
+		ifvare temp 1 
+		{
+			setplayer[THISACTOR].jumping_toggle 0 //Allows for continous jumping with the button held - a movement quirk in the original
+		}
+    
         // Override for episode endings
         setuserdef .eog 0
         ifvare VOLUME 0 ifvare LEVEL 19 setuserdef .eog 1
