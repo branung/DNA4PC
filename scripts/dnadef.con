@@ -852,7 +852,8 @@ defineskillname 0 PIECE OF CAKE
 defineskillname 1 LET'S ROCK
 defineskillname 2 COME GET SOME
 defineskillname 3 DAMN I'M GOOD
-//defineskillname 4 REMIX
+// defineskillname 4 ADVANCED
+// defineskillname 5 PLAY IT LOUD
 
 // Levels
 definelevelname 0 0 maps/MAP01.map  00:00 00:00 Gathering Intel
