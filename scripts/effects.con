@@ -390,20 +390,21 @@ defstate renderman_render
 ends
 
 defstate cutcam_render
+    set renderman_sprite -1
     for u sprofstat STAT_CUTCAM {
         ife sprite[u].lotag cutscene_num set renderman_sprite u
     }
-    ifn renderman_sprite -1 {
-        set renderman_get 2
-        set oview viewingrange
-        set oyx yxaspect
-        setaspect oview 78643
-        state renderman_getcoords
+    ifn renderman_sprite -1 set renderman_get 2 else set renderman_get 1
+    set oview viewingrange
+    set oyx yxaspect
+    state renderman_getcoords
+    setaspect oview 78643
+    ifvare renderman_get 2 {
         shiftvarl r_ang 16
         shiftvarl r_horiz 16
-        state renderman_render
-        setaspect oview oyx
     }
+    state renderman_render
+    setaspect oview oyx
 ends
 
 /// =============================================================================================

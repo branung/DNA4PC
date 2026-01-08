@@ -5,7 +5,7 @@ defstate enemy_fxload
 ends
 
 defstate enemy_deathtrigger
-    ifn fx_lotag 0 {
+    ifn fx_hitag 0 {
         setarray fx_preactivate[fx_hitag] 1
     }
 ends
@@ -387,7 +387,9 @@ defstate access_shared
                                 redefinequote DNA_KEYQUOTE Schematics
                             }
                             setplayer[].got_access temp
-                            
+
+                            state enemy_fxload
+                            state enemy_deathtrigger
                             ifn sprite.hitag 0 { operateactivators sprite.hitag -1 }
                             quote DNA_KEYQUOTE
                             state getcode
