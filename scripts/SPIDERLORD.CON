@@ -286,3 +286,7 @@ ifhitweapon
 
 }
 enda
+
+eventloadactor SPIDERLORD
+    sizeat 60 60
+enda

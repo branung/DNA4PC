@@ -1,3 +1,15 @@
+defstate enemy_fxload
+    // For now just process HTIAG to fx_hitag for enemies!
+    geta .hitag fx_hitag
+    seta .hitag 0
+ends
+
+defstate enemy_deathtrigger
+    ifn fx_lotag 0 {
+        setarray fx_preactivate[fx_hitag] 1
+    }
+ends
+
 // DNA enemy initialization
 include scripts/grey.con
 include scripts/slimecrab.con
@@ -69,44 +81,6 @@ defstate dna_getcode
 // This needs to replace stuff later on!
     state getcode
 ends
-
-
-
-defstate enemy_fxload
-    // For now just process HTIAG to fx_hitag for enemies!
-    geta .hitag fx_hitag
-    seta .hitag 0
-ends
-
-defstate enemy_deathtrigger
-    ifn fx_lotag 0 {
-        setarray fx_preactivate[fx_hitag] 1
-    }
-ends
-
-// eventloadactor for DNA enemies
-eventloadactor GREY
-    sizeat 48 40
-    state enemy_fxload
-enda
-eventloadactor SLIMEREGG
-    sizeat 48 40
-enda
-eventloadactor SLIMECRAB
-    sizeat 24 20
-enda
-eventloadactor SPIDERLORD
-    sizeat 60 60
-enda
-eventloadactor CONTROLLERBOSS
-    sizeat 48 48
-enda
-eventloadactor CYBERALIEN
-    sizeat 64 64
-enda
-eventloadactor ALIENLORD
-    sizeat 64 64
-enda
 
 // Moved from GAME.CON
 actor LEAD_CANNON_SPRITE
