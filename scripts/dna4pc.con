@@ -39,6 +39,10 @@ onevent EVENT_SPAWN
         case LIZTROOPSTAYPUT seta[].pal 0 break
         case LIZTROOPJETPACK seta[].pal 0 break
     endswitch
+
+    // Disable monster respawn
+    setvar RESPAWN_MONSTERS 0
+    addlogvar RESPAWN_MONSTERS
 endevent
 
 var viewscreen_spr 0 0
@@ -69,9 +73,6 @@ appendevent EVENT_ENTERLEVEL
         stopallmusic   
         starttrackslot 5 20
     }
-
-    // Disable monster respawn
-    setvar RESPAWN_MONSTERS 0
 endevent
 
 appendevent EVENT_LOADGAME
