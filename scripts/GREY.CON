@@ -19,7 +19,6 @@ move GREYSHRUNKVELS 32
 
 gamevar greyprojpos 0 0
 gamevar greycurrpos 0 0
-gamevar greycutscene 0 0
 
 ai AIGREYWAIT               GREYSTANDING GREYSTOPPED geth
 ai AIGREYSEEK               GREYWALKING GREYWALKVEL seekplayer
@@ -281,10 +280,7 @@ ifhitweapon
 		      //guts JIBS2 1
         ifdead
         {
-          ifvarn greycutscene 1 {
-            state enemy_deathtrigger
-            setvar greycutscene 1
-          }
+          state enemy_deathtrigger
                 ifwasweapon FREEZEBLAST
                 {
                   sound SOMETHINGFROZE

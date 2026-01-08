@@ -7,6 +7,7 @@ ends
 defstate enemy_deathtrigger
     ifn fx_hitag 0 {
         setarray fx_preactivate[fx_hitag] 1
+        setvar fx_hitag 0
     }
 ends
 
