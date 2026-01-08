@@ -42,7 +42,6 @@ onevent EVENT_SPAWN
 
     // Disable monster respawn
     setvar RESPAWN_MONSTERS 0
-    addlogvar RESPAWN_MONSTERS
 endevent
 
 var viewscreen_spr 0 0
