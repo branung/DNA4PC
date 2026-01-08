@@ -292,7 +292,3 @@ ifhitweapon
 }
 
 enda
-
-eventloadactor CYBERALIEN
-    sizeat 64 64
-enda

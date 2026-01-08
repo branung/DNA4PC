@@ -84,6 +84,30 @@ defstate enemy_deathtrigger
     }
 ends
 
+// eventloadactor for DNA enemies
+eventloadactor GREY
+    sizeat 48 40
+    state enemy_fxload
+enda
+eventloadactor SLIMEREGG
+    sizeat 48 40
+enda
+eventloadactor SLIMECRAB
+    sizeat 24 20
+enda
+eventloadactor SPIDERLORD
+    sizeat 60 60
+enda
+eventloadactor CONTROLLERBOSS
+    sizeat 48 48
+enda
+eventloadactor CYBERALIEN
+    sizeat 64 64
+enda
+eventloadactor ALIENLORD
+    sizeat 64 64
+enda
+
 // Moved from GAME.CON
 actor LEAD_CANNON_SPRITE
   fall

@@ -228,7 +228,3 @@ ifai AICONTROLLERBOSSSEEK state controllerbossseekstate
 
 
 enda
-
-eventloadactor CONTROLLERBOSS
-    sizeat 48 48
-enda

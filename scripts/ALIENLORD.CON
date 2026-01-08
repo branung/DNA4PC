@@ -311,7 +311,3 @@ ifhitweapon
 
 }
 enda
-
-eventloadactor ALIENLORD
-    sizeat 64 64
-enda
