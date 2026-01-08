@@ -23,6 +23,7 @@ onevent EVENT_NEWGAME
     readgamevar dna_menu_tutorial
     readgamevar dna_level_music
     readgamevar dna_crosshair
+    readgamevar dna_key_hud
 endevent
 
 //Replace D3D loading screen

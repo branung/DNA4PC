@@ -1,14 +1,18 @@
 setdefname dna.def
 
 gamevar dna_localization 0 // 0 is the US script. run 'setvar dna_localization 1' in console while ingame for the EU localization
-gamevar dna_cutscenes 0 // 0 means level cutscenes will play, while 1 will disabling them from triggering 
+gamevar dna_cutscenes 0 // 0 means level cutscenes will play, while 1 will disable them from triggering 
 gamevar dna_dukecutscenevoc 0 // 0 means no Duke voice lines play in cutscenes, 1 means 3D voice clips are played, 2 means Gianni voice lines are used
 gamevar dna_menu_tutorial 0 // 0 tells the game to show the prompt telling the player to open the mod menu. Once pressed it is set to 1 so it never shows up again
 gamevar dna_level_music 0 // 0 means the music specifically for the levels will play. Setting it to 1 disables level music, meaning only menus and cutscenes will have music like in the original 
 gamevar dna_crosshair 0 // 0 is the default crosshair in DNA. Set it anywhere from 0-8 for all variations
+gamevar dna_key_hud 0 // 0 has key items take up colored key slots in the hud when obtained. 1 displays their sprites below the key section of the hud. 
 
 // Disable built in episode cutscene
 gamevar LOGO_FLAGS 2095359 0
+
+// Changes DNSTUFF cheat to DNLUAULASS, a phrase used to access the cheat menu in DNA
+definecheat 1 LUAULASS
 
 define GBA_INTRO1 471
 define GBA_INTRO2 472
@@ -72,7 +76,7 @@ define LEAD_WEAPON 7
 define LEAD_TOTALTIME 31
 gamevar SHOT_SWITCH 0 0
 
-definequote 125       GOT LEAD CANNON!
+definequote 125       LEAD CANNON
 
 // Textures
 define HYBRIDCAPSULE 3648
@@ -80,10 +84,10 @@ define HYBRIDCAPSULEBROKE 3649
 
 // Rotatesprite sizes
 define NORMALSIZE 65536
-define INV_X 303
+define INV_X 23
 define INV_Y 48
-define INV_TEXT_X 308
-define INV_TEXT_Y 49
+define INV_TEXT_X 28
+define INV_TEXT_Y 50
 
 gamevar INV_TEMP 0 2
 gamevar INV_NUM_TEMP 0 2
@@ -913,6 +917,7 @@ definesound INSERT_CLIP                 sounds/weapon/shotguncock.wav        -80
 definesound SHOTGUN_FIRE                sounds/weapon/shotgunfire.wav        -80   -80    3     0     0
 definesound SELECT_WEAPON               sounds/weapon/shotguncock.wav        -80   -80    3     0     0
 definesound VENT_BUST                   sounds/env/ventbust.wav              -80   -80    3     0     0
+definesound DUKE_GET                    sounds/weapon/pickarmor.wav          -80   -80    3     0     0
 definesound DUKE_DEAD                   sounds/duke/owwh.wav                 -80   -80    255   4     0
 definesound DUKE_USEMEDKIT              sounds/duke/ahh.wav                  -80   -80    255   4     0
 definesound JIBBED_ACTOR1               sounds/duke/amess.wav                -80   -80    255   4     0
