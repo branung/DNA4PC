@@ -95,10 +95,10 @@ define HYBRIDCAPSULEBROKE 3649
 
 // Rotatesprite sizes
 define NORMALSIZE 65536
-define INV_X 23
-define INV_Y 48
-define INV_TEXT_X 28
-define INV_TEXT_Y 50
+define INV_X 19
+define INV_Y 58
+define INV_TEXT_X 24
+define INV_TEXT_Y 60
 
 gamevar INV_TEMP 0 2
 gamevar INV_NUM_TEMP 0 2
