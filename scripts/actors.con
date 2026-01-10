@@ -132,6 +132,31 @@ actor LEAD_CANNON_SPRITE
 enda
 // Moved from GAME.CON
 
+actor GOLDENGUN_SPRITE
+  fall
+  sizeat 39 40
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifcanseetarget
+      {
+        ifgotweaponce 0
+          break
+
+        addweapon TRIPBOMB_WEAPON 48
+        quote 131
+        ifspawnedby GOLDENGUN_SPRITE
+          state getweaponcode
+        else
+          state quikweaponget
+      }
+enda
+
 actor PISTOLAMMOBOX
   fall
   sizeat 39 40
@@ -302,6 +327,70 @@ actor SHIELD
       }
 enda
 
+// Redefining default shotgun and ammo sprites due for transfer ammo state
+// Also todo: change Pig cop pick up count to DNAs higher count    
+actor SHOTGUNSPRITE
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifcanseetarget
+      {
+        ifspawnedby PIGCOP
+        {
+          addweapon SHOTGUN_WEAPON 0
+          ifrnd 64
+            addammo SHOTGUN_WEAPON 4
+          else ifrnd 64
+            addammo SHOTGUN_WEAPON 3
+          else ifrnd 64
+            addammo SHOTGUN_WEAPON 2
+          else
+            addammo SHOTGUN_WEAPON 1
+          
+          state transfer_lead_ammo
+        }
+        else
+        {
+          ifgotweaponce 0
+            break
+          addweapon SHOTGUN_WEAPON SHOTGUNAMMOAMOUNT
+          quote 57
+        }
+
+        ifspawnedby SHOTGUNSPRITE
+          state getweaponcode
+        else
+          state quikweaponget
+      }
+enda
+
+actor SHOTGUNAMMO
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifcanseetarget
+      {
+        addammo SHOTGUN_WEAPON SHOTGUNAMMOAMOUNT
+        quote 69
+        state transfer_lead_ammo
+        ifspawnedby SHOTGUNAMMO
+          state getcode
+        else
+          state quikget
+      }
+enda
 
 //// --------- ALARM ACTOR ---------
 // Starts upon seeing the player. Compatible with RESPAWN
