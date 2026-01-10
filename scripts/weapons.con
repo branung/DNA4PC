@@ -237,7 +237,16 @@ state draw_pistol // PISTOL_WEAPON:
 
     state reset_hud_weapon_y_coordinate
 
-    set hud_tilenum FIRSTGUN
+    switch currentweapon
+    case PISTOL_WEAPON {
+        set hud_tilenum FIRSTGUN
+        break
+    }
+    case TRIPBOMB_WEAPON {
+        set hud_tilenum GOLDENGUN
+        break
+    }
+    endswitch
 
     add hud_totaltime 1
     ifl weaponcount hud_totaltime
@@ -590,140 +599,6 @@ switch weaponcount
     endswitch
 ends
 
-state draw_goldengun // replacement for TRIPBOMB_WEAPON:
-   
-    state reset_hud_weapon_y_coordinate
-
-    set hud_tilenum GOLDENGUN
-
-    add hud_totaltime 1
-    ifl weaponcount hud_totaltime
-    {
-        set hud_x 183 // 195-12
-        add hud_x weapon_xoffset
-        sub hud_x looking_angSR1
-
-        add hud_y 244
-
-        ife weaponcount hud_temp4
-            sub hud_x 3
-
-        ifl weaponcount 3
-            add hud_tilenum weaponcount
-
-        set hud_orientation 2
-
-        guniqhudid currentweapon
-
-        state G_DrawWeaponTile
-
-        guniqhudid 0
-    }
-    else
-    {
-        or hud_orientation 512
-
-        sub hud_temp3 weaponcount
-
-        //Pistol reload changes
-        ifg hud_temp3 17
-        {
-            set hud_x 150
-            sub hud_x looking_angSR1
-
-            add hud_y 264
-
-            guniqhudid currentweapon
-
-            state G_DrawWeaponTile
-        }
-        else ifg hud_temp3 15
-        {
-            set hud_x 150
-
-            add hud_y 284
-
-            guniqhudid currentweapon
-
-            state G_DrawWeaponTile
-        }
-        else ifg hud_temp3 13
-        {
-            set hud_x 150
-            //sub hud_x hud_temp
-            sub hud_x looking_angSR1
-            add hud_y 304
-
-            guniqhudid currentweapon
-
-            state G_DrawWeaponTile
-        }
-        else ifg hud_temp3 11
-        {
-            set hud_x 150
-            //add hud_x hud_temp
-            sub hud_x looking_angSR1
-            add hud_y 364
-
-            guniqhudid currentweapon
-
-            state G_DrawWeaponTile
-        }
-        else ifg hud_temp3 9
-        {
-            set hud_x 150
-            //add hud_x hud_temp
-            sub hud_x looking_angSR1
-            add hud_y 324
-
-            guniqhudid currentweapon
-
-            state G_DrawWeaponTile
-        }
-        else ifg hud_temp3 7
-        {
-            set hud_x 150
-            add hud_x hud_temp
-            sub hud_x looking_angSR1
-            add hud_y 304
-
-            guniqhudid currentweapon
-
-            state G_DrawWeaponTile
-        }
-        else ifg hud_temp3 4
-        {
-            set hud_x 150
-            sub hud_x looking_angSR1
-            add hud_y 284
-
-            guniqhudid currentweapon
-
-            state G_DrawWeaponTile
-        }
-        else ifg hud_temp3 2
-        {
-            set hud_x 150
-            sub hud_x looking_angSR1
-            add hud_y 264
-
-            guniqhudid currentweapon
-
-            state G_DrawWeaponTile
-        }
-        else ifg hud_temp3 0
-        {
-            set hud_x 150
-            sub hud_x looking_angSR1
-            add hud_y 244
-
-            guniqhudid currentweapon
-
-            state G_DrawWeaponTile
-        }
-    }
-ends
-
 onevent EVENT_DRAWWEAPON 
     // We only care about LEAD WEAPON drawcode so this has been trimmed down considerably
     ife currentweapon LEAD_WEAPON {
@@ -817,7 +692,7 @@ onevent EVENT_DISPLAYWEAPON // P_DisplayWeapon
         set hud_temp3 WEAPON8_RELOAD
         set hud_temp4 WEAPON8_FIREDELAY
         set hud_totaltime WEAPON8_TOTALTIME
-        state draw_goldengun
+        state draw_pistol
         set RETURN -1
         break
     }
