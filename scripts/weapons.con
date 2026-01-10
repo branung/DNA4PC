@@ -753,6 +753,7 @@ endevent
 appendevent EVENT_FIRE
     ife player[THISACTOR].curr_weapon LEAD_WEAPON {
         getplayer[THISACTOR].ammo_amount LEAD_WEAPON temp
+        addlogvar temp
         ifl temp 4 {
             ifg weaponcount 20 set RETURN -1
         } else {
@@ -766,13 +767,24 @@ endevent
 appendevent EVENT_PROCESSINPUT
     getinput[].bits bits
     ifvarand bits 4
-    ifp palive
-    ife player[].weapon_pos 0
-    ife player[].gotweapon TRIPBOMB_WEAPON YES
-    ifg player[].ammo_amount TRIPBOMB_WEAPON 0
-    ife player[].curr_weapon TRIPBOMB_WEAPON
-    ife player[].kickback_pic 0
     {
-        setp[].kickback_pic 1
+        ifp palive
+        ife player[].weapon_pos 0
+        ife player[].gotweapon TRIPBOMB_WEAPON YES
+        ifg player[].ammo_amount TRIPBOMB_WEAPON 0
+        ife player[].curr_weapon TRIPBOMB_WEAPON
+        {
+            ife player[].kickback_pic 0
+            {
+                setp[].kickback_pic 1
+            }
+                getplayer[THISACTOR].ammo_amount TRIPBOMB_WEAPON temp
+                setplayer[THISACTOR].ammo_amount PISTOL_WEAPON temp
+        }
+        else ife player[].curr_weapon PISTOL_WEAPON
+        {
+            getplayer[THISACTOR].ammo_amount PISTOL_WEAPON temp
+            setplayer[THISACTOR].ammo_amount TRIPBOMB_WEAPON temp
+        }
     }
 endevent

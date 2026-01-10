@@ -76,6 +76,12 @@ defstate transfer_lead_ammo
     setplayer[].ammo_amount SHOTGUN_WEAPON temp
 ends
 
+defstate transfer_pistol_ammo
+    getplayer[].ammo_amount PISTOL_WEAPON temp
+    setplayer[].ammo_amount TRIPBOMB_WEAPON temp
+    setplayer[].ammo_amount PISTOL_WEAPON temp
+ends
+
 gamevar explosion_snd 0 1
 
 defstate dna_getcode
@@ -150,6 +156,7 @@ actor GOLDENGUN_SPRITE
 
         addweapon TRIPBOMB_WEAPON 48
         quote 131
+        state transfer_pistol_ammo
         ifspawnedby GOLDENGUN_SPRITE
           state getweaponcode
         else
@@ -172,6 +179,7 @@ actor PISTOLAMMOBOX
       {
         addammo PISTOL_WEAPON PISTOLAMMOBOXAMOUNT
         quote 128
+        state transfer_pistol_ammo
         ifspawnedby PISTOLAMMOBOX
           state getcode
         else
@@ -386,6 +394,28 @@ actor SHOTGUNAMMO
         quote 69
         state transfer_lead_ammo
         ifspawnedby SHOTGUNAMMO
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor AMMO
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifcanseetarget
+      {
+        addammo PISTOL_WEAPON PISTOLAMMOAMOUNT
+        quote 65
+        state transfer_pistol_ammo
+        ifspawnedby AMMO
           state getcode
         else
           state quikget
