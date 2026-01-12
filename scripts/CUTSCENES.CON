@@ -194,7 +194,6 @@ useractor notenemy CUTSCENEINDICATOR 0
         ife fx_activate[fx_hitag] 1 {
             set cutscene_num cutscene_myvar
             set in_cutscene 1
-            addlogvar in_cutscene
         }
     } else {
 

@@ -11,6 +11,109 @@ defstate enemy_deathtrigger
     }
 ends
 
+// Below is a custom get code state for the various sound effects pick ups have.
+// Following it are prepends for the standard get states in order to override 
+// their behavior and add the dna_getcode. Palfrom are also removed (Might be added back as a toggle)
+defstate dna_getcode
+  geta[THISACTOR].picnum temp
+  switch temp
+  case ATOMICHEALTH
+    globalsound GETATOMICHEALTH
+    break
+  case SHIELD
+  case ARMORSHARD
+    globalsound A_PICKARMOR
+    break
+  case DNA_BLUEKEY
+  case DNA_REDKEY
+  case DNA_YELLOWKEY
+  case DNA_SYSKEY
+  case DNA_CDKEY
+  case DNA_CHIPKEY
+    globalsound A_ACTIVATE
+    break
+  case SIXPAK
+  case HEALTHPACKSMALL
+  case COLA
+    globalsound ADUKE_USEMEDKIT2
+    break
+  default
+    globalsound A_PICKWEAPON
+    break
+  endswitch
+ends
+
+prependstate getcode
+  state dna_getcode
+  //palfrom 16 0 32
+  ifrespawn
+  {
+    move RESPAWN_ACTOR_FLAG
+    spawn RESPAWNMARKERRED
+    cstat 32768
+  }
+  else
+    killit
+terminate
+ends
+
+prependstate quikget
+  state dna_getcode
+  //palfrom 16 0 32
+  killit
+  terminate
+ends
+
+// Gives a chance for Duke to not say anything for weapon pickups mainly due to increased drop rate of shotguns
+prependstate randgetweapsnds
+  ifrnd 32
+    globalsound DUKE_GETWEAPON1
+  else
+    ifrnd 32
+      globalsound DUKE_GETWEAPON2
+  else
+    ifrnd 32
+      globalsound DUKE_GETWEAPON3
+  else
+    ifrnd 32
+      globalsound DUKE_GETWEAPON4
+  else
+    ifrnd 32
+      globalsound DUKE_GETWEAPON6
+  terminate
+ends
+
+prependstate getweaponcode
+
+  globalsound A_PICKWEAPON
+  state randgetweapsnds
+
+  //palfrom 32 0 32
+  ifgotweaponce 1
+    break
+  ifrespawn
+  {
+    move RESPAWN_ACTOR_FLAG
+    spawn RESPAWNMARKERRED
+    cstat 32768
+  }
+  else
+    killit
+  terminate
+ends
+
+
+prependstate quikweaponget
+  globalsound A_PICKWEAPON
+  state randgetweapsnds
+  //palfrom 32 0 32
+  ifgotweaponce 1
+    break
+  killit
+  terminate
+ends
+
+
 // DNA enemy initialization
 include scripts/grey.con
 include scripts/slimecrab.con
@@ -83,11 +186,6 @@ defstate transfer_pistol_ammo
 ends
 
 gamevar explosion_snd 0 1
-
-defstate dna_getcode
-// This needs to replace stuff later on!
-    state getcode
-ends
 
 // Moved from GAME.CON
 actor LEAD_CANNON_SPRITE
@@ -361,6 +459,7 @@ actor SHOTGUNSPRITE
           else
             addammo SHOTGUN_WEAPON 1
           
+          quote 57
           state transfer_lead_ammo
         }
         else

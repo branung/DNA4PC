@@ -935,7 +935,6 @@ definesound INSERT_CLIP                 sounds/weapon/shotguncock.wav        -80
 definesound SHOTGUN_FIRE                sounds/weapon/shotgunfire.wav        -80   -80    3     0     0
 definesound SELECT_WEAPON               sounds/weapon/shotguncock.wav        -80   -80    3     0     0
 definesound VENT_BUST                   sounds/env/ventbust.wav              -80   -80    3     0     0
-definesound DUKE_GET                    sounds/weapon/pickarmor.wav          -80   -80    3     0     0
 definesound DUKE_DEAD                   sounds/duke/owwh.wav                 -80   -80    255   4     0
 definesound DUKE_USEMEDKIT              sounds/duke/ahh.wav                  -80   -80    255   4     0
 definesound JIBBED_ACTOR1               sounds/duke/amess.wav                -80   -80    255   4     0
