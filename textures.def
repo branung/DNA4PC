@@ -5,6 +5,29 @@ tint { pal 141 red 48 green 40 blue 0 flags 64 }
 tint { pal 142 red 32 green 8 blue 4 flags 64 }
 
 // Definitions to make textures ignore palette limitations
+
+texture 26 { pal 0 { file "tiles/26.png" } }
+
+texture 2400 { pal 0 { file "tiles/2400.png" } }
+texture 2401 { pal 0 { file "tiles/2401.png" } }
+texture 2402 { pal 0 { file "tiles/2402.png" } }
+texture 2403 { pal 0 { file "tiles/2403.png" } }
+texture 2404 { pal 0 { file "tiles/2404.png" } }
+texture 2405 { pal 0 { file "tiles/2405.png" } }
+texture 2406 { pal 0 { file "tiles/2406.png" } }
+texture 2407 { pal 0 { file "tiles/2407.png" } }
+
+texture 2482 { pal 0 { file "tiles/2482.png" } }
+texture 2483 { pal 0 { file "tiles/2483.png" } }
+texture 2536 { pal 0 { file "tiles/2536.png" } }
+texture 2537 { pal 0 { file "tiles/2537.png" } }
+texture 2538 { pal 0 { file "tiles/2538.png" } }
+texture 2539 { pal 0 { file "tiles/2539.png" } }
+texture 2540 { pal 0 { file "tiles/2540.png" } }
+texture 2541 { pal 0 { file "tiles/2541.png" } }
+texture 2542 { pal 0 { file "tiles/2542.png" } }
+texture 2543 { pal 0 { file "tiles/2543.png" } }
+
 texture 2929 { pal 0 { file "tiles/2929.png" } }
 texture 2930 { pal 0 { file "tiles/2930.png" } }
 texture 2931 { pal 0 { file "tiles/2931.png" } }

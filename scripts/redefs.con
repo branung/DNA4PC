@@ -127,3 +127,6 @@ define TANK 6741
 // define HEAVYHBOMB 5630
 // define CHAINGUN 5772
 // define FREEZEBLAST 5732
+// define SCRAP1 6704
+// define SCRAP2 6708
+// define SCRAP3 6712
