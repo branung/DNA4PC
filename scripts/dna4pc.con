@@ -151,3 +151,89 @@ prependstate random_ooz
       terminate
     }
 ends
+
+// End level screen events
+onevent EVENT_GETBONUSTILE
+{
+    // cleanup called to reset values used for fadeout in bonus screen
+    state cutscene_cleanup
+    setuserdef[THISACTOR].return 0 -1
+    setuserdef[THISACTOR].return 1 -1
+    setuserdef[THISACTOR].return 2 -1
+    setuserdef[THISACTOR].return 3 -1
+    setuserdef[THISACTOR].return 4 -1
+}
+endevent
+
+onevent EVENT_DISPLAYBONUSSCREEN
+{
+    state screen_fadeout
+    rotatesprite 160 100 65536 0 5761 0 0 72 0 0 xdim ydim
+    rotatesprite 160 30 81920 0 5762 0 0 8 0 0 xdim ydim
+    screentext BIGALPHANUM 160 21 81920 0 0 132 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+
+    // Kill count
+    setvar y 64
+    screentext BIGALPHANUM 86 y 81920 0 0 133 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    getplayer[THISACTOR].actors_killed temp
+    getplayer[THISACTOR].max_actors_killed temp2
+    redefinequote 134 %d/%d
+    qsprintf 134 134 temp temp2
+    screentext BIGALPHANUM 230 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    addvar y 24
+
+    // Secret count
+    screentext BIGALPHANUM 110 y 81920 0 0 135 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    getplayer[THISACTOR].secret_rooms temp
+    getplayer[THISACTOR].max_secret_rooms temp2
+    redefinequote 134 %d/%d
+    qsprintf 134 134 temp temp2
+    screentext BIGALPHANUM 240 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    addvar y 24
+
+    // Time
+    screentext BIGALPHANUM 85 y 81920 0 0 136 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    //getplayer[THISACTOR].max_secret_rooms temp2
+    qgetsysstr 134 STR_YOURTIME 
+    screentext BIGALPHANUM 215 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    addvar y 24
+
+    // Par Time
+    screentext BIGALPHANUM 85 y 81920 0 0 137 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    qgetsysstr 134 STR_PARTIME 
+    screentext BIGALPHANUM 232 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    addvar y 24
+    
+    // Best Time - Only shown when player has a previous record
+    qgetsysstr 134 STR_BESTTIME
+    qstrcmp 134 139 temp
+    ifvarn temp 0 {
+        screentext BIGALPHANUM 90 y 81920 0 0 138 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+        screentext BIGALPHANUM 215 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    }
+    
+}
+endevent
+
+// Disable various sounds on level complete screen
+onevent EVENT_SOUND    
+    getplayer[THISACTOR].gm temp
+    ifvarand temp 8    
+    {
+        switch RETURN
+        case FLY_BY
+        case BONUS_SPEECH1
+        case BONUS_SPEECH2
+        case BONUS_SPEECH3
+            set RETURN -1
+            break
+        case SHOTGUN_COCK
+            setvar RETURN -1 
+            globalsound A_PISTOL
+            break
+        case PIPEBOMB_EXPLODE
+            ifvarn CUTSCENE_STEP 3 { setvar RETURN -1 }
+            break
+        endswitch
+    }
+endevent

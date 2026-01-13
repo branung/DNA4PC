@@ -136,6 +136,15 @@ define disabled 0
 define pre_complete 5
 define completed 4
 
+// End level screen stats
+definequote 132         LEVEL COMPLETE
+definequote 133         KILLS
+definequote 134         
+definequote 135         SECRETS
+definequote 136         TIME
+definequote 137         PAR
+definequote 138         BEST
+definequote 139         00:00.-3
 
 // Common iterators
 var i 0 0
@@ -872,35 +881,34 @@ defineskillname 3 DAMN I'M GOOD
 // defineskillname 4 ADVANCED
 // defineskillname 5 PLAY IT LOUD
 
-// Levels
-definelevelname 0 0 maps/MAP01.map  00:00 00:00 Gathering Intel
-definelevelname 0 1 maps/MAP02.map 00:00 00:00 Close Encounter
-definelevelname 0 2 maps/MAP03.map 00:00 00:00 Hybrid Army
-definelevelname 0 3 maps/MAP04.map 00:00 00:00 Temple of Amun
-definelevelname 0 4 maps/MAP05.map 00:00 00:00 Inner Sanctum
-definelevelname 0 5 maps/MAP06.map 00:00 00:00 The Controller
-definelevelname 0 6 maps/MAP07.map 00:00 00:00 Temple Escape
-definelevelname 0 7 maps/MAP08.map 00:00 00:00 Down Under
-definelevelname 0 8 maps/MAP09.map 00:00 00:00 Eating Out
-definelevelname 0 9 maps/MAP10.map 00:00 00:00 Day at the Opera
-definelevelname 0 10 maps/MAP11.map 00:00 00:00 Doomsday Weapon
-definelevelname 0 11 maps/MAP12.map 00:00 00:00 Alien Ship
-definelevelname 0 12 maps/MAP13.map 00:00 00:00 Cloaking Device
-definelevelname 0 13 maps/MAP14.map 00:00 00:00 Mazeframe
-definelevelname 0 14 maps/MAP15.map 00:00 00:00 Seeing Double
-definelevelname 0 15 maps/MAP16.map 00:00 00:00 Clone Saga
-definelevelname 0 16 maps/MAP17.map 00:00 00:00 Deja Vu Encore
-definelevelname 0 17 maps/MAP18.map 00:00 00:00 Alien Lord
-definelevelname 0 18 maps/MAP19.map 00:00 00:00 Run Your Ass Off!
+// Levels - par times are currently set to the GBA's pars 
+definelevelname 0 0 maps/MAP01.map 01:03 00:00 Gathering Intel
+definelevelname 0 1 maps/MAP02.map 02:21 00:00 Close Encounter
+definelevelname 0 2 maps/MAP03.map 03:18 00:00 Hybrid Army
+definelevelname 0 3 maps/MAP04.map 04:30 00:00 Temple of Amun
+definelevelname 0 4 maps/MAP05.map 05:31 00:00 Inner Sanctum
+definelevelname 0 5 maps/MAP06.map 06:30 00:00 The Controller
+definelevelname 0 6 maps/MAP07.map 01:05 00:00 Temple Escape
+definelevelname 0 7 maps/MAP08.map 04:30 00:00 Down Under
+definelevelname 0 8 maps/MAP09.map 04:15 00:00 Eating Out
+definelevelname 0 9 maps/MAP10.map 05:02 00:00 Day at the Opera
+definelevelname 0 10 maps/MAP11.map 02:30 00:00 Doomsday Weapon
+definelevelname 0 11 maps/MAP12.map 03:54 00:00 Alien Ship
+definelevelname 0 12 maps/MAP13.map 06:01 00:00 Cloaking Device
+definelevelname 0 13 maps/MAP14.map 03:23 00:00 Mazeframe
+definelevelname 0 14 maps/MAP15.map 06:18 00:00 Seeing Double
+definelevelname 0 15 maps/MAP16.map 06:16 00:00 Clone Saga
+definelevelname 0 16 maps/MAP17.map 14:34 00:00 Deja Vu Encore
+definelevelname 0 17 maps/MAP18.map 07:45 00:00 Alien Lord
+definelevelname 0 18 maps/MAP19.map 01:24 00:00 Run Your Ass Off!
 
 // Music
 music 1
 //Level 1    Level 2     Level 3    Level 4    Level 5     Level 6    Level 7    Level 8   Level 9      Level 10     Level 11 Level 12  Level 13     Level 14    Level 15   Level 16   Level 17     Level 18     Level 19
 restrict.mid xplasma.mid alienz.mid music/DesertMaze.ogg thecall.mid gloomy.mid ahgeez.mid prepd.mid inhiding.mid watrwld1.mid pob.mid  storm.mid warehaus.mid intents.mid stalag.mid spook.mid  robocrep.mid gutwrnch.mid depart.mid
 
-
-
-
+// Override for end level screen music
+definesound BONUSMUSIC          music/grabbag.ogg         0 0 255 1 0
 
 // Overwrites for the main game definitions
 definequote 9         YOU HAVE DISCOVERED A SECRET!

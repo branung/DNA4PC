@@ -138,6 +138,8 @@ defstate cutscene_cleanup
                 setvar SCREENALPHA 255
         ifvarn CUTSCENE_STEP 0
                 setvar CUTSCENE_STEP 0
+        ifvarn prevtick -1
+                setvar prevtick -1
 ends
 
 defstate screen_fadeout
@@ -156,6 +158,9 @@ defstate screen_fadeout
                 divvar ticktmp 2
                 subvarvar SCREENALPHA ticktmp
                 setvarvar prevtick curtick
+        }
+        else {
+                setvar prevtick -1
         }
 ends
 

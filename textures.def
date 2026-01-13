@@ -900,7 +900,8 @@ texture 5755 { pal 0 { file "tiles/5755.png" } }
 texture 5758 { pal 0 { file "tiles/5758.png" } }
 texture 5759 { pal 0 { file "tiles/5759.png" } }
 texture 5760 { pal 0 { file "tiles/5760.png" } }
-
+texture 5761 { pal 0 { file "tiles/5761.png" } }
+texture 5762 { pal 0 { file "tiles/5762.png" } }
 texture 5763 { pal 0 { file "tiles/5763.png" } }
 texture 5764 { pal 0 { file "tiles/5764.png" } }
 texture 5765 { pal 0 { file "tiles/5765.png" } }
