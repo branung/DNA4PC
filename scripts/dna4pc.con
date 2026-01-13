@@ -60,6 +60,9 @@ endevent
 
 
 appendevent EVENT_ENTERLEVEL
+    // Don't show level name
+    setuserdef .show_level_text 0
+
     // Prevent knuckle cracking animation at level start
     getplayer[THISACTOR].knuckle_incs temp
 	ifvarg temp 0 
@@ -188,7 +191,7 @@ onevent EVENT_DISPLAYBONUSSCREEN
     getplayer[THISACTOR].max_secret_rooms temp2
     redefinequote 134 %d/%d
     qsprintf 134 134 temp temp2
-    screentext BIGALPHANUM 240 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    screentext BIGALPHANUM 230 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
     addvar y 24
 
     // Time

@@ -849,6 +849,7 @@ appendevent EVENT_GAME
                         {
                                 ifvare cutscene_num 1001
                                 {
+                                        stopallsounds
                                         startscreen    
                                         startscreen    
                                         startscreen
