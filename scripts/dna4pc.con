@@ -163,7 +163,7 @@ onevent EVENT_GETBONUSTILE
     // cleanup called to reset values used for fadeout in bonus screen
     state cutscene_cleanup
     setvar level_complete_ani 0
-    setvar delayTime 15
+    setvar delayTime 20
     setuserdef[THISACTOR].return 0 -1
     setuserdef[THISACTOR].return 1 -1
     setuserdef[THISACTOR].return 2 -1
@@ -171,6 +171,22 @@ onevent EVENT_GETBONUSTILE
     setuserdef[THISACTOR].return 4 -1
 }
 endevent
+
+defstate bonus_screen_ani {
+    getticks curtick
+    ifvare bonus_screen_prevtick -1 setvar ticktmp 0 else
+    {
+        setvarvar ticktmp curtick
+        subvarvar ticktmp bonus_screen_prevtick
+    }
+
+    divvar ticktmp 4
+    
+    subvarvar delayTime ticktmp
+        
+    setvarvar bonus_screen_prevtick curtick
+}
+ends
 
 onevent EVENT_DISPLAYBONUSSCREEN
 {
@@ -186,12 +202,12 @@ onevent EVENT_DISPLAYBONUSSCREEN
  
         ifvarg delayTime 0
         {
-                subvar delayTime 1
+            state bonus_screen_ani
         }
         else
         {
                 addvar level_complete_ani 1
-                setvar delayTime 15
+                setvar delayTime 20
         }
     }
     else ifvarl level_complete_ani 24
@@ -205,13 +221,12 @@ onevent EVENT_DISPLAYBONUSSCREEN
 
         ifvarg delayTime 0
         {
-                subvar delayTime 1
+                state bonus_screen_ani
         }
         else
         {
                 addvar level_complete_ani 1
-                setvar prevtick -1
-                setvar delayTime 15
+                setvar delayTime 20
         }
     }
     else 

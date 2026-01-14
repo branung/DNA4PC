@@ -282,6 +282,9 @@ gamevar ticktmp2  0 0
 // Additional pretick for quotes to prevent conflict with cutscene timer
 gamevar quote_prevtick -1 0
 
+// Pretick for end level screen to not conflict with fade out timer
+gamevar bonus_screen_prevtick -1 0
+
 defineprojectile GOLDENGUN_PROJ PROJ_WORKSLIKE 1
 defineprojectile GOLDENGUN_PROJ PROJ_EXTRA 100
 defineprojectile GOLDENGUN_PROJ PROJ_SPAWNS SMALLSMOKE
