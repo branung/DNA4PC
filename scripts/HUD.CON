@@ -918,8 +918,12 @@ onevent EVENT_DISPLAYREST
 		getuserdef[THISACTOR].screen_size SCREENSIZE
 		ifvarg SCREENSIZE 0
 		{
-			state draw_dna_hud
-			state draw_dna_timer
+			getplayer[].newowner temp
+			ife temp -1 // Hide hud when in camera view
+			{
+				state draw_dna_hud
+				state draw_dna_timer	
+			}
 		}
 		state draw_dna_quotes
 	}
