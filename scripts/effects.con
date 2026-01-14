@@ -809,17 +809,32 @@ ends
 //// -- SE78: Cameras  --
 // Allows for camera views to be activatable through switches
 // Set its hitag as the same value as the lotag of the switch being flipped
-// Extra will be the sprite number of the camera you want to switch the player's view to
+// Camera pairing is done during eventloadactor for the matching switch tag
+// There is a 15tick delay after player's exit has been detected to re-enable the switch once more
 defstate do_se78
     switch fx_state
         case disabled
             ife fx_activate[sprite[].hitag] 1 {
-                set fx_state enabled
+                set fx_state pre_enable
             }
             break
+        case pre_enable
+            ifn fx_int -1 setplayer[].newowner fx_int
+            set fx_state enabled
+            set fx_int2 15
+            break
         case enabled
-            setplayer[].newowner fx_extra
-            set fx_state disabled
+            getplayer[].newowner temp
+            ife temp -1 set fx_state pre_disable
+            break
+        case pre_disable
+            ifn fx_yvel 0 {
+                ifg fx_int2 0 sub fx_int2 1
+                ifl fx_int2 1 {
+                    setarray fx_preactivate[fx_yvel] 1
+                    set fx_state disabled
+                }
+            } else set fx_state disabled
             break
     endswitch
 ends
@@ -902,6 +917,10 @@ eventloadactor SECTOREFFECTOR
         ife sprite.hitag 0 seta[THISACTOR].hitag 436
     }
     
+    ife sprite.lotag 78 {
+        set fx_int -1
+    }
+    
 enda
 eventloadactor CUTCAM
     seta [THISACTOR].cstat 32768
@@ -940,7 +959,22 @@ appendevent EVENT_ENTERLEVEL
          }
         
         ife sprite[i].lotag 75 {
-        add triggercounter 1
+            add triggercounter 1
+        }
+        
+        // Figure out what CAMERA sprite we should link to
+        // hitag == switch tag == camera lotag
+        ife sprite[i].lotag 78 {
+            for u sprofstat STAT_ACTOR {
+                ife sprite[u].picnum CAMERA1 {
+                    ife sprite[u].lotag sprite[i].hitag {
+                        getu[].vm_sprite temp
+                        setu[].vm_sprite i
+                        set fx_int u
+                        setu[].vm_sprite temp
+                    }
+                }
+            }
         }
     }
 endevent
