@@ -113,6 +113,77 @@ prependstate quikweaponget
   terminate
 ends
 
+// Have to copy this whole state just to remove the shield drop chance
+prependstate checkpighitstate
+  spawn BLOOD
+  ifdead
+  {
+    state random_wall_jibs
+    state drop_shotgun
+    ifwasweapon GROWSPARK
+    {
+      sound ACTOR_GROWING
+      ai AIPIGGROW
+      break
+    }
+
+    addkills 1
+
+    ifwasweapon FREEZEBLAST
+    {
+      sound SOMETHINGFROZE
+      spritepal 1
+      move 0
+      action APIGFROZEN
+      strength 0
+      break
+    }
+    ifwasweapon RADIUSEXPLOSION
+    {
+      sound SQUISHED
+      state standard_jibs
+      killit
+    }
+    else
+      ifwasweapon RPG
+    {
+      sound SQUISHED
+      state standard_jibs
+      killit
+    }
+    else
+      ai AIPIGDYING
+        sound PIG_DYING
+  }
+  else
+  {
+    sound PIG_PAIN
+    state random_wall_jibs
+
+    ifwasweapon SHRINKSPARK
+    {
+      sound ACTOR_SHRINKING
+      ai AIPIGSHRINK
+    }
+    else
+      ifwasweapon GROWSPARK
+        sound EXPANDERHIT
+    else
+      ifrnd 32
+        ai AIPIGHIT
+    else
+      ifrnd 64
+        ai AIPIGSHOOTENEMY
+    else
+      ifrnd 64
+      {
+        ai AIPIGDIVING
+        action APIGDIVESHOOT
+      }
+  }
+  terminate
+ends
+
 
 // DNA enemy initialization
 include scripts/grey.con
