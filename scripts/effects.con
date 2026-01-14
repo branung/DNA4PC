@@ -806,6 +806,24 @@ defstate do_se77
     endswitch
 ends
 
+//// -- SE78: Cameras  --
+// Allows for camera views to be activatable through switches
+// Set its hitag as the same value as the lotag of the switch being flipped
+// Extra will be the sprite number of the camera you want to switch the player's view to
+defstate do_se78
+    switch fx_state
+        case disabled
+            ife fx_activate[sprite[].hitag] 1 {
+                set fx_state enabled
+            }
+            break
+        case enabled
+            setplayer[].newowner fx_extra
+            set fx_state disabled
+            break
+    endswitch
+ends
+
 
 /// =============================================================================================
 ///   LEVEL STARTUP: PRELEVEL -> ACTORS -> ENTERLEVEL
@@ -954,6 +972,7 @@ appendevent EVENT_WORLD
                 ife sprite[i].lotag 75 state do_se75
                 ife sprite[i].lotag 76 state do_se76
                 ife sprite[i].lotag 77 state do_se77
+                ife sprite[i].lotag 78 state do_se78
                 break
         endswitch
     }
