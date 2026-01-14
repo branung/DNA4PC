@@ -120,6 +120,7 @@ gamevar CUTSCENE_DIALOG2 0 0
 gamevar CUTSCENE_DUKE 0 0
 gamevar CUTSCENE_DIALOGBOX 3921 0
 gamevar CUTSCENE_SPRITE 0 0
+gamevar x 0 0
 gamevar y 0 0
 var cutscene_num 0 0
 var cutscene_i 0 0
@@ -145,6 +146,10 @@ definequote 136         TIME
 definequote 137         PAR
 definequote 138         BEST
 definequote 139         00:00.-3
+definequote 140      BLANK
+gamevar level_complete_ani 0 0
+define ENDSCREEN_TEXT_SIZE 71920
+define ENDSCREEN_TEXT_SPACE 1
 
 // Common iterators
 var i 0 0

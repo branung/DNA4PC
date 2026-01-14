@@ -86,15 +86,17 @@ appendevent EVENT_LOADGAME
 endevent
 
 onevent EVENT_DISPLAYCROSSHAIR
-    ifvare dna_crosshair 1 { setvar RETURN 5744 }
-    else ifvare dna_crosshair 2 { setvar RETURN 5745 }
-    else ifvare dna_crosshair 3 { setvar RETURN 5746 }
-    else ifvare dna_crosshair 4 { setvar RETURN 5747 }
-    else ifvare dna_crosshair 5 { setvar RETURN 5748 }
-    else ifvare dna_crosshair 6 { setvar RETURN 5749 }
-    else ifvare dna_crosshair 7 { setvar RETURN 5750 }
-    else ifvare dna_crosshair 8 { setvar RETURN 5751 }
-    else { setvar RETURN 5743 }
+    switch dna_crosshair
+        case 1 { setvar RETURN 5744 break }
+        case 2 { setvar RETURN 5745 break }
+        case 3 { setvar RETURN 5746 break }
+        case 4 { setvar RETURN 5747 break }
+        case 5 { setvar RETURN 5748 break }
+        case 6 { setvar RETURN 5749 break }
+        case 7 { setvar RETURN 5750 break }
+        case 8 { setvar RETURN 5751 break }
+        default { setvar RETURN 5743 break }
+    endswitch
 endevent
 
 appendevent EVENT_ANIMATESPRITES
@@ -160,6 +162,8 @@ onevent EVENT_GETBONUSTILE
 {
     // cleanup called to reset values used for fadeout in bonus screen
     state cutscene_cleanup
+    setvar level_complete_ani 0
+    setvar delayTime 15
     setuserdef[THISACTOR].return 0 -1
     setuserdef[THISACTOR].return 1 -1
     setuserdef[THISACTOR].return 2 -1
@@ -172,47 +176,88 @@ onevent EVENT_DISPLAYBONUSSCREEN
 {
     state screen_fadeout
     rotatesprite 160 100 65536 0 5761 0 0 72 0 0 xdim ydim
-    rotatesprite 160 30 81920 0 5762 0 0 8 0 0 xdim ydim
-    screentext BIGALPHANUM 160 21 81920 0 0 132 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    rotatesprite 160 30 87920 0 5762 0 0 8 0 0 xdim ydim
+    ifvarl level_complete_ani 15
+    {
+        ifvarg level_complete_ani 0 { 
+            qsubstr 140 132 0 level_complete_ani
+            screentext BIGALPHANUM 64 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 2 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+        }
+ 
+        ifvarg delayTime 0
+        {
+                subvar delayTime 1
+        }
+        else
+        {
+                addvar level_complete_ani 1
+                setvar delayTime 15
+        }
+    }
+    else ifvarl level_complete_ani 24
+    {
+        setvarvar temp level_complete_ani
+        mod temp 2
+        ifvare temp 0 {
+            qsubstr 140 132 0 level_complete_ani
+            screentext BIGALPHANUM 160 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        }
+
+        ifvarg delayTime 0
+        {
+                subvar delayTime 1
+        }
+        else
+        {
+                addvar level_complete_ani 1
+                setvar prevtick -1
+                setvar delayTime 15
+        }
+    }
+    else 
+        screentext BIGALPHANUM 160 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+
+    
 
     // Kill count
     setvar y 64
-    screentext BIGALPHANUM 86 y 81920 0 0 133 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    setvar x 55
+    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 133 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     getplayer[THISACTOR].actors_killed temp
     getplayer[THISACTOR].max_actors_killed temp2
     redefinequote 134 %d/%d
     qsprintf 134 134 temp temp2
-    screentext BIGALPHANUM 230 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
 
     // Secret count
-    screentext BIGALPHANUM 110 y 81920 0 0 135 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 135 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     getplayer[THISACTOR].secret_rooms temp
     getplayer[THISACTOR].max_secret_rooms temp2
     redefinequote 134 %d/%d
     qsprintf 134 134 temp temp2
-    screentext BIGALPHANUM 230 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
 
     // Time
-    screentext BIGALPHANUM 85 y 81920 0 0 136 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 136 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     //getplayer[THISACTOR].max_secret_rooms temp2
     qgetsysstr 134 STR_YOURTIME 
-    screentext BIGALPHANUM 215 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
 
     // Par Time
-    screentext BIGALPHANUM 85 y 81920 0 0 137 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 137 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     qgetsysstr 134 STR_PARTIME 
-    screentext BIGALPHANUM 232 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
     
     // Best Time - Only shown when player has a previous record
     qgetsysstr 134 STR_BESTTIME
     qstrcmp 134 139 temp
     ifvarn temp 0 {
-        screentext BIGALPHANUM 90 y 81920 0 0 138 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
-        screentext BIGALPHANUM 215 y 81920 0 0 134 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+        screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 138 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+        screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     }
     
 }
