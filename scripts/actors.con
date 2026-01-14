@@ -941,7 +941,6 @@ defstate switchcode
             // In case yvel gets triggered, re-enable it
             ifg fx_yvel 0 {
                 ife fx_activate[fx_yvel] 1 {
-                    sound 1
                     geta .picnum temp2
                     sub temp2 1
                     seta .picnum temp2
