@@ -29,9 +29,15 @@ define OPCUTSCENEDUKESPRITE 5519
 define OPCUTSCENEDIALOG1 5520
 define OPCUTSCENEDIALOG2 5521
 
-gamevar OPCUTSCENESLIDEINTIME 520
-gamevar OPCUTSCENE12SLIDEINTIME 420
-gamevar OP12DUKESLIDEINTIME 520
+// Defines for cutscene slide animation times so they can be adjusted from here
+define OPSLIDEINTIME 520
+define OP12SLIDEINTIME 420
+define OPDUKESLIDEINTIME 520
+// gamevars for current slide animation times
+gamevar OPCUTSCENESLIDEINTIME OPSLIDEINTIME
+gamevar OPCUTSCENE12SLIDEINTIME OP12SLIDEINTIME
+gamevar OP12DUKESLIDEINTIME OPDUKESLIDEINTIME
+
 var OPCUTSCENEPOS 160
 define OPCUTSCENE12POS 95
 define OPCUTSCENE12DUKEPOS 40
@@ -140,6 +146,15 @@ defstate cutscene_cleanup
                 setvar CUTSCENE_STEP 0
         ifvarn prevtick -1
                 setvar prevtick -1
+ends
+
+defstate op_cutscene_cleanup
+        ifvarn OPCUTSCENESLIDEINTIME OPSLIDEINTIME
+                setvar OPCUTSCENESLIDEINTIME OPSLIDEINTIME
+        ifvarn OPCUTSCENE12SLIDEINTIME OP12SLIDEINTIME
+                setvar OPCUTSCENE12SLIDEINTIME OP12SLIDEINTIME
+        ifvarn OP12DUKESLIDEINTIME OPDUKESLIDEINTIME
+                setvar OP12DUKESLIDEINTIME OPDUKESLIDEINTIME
 ends
 
 defstate cutscene_timer //same as waste_time but without input restriction 
@@ -272,6 +287,7 @@ onevent EVENT_PRELEVEL
         {
                 ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
                 {
+                        state op_cutscene_cleanup
                         getuserdef[].music_episode currmusic
                         ifvarn currmusic 7
                         {
