@@ -89,6 +89,14 @@ defstate killme
     changespritestat i STAT_MISC
 ends
 
+//// --------- SECTOREFFECTORFY ---------
+// Prepares sprite to be a full blown SE after espawn
+//defstate prepeffector
+//    seta .xrepeat 0
+//    seta .yrepeat 0
+//    changespritestat i STAT_MISC
+//ends
+
 /// =============================================================================================
 ///   STATES: GAMEPLAY FUNCTIONALITY
 /// =============================================================================================
@@ -789,19 +797,25 @@ defstate do_se77
     switch fx_state
         case disabled
             ife fx_activate[sprite[].hitag] 1 {
-                set fx_state enabled
+                ife fx_zvel 1 {
+                    ife lotsofglass 20
+                    set fx_state completed
+                } else {
+                    set fx_state enabled
+                }
             }
             break
         case enabled
-            for i allwalls { 
-                ife wall[i].picnum fx_owner { 
-                    setw[i].picnum fx_extra
+            for u allwalls { 
+                ife wall[u].picnum fx_owner { 
+                    setw[u].picnum fx_extra
                 } 
             }
-            ifn fx_xvel 0 sound fx_xvel else sound VENT_BUST
-            ifn fx_yvel 0 sound fx_yvel else sound GREYDEATH
-            ifn fx_yvel 0 sound fx_zvel
-            killit
+            ifn fx_xvel 0 sound fx_xvel else soundonce VENT_BUST
+            ifn fx_yvel 0 sound fx_yvel else soundonce GREYDEATH
+            set fx_state completed
+            break
+        case completed
             break
     endswitch
 ends
@@ -838,6 +852,27 @@ defstate do_se78
             break
     endswitch
 ends
+
+//// -- SE79: Trigger relay  --
+// Trigger relay
+defstate do_se79
+    switch fx_state
+        case disabled
+            ife fx_extra 0 {
+                set fx_state enabled
+            } else {
+                ifg fx_extra 0 sub fx_extra 1
+            }
+            break
+        case enabled
+            geta .hitag temp
+            operateactivators temp 0
+            state killme
+            set fx_state completed
+            break
+    endswitch
+ends
+
 
 //// -- SE32767: Secret room --
 // Alternate secret tagging, essentailly sector tag 32767 but a sprite
@@ -1027,20 +1062,19 @@ appendevent EVENT_WORLD
     // Handle any SE changes for this tick
     for i sprofstat STAT_EFFECTOR {
         setu[].vm_sprite i
-        switch sprite.picnum
-            case SECTOREFFECTOR
-                ife sprite[i].lotag 70 state do_se70
-                ife sprite[i].lotag 71 state do_se71
-                ife sprite[i].lotag 72 state do_se72
-                ife sprite[i].lotag 73 state do_se73
-                ife sprite[i].lotag 74 state do_se74
-                ife sprite[i].lotag 75 state do_se75
-                ife sprite[i].lotag 76 state do_se76
-                ife sprite[i].lotag 77 state do_se77
-                ife sprite[i].lotag 78 state do_se78
-                ife sprite[i].lotag 32767 state do_se32767
-                break
-        endswitch
+        ife sprite.picnum SECTOREFFECTOR {
+            ife sprite[i].lotag 70 state do_se70
+            ife sprite[i].lotag 71 state do_se71
+            ife sprite[i].lotag 72 state do_se72
+            ife sprite[i].lotag 73 state do_se73
+            ife sprite[i].lotag 74 state do_se74
+            ife sprite[i].lotag 75 state do_se75
+            ife sprite[i].lotag 76 state do_se76
+            ife sprite[i].lotag 77 state do_se77
+            ife sprite[i].lotag 78 state do_se78
+            ife sprite[i].lotag 79 state do_se79
+            ife sprite[i].lotag 32767 state do_se32767
+        }
     }
     
     // Player idle state when not moving
@@ -1065,8 +1099,33 @@ endevent
 //// --------- RAN AGAINST MATCHING STAT_ACTIVATOR ---------
 // When lotag of a sprite with STAT_ACTIVATOR gets matched. i.e. buttons/touchplates
 appendevent EVENT_OPERATEACTIVATORS
-    setarray fx_preactivate[sprite[].lotag] 1
-    //addlogvar fx_preactivate[sprite[].lotag]
+    ife fx_int 2 {
+        set RETURN -1
+        state killme
+    } else {
+        ife sprite[].pal 6 {
+            ifl fx_extra 1 set fx_extra 1
+            espawn 0
+            seta[RETURN].cstat 32768
+            seta[RETURN].picnum 1
+            seta[RETURN].xrepeat 64
+            seta[RETURN].yrepeat 64
+            seta[RETURN].lotag 79
+            changespritestat RETURN STAT_EFFECTOR
+            setav[RETURN].fx_extra fx_extra
+            setav[RETURN].fx_state disabled
+            geta[].hitag temp
+            seta[RETURN].hitag temp
+            seta[].lotag temp
+            seta[].hitag 1
+            seta[].pal 0
+            set fx_int 1
+            set RETURN -1
+        } else {
+            setarray fx_preactivate[sprite[].lotag] 1
+            ife fx_int 1 set fx_int 2
+        }
+    }
 endevent
 
 
