@@ -857,7 +857,7 @@ defstate do_se32767
             add temp 1
             setp[].secret_rooms temp
             set fx_state completed
-            quote 6
+            quote 9
             state killme
             break
         case completed
