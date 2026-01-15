@@ -134,56 +134,57 @@ defstate enable_autoshade
         for i allsectors {
             gets[i].floorpal s_temp1
             gets[i].floorshade s_sectshade
-            // Do basic shading if we're not fullbright
-            ifg s_sectshade -1 {
-                for u wallsofsector i {
-                    state getwallang
-                    shiftr s_temp3 13
-                    set s_temp1 s_sectshade
-                    add s_temp1 s_temp3
-                    shiftl s_temp3 1
-                    abs s_temp3
-                    add s_temp1 s_temp3
-                    setw[u].shade s_temp1
-                    set s_tempvis 8
-                    
+            ifn s_sectshade 22 {
+                // Do basic shading if we're not fullbright
+                ifg s_sectshade -1 {
+                    for u wallsofsector i {
+                        state getwallang
+                        shiftr s_temp3 13
+                        set s_temp1 s_sectshade
+                        add s_temp1 s_temp3
+                        shiftl s_temp3 2
+                        abs s_temp3
+                        add s_temp1 s_temp3
+                        setw[u].shade s_temp1
+                        set s_tempvis 8
+                        
+                    }
+                    // Increase darkness (vis) if areas are darker
+                    ifg s_sectshade 2 shiftl s_tempvis 1
+                    ifg s_sectshade 8 shiftl s_tempvis 1
+                    ifg s_sectshade 16 shiftl s_tempvis 1
                 }
-                // Increase darkness (vis) if areas are darker
-                ifg s_sectshade 2 shiftl s_tempvis 1
-                ifg s_sectshade 8 shiftl s_tempvis 1
-                ifg s_sectshade 16 shiftl s_tempvis 1
-            }
-            else {
-                // For bright sectors it should be slightly less intense (and full vis)
-                for u wallsofsector i {
-                    state getwallang
-                    shiftr s_temp3 13
-                    abs s_temp3
-                    set s_temp1 s_sectshade
-                    add s_temp1 s_temp3
-                    setw[u].shade s_temp1
-                    set s_tempvis 240
+                else {
+                    // For bright sectors it should be slightly less intense (and full vis)
+                    for u wallsofsector i {
+                        state getwallang
+                        shiftr s_temp3 13
+                        abs s_temp3
+                        set s_temp1 s_sectshade
+                        add s_temp1 s_temp3
+                        setw[u].shade s_temp1
+                        set s_tempvis 240
+                    }
                 }
+                // Apply final visibility and darken the ceiling a bit for better three-dee
+                sets[i].visibility s_tempvis
+                set s_temp1 s_sectshade
+                add s_temp1 6
+                ifand sector[i].ceilingstat 1 {
+                    sets[i].ceilingshade -32
+                } else {
+                    sets[i].ceilingshade s_temp1
+                }
+                gets[i].floorpicnum s_temp1
+                set s_temp2 0
+                // Bright ones
+                ife s_temp1 5684 set s_temp2 1
+                ife s_temp2 1 sets[i].visibility 0
+                gets[i].floorpal s_temp1
+                ife s_temp1 142 sets[i].visibility 241
+                ife s_temp1 141 sets[i].visibility 241
+                ife s_temp1 140 sets[i].visibility 241
             }
-            // Apply final visibility and darken the ceiling a bit for better three-dee
-            sets[i].visibility s_tempvis
-            set s_temp1 s_sectshade
-            add s_temp1 6
-            ifand sector[i].ceilingstat 1 {
-                sets[i].ceilingshade -32
-            } else {
-                sets[i].ceilingshade s_temp1
-            }
-            gets[i].floorpicnum s_temp1
-            set s_temp2 0
-            // Bright ones
-            ife s_temp1 5684 set s_temp2 1
-            ife s_temp2 1 sets[i].visibility 0
-            gets[i].floorpal s_temp1
-            ife s_temp1 142 sets[i].visibility 241
-            ife s_temp1 141 sets[i].visibility 241
-            ife s_temp1 140 sets[i].visibility 241
-
         }
     set s_state enabled
 ends
@@ -873,6 +874,50 @@ defstate do_se79
     endswitch
 ends
 
+//// -- SE80: #BetterCycler  --
+// Offset sector to this shade and back, not actually that much better :)
+// Hitag is how many nops get waited per tick (1 is 50% speed, 2 is 25% and so on..)
+// Extra is how many units will be consumed each tick, default abs(-1)
+// fx_int stores direciton, fx_int2 stores current wait padding
+defstate do_se80
+    switch fx_state
+        case enabled
+            ife fx_int2 0 {
+                geta .shade temp
+                ife fx_int 1 {
+                    add temp fx_extra
+                    ifg temp fx_int3 set temp fx_int3
+                    seta .shade temp
+                    ife temp fx_int3 {
+                        set fx_int -1
+                        inv fx_int3
+                    }
+                } else ife fx_int -1 {
+                    sub temp fx_extra
+                    ifl temp fx_int3 set temp fx_int3
+                    seta .shade temp
+                    ife temp fx_int3 {
+                        inv fx_int3
+                        set fx_int 1
+                    }
+                }
+                // Shade was changed this tick so..
+                geta .sectnum temp
+                geta .shade temp2
+                add temp2 fx_xvel
+                for u wallsofsector temp {
+                    setw[u].shade temp2
+                }
+                sets[temp].floorshade temp2
+                sets[temp].ceilingshade temp2
+                geta .hitag temp
+                set fx_int2 temp
+            } else {
+                ifg fx_int2 0 sub fx_int2 1
+            }
+            break
+    endswitch
+ends
 
 //// -- SE32767: Secret room --
 // Alternate secret tagging, essentailly sector tag 32767 but a sprite
@@ -1035,6 +1080,28 @@ appendevent EVENT_ENTERLEVEL
                     }
                 }
                 break
+            case 80
+                // Get initial direction, negative is brighter
+                geta[i].shade temp
+                ifg temp 0 setav[i].fx_int 1
+                ifl temp 0 setav[i].fx_int -1
+                ife temp 0 setav[i].fx_int 0
+                setav[i].fx_int3 temp
+                // Extra is steps to skip
+                getav[i].fx_extra temp
+                abs temp
+                setav[i].fx_extra temp
+                // Prepare wait ticks from Hitag
+                geta[i].hitag temp
+                setav[i].fx_int2 temp
+                setav[i].fx_state enabled
+                // Get sector's shade too
+                geta[i].sectnum temp2
+                gets[temp2].floorshade temp
+                geta[i].shade temp2
+                add temp temp2
+                setav[i].fx_xvel temp
+                break
             case 32767
                 // Increment map secrets
                 getp[].max_secret_rooms temp
@@ -1073,6 +1140,7 @@ appendevent EVENT_WORLD
             ife sprite[i].lotag 77 state do_se77
             ife sprite[i].lotag 78 state do_se78
             ife sprite[i].lotag 79 state do_se79
+            ife sprite[i].lotag 80 state do_se80
             ife sprite[i].lotag 32767 state do_se32767
         }
     }
