@@ -798,7 +798,7 @@ defstate do_se77
         case disabled
             ife fx_activate[sprite[].hitag] 1 {
                 ife fx_zvel 1 {
-                    ife lotsofglass 20
+                    lotsofglass 20
                     set fx_state completed
                 } else {
                     set fx_state enabled
