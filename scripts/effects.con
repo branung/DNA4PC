@@ -839,6 +839,31 @@ defstate do_se78
     endswitch
 ends
 
+//// -- SE32767: Secret room --
+// Alternate secret tagging, essentailly sector tag 32767 but a sprite
+// Place in a sector with this tag.
+// Can be remote toggled with hitag (A matching activator needed as usual)
+defstate do_se32767
+    switch fx_state
+        case disabled
+            ife sprite[].hitag 0 {
+                ife player[].cursectnum sprite[].sectnum set fx_state pre_enable
+            } else {
+                ife fx_activate[sprite[].hitag] 1 set fx_state pre_enable
+            }
+            break
+        case pre_enable
+            getp[].secret_rooms temp
+            add temp 1
+            setp[].secret_rooms temp
+            set fx_state completed
+            quote 6
+            state killme
+            break
+        case completed
+            break
+   endswitch
+ends
 
 /// =============================================================================================
 ///   LEVEL STARTUP: PRELEVEL -> ACTORS -> ENTERLEVEL
@@ -949,33 +974,39 @@ appendevent EVENT_ENTERLEVEL
     
     // These get mangled around this point in time
     for i sprofstat STAT_EFFECTOR {
-         ife sprite[i].lotag 25 {
-            // Crusher should start stopped if pal was red
-            ife sprite[i].pal 2 {
-                seta [i].htg_t 4 0
-                geta [i].htg_t 3 temp
-                sets[sprite[i].sectnum].ceilingz temp
-            }
-         }
-        
-        ife sprite[i].lotag 75 {
-            add triggercounter 1
-        }
-        
-        // Figure out what CAMERA sprite we should link to
-        // hitag == switch tag == camera lotag
-        ife sprite[i].lotag 78 {
-            for u sprofstat STAT_ACTOR {
-                ife sprite[u].picnum CAMERA1 {
-                    ife sprite[u].lotag sprite[i].hitag {
-                        getu[].vm_sprite temp
-                        setu[].vm_sprite i
-                        set fx_int u
-                        setu[].vm_sprite temp
+        switch sprite[i].lotag
+            case 25
+                // Crusher should start stopped if pal was red
+                ife sprite[i].pal 2 {
+                    seta [i].htg_t 4 0
+                    geta [i].htg_t 3 temp
+                    sets[sprite[i].sectnum].ceilingz temp
+                }
+                break
+            case 75
+                add triggercounter 1
+                break
+            case 78
+                // Figure out what CAMERA sprite we should link to
+                // hitag == switch tag == camera lotag
+                for u sprofstat STAT_ACTOR {
+                    ife sprite[u].picnum CAMERA1 {
+                        ife sprite[u].lotag sprite[i].hitag {
+                            getu[].vm_sprite temp
+                            setu[].vm_sprite i
+                            set fx_int u
+                            setu[].vm_sprite temp
+                        }
                     }
                 }
-            }
-        }
+                break
+            case 32767
+                // Increment map secrets
+                getp[].max_secret_rooms temp
+                add temp 1
+                setp[].max_secret_rooms temp
+                break
+        endswitch
     }
 endevent
 
@@ -1007,6 +1038,7 @@ appendevent EVENT_WORLD
                 ife sprite[i].lotag 76 state do_se76
                 ife sprite[i].lotag 77 state do_se77
                 ife sprite[i].lotag 78 state do_se78
+                ife sprite[i].lotag 32767 state do_se32767
                 break
         endswitch
     }
