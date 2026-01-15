@@ -1,0 +1,186 @@
+// States to control fading the screen out of black and fading into black 
+defstate screen_fadeout
+        ifvarg SCREENALPHA 0
+        {
+                getticks curtick
+                setvar RETURN 0
+                screenpal 0 0 0 SCREENALPHA
+                
+                ifvare prevtick -1 setvar ticktmp 0 else
+                {
+                setvarvar ticktmp curtick
+                subvarvar ticktmp prevtick
+                }
+                
+                divvar ticktmp 2
+                subvarvar SCREENALPHA ticktmp
+                setvarvar prevtick curtick
+        }
+        else {
+                setvar prevtick -1
+        }
+ends
+
+defstate screen_fadein
+{
+        ifvarl SCREENALPHA 255
+        {
+                getticks curtick
+                setvar RETURN 0
+                screenpal 0 0 0 SCREENALPHA
+                
+                ifvare prevtick -1 setvar ticktmp 0 else
+                {
+                setvarvar ticktmp curtick
+                subvarvar ticktmp prevtick
+                }
+                
+                divvar ticktmp 2
+                addvarvar SCREENALPHA ticktmp
+                setvarvar prevtick curtick
+        }
+        else {
+                setvar prevtick -1
+        }
+}
+ends
+
+// Fade-in effect when starting a level
+appendevent EVENT_DISPLAYSTART
+{
+    ifvarg SCREENALPHAWORLD 0   
+        {
+            getticks worldcurtick
+            screenpal 0 0 0 SCREENALPHAWORLD
+            
+            ifvare worldprevtick -1 setvar worldticktmp 0 else
+            {
+            setvarvar worldticktmp worldcurtick
+            subvarvar worldticktmp worldprevtick
+            }
+            
+            divvar worldticktmp 2
+            subvarvar SCREENALPHAWORLD worldticktmp
+            setvarvar worldprevtick worldcurtick
+        }
+}
+endevent
+
+// Timer for the LEVEL COMPLETE animation on end level screen
+// Given its own prevtick value due to conflicting with prevtick in fade timer
+defstate bonus_screen_ani {
+    getticks curtick
+    ifvare bonus_screen_prevtick -1 setvar ticktmp 0 else
+    {
+        setvarvar ticktmp curtick
+        subvarvar ticktmp bonus_screen_prevtick
+    }
+
+    divvar ticktmp 4
+    
+    subvarvar bonusDelayTime ticktmp
+        
+    setvarvar bonus_screen_prevtick curtick
+}
+ends
+
+// End screen drawing state
+// Usage can be found at the end of EVENT_GAME in CUTSCENES.CON
+defstate display_end_screen
+{
+    rotatesprite 160 100 65536 0 5761 0 0 72 0 0 xdim ydim
+    rotatesprite 160 30 87920 0 5762 0 0 8 0 0 xdim ydim
+    // When level complete phrase is not fully spelt
+    ifvarl level_complete_ani 15
+    {
+        // level_complete_ani 0 means no letters yet, therefore no screentext needed
+        ifvarg level_complete_ani 0 {
+            qsubstr 140 132 0 level_complete_ani
+            screentext BIGALPHANUM 64 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 2 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+        }
+ 
+        ifvarg bonusDelayTime 0
+        {
+            state bonus_screen_ani
+        }
+        else
+        {
+            addvar level_complete_ani 1
+            setvar bonusDelayTime 20
+        }
+    }
+    // Level complete is now spelt out, now to flash it
+    else ifvarl level_complete_ani 24
+    {
+        setvarvar temp level_complete_ani
+        mod temp 2
+        ifvare temp 0 {
+            qsubstr 140 132 0 level_complete_ani
+            screentext BIGALPHANUM 160 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        }
+
+        ifvarg bonusDelayTime 0
+        {
+                state bonus_screen_ani
+        }
+        else
+        {
+                addvar level_complete_ani 1
+                setvar bonusDelayTime 20
+        }
+    }
+    else 
+        screentext BIGALPHANUM 160 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+
+
+    // Kill count
+    setvar y 64
+    setvar x 55
+    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 133 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    getplayer[THISACTOR].actors_killed temp
+    getplayer[THISACTOR].max_actors_killed temp2
+    redefinequote 134 %d/%d
+    qsprintf 134 134 temp temp2
+    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    addvar y 24
+
+    // Secret count
+    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 135 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    getplayer[THISACTOR].secret_rooms temp
+    getplayer[THISACTOR].max_secret_rooms temp2
+    redefinequote 134 %d/%d
+    qsprintf 134 134 temp temp2
+    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    addvar y 24
+
+    // Time
+    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 136 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    //getplayer[THISACTOR].max_secret_rooms temp2
+    qgetsysstr 134 STR_YOURTIME 
+    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    addvar y 24
+
+    // Par Time
+    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 137 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    qgetsysstr 134 STR_PARTIME 
+    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    addvar y 24
+    
+    // Best Time - Only shown when player has a previous record
+    qgetsysstr 134 STR_BESTTIME
+    qstrcmp 134 139 temp
+    ifvarn temp 0 {
+        screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 138 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+        screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    }
+}
+ends
+
+// Reset important values on level load
+defstate endscreen_cleanup 
+{
+  setvar level_complete_ani 0
+  setvar in_endlevel_screen 0
+  setvar bonusDelayTime 20
+}
+ends

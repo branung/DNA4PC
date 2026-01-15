@@ -142,28 +142,6 @@ defstate cutscene_cleanup
                 setvar prevtick -1
 ends
 
-defstate screen_fadeout
-        ifvarg SCREENALPHA 0    // QUICK FADEOUT
-        {
-                getticks curtick
-                setvar RETURN 0
-                screenpal 0 0 0 SCREENALPHA
-                
-                ifvare prevtick -1 setvar ticktmp 0 else
-                {
-                setvarvar ticktmp curtick
-                subvarvar ticktmp prevtick
-                }
-                
-                divvar ticktmp 2
-                subvarvar SCREENALPHA ticktmp
-                setvarvar prevtick curtick
-        }
-        else {
-                setvar prevtick -1
-        }
-ends
-
 defstate cutscene_timer //same as waste_time but without input restriction 
 {
         ifvarg delayTime 0
@@ -309,20 +287,24 @@ endevent
 
 appendevent EVENT_ENDLEVELSCREEN
         state cutscene_cleanup
+        stopallmusic
+        starttrackslot 7 0
+        setvar delayTime END_SCREEN_INPUT_DELAY // This controls how long it takes until the player can skip the end level screen
+        setvar in_endlevel_screen 1
+        stopallsounds
+        startscreen
+        startscreen
+        //setvar in_endlevel_screen 0
         ifvare VOLUME 0
         {
                 ifvare LEVEL 19 
                 {
-                        getuserdef[].music_episode currmusic
-                        ifvarn currmusic 7
-                        {
-                                stopallmusic
-                                starttrackslot 7 0 
-                        }
+                        state cutscene_cleanup
                         stopallsounds
                         startscreen
                 }
         }
+        setvar RETURN -1
 endevent
 
 appendevent EVENT_GAME
@@ -333,7 +315,10 @@ appendevent EVENT_GAME
         state get_script
         state cutscene_cleanup
         ifvare dna_cutscenes 1 { state end_cutscene }
-        else ifvare dna_cutscenes 0 {
+        else ifvare dna_cutscenes 0 
+        {
+                setvar SCREENALPHAWORLD 255
+                setvar worldprevtick -1 // Keep resetting world fade values while in cutscene so the fade returns once exiting
                 ifvare VOLUME 0
                 {
                         setvar delayTime 500 // Inital delay on cutscene start
@@ -888,6 +873,7 @@ appendevent EVENT_GAME
                         {
                                 ifvare cutscene_num 1001
                                 {
+                                        stopallsounds
                                         ifvare dna_dukecutscenevoc 2 ifvare dna_localization 0 { screensound GM_IMIN } else ifvare dna_localization 1 { screensound GM_IMINEU }
                                         startscreen
                                         stopallsounds
@@ -1346,11 +1332,9 @@ onevent EVENT_SCREEN
     {
         ifvarn cutscene_num 0
         {
-                ifvarg SCREENALPHA 0    // QUICK FADEOUT
+                ifvarg SCREENALPHA 0
                 {
-                                setvar RETURN 0
-                                screenpal 0 0 0 SCREENALPHA
-                                subvar SCREENALPHA 10
+                        state screen_fadeout
                 }
 
         ifvare VOLUME 0
@@ -4597,6 +4581,7 @@ onevent EVENT_SCREEN
     }
     else
     {
+        ife in_endlevel_screen 0 { // As name says: checks if we're not in end level screen
         ifvare VOLUME 0
         {
                 ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
@@ -4890,7 +4875,6 @@ onevent EVENT_SCREEN
                 }
                 ifvare LEVEL 19
                 {
-
                         ifvare CUTSCENE_STEP 0    // FIRST SCREEN
                         {
                                 setvar CUTSCENE_DIALOG 5400
@@ -4898,9 +4882,8 @@ onevent EVENT_SCREEN
                                 setvar CUTSCENE_SCREEN ENDCUTSCENE1
                                 ifvarg SCREENALPHA 0
                                 {
+                                        state screen_fadeout
                                         setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar prevtick -1
-                                        setvar SCREENALPHA 0
                                 }
                                 else
                                 ifvarg delayTime 0
@@ -5162,7 +5145,35 @@ onevent EVENT_SCREEN
 
 
         }
-
+        }
+        else ife in_endlevel_screen 1 { // End level screens
+                state display_end_screen
+                ifvarg SCREENALPHA 0
+                {
+                        state screen_fadeout
+                }
+                ifvare RETURN 1
+                {
+                        setvar prevtick -1
+                        globalsound A_PISTOL
+                        setvar SCREENALPHA 0
+                        setvar in_endlevel_screen 2
+                }  
+        }
+        else ife in_endlevel_screen 2
+        {
+                state display_end_screen
+                ifvarl SCREENALPHA 255
+                {
+                        state screen_fadein
+                }
+                else {
+                        setvar prevtick -1
+                        setvar SCREENALPHA 255
+                        setvar in_endlevel_screen 0
+                        setvar RETURN 1
+                }
+        }
         
     }
 endevent

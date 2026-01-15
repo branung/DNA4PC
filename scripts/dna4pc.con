@@ -8,6 +8,7 @@ include scripts/actors.con
 include scripts/breakable.con
 include scripts/dialogdef.con
 include scripts/effects.con
+include scripts/screens.con
 include scripts/cutscenes.con
 include scripts/hud.con
 // WEAPON DEFINES, I'm too lazy so I stole the sample from sdk/samples/weapons.sample.con
@@ -26,9 +27,9 @@ onevent EVENT_NEWGAME
     readgamevar dna_key_hud
 endevent
 
-//Replace D3D loading screen
+//Remove D3D loading screen
 onevent EVENT_GETLOADTILE
-    setvar RETURN 5753
+    setvar RETURN -1
 endevent
 
 //Set all Liztroops to blue on spawn rather than the hardcoded green 
@@ -44,20 +45,13 @@ onevent EVENT_SPAWN
     setvar RESPAWN_MONSTERS 0
 endevent
 
-var viewscreen_spr 0 0
-
 appendevent EVENT_PRELEVEL
+  state cutscene_cleanup
+  state endscreen_cleanup
+  setvar worldprevtick -1
+  setvar SCREENALPHAWORLD 255
   setp[myconnectindex].max_ammo_amount 12 100
-  for viewscreen_spr allsprites
-  {
-    ifvare sprite[viewscreen_spr].picnum VIEWSCREEN
-    {
-        setactor[viewscreen_spr].mdflags 16
-                    
-    }
-  }
 endevent
-
 
 appendevent EVENT_ENTERLEVEL
     // Don't show level name
@@ -156,147 +150,3 @@ prependstate random_ooz
       terminate
     }
 ends
-
-// End level screen events
-onevent EVENT_GETBONUSTILE
-{
-    // cleanup called to reset values used for fadeout in bonus screen
-    state cutscene_cleanup
-    setvar level_complete_ani 0
-    setvar delayTime 20
-    setuserdef[THISACTOR].return 0 -1
-    setuserdef[THISACTOR].return 1 -1
-    setuserdef[THISACTOR].return 2 -1
-    setuserdef[THISACTOR].return 3 -1
-    setuserdef[THISACTOR].return 4 -1
-}
-endevent
-
-defstate bonus_screen_ani {
-    getticks curtick
-    ifvare bonus_screen_prevtick -1 setvar ticktmp 0 else
-    {
-        setvarvar ticktmp curtick
-        subvarvar ticktmp bonus_screen_prevtick
-    }
-
-    divvar ticktmp 4
-    
-    subvarvar delayTime ticktmp
-        
-    setvarvar bonus_screen_prevtick curtick
-}
-ends
-
-onevent EVENT_DISPLAYBONUSSCREEN
-{
-    state screen_fadeout
-    rotatesprite 160 100 65536 0 5761 0 0 72 0 0 xdim ydim
-    rotatesprite 160 30 87920 0 5762 0 0 8 0 0 xdim ydim
-    ifvarl level_complete_ani 15
-    {
-        ifvarg level_complete_ani 0 { 
-            qsubstr 140 132 0 level_complete_ani
-            screentext BIGALPHANUM 64 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 2 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
-        }
- 
-        ifvarg delayTime 0
-        {
-            state bonus_screen_ani
-        }
-        else
-        {
-                addvar level_complete_ani 1
-                setvar delayTime 20
-        }
-    }
-    else ifvarl level_complete_ani 24
-    {
-        setvarvar temp level_complete_ani
-        mod temp 2
-        ifvare temp 0 {
-            qsubstr 140 132 0 level_complete_ani
-            screentext BIGALPHANUM 160 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
-        }
-
-        ifvarg delayTime 0
-        {
-                state bonus_screen_ani
-        }
-        else
-        {
-                addvar level_complete_ani 1
-                setvar delayTime 20
-        }
-    }
-    else 
-        screentext BIGALPHANUM 160 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
-
-    
-
-    // Kill count
-    setvar y 64
-    setvar x 55
-    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 133 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
-    getplayer[THISACTOR].actors_killed temp
-    getplayer[THISACTOR].max_actors_killed temp2
-    redefinequote 134 %d/%d
-    qsprintf 134 134 temp temp2
-    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
-    addvar y 24
-
-    // Secret count
-    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 135 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
-    getplayer[THISACTOR].secret_rooms temp
-    getplayer[THISACTOR].max_secret_rooms temp2
-    redefinequote 134 %d/%d
-    qsprintf 134 134 temp temp2
-    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
-    addvar y 24
-
-    // Time
-    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 136 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
-    //getplayer[THISACTOR].max_secret_rooms temp2
-    qgetsysstr 134 STR_YOURTIME 
-    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
-    addvar y 24
-
-    // Par Time
-    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 137 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
-    qgetsysstr 134 STR_PARTIME 
-    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
-    addvar y 24
-    
-    // Best Time - Only shown when player has a previous record
-    qgetsysstr 134 STR_BESTTIME
-    qstrcmp 134 139 temp
-    ifvarn temp 0 {
-        screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 138 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
-        screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
-    }
-    
-}
-endevent
-
-// Disable various sounds on level complete screen
-onevent EVENT_SOUND    
-    getplayer[THISACTOR].gm temp
-    ifvarand temp 8    
-    {
-        switch RETURN
-        case FLY_BY
-        case BONUS_SPEECH1
-        case BONUS_SPEECH2
-        case BONUS_SPEECH3
-            set RETURN -1
-            break
-        case SHOTGUN_COCK
-            setvar RETURN -1 
-            globalsound A_PISTOL
-            break
-        case PIPEBOMB_EXPLODE
-            ifvarn CUTSCENE_STEP 3 { setvar RETURN -1 }
-            break
-        endswitch
-    }
-endevent

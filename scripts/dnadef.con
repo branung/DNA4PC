@@ -273,6 +273,7 @@ var bobfrequency 1024 0
 
 //Delay vars
 var delayTime 0
+var bonusDelayTime 0
 
 gamevar prevtick -1 0
 gamevar curtick   0 0
@@ -284,6 +285,15 @@ gamevar quote_prevtick -1 0
 
 // Pretick for end level screen to not conflict with fade out timer
 gamevar bonus_screen_prevtick -1 0
+
+// Additional ticks for world screen fade timer - dont want any conflicts with these
+gamevar SCREENALPHAWORLD 255 0
+gamevar worldprevtick -1 0
+gamevar worldcurtick   0 0
+gamevar worldticktmp   0 0 
+
+define END_SCREEN_INPUT_DELAY 1000
+gamevar in_endlevel_screen 0 0
 
 defineprojectile GOLDENGUN_PROJ PROJ_WORKSLIKE 1
 defineprojectile GOLDENGUN_PROJ PROJ_EXTRA 100
