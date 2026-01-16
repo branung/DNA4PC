@@ -547,11 +547,13 @@ defstate do_se72
             }
             
             // Check if we need to disabled
-            ife fx_activate[fx_owner] 1 {
-                set fx_state disabled
-                set fx_int2 60
-                set kcsunshinemode 0
-                set undisplayrooms 0
+            ifg fx_owner 0 {
+                ife fx_activate[fx_owner] 1 {
+                    set fx_state disabled
+                    set fx_int2 60
+                    set kcsunshinemode 0
+                    set undisplayrooms 0
+                }
             }
             break
     endswitch
@@ -589,10 +591,12 @@ defstate do_se73
             ife eggtimer 0 {
                 set fx_state pre_complete
             }
-            ife fx_activate[fx_owner] 1 {
-                set fx_state disabled
-                set eggtimer -1
-                //redefinequote DNA_EGGQUOTE_ON TIMER OFFLINE!
+            ifg fx_owner 0 {
+                ife fx_activate[fx_owner] 1 {
+                    set fx_state disabled
+                    set eggtimer -1
+                    //redefinequote DNA_EGGQUOTE_ON TIMER OFFLINE!
+                }
             }
             break
         case pre_complete
