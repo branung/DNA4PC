@@ -14,6 +14,7 @@ defstate screen_fadeout
                 
                 divvar ticktmp 2
                 subvarvar SCREENALPHA ticktmp
+                clamp SCREENALPHA 0 255
                 setvarvar prevtick curtick
         }
         else {
@@ -37,6 +38,7 @@ defstate screen_fadein
                 
                 divvar ticktmp 2
                 addvarvar SCREENALPHA ticktmp
+                clamp SCREENALPHA 0 255
                 setvarvar prevtick curtick
         }
         else {
@@ -50,6 +52,7 @@ appendevent EVENT_DISPLAYSTART
 {
     ifvarg SCREENALPHAWORLD 0   
         {
+            // ife SCREENALPHAWORLD 255 { palfrom 63 0 0 0 } // Prevents screen flash at level start, but causes slow fade
             getticks worldcurtick
             screenpal 0 0 0 SCREENALPHAWORLD
             
@@ -61,6 +64,7 @@ appendevent EVENT_DISPLAYSTART
             
             divvar worldticktmp 2
             subvarvar SCREENALPHAWORLD worldticktmp
+            clamp SCREENALPHAWORLD 0 255
             setvarvar worldprevtick worldcurtick
         }
 }
