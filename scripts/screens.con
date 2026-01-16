@@ -92,7 +92,7 @@ ends
 // Usage can be found at the end of EVENT_GAME in CUTSCENES.CON
 defstate display_end_screen
 {
-    rotatesprite 160 100 65536 0 5761 0 0 72 0 0 xdim ydim
+    rotatesprite 160 100 81935 0 5761 0 0 72 0 0 xdim ydim
     rotatesprite 160 30 87920 0 5762 0 0 8 0 0 xdim ydim
     // When level complete phrase is not fully spelt
     ifvarl level_complete_ani 15
@@ -139,13 +139,13 @@ defstate display_end_screen
 
     // Kill count
     setvar y 64
-    setvar x 55
+    setvar x 60
     screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 133 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     getplayer[THISACTOR].actors_killed temp
     getplayer[THISACTOR].max_actors_killed temp2
     redefinequote 134 %d/%d
     qsprintf 134 134 temp temp2
-    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    screentext BIGALPHANUM 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
 
     // Secret count
@@ -154,20 +154,20 @@ defstate display_end_screen
     getplayer[THISACTOR].max_secret_rooms temp2
     redefinequote 134 %d/%d
     qsprintf 134 134 temp temp2
-    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    screentext BIGALPHANUM 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
 
     // Time
     screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 136 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     //getplayer[THISACTOR].max_secret_rooms temp2
     qgetsysstr 134 STR_YOURTIME 
-    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    screentext BIGALPHANUM 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
 
     // Par Time
     screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 137 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     qgetsysstr 134 STR_PARTIME 
-    screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    screentext BIGALPHANUM 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
     
     // Best Time - Only shown when player has a previous record
@@ -175,7 +175,7 @@ defstate display_end_screen
     qstrcmp 134 139 temp
     ifvarn temp 0 {
         screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 138 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
-        screentext BIGALPHANUM 265 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+        screentext BIGALPHANUM 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     }
 }
 ends
