@@ -40,8 +40,18 @@ onevent EVENT_SPAWN
         case LIZTROOPSTAYPUT seta[].pal 0 break
         case LIZTROOPJETPACK seta[].pal 0 break
         // Resize standard health pickups
-        case SIXPAK seta[].xrepeat 58 seta[].yrepeat 50 break
-        case COLA seta[].xrepeat 48 seta[].yrepeat 40 break
+        case SIXPAK {
+            getuserdef .player_skill temp
+            geta[].lotag temp2
+            ifg temp2 temp break
+            else seta[].xrepeat 58 seta[].yrepeat 50 break
+        } 
+        case COLA {
+            getuserdef .player_skill temp
+            geta[].lotag temp2
+            ifg temp2 temp break
+            else seta[].xrepeat 48 seta[].yrepeat 40 break
+        } 
     endswitch
 
     // Disable monster respawn
