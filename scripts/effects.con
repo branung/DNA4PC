@@ -89,14 +89,6 @@ defstate killme
     changespritestat i STAT_MISC
 ends
 
-//// --------- SECTOREFFECTORFY ---------
-// Prepares sprite to be a full blown SE after espawn
-//defstate prepeffector
-//    seta .xrepeat 0
-//    seta .yrepeat 0
-//    changespritestat i STAT_MISC
-//ends
-
 /// =============================================================================================
 ///   STATES: GAMEPLAY FUNCTIONALITY
 /// =============================================================================================
@@ -923,6 +915,81 @@ defstate do_se80
     endswitch
 ends
 
+//// -- SE81: Videogame floor or ceiling  --
+// Alternates between lower floor and starting position, making sounds.
+// Sort of like an automated elevtor without player interaction.
+// fx_int = Starting Z
+// fx_int2 = Floor Z
+// fx_int3 = Direction tracking, 1 up and -1 down, contrary to real Z units
+// fx_extra = units to decrement, 16 is not specified
+// xvel = soundnum override
+// yvel = trigger
+defstate do_se81
+    switch fx_state
+        case pre_enable
+            geta .hitag temp
+            ifg temp 0 {
+                sub temp 1
+                seta .hitag temp
+            }
+            ife temp 0 ife fx_yvel 0 {
+                set fx_state enabled
+            } else {
+                ife temp 0 ife fx_activate[fx_yvel] 1 {
+                    set fx_state enabled
+                }
+            }
+            break
+        case enabled
+            geta .sectnum temp2
+            ife fx_int4 512 {
+                gets[temp2].ceilingz temp
+            } else {
+                gets[temp2].floorz temp
+            }
+            ife fx_int3 -1 {
+                set temp4 fx_extra
+                // Slow down when crushing the player
+                ife fx_int4 512 {
+                    ife temp2 player.cursectnum ife fx_int3 -1 {
+                        set temp5 temp
+                        add temp5 10000
+                        ifg temp5 fx_int2 {
+                            div temp4 2
+                            set temp5 temp
+                            add temp5 7000
+                            ifg temp5 fx_int2 addphealth -2
+                        }
+                    }
+                }
+                add temp temp4
+                ifg temp fx_int2 {
+                    set temp fx_int2
+                    inv fx_int3
+                    dist temp3 THISACTOR player[].i
+                    ifl temp3 6144 {
+                        ife fx_xvel 0 sound 435 else sound fx_xvel
+                    }
+                }
+            } else ife fx_int3 1 {
+                sub temp fx_extra
+                ifl temp fx_int {
+                    set temp fx_int
+                    inv fx_int3
+                    dist temp3 THISACTOR player[].i
+                    ifl temp3 6144 {
+                        ife fx_xvel 0 sound 435 else sound fx_xvel
+                    }
+                }
+            }
+            ife fx_int4 512 sets[temp2].ceilingz temp else sets[temp2].floorz temp
+            break
+        case completed
+            // This is reached if the effect failed to initialize
+            break
+    endswitch
+ends
+
 //// -- SE32767: Secret room --
 // Alternate secret tagging, essentailly sector tag 32767 but a sprite
 // Place in a sector with this tag.
@@ -1028,6 +1095,33 @@ eventloadactor SECTOREFFECTOR
     
     ife sprite.lotag 78 {
         set fx_int -1
+    }
+    
+    // Videogame floor/ceiling
+    ife sprite.lotag 81 {
+        geta .sectnum temp
+        geta .ang fx_int4
+        ife fx_int4 512 {
+            gets[temp].floorz fx_int2
+            gets[temp].ceilingz fx_int
+            set fx_state pre_enable
+            set fx_int3 -1
+            ifl fx_extra 1 set fx_extra 512
+        } else {
+            gets[temp].floorz fx_int
+            nextsectorneighborz temp fx_int 1 1
+            ifn RETURN -1 {
+                gets[RETURN].floorz fx_int2
+                //ifl fx_int fx_int2
+                set fx_state pre_enable
+                set fx_int3 -1
+                ifl fx_extra 1 set fx_extra 512
+                // Doesn't work ?? sectsetinterpolation temp
+            } else {
+                set fx_state completed
+            }
+        }
+
     }
     
 enda
@@ -1145,6 +1239,7 @@ appendevent EVENT_WORLD
             ife sprite[i].lotag 78 state do_se78
             ife sprite[i].lotag 79 state do_se79
             ife sprite[i].lotag 80 state do_se80
+            ife sprite[i].lotag 81 state do_se81
             ife sprite[i].lotag 32767 state do_se32767
         }
     }

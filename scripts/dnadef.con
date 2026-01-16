@@ -110,6 +110,9 @@ gamevar SCREENSIZE -1 1
 gamevar WEAPON1_TOTALTIME 9 // Increases delay time between each pistol shot
 gamevar temp 0 1
 gamevar temp2 0 1
+gamevar temp3 0 1
+gamevar temp4 0 1
+gamevar temp5 0 1
 gamevar player_health 0 1
 
 gamevar SCREENALPHA 255 0
@@ -213,6 +216,7 @@ array fx_preactivate 65536 GAMEARRAY_RESTORE GAMEARRAY_BOOLEAN
 var fx_int 0 2
 var fx_int2 0 2
 var fx_int3 0 2
+var fx_int4 0 2
 var fx_state 0 2
 
 
