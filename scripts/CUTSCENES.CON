@@ -333,8 +333,6 @@ appendevent EVENT_GAME
         ifvare dna_cutscenes 1 { state end_cutscene }
         else ifvare dna_cutscenes 0 
         {
-                setvar SCREENALPHAWORLD 255
-                setvar worldprevtick -1 // Keep resetting world fade values while in cutscene so the fade returns once exiting
                 ifvare VOLUME 0
                 {
                         setvar delayTime 500 // Inital delay on cutscene start
@@ -1355,6 +1353,8 @@ onevent EVENT_SCREEN
 
         ifvare VOLUME 0
         {
+                setvar SCREENALPHAWORLD 255
+                setvar worldprevtick -1 // Keep resetting world fade values while in cutscene so the fade returns once exiting
                 setvar CUTSCENE_DIALOGBOX 3921
 	        setvar y 153
                 ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
