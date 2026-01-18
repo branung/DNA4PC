@@ -99,8 +99,9 @@ defstate display_end_screen
     {
         // level_complete_ani 0 means no letters yet, therefore no screentext needed
         ifvarg level_complete_ani 0 {
+            ife level_complete_ani 6 { set level_complete_ani 7 } // Skip space between words
             qsubstr 140 132 0 level_complete_ani
-            screentext DNABIGTEXTBRIGHT 64 23 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 2 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+            screentext DNABIGTEXTBRIGHT 66 23 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 2 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
         }
  
         ifvarg bonusDelayTime 0
@@ -110,7 +111,7 @@ defstate display_end_screen
         else
         {
             addvar level_complete_ani 1
-            setvar bonusDelayTime 20
+            setvar bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
         }
     }
     // Level complete is now spelt out, now to flash it
@@ -130,7 +131,7 @@ defstate display_end_screen
         else
         {
                 addvar level_complete_ani 1
-                setvar bonusDelayTime 20
+                setvar bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
         }
     }
     else 
@@ -185,7 +186,7 @@ defstate endscreen_cleanup
 {
   setvar level_complete_ani 0
   setvar in_endlevel_screen 0
-  setvar bonusDelayTime 20
+  setvar bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
 }
 ends
 

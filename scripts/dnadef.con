@@ -154,10 +154,11 @@ definequote 136         TIME
 definequote 137         PAR
 definequote 138         BEST
 definequote 139         00:00.-3
-definequote 140      BLANK
+definequote 140         BLANK
 gamevar level_complete_ani 0 0
 define ENDSCREEN_TEXT_SIZE 75920
 define ENDSCREEN_TEXT_SPACE 1
+define LEVEL_COMPLETE_ANI_DELAY 20
 
 // Objective Screen text
 definequote 141 PLAY
