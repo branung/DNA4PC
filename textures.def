@@ -1427,3 +1427,47 @@ texture 6751 { pal 0 { file "tiles/6751.png" } }
 texture 6755 { pal 0 { file "tiles/6755.png" } }
 texture 6756 { pal 0 { file "tiles/6756.png" } }
 texture 6757 { pal 0 { file "tiles/6757.png" } }
+
+texture 6919 { pal 0 { file "tiles/6919.png" } }
+
+texture 6927 { pal 0 { file "tiles/6927.png" } }
+texture 6928 { pal 0 { file "tiles/6928.png" } }
+texture 6929 { pal 0 { file "tiles/6929.png" } }
+texture 6930 { pal 0 { file "tiles/6930.png" } }
+texture 6931 { pal 0 { file "tiles/6931.png" } }
+texture 6932 { pal 0 { file "tiles/6932.png" } }
+texture 6933 { pal 0 { file "tiles/6933.png" } }
+texture 6934 { pal 0 { file "tiles/6934.png" } }
+texture 6935 { pal 0 { file "tiles/6935.png" } }
+texture 6936 { pal 0 { file "tiles/6936.png" } }
+texture 6937 { pal 0 { file "tiles/6937.png" } }
+texture 6938 { pal 0 { file "tiles/6938.png" } }
+texture 6939 { pal 0 { file "tiles/6939.png" } }
+texture 6940 { pal 0 { file "tiles/6940.png" } }
+
+texture 6947 { pal 0 { file "tiles/6947.png" } }
+texture 6948 { pal 0 { file "tiles/6948.png" } }
+texture 6949 { pal 0 { file "tiles/6949.png" } }
+texture 6950 { pal 0 { file "tiles/6950.png" } }
+texture 6951 { pal 0 { file "tiles/6951.png" } }
+texture 6952 { pal 0 { file "tiles/6952.png" } }
+texture 6953 { pal 0 { file "tiles/6953.png" } }
+texture 6954 { pal 0 { file "tiles/6954.png" } }
+texture 6955 { pal 0 { file "tiles/6955.png" } }
+texture 6956 { pal 0 { file "tiles/6956.png" } }
+texture 6957 { pal 0 { file "tiles/6957.png" } }
+texture 6958 { pal 0 { file "tiles/6958.png" } }
+texture 6959 { pal 0 { file "tiles/6959.png" } }
+texture 6960 { pal 0 { file "tiles/6960.png" } }
+texture 6961 { pal 0 { file "tiles/6961.png" } }
+texture 6962 { pal 0 { file "tiles/6962.png" } }
+texture 6963 { pal 0 { file "tiles/6963.png" } }
+texture 6964 { pal 0 { file "tiles/6964.png" } }
+texture 6965 { pal 0 { file "tiles/6965.png" } }
+texture 6966 { pal 0 { file "tiles/6966.png" } }
+texture 6967 { pal 0 { file "tiles/6967.png" } }
+texture 6968 { pal 0 { file "tiles/6968.png" } }
+texture 6969 { pal 0 { file "tiles/6969.png" } }
+texture 6970 { pal 0 { file "tiles/6970.png" } }
+texture 6971 { pal 0 { file "tiles/6971.png" } }
+texture 6972 { pal 0 { file "tiles/6972.png" } }

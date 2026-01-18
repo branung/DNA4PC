@@ -74,6 +74,7 @@ var textQuoteRow4 200
 // Objective sprites
 define MISSIONBRIEF 5760
 define DNASMALLTEXT 6002
+define DNABIGTEXTBRIGHT 6915
 
 // Lead Cannon definitions if I somehow manage to get it working
 define LEAD_CANNON_SPRITE 5403
@@ -155,7 +156,7 @@ definequote 138         BEST
 definequote 139         00:00.-3
 definequote 140      BLANK
 gamevar level_complete_ani 0 0
-define ENDSCREEN_TEXT_SIZE 71920
+define ENDSCREEN_TEXT_SIZE 75920
 define ENDSCREEN_TEXT_SPACE 1
 
 // Objective Screen text

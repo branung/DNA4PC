@@ -100,7 +100,7 @@ defstate display_end_screen
         // level_complete_ani 0 means no letters yet, therefore no screentext needed
         ifvarg level_complete_ani 0 {
             qsubstr 140 132 0 level_complete_ani
-            screentext BIGALPHANUM 64 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 2 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+            screentext DNABIGTEXTBRIGHT 64 23 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 2 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
         }
  
         ifvarg bonusDelayTime 0
@@ -120,7 +120,7 @@ defstate display_end_screen
         mod temp 2
         ifvare temp 0 {
             qsubstr 140 132 0 level_complete_ani
-            screentext BIGALPHANUM 160 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+            screentext DNABIGTEXTBRIGHT 160 23 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
         }
 
         ifvarg bonusDelayTime 0
@@ -134,48 +134,48 @@ defstate display_end_screen
         }
     }
     else 
-        screentext BIGALPHANUM 160 22 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 23 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
 
 
     // Kill count
     setvar y 64
     setvar x 60
-    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 133 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 133 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     getplayer[THISACTOR].actors_killed temp
     getplayer[THISACTOR].max_actors_killed temp2
     redefinequote 134 %d/%d
     qsprintf 134 134 temp temp2
-    screentext BIGALPHANUM 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    screentext DNABIGTEXTBRIGHT 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
 
     // Secret count
-    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 135 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 135 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     getplayer[THISACTOR].secret_rooms temp
     getplayer[THISACTOR].max_secret_rooms temp2
     redefinequote 134 %d/%d
     qsprintf 134 134 temp temp2
-    screentext BIGALPHANUM 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    screentext DNABIGTEXTBRIGHT 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
 
     // Time
-    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 136 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 136 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     //getplayer[THISACTOR].max_secret_rooms temp2
     qgetsysstr 134 STR_YOURTIME 
-    screentext BIGALPHANUM 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    screentext DNABIGTEXTBRIGHT 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
 
     // Par Time
-    screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 137 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 137 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     qgetsysstr 134 STR_PARTIME 
-    screentext BIGALPHANUM 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    screentext DNABIGTEXTBRIGHT 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     addvar y 24
     
     // Best Time - Only shown when player has a previous record
     qgetsysstr 134 STR_BESTTIME
     qstrcmp 134 139 temp
     ifvarn temp 0 {
-        screentext BIGALPHANUM x y ENDSCREEN_TEXT_SIZE 0 0 138 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
-        screentext BIGALPHANUM 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 138 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     }
 }
 ends
@@ -196,7 +196,7 @@ defstate display_objective_screen
     rotatesprite 160 100 80536 0 3933 0 0 8 0 0 xdim ydim
     rotatesprite 160 30 85536 0 MISSIONBRIEF 0 0 8 0 0 xdim ydim
     rotatesprite 55 175 75536 0 5759 0 0 8 0 0 xdim ydim
-    screentext BIGALPHANUM 29 167 65536 0 0 141 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    screentext DNABIGTEXTBRIGHT 29 167 71536 0 0 141 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
 
     state get_script
 
