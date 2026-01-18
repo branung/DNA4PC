@@ -188,3 +188,28 @@ defstate endscreen_cleanup
   setvar bonusDelayTime 20
 }
 ends
+
+// Objective drawing state
+defstate display_objective_screen
+{
+    rotatesprite 160 100 81935 0 5758 0 0 72 0 0 xdim ydim
+    rotatesprite 160 100 80536 0 3933 0 0 8 0 0 xdim ydim
+    rotatesprite 160 30 85536 0 MISSIONBRIEF 0 0 8 0 0 xdim ydim
+    rotatesprite 55 175 75536 0 5759 0 0 8 0 0 xdim ydim
+    screentext BIGALPHANUM 29 167 65536 0 0 141 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+
+    state get_script
+
+    setvar y 63
+    setvar x 55
+    screentext DNASMALLTEXT x y 75536 0 0 295 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+    addvar y 40
+    screentext DNASMALLTEXT x y 75536 0 0 296 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 297 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 298 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+
+
+}
+ends

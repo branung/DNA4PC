@@ -71,6 +71,10 @@ var textQuoteRow2 200
 var textQuoteRow3 200
 var textQuoteRow4 200
 
+// Objective sprites
+define MISSIONBRIEF 5760
+define DNASMALLTEXT 6002
+
 // Lead Cannon definitions if I somehow manage to get it working
 define LEAD_CANNON_SPRITE 5403
 define LEAD_CANNON 5404
@@ -153,6 +157,9 @@ definequote 140      BLANK
 gamevar level_complete_ani 0 0
 define ENDSCREEN_TEXT_SIZE 71920
 define ENDSCREEN_TEXT_SPACE 1
+
+// Objective Screen text
+definequote 141 PLAY
 
 // Common iterators
 var i 0 0
@@ -298,6 +305,10 @@ gamevar worldticktmp   0 0
 
 define END_SCREEN_INPUT_DELAY 1000
 gamevar in_endlevel_screen 0 0
+
+gamevar in_objective_screen 0 0
+
+gamevar in_opening_cutscene 1 0
 
 defineprojectile GOLDENGUN_PROJ PROJ_WORKSLIKE 1
 defineprojectile GOLDENGUN_PROJ PROJ_EXTRA 100

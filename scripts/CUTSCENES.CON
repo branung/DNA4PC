@@ -155,6 +155,8 @@ defstate op_cutscene_cleanup
                 setvar OPCUTSCENE12SLIDEINTIME OP12SLIDEINTIME
         ifvarn OP12DUKESLIDEINTIME OPDUKESLIDEINTIME
                 setvar OP12DUKESLIDEINTIME OPDUKESLIDEINTIME
+        ifvarn in_opening_cutscene 1
+                setvar in_opening_cutscene 1
 ends
 
 defstate cutscene_timer //same as waste_time but without input restriction 
@@ -283,21 +285,28 @@ ends
 
 onevent EVENT_PRELEVEL
         state cutscene_cleanup
+        getuserdef[].music_episode currmusic
+        ifvarn currmusic 7
+        {
+                stopallmusic
+                starttrackslot 7 0 
+        }
         ifvare VOLUME 0
         {
                 ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
                 {
                         state op_cutscene_cleanup
-                        getuserdef[].music_episode currmusic
-                        ifvarn currmusic 7
-                        {
-                                stopallmusic
-                                starttrackslot 7 0 
-                        }
                         stopallsounds
                         screensound SHOTGUN_COCK
-                        startscreen    
+                        startscreen
+                        setvar in_opening_cutscene 0
                 }
+
+                // Objective Screen
+                setvar in_objective_screen 1
+                startscreen
+                screensound A_PISTOL
+                startscreen
         }
 endevent
 
@@ -4602,7 +4611,8 @@ onevent EVENT_SCREEN
         {
                 ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
                 {
-
+                        ife in_opening_cutscene 1
+                        { 
                         ifvare CUTSCENE_STEP 0    // FIRST SCREEN
                         {
                                 setvar OPCUTSCENEPOS 160
@@ -4882,12 +4892,14 @@ onevent EVENT_SCREEN
                                 {
                                         ifvare dna_dukecutscenevoc 2 screensound GM_LETSROCK
                                         else screensound BONUS_SPEECH1 // LET'S ROCK
+                                        setvar SCREENALPHA 255
                                         setvar RETURN 1
                                 }
                         }
                         rotatesprite OPCUTSCENEPOS 100 81920 0 CUTSCENE_SCREEN 0 0 2 0 0 xdim ydim
                         rotatesprite OPCUTSCENE12DUKEPOS 120 81920 0 CUTSCENE_DUKE 0 0 2 0 0 xdim ydim
                         rotatesprite 130 180 81920 0 CUTSCENE_DIALOG 0 0 2 0 0 xdim ydim
+                        }
                 }
                 ifvare LEVEL 19
                 {
@@ -5159,6 +5171,33 @@ onevent EVENT_SCREEN
                         rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
                 }
 
+        ife in_objective_screen 1 { // Objective level screens
+                state display_objective_screen
+                ifvarg SCREENALPHA 0
+                {
+                        state screen_fadeout
+                }
+                ifvare RETURN 1
+                {
+                        setvar prevtick -1
+                        setvar SCREENALPHA 0
+                        setvar in_objective_screen 2
+                }  
+        }
+        else ife in_objective_screen 2
+        {
+                state display_objective_screen
+                ifvarl SCREENALPHA 255
+                {
+                        state screen_fadein
+                }
+                else {
+                        setvar prevtick -1
+                        setvar SCREENALPHA 255
+                        setvar in_objective_screen 0
+                        setvar RETURN 1
+                }
+        }
 
         }
         }

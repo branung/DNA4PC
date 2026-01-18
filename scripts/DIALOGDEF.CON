@@ -59,6 +59,11 @@ ifvare LEVEL 0 // Level 1 - Gathering Intel
     redefinequote 292 lot'a security!
     redefinequote 293
     redefinequote 294
+    //Mission objective
+    redefinequote 295 Area 51
+    redefinequote 296 Gather alien
+    redefinequote 297 intelligence data.
+    redefinequote 298 
 }
 else ifvare LEVEL 1 // Level 2 - Close Encounter
 {
@@ -112,7 +117,12 @@ else ifvare LEVEL 1 // Level 2 - Close Encounter
     redefinequote 247 
     redefinequote 248 
     redefinequote 249 
-    redefinequote 250 
+    redefinequote 250
+    //Mission objective
+    redefinequote 295 Area 51
+    redefinequote 296 Find the Satlink
+    redefinequote 297 Laptop.
+    redefinequote 298 
     }
 else ifvare LEVEL 2 // Level 3 - Hybrid Army
 {
@@ -203,6 +213,11 @@ else ifvare LEVEL 2 // Level 3 - Hybrid Army
     redefinequote 292 throw a pipe 
     redefinequote 293 bomb party for
     redefinequote 294 this guy.
+    //Mission objective
+    redefinequote 295 Area 51
+    redefinequote 296 Destroy the Hybrid
+    redefinequote 297 Army.
+    redefinequote 298 
 }
 else ifvare LEVEL 3 // Level 4 - Temple of Amun
 {
@@ -224,6 +239,11 @@ else ifvare LEVEL 3 // Level 4 - Temple of Amun
     redefinequote 215 
     redefinequote 216 
     redefinequote 217 
+    //Mission objective
+    redefinequote 295 Egypt
+    redefinequote 296 Breach the Inner
+    redefinequote 297 Sanctum.
+    redefinequote 298 
 }
 else ifvare LEVEL 4 //Level 5 - Inner Sanctum
 {
@@ -262,7 +282,12 @@ else ifvare LEVEL 4 //Level 5 - Inner Sanctum
     redefinequote 232
     redefinequote 233
     redefinequote 234 
-    redefinequote 235 
+    redefinequote 235
+    //Mission objective
+    redefinequote 295 Egypt
+    redefinequote 296 Find data on the
+    redefinequote 297 environmental
+    redefinequote 298 regulators.
 }
 else ifvare LEVEL 5 //AKA Level 6 - The Controller
 {
@@ -353,6 +378,11 @@ else ifvare LEVEL 5 //AKA Level 6 - The Controller
     redefinequote 292 crying to his mummy. 
     redefinequote 293
     redefinequote 294
+    //Mission objective
+    redefinequote 295 Egypt
+    redefinequote 296 Destroy the
+    redefinequote 297 hibernating army.
+    redefinequote 298 
     
 }
 else ifvare LEVEL 6 //AKA Level 7 - Temple Run
@@ -383,7 +413,12 @@ else ifvare LEVEL 6 //AKA Level 7 - Temple Run
     redefinequote 223 
     redefinequote 224 
     redefinequote 225 
-    redefinequote 226 
+    redefinequote 226
+    //Mission objective
+    redefinequote 295 Egypt
+    redefinequote 296 Escape the temple! 
+    redefinequote 297 
+    redefinequote 298 
 }
 else ifvare LEVEL 7 //AKA Level 8 - Down Under
 {
@@ -469,6 +504,11 @@ else ifvare LEVEL 7 //AKA Level 8 - Down Under
     redefinequote 279 
     redefinequote 280 
     redefinequote 281
+    //Mission objective
+    redefinequote 295 Sydney
+    redefinequote 296 Locate the
+    redefinequote 297 Undercover
+    redefinequote 298 Operative.
 }
 else ifvare LEVEL 8 // Level 9 - Eating Out
 {
@@ -522,7 +562,12 @@ else ifvare LEVEL 8 // Level 9 - Eating Out
     redefinequote 247 
     redefinequote 248 
     redefinequote 249 
-    redefinequote 250 
+    redefinequote 250
+    //Mission objective
+    redefinequote 295 Sydney
+    redefinequote 296 Kill the alien
+    redefinequote 297 sentry. Gain access
+    redefinequote 298 to the Opera House
 }
 else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera 
 {
@@ -566,7 +611,12 @@ else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera
     redefinequote 237 
     redefinequote 238
     redefinequote 239 
-    redefinequote 240 
+    redefinequote 240
+    //Mission objective
+    redefinequote 295 Sydney
+    redefinequote 296 Recover data on the
+    redefinequote 297 Doomsday Weapon.
+    redefinequote 298 
 }
 else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
 {
@@ -657,6 +707,11 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 292 doomsday weapon.
     redefinequote 293 Most Impressive. 
     redefinequote 294
+    //Mission objective
+    redefinequote 295 Sydney
+    redefinequote 296 Stop the Doomsday
+    redefinequote 297 Weapon!
+    redefinequote 298 
 }
 else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
 {
@@ -690,7 +745,12 @@ else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
     redefinequote 227 
     redefinequote 228 
     redefinequote 229 
-    redefinequote 230 
+    redefinequote 230
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Destroy all the
+    redefinequote 297 alien eggs.
+    redefinequote 298 
 }
 else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
 {
@@ -725,6 +785,11 @@ else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
     redefinequote 228 your new objectives. 
     redefinequote 229 
     redefinequote 230 
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Shutdown the
+    redefinequote 297 cloaking device.
+    redefinequote 298 
 }
 else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
 {
@@ -748,7 +813,12 @@ else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
     redefinequote 217 
     redefinequote 218 
     redefinequote 219 
-    redefinequote 220 
+    redefinequote 220
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Hack into the
+    redefinequote 297 Mainframe.
+    redefinequote 298 
 }
 else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
 {
@@ -812,7 +882,12 @@ else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
     redefinequote 257 
     redefinequote 258
     redefinequote 259
-    redefinequote 260 
+    redefinequote 260
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Find and rescue the 
+    redefinequote 297 women.
+    redefinequote 298 
 }
 else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
 {
@@ -872,6 +947,11 @@ else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
     redefinequote 253 
     redefinequote 254 
     redefinequote 255 
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Rescue Jenny 3. 
+    redefinequote 297 
+    redefinequote 298 
 }
 else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
 {
@@ -921,6 +1001,11 @@ else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
     redefinequote 292 challenge...
     redefinequote 293
     redefinequote 294
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Find the engine 
+    redefinequote 297 room.Rescue Jenny 4. 
+    redefinequote 298 
 }
 else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
 {
@@ -1000,6 +1085,11 @@ else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
     redefinequote 292
     redefinequote 293
     redefinequote 294
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Shutdown the cooling unit.
+    redefinequote 297 unit. Save the Girl. 
+    redefinequote 298 
 }
 else ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
 {
@@ -1085,6 +1175,11 @@ else ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
     redefinequote 279 
     redefinequote 280 
     redefinequote 281
+    //Mission objective
+    redefinequote 295 Escape
+    redefinequote 296 Run your ass off!
+    redefinequote 297 
+    redefinequote 298 
 }
 ends
 
@@ -1147,6 +1242,11 @@ ifvare LEVEL 0 // Level 1 - Gathering Intel
     redefinequote 292 lot'a security!
     redefinequote 293
     redefinequote 294
+    //Mission objective
+    redefinequote 295 Area 51
+    redefinequote 296 Find the Data Disk.
+    redefinequote 297 
+    redefinequote 298 
 }
 else ifvare LEVEL 1 // Level 2 - Close Encounter
 {
@@ -1200,7 +1300,12 @@ else ifvare LEVEL 1 // Level 2 - Close Encounter
     redefinequote 247 
     redefinequote 248 
     redefinequote 249 
-    redefinequote 250 
+    redefinequote 250
+    //Mission objective
+    redefinequote 295 Area 51
+    redefinequote 296 Find the SatLink.
+    redefinequote 297 
+    redefinequote 298 
 }
 else ifvare LEVEL 2 // Level 3 - Hybrid Army
 {
@@ -1291,6 +1396,11 @@ else ifvare LEVEL 2 // Level 3 - Hybrid Army
     redefinequote 292 throw a pipe 
     redefinequote 293 bomb party for
     redefinequote 294 this guy.
+    //Mission objective
+    redefinequote 295 Area 51
+    redefinequote 296 Stop the invasion!
+    redefinequote 297 
+    redefinequote 298 
 }
 else ifvare LEVEL 3 // Level 4 - Temple of Amun 
 {
@@ -1312,6 +1422,11 @@ else ifvare LEVEL 3 // Level 4 - Temple of Amun
     redefinequote 215 be defrosted when needed. 
     redefinequote 216 
     redefinequote 217 
+    //Mission objective
+    redefinequote 295 Egypt
+    redefinequote 296 Breach the Inner
+    redefinequote 297 Sanctum.
+    redefinequote 298 
 }
 else ifvare LEVEL 4 //Level 5 - Inner Sanctum
 {
@@ -1351,6 +1466,11 @@ else ifvare LEVEL 4 //Level 5 - Inner Sanctum
     redefinequote 233
     redefinequote 234 
     redefinequote 235 
+    //Mission objective
+    redefinequote 295 Egypt
+    redefinequote 296 Find the Schematics.
+    redefinequote 297 
+    redefinequote 298 
 }
 else ifvare LEVEL 5 //AKA Level 6 - The Controller
 {
@@ -1441,6 +1561,11 @@ else ifvare LEVEL 5 //AKA Level 6 - The Controller
     redefinequote 292 control here! 
     redefinequote 293
     redefinequote 294
+    //Mission objective
+    redefinequote 295 Egypt
+    redefinequote 296 Stop the alien 
+    redefinequote 297 controller.
+    redefinequote 298 
 }
 else ifvare LEVEL 6 //AKA Level 7 - Temple Run
 {
@@ -1471,6 +1596,11 @@ else ifvare LEVEL 6 //AKA Level 7 - Temple Run
     redefinequote 224 
     redefinequote 225 
     redefinequote 226 
+    //Mission objective
+    redefinequote 295 Egypt
+    redefinequote 296 Escape before it
+    redefinequote 297 blows.
+    redefinequote 298 
 }
 else ifvare LEVEL 7 //AKA Level 8 - Down Under
 {
@@ -1556,6 +1686,11 @@ else ifvare LEVEL 7 //AKA Level 8 - Down Under
     redefinequote 279 
     redefinequote 280 
     redefinequote 281
+    //Mission objective
+    redefinequote 295 Sydney
+    redefinequote 296 Find the undercover
+    redefinequote 297 operative.
+    redefinequote 298 
 }
 else ifvare LEVEL 8 // Level 9 Eating Out
 {
@@ -1610,6 +1745,11 @@ else ifvare LEVEL 8 // Level 9 Eating Out
     redefinequote 248 
     redefinequote 249 
     redefinequote 250 
+    //Mission objective
+    redefinequote 295 Sydney
+    redefinequote 296 Remove Sentry. Find the 
+    redefinequote 297 the Opera House.
+    redefinequote 298 
 }
 else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera 
 {
@@ -1653,7 +1793,12 @@ else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera
     redefinequote 237 
     redefinequote 238
     redefinequote 239 
-    redefinequote 240 
+    redefinequote 240
+    //Mission objective
+    redefinequote 295 Sydney
+    redefinequote 296 Find the doomsday
+    redefinequote 297 plans.
+    redefinequote 298 
 }
 else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
 {
@@ -1744,6 +1889,11 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 292
     redefinequote 293
     redefinequote 294
+    //Mission objective
+    redefinequote 295 Sydney
+    redefinequote 296 Stop the Doomsday 
+    redefinequote 297 weapon!
+    redefinequote 298 
 }
 else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
 {
@@ -1778,6 +1928,11 @@ else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
     redefinequote 228 
     redefinequote 229 
     redefinequote 230 
+    //Mission objective
+    redefinequote 295 Alien Home World
+    redefinequote 296 Destroy the eggs. 
+    redefinequote 297 
+    redefinequote 298 
 }
 else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
 {
@@ -1812,6 +1967,11 @@ else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
     redefinequote 228 of your new mission.
     redefinequote 229 
     redefinequote 230 
+    //Mission objective
+    redefinequote 295 Alien Home World
+    redefinequote 296 Contact General
+    redefinequote 297 Graves.
+    redefinequote 298 
 }
 else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
 {
@@ -1836,6 +1996,11 @@ else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
     redefinequote 218 
     redefinequote 219 
     redefinequote 220 
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Hack into the
+    redefinequote 297 Mainframe.
+    redefinequote 298 
 }
 else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
 {
@@ -1899,7 +2064,12 @@ else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
     redefinequote 257 
     redefinequote 258
     redefinequote 259
-    redefinequote 260 
+    redefinequote 260
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Rescue mission.
+    redefinequote 297 
+    redefinequote 298 
 }
 else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
 {
@@ -1959,6 +2129,11 @@ else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
     redefinequote 253 
     redefinequote 254 
     redefinequote 255 
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Conserve your ammo.
+    redefinequote 297 
+    redefinequote 298 
 }
 else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
 {
@@ -2008,6 +2183,11 @@ else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
     redefinequote 292 Nothing like a
     redefinequote 293 challenge...
     redefinequote 294 
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Get to the engine
+    redefinequote 297 room. 
+    redefinequote 298 
 }
 else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
 {
@@ -2087,6 +2267,11 @@ else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
     redefinequote 292 brains and brawn 
     redefinequote 293 behind this operation. 
     redefinequote 294
+    //Mission objective
+    redefinequote 295 Alien Ship
+    redefinequote 296 Blow the ship, Save 
+    redefinequote 297 the girl.
+    redefinequote 298 
 }
 else ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
 {
@@ -2172,6 +2357,11 @@ else ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
     redefinequote 279 
     redefinequote 280 
     redefinequote 281
+    //Mission objective
+    redefinequote 295 Escape
+    redefinequote 296 Get to the
+    redefinequote 297 Teleporter!
+    redefinequote 298 
 }
 ends
 

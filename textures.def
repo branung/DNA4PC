@@ -1031,6 +1031,10 @@ texture 6002 { pal 0 { file "tiles/6002.png" } }
 texture 6014 { pal 0 { file "tiles/6014.png" } }
 texture 6015 { pal 0 { file "tiles/6015.png" } }
 
+texture 6018 { pal 0 { file "tiles/6018.png" } }
+
+texture 6022 { pal 0 { file "tiles/6022.png" } }
+
 texture 6034 { pal 0 { file "tiles/6034.png" } }
 texture 6035 { pal 0 { file "tiles/6035.png" } }
 texture 6036 { pal 0 { file "tiles/6036.png" } }
