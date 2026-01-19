@@ -968,7 +968,7 @@ defstate do_se81
                     inv fx_int3
                     dist temp3 THISACTOR player[].i
                     ifl temp3 6144 {
-                        ife fx_xvel 0 sound 435 else sound fx_xvel
+                        ifg fx_xvel 0 sound fx_xvel
                     }
                 }
             } else ife fx_int3 1 {
@@ -978,7 +978,7 @@ defstate do_se81
                     inv fx_int3
                     dist temp3 THISACTOR player[].i
                     ifl temp3 6144 {
-                        ife fx_xvel 0 sound 435 else sound fx_xvel
+                        ifg fx_xvel 0 sound fx_xvel
                     }
                 }
             }
