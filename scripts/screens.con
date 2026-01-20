@@ -1,3 +1,16 @@
+
+// DOS by default stretches rotatesprite calls from 1:1 mapped to 320x200 as 4:3
+// Calling "sqr aspect" before such calls will change the draw looks
+defstate setsqraspect
+    // Square = (65536 * 5 / 6)
+    setu[].draw_yxaspect 54613
+ends
+
+defstate setdosaspect
+    // Normal = 65535
+    setu[].draw_yxaspect 65535
+ends
+
 // States to control fading the screen out of black and fading into black 
 defstate screen_fadeout
         ifvarg SCREENALPHA 0
@@ -514,8 +527,12 @@ ends
 
 appendevent EVENT_SCREEN
 {
-    ifg in_startup 0 ifl in_startup 10 state show_logos
-    ifg in_startup 9 state show_title
+    ifg in_startup 0 {
+        state setsqraspect
+        ifl in_startup 10 state show_logos
+        ifg in_startup 9 state show_title
+        state setdosaspect
+    }
 }
 endevent
 
