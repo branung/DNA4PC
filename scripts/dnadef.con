@@ -24,7 +24,7 @@ gamevar title_ani 0 0
 define LOGO_3DR 5503
 define LOGO_TAKETWO 5504
 define LOGO_TORUS 5505
-define LOGO_DELAY_TIME 2000
+define LOGO_DELAY_TIME 3000
 
 define TITLE_BACKGROUND 5740
 define TITLE_DUKE 5754
