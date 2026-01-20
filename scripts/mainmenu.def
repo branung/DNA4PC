@@ -1,0 +1,11 @@
+newgamechoices
+{
+   choice 0
+   {
+       name "PC Enhanced"
+   }
+   choice 1
+   {
+       name "Original"
+   }
+}

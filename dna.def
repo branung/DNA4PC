@@ -5,6 +5,7 @@ basepalette 3 { raw { file "/palette/dna_3dr_pal.raw" } }
 artfile { file "dna_3dr.art" }
 
 include textures.def
+include scripts/mainmenu.def
 
 // Shade6, "tan", lavaroom map4
 fogpal 140 32 16 4

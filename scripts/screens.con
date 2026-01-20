@@ -565,3 +565,71 @@ appendevent EVENT_MAINMENUSCREEN
     setvar in_startup 0
 }
 endevent
+
+
+appendevent EVENT_DISPLAYMENUREST
+    getu[].return 0 temp
+    ife temp 102 {
+        redefinequote 200 CHOOSE STYLE
+        getu[].return 1 temp
+        shiftvarr temp 16
+        qstrdim temp2 temp3 DNASMALLTEXT 0 50 65536 0 200 16 8 0 0 0 0 0 0 xdim ydim
+        div temp2 2
+        add temp 160
+        sub temp temp2
+        add temp 1
+        screentext DNASMALLTEXT temp 44 65536 0 0 200 32 0 16 0 8 0 0 0 0 0 0 xdim ydim
+        sub temp 1
+        screentext DNASMALLTEXT temp 43 65536 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+
+        getu[].return 3 temp
+        ife temp 0 redefinequote 200 Apply map shading and minor QoL tweaks.
+        ife temp 1 redefinequote 200 Match the GBA original.
+        getu[].return 1 temp
+        shiftvarr temp 16
+        qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+        div temp2 2
+        add temp 160
+        sub temp temp2
+        screentext STARTALPHANUM temp 115 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+        
+        getu[].return 3 temp
+        ife temp 0 redefinequote 200 This is the recommended way to play.
+        ife temp 1 redefinequote 200 Aims for a more vanilla experience.
+        getu[].return 1 temp
+        shiftvarr temp 16
+        qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+        div temp2 2
+        add temp 160
+        sub temp temp2
+        screentext STARTALPHANUM temp 121 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+        
+
+        redefinequote 200 CUSTOMIZE MORE IN-GAME WITH [BACKSPACE]
+        getu[].return 1 temp
+        shiftvarr temp 16
+        qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+        div temp2 2
+        add temp 160
+        sub temp temp2
+        screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+        
+    }
+endevent
+
+appendevent EVENT_NEWGAMECUSTOM
+    switch userdef.return 0
+        case 0
+            setu[].m_volume_number 0
+            setu[].m_level_number 0
+            redefinequote 200 ENHANCED SELECTED
+            quote 200
+            break
+        case 1
+            setu[].m_volume_number 0
+            setu[].m_level_number 0
+            redefinequote 200 VANILLA SELECTED
+            quote 200
+            break
+    endswitch
+endevent
