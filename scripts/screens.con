@@ -2,23 +2,23 @@
 defstate screen_fadeout
         ifvarg SCREENALPHA 0
         {
-                getticks curtick
-                setvar RETURN 0
-                screenpal 0 0 0 SCREENALPHA
-                
-                ifvare prevtick -1 setvar ticktmp 0 else
-                {
-                setvarvar ticktmp curtick
-                subvarvar ticktmp prevtick
-                }
-                
-                divvar ticktmp 2
-                subvarvar SCREENALPHA ticktmp
-                clamp SCREENALPHA 0 255
-                setvarvar prevtick curtick
+            getticks curtick
+            setvar RETURN 0
+            screenpal 0 0 0 SCREENALPHA
+            
+            ifvare prevtick -1 setvar ticktmp 0 else
+            {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp prevtick
+            }
+            
+            divvar ticktmp 2
+            subvarvar SCREENALPHA ticktmp
+            clamp SCREENALPHA 0 255
+            setvarvar prevtick curtick
         }
         else {
-                setvar prevtick -1
+            setvar prevtick -1
         }
 ends
 
@@ -26,23 +26,41 @@ defstate screen_fadein
 {
         ifvarl SCREENALPHA 255
         {
-                getticks curtick
-                setvar RETURN 0
-                screenpal 0 0 0 SCREENALPHA
-                
-                ifvare prevtick -1 setvar ticktmp 0 else
-                {
-                setvarvar ticktmp curtick
-                subvarvar ticktmp prevtick
-                }
-                
-                divvar ticktmp 2
-                addvarvar SCREENALPHA ticktmp
-                clamp SCREENALPHA 0 255
-                setvarvar prevtick curtick
+            getticks curtick
+            setvar RETURN 0
+            screenpal 0 0 0 SCREENALPHA
+            
+            ifvare prevtick -1 setvar ticktmp 0 else
+            {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp prevtick
+            }
+            
+            divvar ticktmp 2
+            addvarvar SCREENALPHA ticktmp
+            clamp SCREENALPHA 0 255
+            setvarvar prevtick curtick
         }
         else {
-                setvar prevtick -1
+            setvar prevtick -1
+        }
+}
+ends
+
+defstate cutscene_timer //same as waste_time in cutscenes.con but without input restriction 
+{
+        ifvarg delayTime 0
+        {
+            getticks curtick
+            ifvare prevtick -1 setvar ticktmp 0 else
+            {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp prevtick
+            }
+
+            subvarvar delayTime ticktmp
+            
+            setvarvar prevtick curtick
         }
 }
 ends
@@ -210,7 +228,323 @@ defstate display_objective_screen
     screentext DNASMALLTEXT x y 75536 0 0 297 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
     addvar y 10
     screentext DNASMALLTEXT x y 75536 0 0 298 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
-
-
 }
 ends
+
+defstate display_copyright_screen
+{
+    setvar y 20
+    setvar x 160
+    screentext DNASMALLTEXT x y 75536 0 0 150 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 151 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 152 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 153 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 20
+    screentext DNASMALLTEXT x y 75536 0 0 154 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 155 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 156 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 157 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 158 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 159 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 20
+    screentext DNASMALLTEXT x y 75536 0 0 160 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 161 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 20
+    screentext DNASMALLTEXT x y 75536 0 0 162 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+}
+ends
+
+defstate display_logo
+{
+    ifvarg SCREENALPHA 0
+    {
+        state screen_fadeout
+    }
+    ifvarg delayTime 0
+    {
+        state cutscene_timer
+    }
+    else
+    {
+        addvar in_startup 1
+    }
+}
+ends
+
+defstate fade_logo
+{
+    ifvarl SCREENALPHA 255
+    {
+        state screen_fadein
+    }
+    else {
+        setvar prevtick -1
+        setvar SCREENALPHA 255
+        setvar delayTime LOGO_DELAY_TIME
+        setvar RETURN 1
+    }
+}
+ends
+
+defstate show_logos {
+    switch in_startup
+    case 1 {
+        sound GBA_INTRO
+        startcutscene 149 // logo.ivf
+        stopallmusic
+        starttrackslot 7 0 
+        addvar in_startup 1
+        break
+    }
+    case 2 {
+        stopallsounds
+        state display_copyright_screen
+        state display_logo
+        break
+    }
+    case 3
+    {
+        state display_copyright_screen
+        state fade_logo
+        break
+    }
+    case 4 {
+        rotatesprite 160 100 81935 0 LOGO_3DR 0 0 72 0 0 xdim ydim 
+        state display_logo
+        break
+    }
+    case 5
+    {
+        rotatesprite 160 100 81935 0 LOGO_3DR 0 0 72 0 0 xdim ydim
+        state fade_logo
+        break
+    }
+    case 6 {
+        rotatesprite 160 100 81935 0 LOGO_TAKETWO 0 0 72 0 0 xdim ydim 
+        state display_logo
+        break
+    }
+    case 7
+    {
+        rotatesprite 160 100 81935 0 LOGO_TAKETWO 0 0 72 0 0 xdim ydim
+        state fade_logo
+        break
+    }
+    case 8
+    {
+        rotatesprite 160 100 81935 0 LOGO_TORUS 0 0 72 0 0 xdim ydim
+        state display_logo
+        break
+    }
+    case 9
+    {
+        rotatesprite 160 100 81935 0 LOGO_TORUS 0 0 72 0 0 xdim ydim
+        state fade_logo
+        break
+    }
+    endswitch
+}
+ends
+
+defstate get_title_ticks {
+    getticks curtick
+    ifvare prevtick -1 setvar ticktmp 0 else
+    {
+    setvarvar ticktmp curtick
+    subvarvar ticktmp prevtick
+    }
+    ifl title_ani 3 { divvar ticktmp 3 }
+    else divvar ticktmp 2
+}
+ends
+
+defstate show_title {
+    ife in_startup 10 
+    {
+        rotatesprite 160 100 81935 0 TITLE_BACKGROUND 0 0 72 0 0 xdim ydim
+        ifvarg SCREENALPHA 0
+        {
+            state screen_fadeout
+        }
+        else 
+        switch title_ani 
+        case 1
+        {
+            ifvarl duke_title_slidein_time TITLE_DUKE_FINAL_POSX  
+            {
+                setvar delayTime LOGO_DELAY_TIME
+                state get_title_ticks
+                
+                addvarvar duke_title_slidein_time ticktmp
+                
+                setvarvar prevtick curtick
+            }
+            else 
+            {
+                addvar title_ani 1
+                sound A_EXPLOSION
+            }
+            break
+        }
+        case 2
+        {
+            ifvarg nukem_title_slidein_time TITLE_NUKEM_MID_POSX  
+            {
+                setvar delayTime LOGO_DELAY_TIME
+
+                state get_title_ticks
+                subvarvar nukem_title_slidein_time ticktmp
+                ifvarl nukem_title_slidein_time TITLE_NUKEM_FINAL_POSX
+                {
+                    subvarvar duke_title_slidein_time ticktmp
+                }
+                
+                setvarvar prevtick curtick
+            }
+            else
+            {
+                addvar title_ani 1
+                sound A_EXPLOSION
+            }
+            break
+        }
+        case 3
+        {
+            ifvarl duke_title_slidein_time TITLE_DUKE_FINAL_POSX  
+            {
+                setvar delayTime LOGO_DELAY_TIME
+                state get_title_ticks
+                
+                addvarvar duke_title_slidein_time ticktmp
+                ifvarl nukem_title_slidein_time TITLE_NUKEM_FINAL_POSX
+                {
+                    addvarvar nukem_title_slidein_time ticktmp
+                }
+                
+                setvarvar prevtick curtick
+            }
+            else 
+            { 
+                setvar duke_title_slidein_time TITLE_DUKE_FINAL_POSX 
+                setvar nukem_title_slidein_time TITLE_NUKEM_FINAL_POSX  
+                addvar title_ani 1
+            }
+            break
+        }
+        case 4
+        {
+            ifvarg advance_slideup_time TITLE_ADVANCE_MID_POSY  
+            {
+                setvar delayTime LOGO_DELAY_TIME
+
+                state get_title_ticks
+                subvarvar advance_slideup_time ticktmp
+
+                ifvarl advance_slideup_time TITLE_ADVANCE_FINAL_POSY
+                {
+                    subvarvar name_title_slideup_time ticktmp
+                }
+                
+                setvarvar prevtick curtick
+            }
+            else
+            {
+                addvar title_ani 1
+                sound A_EXPLOSION
+            }
+            break
+        }
+        case 5
+        {
+            ifvarl advance_slideup_time TITLE_ADVANCE_FINAL_POSY  
+            {
+                setvar delayTime LOGO_DELAY_TIME
+
+                state get_title_ticks
+                addvarvar advance_slideup_time ticktmp
+                ifvarl name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY
+                {
+                    addvarvar name_title_slideup_time ticktmp
+                }
+                
+                setvarvar prevtick curtick
+            }
+            else
+            {
+                setvar name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY 
+                setvar advance_slideup_time TITLE_ADVANCE_FINAL_POSY  
+                ifvarg delayTime 0
+                {
+                    state cutscene_timer
+                }
+                else
+                {
+                    addvar in_startup 1
+                }
+            }
+            break
+        }
+        endswitch
+
+        rotatesprite duke_title_slidein_time name_title_slideup_time 81935 0 TITLE_DUKE 0 0 8 0 0 xdim ydim
+        rotatesprite nukem_title_slidein_time name_title_slideup_time 81935 0 TITLE_NUKEM 0 0 8 0 0 xdim ydim
+        rotatesprite 160 advance_slideup_time 81935 0 TITLE_ADVANCE 0 0 8 0 0 xdim ydim
+
+    }
+    else ife in_startup 11
+    {
+        rotatesprite 160 100 81935 0 TITLE_BACKGROUND 0 0 72 0 0 xdim ydim
+        rotatesprite TITLE_DUKE_FINAL_POSX TITLE_DUKENUKEM_FINAL_POSY 81935 0 TITLE_DUKE 0 0 8 0 0 xdim ydim
+        rotatesprite TITLE_NUKEM_FINAL_POSX TITLE_DUKENUKEM_FINAL_POSY 81935 0 TITLE_NUKEM 0 0 8 0 0 xdim ydim
+        rotatesprite 160 TITLE_ADVANCE_FINAL_POSY 81935 0 TITLE_ADVANCE 0 0 8 0 0 xdim ydim
+        state fade_logo
+        ifvare SCREENALPHA 255 { setvar RETURN 1 } 
+    }
+}
+ends
+
+appendevent EVENT_SCREEN
+{
+    ifg in_startup 0 ifl in_startup 10 state show_logos
+    ifg in_startup 9 state show_title
+}
+endevent
+
+defstate startup_cleanup // Reset values when back at startup
+{
+    set in_startup 1
+    set title_ani 1
+    set in_opening_cutscene 0
+    set in_endlevel_screen 0
+    set in_ending_cutscene 0
+    set duke_title_slidein_time TITLE_DUKE_START_POSX
+    set nukem_title_slidein_time TITLE_NUKEM_START_POSX
+    set name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY
+    set advance_slideup_time TITLE_ADVANCE_START_POSY
+}
+ends
+
+appendevent EVENT_MAINMENUSCREEN
+{
+    addlogvar in_endlevel_screen
+    state startup_cleanup
+    setvar delayTime LOGO_DELAY_TIME
+    whilel in_startup 10 {
+        startscreen
+        addvar in_startup 1
+    }
+    setvar in_startup 10
+    setvar delayTime LOGO_DELAY_TIME
+    startscreen
+    setvar in_startup 0
+}
+endevent

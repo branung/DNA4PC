@@ -9,15 +9,59 @@ gamevar dna_crosshair 0 // 0 is the default crosshair in DNA. Set it anywhere fr
 gamevar dna_key_hud 0 // 0 has key items take up colored key slots in the hud when obtained. 1 displays their sprites below the key section of the hud. 
 
 // Disable built in episode cutscene
-gamevar LOGO_FLAGS 2095359 0
+gamevar LOGO_FLAGS 2095329 0
 
 // Changes DNSTUFF cheat to DNLUAULASS, a phrase used to access the cheat menu in DNA
 definecheat 1 LUAULASS
 
-define GBA_INTRO1 471
-define GBA_INTRO2 472
-definesound GBA_INTRO1         sounds/intro/gba_intro1.ogg     0     0     255   4     0
-definesound GBA_INTRO2         sounds/intro/gba_intro2.ogg     0     0     255   4     0
+// Startup intro defines
+define GBA_INTRO 471
+definesound GBA_INTRO         sounds/intro/gba_intro.ogg     0     0     255   4     0
+
+gamevar in_startup 0 0
+gamevar title_ani 0 0
+
+define LOGO_3DR 5503
+define LOGO_TAKETWO 5504
+define LOGO_TORUS 5505
+define LOGO_DELAY_TIME 2000
+
+define TITLE_BACKGROUND 5740
+define TITLE_DUKE 5754
+define TITLE_NUKEM 5755
+define TITLE_ADVANCE 5741
+
+define TITLE_DUKE_START_POSX -120
+define TITLE_NUKEM_START_POSX 455
+define TITLE_ADVANCE_START_POSY 300
+
+define TITLE_NUKEM_MID_POSX 210
+define TITLE_ADVANCE_MID_POSY 107
+
+define TITLE_DUKE_FINAL_POSX 78
+define TITLE_NUKEM_FINAL_POSX 224
+define TITLE_DUKENUKEM_FINAL_POSY 70
+define TITLE_ADVANCE_FINAL_POSY 127
+
+gamevar duke_title_slidein_time TITLE_DUKE_START_POSX 0
+gamevar nukem_title_slidein_time TITLE_NUKEM_START_POSX 0
+gamevar name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY 0
+gamevar advance_slideup_time TITLE_ADVANCE_START_POSY 0
+
+definequote 149 logo.ivf
+definequote 150 TAKE-TWO INTERACTIVE SOFTWARE,INC.
+definequote 151 AND THE TAKE-TWO LOGO
+definequote 152 ARE TRADEMARKS OF TAKE-TWO
+definequote 153 INTERACTIVE INC.
+definequote 154 DUKE NUKEM AND THE DUKE NUKEM
+definequote 155 LOGO ARE TRADEMARKS OF
+definequote 156 3D REALMS ENTERTAINMENT.
+definequote 157 3D REALMS ENTERTAINMENT AND THE
+definequote 158 3D REALMS LOGO ARE TRADEMARKS
+definequote 159 OF APOGEE SOFTWARE LTD.
+definequote 160 @2002 3D REALMS ENTERTAINMENT.
+definequote 161 ALL RIGHTS RESERVED.
+definequote 162 LICENSED BY NINTENDO.
 
 // Actors and their projectiles
 define GREY 5119
@@ -311,6 +355,7 @@ gamevar in_endlevel_screen 0 0
 gamevar in_objective_screen 0 0
 
 gamevar in_opening_cutscene 1 0
+gamevar in_ending_cutscene 0 0
 
 defineprojectile GOLDENGUN_PROJ PROJ_WORKSLIKE 1
 defineprojectile GOLDENGUN_PROJ PROJ_EXTRA 100

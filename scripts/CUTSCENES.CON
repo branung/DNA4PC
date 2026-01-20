@@ -159,24 +159,6 @@ defstate op_cutscene_cleanup
                 setvar in_opening_cutscene 1
 ends
 
-defstate cutscene_timer //same as waste_time but without input restriction 
-{
-        ifvarg delayTime 0
-        {
-                getticks curtick
-                ifvare prevtick -1 setvar ticktmp 0 else
-                {
-                setvarvar ticktmp curtick
-                subvarvar ticktmp prevtick
-                }
-
-                subvarvar delayTime ticktmp
-                
-                setvarvar prevtick curtick
-        }
-}
-ends
-
 defstate cutscene_getscene
     ifvare cutscene_myvar 0
     {
@@ -326,7 +308,9 @@ appendevent EVENT_ENDLEVELSCREEN
                 {
                         state cutscene_cleanup
                         stopallsounds
+                        setvar in_ending_cutscene 1
                         startscreen
+                        setvar in_ending_cutscene 0
                 }
         }
         setvar RETURN -1
@@ -1350,7 +1334,7 @@ appendevent EVENT_GAME
 endevent
 
 
-onevent EVENT_SCREEN
+appendevent EVENT_SCREEN
     ifvarn in_cutscene 0
     {
         ifvarn cutscene_num 0
@@ -4903,6 +4887,7 @@ onevent EVENT_SCREEN
                 }
                 ifvare LEVEL 19
                 {
+                        ife in_ending_cutscene 1 { 
                         ifvare CUTSCENE_STEP 0    // FIRST SCREEN
                         {
                                 setvar CUTSCENE_DIALOG 5400
@@ -5169,6 +5154,7 @@ onevent EVENT_SCREEN
                         rotatesprite 160 100 81920 0 CUTSCENE_SCREEN 0 0 2 0 0 xdim ydim
                         rotatesprite ENDCUTSCENEDIAPOSX1 ENDCUTSCENEDIAPOSY1 81920 0 CUTSCENE_DIALOG 0 0 2 0 0 xdim ydim
                         rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
+                        }
                 }
 
         ife in_objective_screen 1 { // Objective level screens
