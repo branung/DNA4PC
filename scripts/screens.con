@@ -38,7 +38,6 @@ ends
 
 defstate screen_fadein
 {
-        ife RETURN 1 set SCREENALPHA 250
         ifvarl SCREENALPHA 255
         {
             getticks curtick
