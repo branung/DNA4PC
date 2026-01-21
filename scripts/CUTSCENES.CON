@@ -1,6 +1,7 @@
 // Special thanks to Hendricks266's World Tour stopgap code. 
 // This script utilizes the implementation of the audio commentary feature and reworks it to function as cutscene triggers
 // Also big thanks to the Cutting Room Floor for having a full page showing both scripts to this game 
+// Later note - This was my first con script and it's such a mess if you're looking through I'm so sorry
 
 
 var cutscene_myvar 0 2
@@ -310,7 +311,12 @@ appendevent EVENT_ENDLEVELSCREEN
                         stopallsounds
                         setvar in_ending_cutscene 1
                         startscreen
+                        stopallsounds
                         setvar in_ending_cutscene 0
+                        setvar SCREENALPHA 255
+                        setvar in_credits 1
+                        startscreen
+                        startscreen
                 }
         }
         setvar RETURN -1
@@ -5155,6 +5161,37 @@ appendevent EVENT_SCREEN
                         rotatesprite ENDCUTSCENEDIAPOSX1 ENDCUTSCENEDIAPOSY1 81920 0 CUTSCENE_DIALOG 0 0 2 0 0 xdim ydim
                         rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
                         }
+
+                
+                ife in_credits 1 { // Credits screens
+                        state show_credits
+                        ifvarg SCREENALPHA 0
+                        {
+                                state screen_fadeout
+                        }
+                        ifvare RETURN 1
+                        {
+                                setvar prevtick -1
+                                setvar SCREENALPHA 0
+                                setvar in_credits 2
+                        }  
+                        }
+                        else ife in_credits 2
+                        {
+                        state show_credits
+                        ifvarl SCREENALPHA 255
+                        {
+                                state screen_fadein
+                        }
+                        else {
+                                setvar prevtick -1
+                                setvar SCREENALPHA 255
+                                setvar in_credits 0
+                                setvar RETURN 1
+                        }
+                }
+                
+                        
                 }
 
         ife in_objective_screen 1 { // Objective level screens

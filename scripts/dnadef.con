@@ -26,6 +26,8 @@ define LOGO_TAKETWO 5504
 define LOGO_TORUS 5505
 define LOGO_DELAY_TIME 3000
 
+define LOGO_SIZE 98535
+
 define TITLE_BACKGROUND 5740
 define TITLE_DUKE 5754
 define TITLE_NUKEM 5755
@@ -48,6 +50,7 @@ gamevar nukem_title_slidein_time TITLE_NUKEM_START_POSX 0
 gamevar name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY 0
 gamevar advance_slideup_time TITLE_ADVANCE_START_POSY 0
 
+// Logo quotes
 definequote 149 logo.ivf
 definequote 150 TAKE-TWO INTERACTIVE SOFTWARE,INC.
 definequote 151 AND THE TAKE-TWO LOGO
@@ -62,6 +65,30 @@ definequote 159 OF APOGEE SOFTWARE LTD.
 definequote 160 @2002 3D REALMS ENTERTAINMENT.
 definequote 161 ALL RIGHTS RESERVED.
 definequote 162 LICENSED BY NINTENDO.
+definequote 163 CREDITS
+definequote 164 COMPANY
+
+// Credit defines
+gamevar in_credits 0 0
+gamevar conclude_credits_scoll 0 0
+gamevar credits_ani 0 0
+gamevar credits_panel_ani 0 0
+
+define CREDITS_QUOTE 163
+define CREDITS_COMPANY 164
+define CREDITS_START_POSY 200
+define CREDITS_FINAL_POSY -20
+define CREDITS_3DR_TIME -640
+define CREDITS_T2_TIME -900
+
+define CREDITS_PANEL 5539
+define CREDITS_PANEL_CLOSED 5544
+var curr_panel CREDITS_PANEL
+
+define CREDITS_TITLENAME_GAP 10
+define CREDITS_INDIVIDUAL_GAP 20
+
+gamevar credits_slideup_time CREDITS_START_POSY
 
 // Actors and their projectiles
 define GREY 5119
@@ -342,6 +369,9 @@ gamevar quote_prevtick -1 0
 
 // Pretick for end level screen to not conflict with fade out timer
 gamevar bonus_screen_prevtick -1 0
+
+// Pretick for credits to not conflict with fade out timer
+gamevar credits_screen_prevtick -1 0
 
 // Additional ticks for world screen fade timer - dont want any conflicts with these
 gamevar SCREENALPHAWORLD 255 0

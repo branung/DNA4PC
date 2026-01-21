@@ -552,7 +552,6 @@ ends
 
 appendevent EVENT_MAINMENUSCREEN
 {
-    addlogvar in_endlevel_screen
     state startup_cleanup
     setvar delayTime LOGO_DELAY_TIME
     whilel in_startup 10 {
@@ -633,3 +632,599 @@ appendevent EVENT_NEWGAMECUSTOM
             break
     endswitch
 endevent
+
+defstate get_credit_ticks {
+    ifvarg delayTime 0
+    {
+        getticks curtick
+        ifvare credits_screen_prevtick -1 setvar ticktmp 0 else
+        {
+        setvarvar ticktmp curtick
+        subvarvar ticktmp credits_screen_prevtick
+        }
+
+        subvarvar delayTime ticktmp
+        
+        setvarvar credits_screen_prevtick curtick
+    }
+    else {
+        subvarvar credits_slideup_time 1
+        set delayTime 50
+    }
+}
+ends
+
+// Timer for company panel closing and opening
+// Reuses bonus screen prevtick and delaytime to avoid conflicts
+defstate credits_screen_ani {
+    ifvarg bonusDelayTime 0
+    {
+        getticks curtick
+        ifvare bonus_screen_prevtick -1 setvar ticktmp 0 else
+        {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp bonus_screen_prevtick
+        }
+
+        divvar ticktmp 4
+        
+        subvarvar bonusDelayTime ticktmp
+            
+        setvarvar bonus_screen_prevtick curtick
+    }
+    else
+    {
+        ife credits_panel_ani 0 { add curr_panel 1 }
+        else { sub curr_panel 1 }
+        ife curr_panel CREDITS_PANEL_CLOSED { set credits_panel_ani 1 }
+        else ife curr_panel CREDITS_PANEL { set credits_panel_ani 0 add credits_ani 1 } 
+        setvar bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
+    }
+}
+ends
+
+defstate print_credit_title {
+    add temp CREDITS_INDIVIDUAL_GAP
+    screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+}
+ends
+
+defstate print_credit_title_line2 {
+    add temp CREDITS_TITLENAME_GAP
+    screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+}
+ends
+
+defstate print_credit_name {
+    add temp CREDITS_TITLENAME_GAP
+    screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 10 0 16 0 4 0 0 0 2 0 0 xdim ydim
+}
+ends
+
+defstate show_credits {
+    set x 160
+    
+    ife conclude_credits_scoll 0 {
+    state get_credit_ticks
+    //addlogvar credits_slideup_time
+
+    // TORUS GAMES
+    set temp credits_slideup_time
+    redefinequote CREDITS_QUOTE MANAGING DIRECTOR
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE BILL MCINTOSH
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE PRODUCER
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE BRIAN UNIACKE
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE ART DIRECTION
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE JEREMY GEDDES
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE TECHNICAL DIRECTOR
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE STEVE WHITE
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE DESIGN
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE CRAIG DUTURBURE
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE ALEX HUTCHINSON
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE SIMON SHORT
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE BRIAN UNIACKE
+    state print_credit_name
+    
+    redefinequote CREDITS_QUOTE LEAD PROGRAMMER
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE LUKE RYAN
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE LEAD ARTIST
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE DAVE BIGGS
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE PROGRAMMERS
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE CHRIS HAYTON
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE MARK WAYLAND
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE MATT ELLISON
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE ADDITIONAL
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE PROGRAMMING
+    state print_credit_title_line2
+
+    redefinequote CREDITS_QUOTE STUART CAMERON
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE ROB SHAW
+    state print_credit_name
+    
+    redefinequote CREDITS_QUOTE ARTISTS
+    state print_credit_title
+    
+    redefinequote CREDITS_QUOTE MARK DAY
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JEREMY DOWER
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE TEUVO HEIKKILA
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE DAMIEN HOLDER
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE DARRYL MILLS
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE ADDITIONAL
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE ARTWORK
+    state print_credit_title_line2
+
+    redefinequote CREDITS_QUOTE STUART CAMPBELL
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE PAUL CLARKE
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE IVAN KENNY-SUMIGA
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE MARCUS MESTROV
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JOE TABOR
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE SOUND
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE BRIAN UNIACKE
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JAMES LANGFORD
+    state print_credit_name
+    
+    redefinequote CREDITS_QUOTE QA TESTING
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE ANDREW MAJOR
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JIM BATT
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JAMES LANGFORD
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE BRAD LEWIS
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE DAVID MCINTOSH
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JOHN WEAVER
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JUSTIN WILKINS
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE SPECIAL THANKS
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE STEPHEN LEONARD
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE DAVE GAUNT
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE BRIAN POST
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE KEVIN MCINTOSH
+    state print_credit_name
+
+    add temp 140
+
+    // 3D REALMS
+    ife dna_localization 0 // US credits
+    {
+        redefinequote CREDITS_QUOTE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE STEVEN BLACKBURN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE EXECUTIVE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE SCOTT MILLER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GEORGE BROUSSARD
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE BETA TESTING
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE BRYAN TURNER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE VOICE OF DUKE NUKEM
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE JON ST JOHN
+        state print_credit_name
+    }
+    else // EU credits
+    {
+        redefinequote CREDITS_QUOTE ASSOCIATE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE STEVEN BLACKBURN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE ORIGINAL DUKE3D
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE ART ASSETS
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE DIRK JONES
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE STEPHEN HORNBACK
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE JAMES STOREY
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DAVID DEMARET
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DOUGLAS R WOOD
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DUKE VOICE
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE JON ST. JOHN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE LOTS AND LOTS
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE OF THANKS TO
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE SCOTT MILLER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GEORGE BROUSSARD
+        state print_credit_name
+    }
+
+        add temp 140
+
+        // TAKE-TWO
+        redefinequote CREDITS_QUOTE EXECUTIVE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE SAM HOUSER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE CHIEF TECHNOLOGY
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE OFFICER
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE GARY FOREMAN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DIRECTOR OF
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE PRODUCT DEVELOPMENT
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE JAMIE KING
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE RICH ROSADO
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GAME ANALYST
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE OSWALD 'OZ' GREENE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE QA TESTING
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE JAVIER NEGRETE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE AMANDA RICHARDS
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE MARKETING
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE TERRY DONOVAN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE JENNIFER KOLBE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE COREY WADE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE KEVIN HOPKINS
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE CHRIS CARRO
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE JEFF CASTANEDA
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE STANTON SARGEANT
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE ADAM TEDMAN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE TAKE 2 UK 
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE ASSOCIATE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE LEE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE 'COME GET SOME'
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE BROWN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DEVELOPMENT MANAGER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE LUKE VERNON
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE PRODUCT MANAGER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE NIJIKO WALKER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE INTERNATIONAL
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE PRODUCT MANAGER
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE KARL UNTERHOLZNER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GROUP PRODUCTION
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE MANAGER
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE JON
+        state print_credit_name
+        
+        redefinequote CREDITS_QUOTE 'DAVE'
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE BROADBRIDGE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GROUP PRODUCTION
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE COORDINATOR
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE JOANNA
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE 'EARTH BABE'
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE FOSTER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GROUP DESIGN MANAGER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE JAMES CROCKER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DESIGN TEAM
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE JAMES QUINLAN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE TOM BAKER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE SELENA MIFFLING
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE QA MANAGER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE MARK LLOYD
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE TEST LEADER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE TIM BATES
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE TARANTULA
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE QA TEAM
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE CHRIS 'KIT' BROWN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE PAUL BYERS
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE KEVIN HOBSON
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE CHARLIE KINLOCH
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE ANDY MASON
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DENBY GRACE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE LEE JOHNSON
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE MATT HEWITT
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE MICHAEL EMENY
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE JAMES CREE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE ROBERT DUNKIN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE PHIL DEANE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE SPECIAL MENTIONS TO
+        state print_credit_title
+
+        ife dna_localization 0 redefinequote CREDITS_QUOTE J.J. SUAREZ 
+        else redefinequote CREDITS_QUOTE KAI NEUMANN 
+        state print_credit_name
+
+        ife dna_localization 0 redefinequote CREDITS_QUOTE ALEJANDRO SUAREZ 
+        else redefinequote CREDITS_QUOTE THOMAS LEE BROWN
+        state print_credit_name
+
+        ife dna_localization 0 redefinequote CREDITS_QUOTE MUGSY TABORA
+        else redefinequote CREDITS_QUOTE GAGE DECABRAL 
+        state print_credit_name
+    
+    ifl temp CREDITS_FINAL_POSY { set conclude_credits_scoll 1 }
+
+
+    }
+    else setvar RETURN 1
+
+    rotatesprite x 100 81935 0 5761 0 0 8 0 0 xdim ydim // Background, printed after text so they scroll under
+
+    ifg credits_slideup_time CREDITS_3DR_TIME { set credits_ani 0 }
+    else ifg credits_slideup_time CREDITS_T2_TIME { ife credits_ani 0 { set credits_ani 1 } }
+    else { ife credits_ani 2 { set credits_ani 3 } }
+
+    switch credits_ani 
+    case 0 { 
+        redefinequote CREDITS_COMPANY TORUS GAMES
+        rotatesprite x 28 81935 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
+        break
+    }
+    case 1 { 
+        state credits_screen_ani
+        rotatesprite x 28 81935 0 curr_panel 0 0 8 0 0 xdim ydim
+        break
+    }
+    case 2 { 
+        redefinequote CREDITS_COMPANY 3D REALMS
+        rotatesprite x 28 81935 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
+        break
+    }
+    case 3 { 
+        state credits_screen_ani
+        rotatesprite x 28 81935 0 curr_panel 0 0 8 0 0 xdim ydim
+        break
+    }
+    case 4 { 
+        redefinequote CREDITS_COMPANY TAKE-TWO
+        rotatesprite x 28 81935 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
+        break
+    }
+    endswitch
+    
+}
+ends
