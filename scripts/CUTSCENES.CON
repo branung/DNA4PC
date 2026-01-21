@@ -1341,6 +1341,7 @@ endevent
 
 
 appendevent EVENT_SCREEN
+        state setsqraspect
     ifvarn in_cutscene 0
     {
         ifvarn cutscene_num 0
@@ -1355,7 +1356,7 @@ appendevent EVENT_SCREEN
                 setvar SCREENALPHAWORLD 255
                 setvar worldprevtick -1 // Keep resetting world fade values while in cutscene so the fade returns once exiting
                 setvar CUTSCENE_DIALOGBOX 3921
-	        setvar y 153
+	        setvar y 164
                 ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
                 {
                         //LEVEL 1 OPENING SCENE
@@ -4569,10 +4570,10 @@ appendevent EVENT_SCREEN
         }
         //rotatesprite 160 100 65536 0 CUTSCENE_SCREEN 0 0 2 0 0 xdim ydim
         
-        rotatesprite16 160 170 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
+        rotatesprite16 160 181 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
         state cutcam_render
-        rotatesprite 160 170 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
-        rotatesprite 31 170 65536 0 CUTSCENE_SPRITE 0 0 2 0 0 xdim ydim
+        rotatesprite 160 181 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
+        rotatesprite 31 181 65536 0 CUTSCENE_SPRITE 0 0 2 0 0 xdim ydim
         screentext STARTALPHANUM 55 y 65536 0 0 textQuoteRow1 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
         addvar y 10
         screentext STARTALPHANUM 55 y 65536 0 0 textQuoteRow2 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
@@ -4623,7 +4624,7 @@ appendevent EVENT_SCREEN
                                                 divvar ticktmp 2
                                                 subvarvar OPCUTSCENESLIDEINTIME ticktmp
                                                 
-                                                rotatesprite OPCUTSCENESLIDEINTIME 100 81920 0 OPCUTSCENE1 0 0 2 0 0 xdim ydim
+                                                rotatesprite OPCUTSCENESLIDEINTIME 100 CUTSCENE_SIZE 0 OPCUTSCENE1 0 0 72 0 0 xdim ydim
                                                 setvarvar prevtick curtick
                                 }
                                 else
@@ -4866,9 +4867,9 @@ appendevent EVENT_SCREEN
                                                 
                                                 
                                                 ifvarg OPCUTSCENE12SLIDEINTIME OPCUTSCENE12POS
-                                                rotatesprite OPCUTSCENE12SLIDEINTIME 100 81920 0 OPCUTSCENE12 0 0 2 0 0 xdim ydim
+                                                rotatesprite OPCUTSCENE12SLIDEINTIME 100 CUTSCENE_SIZE 0 OPCUTSCENE12 0 0 72 0 0 xdim ydim
                                                 else
-                                                rotatesprite OPCUTSCENE12POS 100 81920 0 OPCUTSCENE12 0 0 2 0 0 xdim ydim
+                                                rotatesprite OPCUTSCENE12POS 100 CUTSCENE_SIZE 0 OPCUTSCENE12 0 0 72 0 0 xdim ydim
                                                 rotatesprite OP12DUKESLIDEINTIME 120 81920 0 OPCUTSCENEDUKESPRITE 0 0 2 0 0 xdim ydim
                                                 rotatesprite 130 180 81920 0 OPCUTSCENEDIALOG2 0 0 2 0 0 xdim ydim
                                                 setvarvar prevtick curtick
@@ -4886,9 +4887,9 @@ appendevent EVENT_SCREEN
                                         setvar RETURN 1
                                 }
                         }
-                        rotatesprite OPCUTSCENEPOS 100 81920 0 CUTSCENE_SCREEN 0 0 2 0 0 xdim ydim
-                        rotatesprite OPCUTSCENE12DUKEPOS 120 81920 0 CUTSCENE_DUKE 0 0 2 0 0 xdim ydim
-                        rotatesprite 130 180 81920 0 CUTSCENE_DIALOG 0 0 2 0 0 xdim ydim
+                        rotatesprite OPCUTSCENEPOS 100 CUTSCENE_SIZE 0 CUTSCENE_SCREEN 0 0 72 0 0 xdim ydim
+                        rotatesprite OPCUTSCENE12DUKEPOS 120 CUTSCENE_SIZE 0 CUTSCENE_DUKE 0 0 72 0 0 xdim ydim
+                        rotatesprite 130 180 81920 0 CUTSCENE_DIALOG 0 0 8 0 0 xdim ydim
                         }
                 }
                 ifvare LEVEL 19
@@ -5041,8 +5042,8 @@ appendevent EVENT_SCREEN
                                         divvar ticktmp 4
                                         subvarvar ENDDIA1SLIDEINTIME ticktmp
 
-                                        rotatesprite 160 100 81920 0 ENDCUTSCENE7 0 0 2 0 0 xdim ydim
-                                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA1SLIDEINTIME 81920 0 ENDCUTSCENEDIA3 0 0 2 0 0 xdim ydim
+                                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE7 0 0 72 0 0 xdim ydim
+                                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA1SLIDEINTIME CUTSCENE_SIZE 0 ENDCUTSCENEDIA3 0 0 72 0 0 xdim ydim
                                         rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
 
                                         setvarvar prevtick curtick
@@ -5089,8 +5090,8 @@ appendevent EVENT_SCREEN
                                         divvar ticktmp 4
                                         subvarvar ENDDIA2SLIDEINTIME ticktmp
 
-                                        rotatesprite 160 100 81920 0 ENDCUTSCENE8 0 0 2 0 0 xdim ydim
-                                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA2SLIDEINTIME 81920 0 ENDCUTSCENEDIA4 0 0 2 0 0 xdim ydim
+                                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE8 0 0 72 0 0 xdim ydim
+                                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA2SLIDEINTIME CUTSCENE_SIZE 0 ENDCUTSCENEDIA4 0 0 72 0 0 xdim ydim
                                         rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
 
                                         setvarvar prevtick curtick
@@ -5136,8 +5137,8 @@ appendevent EVENT_SCREEN
                                         divvar ticktmp 4
                                         subvarvar ENDDIA3SLIDEINTIME ticktmp
 
-                                        rotatesprite 160 100 81920 0 ENDCUTSCENE9 0 0 2 0 0 xdim ydim
-                                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA3SLIDEINTIME 81920 0 ENDCUTSCENEDIA5 0 0 2 0 0 xdim ydim
+                                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE9 0 0 72 0 0 xdim ydim
+                                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA3SLIDEINTIME 81920 0 ENDCUTSCENEDIA5 0 0 72 0 0 xdim ydim
                                         rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
 
                                         setvarvar prevtick curtick
@@ -5157,7 +5158,7 @@ appendevent EVENT_SCREEN
                                 }
                         }
 
-                        rotatesprite 160 100 81920 0 CUTSCENE_SCREEN 0 0 2 0 0 xdim ydim
+                        rotatesprite 160 100 CUTSCENE_SIZE 0 CUTSCENE_SCREEN 0 0 72 0 0 xdim ydim
                         rotatesprite ENDCUTSCENEDIAPOSX1 ENDCUTSCENEDIAPOSY1 81920 0 CUTSCENE_DIALOG 0 0 2 0 0 xdim ydim
                         rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
                         }
@@ -5254,4 +5255,5 @@ appendevent EVENT_SCREEN
         }
         
     }
+    state setdosaspect
 endevent

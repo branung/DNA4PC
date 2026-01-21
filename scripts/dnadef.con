@@ -9,7 +9,7 @@ gamevar dna_crosshair 0 // 0 is the default crosshair in DNA. Set it anywhere fr
 gamevar dna_key_hud 0 // 0 has key items take up colored key slots in the hud when obtained. 1 displays their sprites below the key section of the hud. 
 
 // Disable built in episode cutscene
-gamevar LOGO_FLAGS 2095329 0
+gamevar LOGO_FLAGS 37746913 0
 
 // Changes DNSTUFF cheat to DNLUAULASS, a phrase used to access the cheat menu in DNA
 definecheat 1 LUAULASS
@@ -21,12 +21,18 @@ definesound GBA_INTRO         sounds/intro/gba_intro.ogg     0     0     255   4
 gamevar in_startup 0 0
 gamevar title_ani 0 0
 
+var curr_logo 0
 define LOGO_3DR 5503
 define LOGO_TAKETWO 5504
 define LOGO_TORUS 5505
 define LOGO_DELAY_TIME 3000
 
-define LOGO_SIZE 98535
+define LOGO_SIZE 95535
+define CUTSCENE_SIZE 87035
+define ENDSCREEN_SIZE 87035
+define ENDSCREEN_PANEL_SIZE 85636
+define MISSIONBRIEF_SIZE 90636
+define PLAY_BUTTON_SIZE 80636
 
 define TITLE_BACKGROUND 5740
 define TITLE_DUKE 5754

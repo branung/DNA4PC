@@ -125,16 +125,18 @@ ends
 // Usage can be found at the end of EVENT_GAME in CUTSCENES.CON
 defstate display_end_screen
 {
-    rotatesprite 160 100 81935 0 5761 0 0 72 0 0 xdim ydim
-    rotatesprite 160 30 87920 0 5762 0 0 8 0 0 xdim ydim
+    rotatesprite 160 100 ENDSCREEN_SIZE 0 5761 0 0 72 0 0 xdim ydim
+    rotatesprite 160 25 87920 0 5762 0 0 8 0 0 xdim ydim
+    set y 18
+
     // When level complete phrase is not fully spelt
     ifvarl level_complete_ani 15
-    {
+    {    
         // level_complete_ani 0 means no letters yet, therefore no screentext needed
         ifvarg level_complete_ani 0 {
             ife level_complete_ani 6 { set level_complete_ani 7 } // Skip space between words
             qsubstr 140 132 0 level_complete_ani
-            screentext DNABIGTEXTBRIGHT 66 23 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 2 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+            screentext DNABIGTEXTBRIGHT 66 y ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 2 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
         }
  
         ifvarg bonusDelayTime 0
@@ -154,7 +156,7 @@ defstate display_end_screen
         mod temp 2
         ifvare temp 0 {
             qsubstr 140 132 0 level_complete_ani
-            screentext DNABIGTEXTBRIGHT 160 23 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+            screentext DNABIGTEXTBRIGHT 160 y ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
         }
 
         ifvarg bonusDelayTime 0
@@ -168,12 +170,12 @@ defstate display_end_screen
         }
     }
     else 
-        screentext DNABIGTEXTBRIGHT 160 23 ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 y ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
 
 
     // Kill count
-    setvar y 64
-    setvar x 60
+    set y 62
+    set x 60
     screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 133 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
     getplayer[THISACTOR].actors_killed temp
     getplayer[THISACTOR].max_actors_killed temp2
@@ -226,16 +228,16 @@ ends
 // Objective drawing state
 defstate display_objective_screen
 {
-    rotatesprite 160 100 81935 0 5758 0 0 72 0 0 xdim ydim
-    rotatesprite 160 100 80536 0 3933 0 0 8 0 0 xdim ydim
-    rotatesprite 160 30 85536 0 MISSIONBRIEF 0 0 8 0 0 xdim ydim
-    rotatesprite 55 175 75536 0 5759 0 0 8 0 0 xdim ydim
-    screentext DNABIGTEXTBRIGHT 29 167 71536 0 0 141 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    rotatesprite 160 100 ENDSCREEN_SIZE 0 5758 0 0 72 0 0 xdim ydim
+    rotatesprite 160 100 ENDSCREEN_PANEL_SIZE 0 3933 0 0 8 0 0 xdim ydim
+    rotatesprite 160 25 MISSIONBRIEF_SIZE 0 MISSIONBRIEF 0 0 8 0 0 xdim ydim
+    setvar x 49
+    rotatesprite x 178 PLAY_BUTTON_SIZE 0 5759 0 0 8 0 0 xdim ydim
+    screentext DNABIGTEXTBRIGHT 21 170 76536 0 0 141 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
 
     state get_script
 
     setvar y 63
-    setvar x 55
     screentext DNASMALLTEXT x y 75536 0 0 295 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
     addvar y 40
     screentext DNASMALLTEXT x y 75536 0 0 296 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
@@ -280,6 +282,7 @@ ends
 
 defstate display_logo
 {
+    ifn curr_logo 0 { rotatesprite 160 100 LOGO_SIZE 0 curr_logo 0 0 72 0 0 xdim ydim  }
     ifvarg SCREENALPHA 0
     {
         state screen_fadeout
@@ -297,6 +300,12 @@ ends
 
 defstate fade_logo
 {
+    ifn curr_logo 0 { rotatesprite 160 100 LOGO_SIZE 0 curr_logo 0 0 72 0 0 xdim ydim  }
+    ife curr_logo TITLE_BACKGROUND { 
+        rotatesprite TITLE_DUKE_FINAL_POSX TITLE_DUKENUKEM_FINAL_POSY 81935 0 TITLE_DUKE 0 0 8 0 0 xdim ydim
+        rotatesprite TITLE_NUKEM_FINAL_POSX TITLE_DUKENUKEM_FINAL_POSY 81935 0 TITLE_NUKEM 0 0 8 0 0 xdim ydim
+        rotatesprite 160 TITLE_ADVANCE_FINAL_POSY 81935 0 TITLE_ADVANCE 0 0 8 0 0 xdim ydim }
+         
     ifvarl SCREENALPHA 255
     {
         state screen_fadein
@@ -323,6 +332,7 @@ defstate show_logos {
     case 2 {
         stopallsounds
         state display_copyright_screen
+        set curr_logo 0
         state display_logo
         break
     }
@@ -333,36 +343,34 @@ defstate show_logos {
         break
     }
     case 4 {
-        rotatesprite 160 100 81935 0 LOGO_3DR 0 0 72 0 0 xdim ydim 
+        set curr_logo LOGO_3DR
         state display_logo
         break
     }
     case 5
     {
-        rotatesprite 160 100 81935 0 LOGO_3DR 0 0 72 0 0 xdim ydim
         state fade_logo
         break
     }
     case 6 {
-        rotatesprite 160 100 81935 0 LOGO_TAKETWO 0 0 72 0 0 xdim ydim 
+        
+        set curr_logo LOGO_TAKETWO
         state display_logo
         break
     }
     case 7
     {
-        rotatesprite 160 100 81935 0 LOGO_TAKETWO 0 0 72 0 0 xdim ydim
         state fade_logo
         break
     }
     case 8
     {
-        rotatesprite 160 100 81935 0 LOGO_TORUS 0 0 72 0 0 xdim ydim
+        set curr_logo LOGO_TORUS
         state display_logo
         break
     }
     case 9
     {
-        rotatesprite 160 100 81935 0 LOGO_TORUS 0 0 72 0 0 xdim ydim
         state fade_logo
         break
     }
@@ -385,7 +393,7 @@ ends
 defstate show_title {
     ife in_startup 10 
     {
-        rotatesprite 160 100 81935 0 TITLE_BACKGROUND 0 0 72 0 0 xdim ydim
+        rotatesprite 160 100 LOGO_SIZE 0 TITLE_BACKGROUND 0 0 72 0 0 xdim ydim
         ifvarg SCREENALPHA 0
         {
             state screen_fadeout
@@ -517,10 +525,7 @@ defstate show_title {
     }
     else ife in_startup 11
     {
-        rotatesprite 160 100 81935 0 TITLE_BACKGROUND 0 0 72 0 0 xdim ydim
-        rotatesprite TITLE_DUKE_FINAL_POSX TITLE_DUKENUKEM_FINAL_POSY 81935 0 TITLE_DUKE 0 0 8 0 0 xdim ydim
-        rotatesprite TITLE_NUKEM_FINAL_POSX TITLE_DUKENUKEM_FINAL_POSY 81935 0 TITLE_NUKEM 0 0 8 0 0 xdim ydim
-        rotatesprite 160 TITLE_ADVANCE_FINAL_POSY 81935 0 TITLE_ADVANCE 0 0 8 0 0 xdim ydim
+        set curr_logo TITLE_BACKGROUND
         state fade_logo
         ifvare SCREENALPHA 255 { setvar RETURN 1 } 
     }
@@ -687,18 +692,21 @@ ends
 
 defstate print_credit_title {
     add temp CREDITS_INDIVIDUAL_GAP
+    ifg temp 40
     screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
 }
 ends
 
 defstate print_credit_title_line2 {
     add temp CREDITS_TITLENAME_GAP
+    ifg temp 40
     screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
 }
 ends
 
 defstate print_credit_name {
     add temp CREDITS_TITLENAME_GAP
+    ifg temp 40
     screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 10 0 16 0 4 0 0 0 2 0 0 xdim ydim
 }
 ends
@@ -1188,41 +1196,42 @@ defstate show_credits {
     }
     else setvar RETURN 1
 
-    rotatesprite x 100 81935 0 5761 0 0 8 0 0 xdim ydim // Background, printed after text so they scroll under
+    rotatesprite x 100 ENDSCREEN_SIZE 0 5761 0 0 8 0 0 xdim ydim // Background, printed after text so they scroll under
 
     ifg credits_slideup_time CREDITS_3DR_TIME { set credits_ani 0 }
     else ifg credits_slideup_time CREDITS_T2_TIME { ife credits_ani 0 { set credits_ani 1 } }
     else { ife credits_ani 2 { set credits_ani 3 } }
 
+    set y 24
     switch credits_ani 
     case 0 { 
         redefinequote CREDITS_COMPANY TORUS GAMES
-        rotatesprite x 28 81935 0 curr_panel 0 0 8 0 0 xdim ydim
-        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        rotatesprite x y ENDSCREEN_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 16 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
         set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
         break
     }
     case 1 { 
         state credits_screen_ani
-        rotatesprite x 28 81935 0 curr_panel 0 0 8 0 0 xdim ydim
+        rotatesprite x y ENDSCREEN_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
         break
     }
     case 2 { 
         redefinequote CREDITS_COMPANY 3D REALMS
-        rotatesprite x 28 81935 0 curr_panel 0 0 8 0 0 xdim ydim
-        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        rotatesprite x y ENDSCREEN_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 16 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
         set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
         break
     }
     case 3 { 
         state credits_screen_ani
-        rotatesprite x 28 81935 0 curr_panel 0 0 8 0 0 xdim ydim
+        rotatesprite x y ENDSCREEN_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
         break
     }
     case 4 { 
         redefinequote CREDITS_COMPANY TAKE-TWO
-        rotatesprite x 28 81935 0 curr_panel 0 0 8 0 0 xdim ydim
-        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        rotatesprite x y ENDSCREEN_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 16 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
         set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
         break
     }
