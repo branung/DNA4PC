@@ -13,6 +13,7 @@ ends
 
 // States to control fading the screen out of black and fading into black 
 defstate screen_fadeout
+        ife RETURN 1 set SCREENALPHA 5
         ifvarg SCREENALPHA 0
         {
             getticks curtick
@@ -37,6 +38,7 @@ ends
 
 defstate screen_fadein
 {
+        ife RETURN 1 set SCREENALPHA 250
         ifvarl SCREENALPHA 255
         {
             getticks curtick
