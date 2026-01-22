@@ -580,6 +580,34 @@ appendevent EVENT_MAINMENUSCREEN
 }
 endevent
 
+// Timer for DIG skull panel
+// Reuses delaytimers from end level screen since there wouldn't be any chance of conflict
+defstate skull_panel_ani {
+    ifvarg bonusDelayTime 0
+    {
+        getticks curtick
+        ifvare bonus_screen_prevtick -1 setvar ticktmp 0 else
+        {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp bonus_screen_prevtick
+        }
+        divvar ticktmp 4      
+        subvarvar bonusDelayTime ticktmp           
+        setvarvar bonus_screen_prevtick curtick
+    }
+    else
+    {
+        ife skull_skill_ani 0 { 
+            set curr_skull SKULL_SKILL_START
+            set skull_skill_ani 1
+        }
+        else ife curr_skull SKULL_SKILL_END set curr_skull SKULL_SKILL_START
+        else { add curr_skull 1 }
+        setvar bonusDelayTime 20 // Change this to adjust skull animation speed
+    }
+}
+ends
+
 
 appendevent EVENT_DISPLAYMENUREST
     switch userdef.return 0
@@ -674,9 +702,10 @@ appendevent EVENT_DISPLAYMENUREST
                         break
                     case 4:
                         ife temp2 i {
-                            set temp 7008
+                            state skull_panel_ani
+                            set temp curr_skull 
                             redefinequote 200 DAMN IM GOD
-                        } else set temp 7016
+                        } else { set temp 7016 set skull_skill_ani 0 }
                         break
                 endswitch
                 // Draw the current picture frame

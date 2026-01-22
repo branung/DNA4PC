@@ -59,6 +59,11 @@ gamevar nukem_title_slidein_time TITLE_NUKEM_START_POSX 0
 gamevar name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY 0
 gamevar advance_slideup_time TITLE_ADVANCE_START_POSY 0
 
+gamevar skull_skill_ani 0 0
+define SKULL_SKILL_START 7008
+define SKULL_SKILL_END 7015
+var curr_skull SKULL_SKILL_START
+
 // Logo quotes
 definequote 149 logo.ivf
 definequote 150 TAKE-TWO INTERACTIVE SOFTWARE,INC.
