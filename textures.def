@@ -1489,3 +1489,21 @@ texture 6969 { pal 0 { file "tiles/6969.png" } }
 texture 6970 { pal 0 { file "tiles/6970.png" } }
 texture 6971 { pal 0 { file "tiles/6971.png" } }
 texture 6972 { pal 0 { file "tiles/6972.png" } }
+
+// Skill screen batch
+texture 7001 { pal 0 { file "tiles/7001.png" } }
+texture 7002 { pal 0 { file "tiles/7002.png" } }
+texture 7003 { pal 0 { file "tiles/7003.png" } }
+texture 7004 { pal 0 { file "tiles/7004.png" } }
+texture 7005 { pal 0 { file "tiles/7005.png" } }
+texture 7006 { pal 0 { file "tiles/7006.png" } }
+texture 7007 { pal 0 { file "tiles/7007.png" } }
+texture 7008 { pal 0 { file "tiles/7008.png" } }
+texture 7009 { pal 0 { file "tiles/7009.png" } }
+texture 7010 { pal 0 { file "tiles/7010.png" } }
+texture 7011 { pal 0 { file "tiles/7011.png" } }
+texture 7012 { pal 0 { file "tiles/7012.png" } }
+texture 7013 { pal 0 { file "tiles/7013.png" } }
+texture 7014 { pal 0 { file "tiles/7014.png" } }
+texture 7015 { pal 0 { file "tiles/7015.png" } }
+texture 7016 { pal 0 { file "tiles/7016.png" } }
