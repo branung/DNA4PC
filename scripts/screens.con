@@ -130,9 +130,10 @@ ends
 // Usage can be found at the end of EVENT_GAME in CUTSCENES.CON
 defstate display_end_screen
 {
+    state setdosaspect
     rotatesprite 160 100 ENDSCREEN_SIZE 0 5761 0 0 72 0 0 xdim ydim
-    rotatesprite 160 25 87920 0 5762 0 0 8 0 0 xdim ydim
-    set y 18
+    rotatesprite 160 30 83920 0 5762 0 0 8 0 0 xdim ydim
+    set y 23
 
     // When level complete phrase is not fully spelt
     ifvarl level_complete_ani 15
@@ -218,6 +219,8 @@ defstate display_end_screen
         screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 138 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
         screentext DNABIGTEXTBRIGHT 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
     }
+
+    state setsqraspect
 }
 ends
 
@@ -233,7 +236,7 @@ ends
 // Objective drawing state
 defstate display_objective_screen
 {
-    rotatesprite 160 100 ENDSCREEN_SIZE 0 5758 0 0 72 0 0 xdim ydim
+    rotatesprite 160 100 OBJECTIVEPANEL_SIZE 0 5758 0 0 72 0 0 xdim ydim
     rotatesprite 160 100 ENDSCREEN_PANEL_SIZE 0 3933 0 0 8 0 0 xdim ydim
     rotatesprite 160 25 MISSIONBRIEF_SIZE 0 MISSIONBRIEF 0 0 8 0 0 xdim ydim
     setvar x 49
@@ -813,26 +816,27 @@ ends
 
 defstate print_credit_title {
     add temp CREDITS_INDIVIDUAL_GAP
-    ifg temp 40
+    ifg temp 20
     screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
 }
 ends
 
 defstate print_credit_title_line2 {
     add temp CREDITS_TITLENAME_GAP
-    ifg temp 40
+    ifg temp 20
     screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
 }
 ends
 
 defstate print_credit_name {
     add temp CREDITS_TITLENAME_GAP
-    ifg temp 40
+    ifg temp 20
     screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 10 0 16 0 4 0 0 0 2 0 0 xdim ydim
 }
 ends
 
 defstate show_credits {
+    state setdosaspect
     set x 160
     
     ife conclude_credits_scoll 0 {
@@ -1323,40 +1327,41 @@ defstate show_credits {
     else ifg credits_slideup_time CREDITS_T2_TIME { ife credits_ani 0 { set credits_ani 1 } }
     else { ife credits_ani 2 { set credits_ani 3 } }
 
-    set y 24
+    set y 28
     switch credits_ani 
     case 0 { 
         redefinequote CREDITS_COMPANY TORUS GAMES
-        rotatesprite x y ENDSCREEN_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
-        screentext DNABIGTEXTBRIGHT 160 16 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        rotatesprite x y CREDITS_PANEL_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
         set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
         break
     }
     case 1 { 
         state credits_screen_ani
-        rotatesprite x y ENDSCREEN_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        rotatesprite x y CREDITS_PANEL_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
         break
     }
     case 2 { 
         redefinequote CREDITS_COMPANY 3D REALMS
-        rotatesprite x y ENDSCREEN_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
-        screentext DNABIGTEXTBRIGHT 160 16 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        rotatesprite x y CREDITS_PANEL_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
         set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
         break
     }
     case 3 { 
         state credits_screen_ani
-        rotatesprite x y ENDSCREEN_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        rotatesprite x y CREDITS_PANEL_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
         break
     }
     case 4 { 
         redefinequote CREDITS_COMPANY TAKE-TWO
-        rotatesprite x y ENDSCREEN_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
-        screentext DNABIGTEXTBRIGHT 160 16 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        rotatesprite x y CREDITS_PANEL_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
         set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
         break
     }
     endswitch
-    
+
+    state setsqraspect
 }
 ends
