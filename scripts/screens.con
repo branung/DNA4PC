@@ -1,4 +1,9 @@
 
+gamevar m_at_skill 0 0
+gamevar m_draw_x 0 0
+gamevar m_draw_y 0 0
+gamevar m_anim_frames 8
+
 // DOS by default stretches rotatesprite calls from 1:1 mapped to 320x200 as 4:3
 // Calling "sqr aspect" before such calls will change the draw looks
 defstate setsqraspect
@@ -574,53 +579,140 @@ endevent
 
 
 appendevent EVENT_DISPLAYMENUREST
-    getu[].return 0 temp
-    ife temp 102 {
-        redefinequote 200 CHOOSE STYLE
-        getu[].return 1 temp
-        shiftvarr temp 16
-        qstrdim temp2 temp3 DNASMALLTEXT 0 50 65536 0 200 16 8 0 0 0 0 0 0 xdim ydim
-        div temp2 2
-        add temp 160
-        sub temp temp2
-        add temp 1
-        screentext DNASMALLTEXT temp 44 65536 0 0 200 32 0 16 0 8 0 0 0 0 0 0 xdim ydim
-        sub temp 1
-        screentext DNASMALLTEXT temp 43 65536 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+    switch userdef.return 0
+        // newgame custom 1st level
+        case 102:
+            set m_at_skill 0
+            redefinequote 200 CHOOSE STYLE
+            getu[].return 1 temp
+            shiftvarr temp 16
+            qstrdim temp2 temp3 DNASMALLTEXT 0 50 65536 0 200 16 8 0 0 0 0 0 0 xdim ydim
+            div temp2 2
+            add temp 160
+            sub temp temp2
+            add temp 1
+            screentext DNASMALLTEXT temp 44 65536 0 0 200 32 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            sub temp 1
+            screentext DNASMALLTEXT temp 43 65536 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+    
+            getu[].return 3 temp
+            ife temp 0 redefinequote 200 Apply map shading and minor QoL tweaks.
+            ife temp 1 redefinequote 200 Match the GBA original.
+            getu[].return 1 temp
+            shiftvarr temp 16
+            qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+            div temp2 2
+            add temp 160
+            sub temp temp2
+            screentext STARTALPHANUM temp 115 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            
+            getu[].return 3 temp
+            ife temp 0 redefinequote 200 This is the recommended way to play.
+            ife temp 1 redefinequote 200 Aims for a more vanilla experience.
+            getu[].return 1 temp
+            shiftvarr temp 16
+            qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+            div temp2 2
+            add temp 160
+            sub temp temp2
+            screentext STARTALPHANUM temp 121 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            
+    
+            redefinequote 200 CUSTOMIZE MORE IN-GAME WITH [BACKSPACE]
+            getu[].return 1 temp
+            shiftvarr temp 16
+            qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+            div temp2 2
+            add temp 160
+            sub temp temp2
+            screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            break
+        // Skill
+        case 110:
+            set m_at_skill 1
+            
+            set m_draw_x 80
+            getu[].return 1 temp
+            shiftvarr temp 16
+            add m_draw_x temp
+            set m_draw_y 90
+            getu[].return 3 temp2
+            add temp2 1
+            for i range 4 {
+                add i 1
+                switch i
+                    case 1:
+                        ife temp2 i {
+                            set temp 7000
+                            redefinequote 200 PISS OF CAKE
+                        } else set temp 7001
+                        
+                        break
+                    case 2:
+                        ife temp2 i {
+                            set temp 7002
+                            redefinequote 200 LETS KNOCK
+                        } else set temp 7003
+                        
+                        break
+                    case 3:
+                        ife temp2 i {
+                            set temp 7006
+                            redefinequote 200 COME GET SUN
+                        } else set temp 7007
+                        
+                        break
+                    case 4:
+                        ife temp2 i {
+                            set temp 7008
+                            redefinequote 200 DAMN IM GOD
+                        } else set temp 7016
+                        break
+                endswitch
+                
+                rotatesprite m_draw_x m_draw_y 65536 0 temp 0 0 8 0 0 xdim ydim
+                ife temp2 i {
+                    ifg m_anim_frames 15 {
+                        rotatesprite m_draw_x m_draw_y 65536 0 7004 0 0 8 0 0 xdim ydim
+                    } else {
+                        rotatesprite m_draw_x m_draw_y 65536 0 7005 0 0 8 0 0 xdim ydim
+                    }
+                }
+                add m_draw_x 54
+            }
+            set m_draw_x 160
+            getu[].return 1 temp
+            shiftvarr temp 16
+            add m_draw_x temp
+            
+            set m_draw_y 160
+            set temp 5539
+            rotatesprite m_draw_x m_draw_y 65536 0 temp 0 0 8 0 0 xdim ydim
+            qstrdim temp2 temp3 DNABIGTEXTBRIGHT 0 50 65536 0 200 8 8 0 0 0 0 0 0 xdim ydim
+            div temp3 2
+            div temp2 2
+            sub m_draw_x temp2
+            sub m_draw_y temp3
+            sub m_draw_y 1
+            sub m_draw_x 8
+            screentext DNABIGTEXTBRIGHT m_draw_x m_draw_y ENDSCREEN_TEXT_SIZE 0 0 200 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
+            
+            add m_anim_frames 1
+            ifg m_anim_frames 30 set m_anim_frames 1
+            
+            break
+        default:
+            set m_at_skill 0
+            break
+    endswitch
+endevent
 
-        getu[].return 3 temp
-        ife temp 0 redefinequote 200 Apply map shading and minor QoL tweaks.
-        ife temp 1 redefinequote 200 Match the GBA original.
-        getu[].return 1 temp
-        shiftvarr temp 16
-        qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
-        div temp2 2
-        add temp 160
-        sub temp temp2
-        screentext STARTALPHANUM temp 115 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-        
-        getu[].return 3 temp
-        ife temp 0 redefinequote 200 This is the recommended way to play.
-        ife temp 1 redefinequote 200 Aims for a more vanilla experience.
-        getu[].return 1 temp
-        shiftvarr temp 16
-        qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
-        div temp2 2
-        add temp 160
-        sub temp temp2
-        screentext STARTALPHANUM temp 121 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-        
+appendevent EVENT_MENUCURSORLEFT
+    ife m_at_skill 1 set RETURN -1
+endevent
 
-        redefinequote 200 CUSTOMIZE MORE IN-GAME WITH [BACKSPACE]
-        getu[].return 1 temp
-        shiftvarr temp 16
-        qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
-        div temp2 2
-        add temp 160
-        sub temp temp2
-        screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
-        
-    }
+appendevent EVENT_MENUCURSORRIGHT
+    ife m_at_skill 1 set RETURN -1
 endevent
 
 appendevent EVENT_NEWGAMECUSTOM
@@ -639,6 +731,20 @@ appendevent EVENT_NEWGAMECUSTOM
             break
     endswitch
 endevent
+
+//appendevent EVENT_DISPLAYMENU
+//    switch userdef.return 0
+//        case 110
+//            
+//            break
+//    endswitch
+//endevent
+
+defineskillname 0 
+defineskillname 1 
+defineskillname 2 
+defineskillname 3 
+
 
 defstate get_credit_ticks {
     ifvarg delayTime 0
