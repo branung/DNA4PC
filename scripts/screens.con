@@ -18,7 +18,7 @@ ends
 
 // States to control fading the screen out of black and fading into black 
 defstate screen_fadeout
-        ife RETURN 1 ifg SCREENALPHA 0 set SCREENALPHA 1
+        //ife RETURN 1 ifg SCREENALPHA 0 set SCREENALPHA 1
         ifvarg SCREENALPHA 0
         {
             getticks curtick

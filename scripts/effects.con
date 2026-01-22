@@ -371,7 +371,11 @@ defstate renderman_getcoords
         set r_x camerax
         set r_y cameray
         set r_z cameraz
+        sub r_z 2048
         set r_sect camerasect
+        gets[r_sect].ceilingz temp
+        ifg temp r_z set r_z temp
+        add r_z 512
         set r_horiz cameraq16horiz
         set r_ang cameraq16ang
     }
@@ -1328,12 +1332,14 @@ endevent
 // Set `undisplayrooms 1` and regular 3D rendering is stopped.
 // Use `showview` to display anything of 3D instead
 appendevent EVENT_DISPLAYROOMS
-    ife undisplayrooms 0 break
+    //ife undisplayrooms 0 break
+    
+    set renderman_get 1
+    state renderman_getcoords
+    
     
     // Shake Shake Shake...
     ife kcsunshinemode 1 {
-        set renderman_get 1
-        state renderman_getcoords
         set temp quake_z
         mul temp 5
         add r_z temp
@@ -1341,9 +1347,9 @@ appendevent EVENT_DISPLAYROOMS
         div temp 100
         add r_x temp
         add r_y rot_fine
-        state renderman_render
     }
-    set renderman_sprite -1
+    state renderman_render
+    //set renderman_sprite -1
     set RETURN 1
 endevent
 
