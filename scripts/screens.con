@@ -582,6 +582,8 @@ appendevent EVENT_DISPLAYMENUREST
     switch userdef.return 0
         // newgame custom 1st level
         case 102:
+            // Reset the nukesymbol override if we're in any other menu than skill
+            // Each print mostly gets the current slide and then just does gametext where needed.
             set m_at_skill 0
             redefinequote 200 CHOOSE STYLE
             getu[].return 1 temp
@@ -627,17 +629,22 @@ appendevent EVENT_DISPLAYMENUREST
             sub temp temp2
             screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
             break
-        // Skill
+        // MENU: At skill
         case 110:
+            // This variable tracks whether to hide the nuke symbols in other events
             set m_at_skill 1
             
+            // X = Start at 80, get the transition X scroll amount from userdef 1
             set m_draw_x 80
             getu[].return 1 temp
             shiftvarr temp 16
             add m_draw_x temp
+            // Hardcode Y to be here
             set m_draw_y 90
+            // Get currently selected skill and bump the minimum from 0 to 1
             getu[].return 3 temp2
             add temp2 1
+            // For loop for all 4 skills, determine what tile to draw and quote
             for i range 4 {
                 add i 1
                 switch i
@@ -669,8 +676,9 @@ appendevent EVENT_DISPLAYMENUREST
                         } else set temp 7016
                         break
                 endswitch
-                
+                // Draw the current picture frame
                 rotatesprite m_draw_x m_draw_y 65536 0 temp 0 0 8 0 0 xdim ydim
+                // Draw the selection blinker if current iterated skill is the selected one
                 ife temp2 i {
                     ifg m_anim_frames 15 {
                         rotatesprite m_draw_x m_draw_y 65536 0 7004 0 0 8 0 0 xdim ydim
@@ -678,16 +686,20 @@ appendevent EVENT_DISPLAYMENUREST
                         rotatesprite m_draw_x m_draw_y 65536 0 7005 0 0 8 0 0 xdim ydim
                     }
                 }
+                // Add 54px after each portrait that gets iterated
                 add m_draw_x 54
             }
+            // Now we draw the text box
+            // Get the X coords and transition scroll as usual
             set m_draw_x 160
             getu[].return 1 temp
             shiftvarr temp 16
             add m_draw_x temp
-            
+            // Y coords and set the tilenum
             set m_draw_y 160
             set temp 5539
             rotatesprite m_draw_x m_draw_y 65536 0 temp 0 0 8 0 0 xdim ydim
+            // Box done, let's do the text now and get it's length
             qstrdim temp2 temp3 DNABIGTEXTBRIGHT 0 50 65536 0 200 8 8 0 0 0 0 0 0 xdim ydim
             div temp3 2
             div temp2 2
@@ -695,13 +707,16 @@ appendevent EVENT_DISPLAYMENUREST
             sub m_draw_y temp3
             sub m_draw_y 1
             sub m_draw_x 8
+            // Where we want to put it is pretty much same as the box coords, given lengths divided by two. Slight padding.
             screentext DNABIGTEXTBRIGHT m_draw_x m_draw_y ENDSCREEN_TEXT_SIZE 0 0 200 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
             
+            // Track animation for 1->30 (~1s) needs something better!
             add m_anim_frames 1
             ifg m_anim_frames 30 set m_anim_frames 1
             
             break
         default:
+            // Reset the nukesymbol override if we're in any other menu than skill
             set m_at_skill 0
             break
     endswitch
