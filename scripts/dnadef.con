@@ -222,6 +222,16 @@ var cutscene_temp 0 0
 var in_cutscene 0 0
 // Moved from dna4pc.con
 
+define CAM_QUOTE1 391
+define CAM_QUOTE2 392
+define CAM_QUOTE3 393
+define CAM_QUOTE4 394
+
+define OBJECTIVE_QUOTE1 395
+define OBJECTIVE_QUOTE2 396
+define OBJECTIVE_QUOTE3 397
+define OBJECTIVE_QUOTE4 398
+
 // Effect state
 var s_state 0 0
 define enabled 3

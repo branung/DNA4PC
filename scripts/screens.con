@@ -246,13 +246,13 @@ defstate display_objective_screen
     state get_script
 
     setvar y 63
-    screentext DNASMALLTEXT x y 75536 0 0 295 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+    screentext DNASMALLTEXT x y 75536 0 0 OBJECTIVE_QUOTE1 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
     addvar y 40
-    screentext DNASMALLTEXT x y 75536 0 0 296 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+    screentext DNASMALLTEXT x y 75536 0 0 OBJECTIVE_QUOTE2 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
     addvar y 10
-    screentext DNASMALLTEXT x y 75536 0 0 297 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+    screentext DNASMALLTEXT x y 75536 0 0 OBJECTIVE_QUOTE3 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
     addvar y 10
-    screentext DNASMALLTEXT x y 75536 0 0 298 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+    screentext DNASMALLTEXT x y 75536 0 0 OBJECTIVE_QUOTE4 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
 }
 ends
 

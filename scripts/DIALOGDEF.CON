@@ -55,15 +55,15 @@ ifvare LEVEL 0 // Level 1 - Gathering Intel
     redefinequote 249 
     redefinequote 250
     //Security cam lines
-    redefinequote 291 Looks like a 
-    redefinequote 292 lot'a security!
-    redefinequote 293
-    redefinequote 294
+    redefinequote CAM_QUOTE1 Looks like a 
+    redefinequote CAM_QUOTE2 lot'a security!
+    redefinequote CAM_QUOTE3
+    redefinequote CAM_QUOTE4
     //Mission objective
-    redefinequote 295 Area 51
-    redefinequote 296 Gather alien
-    redefinequote 297 intelligence data.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Area 51
+    redefinequote OBJECTIVE_QUOTE2 Gather alien
+    redefinequote OBJECTIVE_QUOTE3 intelligence data.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 1 // Level 2 - Close Encounter
 {
@@ -119,105 +119,128 @@ else ifvare LEVEL 1 // Level 2 - Close Encounter
     redefinequote 249 
     redefinequote 250
     //Mission objective
-    redefinequote 295 Area 51
-    redefinequote 296 Find the Satlink
-    redefinequote 297 Laptop.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Area 51
+    redefinequote OBJECTIVE_QUOTE2 Find the Satlink
+    redefinequote OBJECTIVE_QUOTE3 Laptop.
+    redefinequote OBJECTIVE_QUOTE4 
     }
 else ifvare LEVEL 2 // Level 3 - Hybrid Army
 {
     redefinequote 200 
     redefinequote 201 General, I've found some 
-    redefinequote 202 kind of underground 
+    redefinequote 202 kind of underground
     redefinequote 203 subway system. 
-    redefinequote 204 That system is used to 
-    redefinequote 205 move top secret weapons  
-    redefinequote 206 and technology around, 
-    redefinequote 207 under the noses of the 
-    redefinequote 208 American public. 
-    redefinequote 209 Well it looks like the 
-    redefinequote 210 alien scum are using it  
-    redefinequote 211 to transport their army 
-    redefinequote 212 right under 'our' noses.
-    redefinequote 213 Duke, we've learned 
-    redefinequote 214 that the aliens need
-    redefinequote 215 environmental regulators 
-    redefinequote 216 to exist. 
-    redefinequote 217 Locate and destroy them,
-    redefinequote 218 and the aliens will be 
-    redefinequote 219 history. 
-    redefinequote 220 Earth is counting on you. 
-    redefinequote 221 I'll derail their plans.
-    redefinequote 222 
-    redefinequote 223 It's time to kick ass 
-    redefinequote 224 and chew bubblegum,
-    redefinequote 225 and I'm all out of gum.
-    redefinequote 226 Good work, Duke! Shutting
-    redefinequote 227 down the environmental
-    redefinequote 228 regulators has destroyed
-    redefinequote 229 the hybrid alien army. 
-    redefinequote 230 Now get out of there 
-    redefinequote 231 in one piece.
+    redefinequote 204
+    redefinequote 205 That system is used to 
+    redefinequote 206 move top secret weapons  
+    redefinequote 207 and technology around, 
+    redefinequote 208 
+    redefinequote 209 under the noses of the
+    redefinequote 210 American public.
+    redefinequote 211
+    redefinequote 212
+    redefinequote 213 Well it looks like the 
+    redefinequote 214 alien scum are using it  
+    redefinequote 215 to transport their army 
+    redefinequote 216 right under 'our' noses.
+    redefinequote 217 Duke, we've learned 
+    redefinequote 218 that the aliens need
+    redefinequote 219 environmental regulators 
+    redefinequote 220 to exist.
+    redefinequote 221 Locate and destroy them,
+    redefinequote 222 and the aliens will be 
+    redefinequote 223 history.
+    redefinequote 224
+    redefinequote 225 Earth is counting on you. 
+    redefinequote 226
+    redefinequote 227
+    redefinequote 228
+    redefinequote 229 I'll derail their plans.
+    redefinequote 230 
+    redefinequote 231
     redefinequote 232
-    redefinequote 233
-    redefinequote 234 Piece of cake.
-    redefinequote 235 This was almost too easy.
-    redefinequote 236 You amuse me, 
-    redefinequote 237 little human.
-    redefinequote 238 As if your pathetic 
-    redefinequote 239 attempts could stop us.
-    redefinequote 240 You are weak and 
-    redefinequote 241 nothing but food.
-    redefinequote 242 That's a lot of talk 
-    redefinequote 243 from an overgrown insect
-    redefinequote 244 with a dead 
-    redefinequote 245 invasion army. 
-    redefinequote 246 All you've managed to 
-    redefinequote 247 do is kill an
-    redefinequote 248 expendable fraction 
-    redefinequote 249 of our warriors.
-    redefinequote 250 Our full army is 
-    redefinequote 251 obviously located 
-    redefinequote 252 elsewhere.
-    redefinequote 253 
-    redefinequote 254 I wouldn't expect you 
-    redefinequote 255 to understand that with
-    redefinequote 256 100 percent of your brain. 
-    redefinequote 257 Prepare to die.
-    redefinequote 258
-    redefinequote 259
-    redefinequote 260 
-    redefinequote 261 Come Get Some.
-    redefinequote 262 Time for an 
-    redefinequote 263 alien autopsy.
+    redefinequote 233 It's time to kick ass 
+    redefinequote 234 and chew bubblegum,
+    redefinequote 235 and I'm all out of gum.
+    redefinequote 236 
+    redefinequote 237 Good work, Duke! Shutting
+    redefinequote 238 down the environmental
+    redefinequote 239 regulators has destroyed
+    redefinequote 240 the hybrid alien army. 
+    redefinequote 241 Now get out of there 
+    redefinequote 242 in one piece.
+    redefinequote 243
+    redefinequote 244
+    redefinequote 245 Piece of cake.
+    redefinequote 246 This was almost too easy.
+    redefinequote 247
+    redefinequote 248
+    redefinequote 249 You amuse me, 
+    redefinequote 250 little human.
+    redefinequote 251 As if your pathetic 
+    redefinequote 252 attempts could stop us.
+    redefinequote 253 You are weak and 
+    redefinequote 254 nothing but food.
+    redefinequote 255
+    redefinequote 256
+    redefinequote 257 That's a lot of talk 
+    redefinequote 258 from an overgrown insect
+    redefinequote 259 with a dead 
+    redefinequote 260 invasion army. 
+    redefinequote 261
+    redefinequote 262
+    redefinequote 263
     redefinequote 264
-    redefinequote 265 General, Area 51 was just
-    redefinequote 266 the tip of the iceberg.
-    redefinequote 267 There's a much larger 
-    redefinequote 268 army hidden elsewhere. 
-    redefinequote 269 Any idea where? 
-    redefinequote 270
-    redefinequote 271
-    redefinequote 272 No. That overgrown 
-    redefinequote 273 spider was too busy 
-    redefinequote 274 dying to talk. 
-    redefinequote 275 
-    redefinequote 276 But I'm going to jump
-    redefinequote 277 through his teleporter
-    redefinequote 278 and see where it leads.
-    redefinequote 279 
-    redefinequote 280 Talk to you on 
-    redefinequote 281 the other side.
+    redefinequote 265 All you've managed to 
+    redefinequote 266 do is kill an
+    redefinequote 267 expendable fraction 
+    redefinequote 268 of our warriors.
+    redefinequote 269 Our full army is 
+    redefinequote 270 obviously located 
+    redefinequote 271 elsewhere.
+    redefinequote 272 
+    redefinequote 273 I wouldn't expect you 
+    redefinequote 274 to understand that with
+    redefinequote 275 100 percent of your brain. 
+    redefinequote 276 Prepare to die.
+    redefinequote 277 Come Get Some.
+    redefinequote 278 Time for an
+    redefinequote 279 alien autopsy.
+    redefinequote 280 
+    redefinequote 281 
+    redefinequote 282 
+    redefinequote 283
+    redefinequote 284
+    redefinequote 285 General, Area 51 was just
+    redefinequote 286 the tip of the iceberg.
+    redefinequote 287 There's a much larger 
+    redefinequote 288 army hidden elsewhere. 
+    redefinequote 289 Any idea where? 
+    redefinequote 290
+    redefinequote 291
+    redefinequote 292
+    redefinequote 293 No. That overgrown 
+    redefinequote 294 spider was too busy 
+    redefinequote 295 dying to talk. 
+    redefinequote 296 
+    redefinequote 297 But I'm going to jump
+    redefinequote 298 through his teleporter
+    redefinequote 299 and see where it leads.
+    redefinequote 300 
+    redefinequote 301 Talk to you on 
+    redefinequote 302 the other side.
+    redefinequote 303
+    redefinequote 304
     //Security cam lines
-    redefinequote 291 I'm think I'll 
-    redefinequote 292 throw a pipe 
-    redefinequote 293 bomb party for
-    redefinequote 294 this guy.
+    redefinequote CAM_QUOTE1 I think I'll 
+    redefinequote CAM_QUOTE2 throw a pipe 
+    redefinequote CAM_QUOTE3 bomb party for
+    redefinequote CAM_QUOTE4 this guy.
     //Mission objective
-    redefinequote 295 Area 51
-    redefinequote 296 Destroy the Hybrid
-    redefinequote 297 Army.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Area 51
+    redefinequote OBJECTIVE_QUOTE2 Destroy the Hybrid
+    redefinequote OBJECTIVE_QUOTE3 Army.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 3 // Level 4 - Temple of Amun
 {
@@ -229,21 +252,24 @@ else ifvare LEVEL 3 // Level 4 - Temple of Amun
     redefinequote 205 We've also detected a
     redefinequote 206 large power source 
     redefinequote 207 deep inside the temple. 
-    redefinequote 208 Time to walk like an
-    redefinequote 209 Egyptian, into the 
-    redefinequote 210 Temple of Doom, and 
-    redefinequote 211 deliver some max payne. 
-    redefinequote 212 So this is where they've
-    redefinequote 213 been hiding their 
-    redefinequote 214 alien hybrid army. 
-    redefinequote 215 
+    redefinequote 208
+    redefinequote 209 Time to walk like an
+    redefinequote 210 Egyptian, into the 
+    redefinequote 211 Temple of Doom, and 
+    redefinequote 212 deliver some max payne. 
+    redefinequote 213 So this is where they've
+    redefinequote 214 been hiding their 
+    redefinequote 215 alien hybrid army. 
     redefinequote 216 
     redefinequote 217 
+    redefinequote 218
+    redefinequote 219 
+    redefinequote 220  
     //Mission objective
-    redefinequote 295 Egypt
-    redefinequote 296 Breach the Inner
-    redefinequote 297 Sanctum.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Egypt
+    redefinequote OBJECTIVE_QUOTE2 Breach the Inner
+    redefinequote OBJECTIVE_QUOTE3 Sanctum.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 4 //Level 5 - Inner Sanctum
 {
@@ -259,35 +285,36 @@ else ifvare LEVEL 4 //Level 5 - Inner Sanctum
     redefinequote 209 Look for a way to 
     redefinequote 210 shut them down, 
     redefinequote 211 like before. 
-    redefinequote 212 Leave it to me. 
-    redefinequote 213 Permanent hybernation, 
-    redefinequote 214 coming up.
-    redefinequote 215 
-    redefinequote 216 General, I've found 	
-    redefinequote 217 some schematics on  
-    redefinequote 218 the regulators  
-    redefinequote 219 
-    redefinequote 220 and I'm uploading
-    redefinequote 221 them now with the SatLink.
-    redefinequote 222 Transmission received. 
-    redefinequote 223 We'll begin analysis  
-    redefinequote 224 immediately. 
-    redefinequote 225 In the meantime, there
-    redefinequote 226 appears to be a control
-    redefinequote 227 center near your location. 
-    redefinequote 228 Check it out.
-    redefinequote 229 Rockin'.
-    redefinequote 230 
-    redefinequote 231 
-    redefinequote 232
-    redefinequote 233
+    redefinequote 212
+    redefinequote 213 Leave it to me. 
+    redefinequote 214 Permanent hybernation, 
+    redefinequote 215 coming up.
+    redefinequote 216 
+    redefinequote 217 General, I've found 	
+    redefinequote 218 some schematics on  
+    redefinequote 219 the regulators  
+    redefinequote 220 
+    redefinequote 221 and I'm uploading
+    redefinequote 222 them now with the SatLink.
+    redefinequote 223
+    redefinequote 224
+    redefinequote 225 Transmission received. 
+    redefinequote 226 We'll begin analysis  
+    redefinequote 227 immediately.
+    redefinequote 228
+    redefinequote 229 In the meantime, there
+    redefinequote 230 appears to be a control
+    redefinequote 231 center near your location. 
+    redefinequote 232 Check it out.
+    redefinequote 233 Rockin'.
     redefinequote 234 
-    redefinequote 235
+    redefinequote 235 
+    redefinequote 236
     //Mission objective
-    redefinequote 295 Egypt
-    redefinequote 296 Find data on the
-    redefinequote 297 environmental
-    redefinequote 298 regulators.
+    redefinequote OBJECTIVE_QUOTE1 Egypt
+    redefinequote OBJECTIVE_QUOTE2 Find data on the
+    redefinequote OBJECTIVE_QUOTE3 environmental
+    redefinequote OBJECTIVE_QUOTE4 regulators.
 }
 else ifvare LEVEL 5 //AKA Level 6 - The Controller
 {
@@ -374,15 +401,15 @@ else ifvare LEVEL 5 //AKA Level 6 - The Controller
     redefinequote 280 
     redefinequote 281
     //Security cam lines
-    redefinequote 291 I'm gonna send him 
-    redefinequote 292 crying to his mummy. 
-    redefinequote 293
-    redefinequote 294
+    redefinequote CAM_QUOTE1 I'm gonna send him 
+    redefinequote CAM_QUOTE2 crying to his mummy. 
+    redefinequote CAM_QUOTE3
+    redefinequote CAM_QUOTE4
     //Mission objective
-    redefinequote 295 Egypt
-    redefinequote 296 Destroy the
-    redefinequote 297 hibernating army.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Egypt
+    redefinequote OBJECTIVE_QUOTE2 Destroy the
+    redefinequote OBJECTIVE_QUOTE3 hibernating army.
+    redefinequote OBJECTIVE_QUOTE4 
     
 }
 else ifvare LEVEL 6 //AKA Level 7 - Temple Run
@@ -415,10 +442,10 @@ else ifvare LEVEL 6 //AKA Level 7 - Temple Run
     redefinequote 225 
     redefinequote 226
     //Mission objective
-    redefinequote 295 Egypt
-    redefinequote 296 Escape the temple! 
-    redefinequote 297 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Egypt
+    redefinequote OBJECTIVE_QUOTE2 Escape the temple! 
+    redefinequote OBJECTIVE_QUOTE3 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 7 //AKA Level 8 - Down Under
 {
@@ -505,10 +532,10 @@ else ifvare LEVEL 7 //AKA Level 8 - Down Under
     redefinequote 280 
     redefinequote 281
     //Mission objective
-    redefinequote 295 Sydney
-    redefinequote 296 Locate the
-    redefinequote 297 Undercover
-    redefinequote 298 Operative.
+    redefinequote OBJECTIVE_QUOTE1 Sydney
+    redefinequote OBJECTIVE_QUOTE2 Locate the
+    redefinequote OBJECTIVE_QUOTE3 Undercover
+    redefinequote OBJECTIVE_QUOTE4 Operative.
 }
 else ifvare LEVEL 8 // Level 9 - Eating Out
 {
@@ -564,10 +591,10 @@ else ifvare LEVEL 8 // Level 9 - Eating Out
     redefinequote 249 
     redefinequote 250
     //Mission objective
-    redefinequote 295 Sydney
-    redefinequote 296 Kill the alien
-    redefinequote 297 sentry. Gain access
-    redefinequote 298 to the Opera House
+    redefinequote OBJECTIVE_QUOTE1 Sydney
+    redefinequote OBJECTIVE_QUOTE2 Kill the alien
+    redefinequote OBJECTIVE_QUOTE3 sentry. Gain access
+    redefinequote OBJECTIVE_QUOTE4 to the Opera House
 }
 else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera 
 {
@@ -613,10 +640,10 @@ else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera
     redefinequote 239 
     redefinequote 240
     //Mission objective
-    redefinequote 295 Sydney
-    redefinequote 296 Recover data on the
-    redefinequote 297 Doomsday Weapon.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Sydney
+    redefinequote OBJECTIVE_QUOTE2 Recover data on the
+    redefinequote OBJECTIVE_QUOTE3 Doomsday Weapon.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
 {
@@ -703,15 +730,15 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 280 
     redefinequote 281
     //Security cam lines
-    redefinequote 291 Must be the 
-    redefinequote 292 doomsday weapon.
-    redefinequote 293 Most Impressive. 
-    redefinequote 294
+    redefinequote CAM_QUOTE1 Must be the 
+    redefinequote CAM_QUOTE2 doomsday weapon.
+    redefinequote CAM_QUOTE3 Most Impressive. 
+    redefinequote CAM_QUOTE4
     //Mission objective
-    redefinequote 295 Sydney
-    redefinequote 296 Stop the Doomsday
-    redefinequote 297 Weapon!
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Sydney
+    redefinequote OBJECTIVE_QUOTE2 Stop the Doomsday
+    redefinequote OBJECTIVE_QUOTE3 Weapon!
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
 {
@@ -747,10 +774,10 @@ else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
     redefinequote 229 
     redefinequote 230
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Destroy all the
-    redefinequote 297 alien eggs.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Destroy all the
+    redefinequote OBJECTIVE_QUOTE3 alien eggs.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
 {
@@ -786,10 +813,10 @@ else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
     redefinequote 229 
     redefinequote 230 
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Shutdown the
-    redefinequote 297 cloaking device.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Shutdown the
+    redefinequote OBJECTIVE_QUOTE3 cloaking device.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
 {
@@ -815,10 +842,10 @@ else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
     redefinequote 219 
     redefinequote 220
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Hack into the
-    redefinequote 297 Mainframe.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Hack into the
+    redefinequote OBJECTIVE_QUOTE3 Mainframe.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
 {
@@ -884,10 +911,10 @@ else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
     redefinequote 259
     redefinequote 260
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Find and rescue the 
-    redefinequote 297 women.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Find and rescue the 
+    redefinequote OBJECTIVE_QUOTE3 women.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
 {
@@ -948,10 +975,10 @@ else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
     redefinequote 254 
     redefinequote 255 
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Rescue Jenny 3. 
-    redefinequote 297 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Rescue Jenny 3. 
+    redefinequote OBJECTIVE_QUOTE3 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
 {
@@ -997,15 +1024,15 @@ else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
     redefinequote 239 
     redefinequote 240
     //Security cam lines
-    redefinequote 291 Nothing like a
-    redefinequote 292 challenge...
-    redefinequote 293
-    redefinequote 294
+    redefinequote CAM_QUOTE1 Nothing like a
+    redefinequote CAM_QUOTE2 challenge...
+    redefinequote CAM_QUOTE3
+    redefinequote CAM_QUOTE4
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Find the engine 
-    redefinequote 297 room.Rescue Jenny 4. 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Find the engine 
+    redefinequote OBJECTIVE_QUOTE3 room.Rescue Jenny 4. 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
 {
@@ -1081,15 +1108,15 @@ else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
     redefinequote 269 
     redefinequote 270
     //Security cam lines
-    redefinequote 291 I'm coming for you! 
-    redefinequote 292
-    redefinequote 293
-    redefinequote 294
+    redefinequote CAM_QUOTE1 I'm coming for you! 
+    redefinequote CAM_QUOTE2
+    redefinequote CAM_QUOTE3
+    redefinequote CAM_QUOTE4
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Shutdown the cooling unit.
-    redefinequote 297 unit. Save the Girl. 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Shutdown the cooling unit.
+    redefinequote OBJECTIVE_QUOTE3 unit. Save the Girl. 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
 {
@@ -1176,10 +1203,10 @@ else ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
     redefinequote 280 
     redefinequote 281
     //Mission objective
-    redefinequote 295 Escape
-    redefinequote 296 Run your ass off!
-    redefinequote 297 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Escape
+    redefinequote OBJECTIVE_QUOTE2 Run your ass off!
+    redefinequote OBJECTIVE_QUOTE3 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 ends
 
@@ -1238,15 +1265,15 @@ ifvare LEVEL 0 // Level 1 - Gathering Intel
     redefinequote 249 
     redefinequote 250
     //Security cam lines
-    redefinequote 291 Looks like a 
-    redefinequote 292 lot'a security!
-    redefinequote 293
-    redefinequote 294
+    redefinequote CAM_QUOTE1 Looks like a 
+    redefinequote CAM_QUOTE2 lot'a security!
+    redefinequote CAM_QUOTE3
+    redefinequote CAM_QUOTE4
     //Mission objective
-    redefinequote 295 Area 51
-    redefinequote 296 Find the Data Disk.
-    redefinequote 297 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Area 51
+    redefinequote OBJECTIVE_QUOTE2 Find the Data Disk.
+    redefinequote OBJECTIVE_QUOTE3 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 1 // Level 2 - Close Encounter
 {
@@ -1302,10 +1329,10 @@ else ifvare LEVEL 1 // Level 2 - Close Encounter
     redefinequote 249 
     redefinequote 250
     //Mission objective
-    redefinequote 295 Area 51
-    redefinequote 296 Find the SatLink.
-    redefinequote 297 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Area 51
+    redefinequote OBJECTIVE_QUOTE2 Find the SatLink.
+    redefinequote OBJECTIVE_QUOTE3 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 2 // Level 3 - Hybrid Army
 {
@@ -1313,94 +1340,117 @@ else ifvare LEVEL 2 // Level 3 - Hybrid Army
     redefinequote 201 General,
     redefinequote 202 I am in some kind 
     redefinequote 203 of subway!
-    redefinequote 204 It was built years ago 
-    redefinequote 205 to move equipment secretly.
-    redefinequote 206 
+    redefinequote 204 
+    redefinequote 205 It was built years ago 
+    redefinequote 206 to move equipment secretly.
     redefinequote 207
     redefinequote 208
-    redefinequote 209 Well it looks like the 
-    redefinequote 210 alien scum are preparing to
-    redefinequote 211 use it to ferry out their
-    redefinequote 212 army right under our noses.
-    redefinequote 213 Find a way to destroy  
-    redefinequote 214 their army before they
-    redefinequote 215 succeed.
-    redefinequote 216 
-    redefinequote 217 
-    redefinequote 218 
-    redefinequote 219 
+    redefinequote 209 
+    redefinequote 210 
+    redefinequote 211 
+    redefinequote 212 
+    redefinequote 213 Well it looks like the 
+    redefinequote 214 alien scum are preparing to
+    redefinequote 215 use it to ferry out their
+    redefinequote 216 army right under our noses.
+    redefinequote 217 Find a way to destroy  
+    redefinequote 218 their army before they
+    redefinequote 219 succeed.
     redefinequote 220 
-    redefinequote 221 Don't worry, their plans 
-    redefinequote 222 are about to be derailed. 
+    redefinequote 221 
+    redefinequote 222 
     redefinequote 223 
     redefinequote 224
     redefinequote 225 
-    redefinequote 226 Good work, Duke! 
-    redefinequote 227 You have shut down their
-    redefinequote 228 environmental regulators. 
-    redefinequote 229 
-    redefinequote 230 The alien army has 
-    redefinequote 231 been destroyed.
-    redefinequote 232 Now get out of there
-    redefinequote 233 in one piece.
-    redefinequote 234 Piece of cake.
-    redefinequote 235
-    redefinequote 236 The futility of your 
-    redefinequote 237 persistence amuses me.
-    redefinequote 238 It's a shame that I 
-    redefinequote 239 must kill you now. 
+    redefinequote 226 
+    redefinequote 227 
+    redefinequote 228 
+    redefinequote 229 Don't worry, their plans
+    redefinequote 230 are about to be derailed.
+    redefinequote 231 
+    redefinequote 232 
+    redefinequote 233 
+    redefinequote 234 
+    redefinequote 235 
+    redefinequote 236 
+    redefinequote 237 Good work, Duke! 
+    redefinequote 238 You have shut down their
+    redefinequote 239 environmental regulators.
     redefinequote 240 
-    redefinequote 241 
-    redefinequote 242 You and what army? 
-    redefinequote 243 
-    redefinequote 244 
-    redefinequote 245 
-    redefinequote 246 How naive you are to 
-    redefinequote 247 believe you've destroyed 
-    redefinequote 248 our army. 
-    redefinequote 249
-    redefinequote 250 You've managed to kill 
-    redefinequote 251 but a small fraction
-    redefinequote 252 of warriors, no more 
-    redefinequote 253 than a minor setback.
-    redefinequote 254 Our full army is safely 
-    redefinequote 255 located far from here as 
-    redefinequote 256 we prepare for the 
-    redefinequote 257 extinction of 
-    redefinequote 258 the human race.
-    redefinequote 259 I shall begin the process 
-    redefinequote 260 today with your extinction!
-    redefinequote 261 Time for a little 
-    redefinequote 262 alien autopsy, 
-    redefinequote 263 RPG style.
-    redefinequote 264 Come get some! 
-    redefinequote 265 General, Area 51 is the 
-    redefinequote 266 tip of the iceberg.
-    redefinequote 267 There's a much larger 
-    redefinequote 268 army hidden elsewhere! 
-    redefinequote 269 Understood. 
-    redefinequote 270 Stay put while we get 
-    redefinequote 271 a fix on their location.
-    redefinequote 272 No can do. 
-    redefinequote 273 If there's more of them 
-    redefinequote 274 out there then every
-    redefinequote 275 second is precious. 
-    redefinequote 276 The fastest way to locate
-    redefinequote 277 the army is for me to
-    redefinequote 278 follow their slimy trail
-    redefinequote 279 through this Teleporter.
-    redefinequote 280 Hail to the King, baby! 
-    redefinequote 281
+    redefinequote 241 The alien army has
+    redefinequote 242 been destroyed.
+    redefinequote 243 Now get out of there
+    redefinequote 244 in one piece.
+    redefinequote 245 Piece of cake.
+    redefinequote 246 
+    redefinequote 247 
+    redefinequote 248 
+    redefinequote 249 The futility of your 
+    redefinequote 250 persistence amuses me.
+    redefinequote 251 It's a shame that I
+    redefinequote 252 must kill you now.
+    redefinequote 253 
+    redefinequote 254 
+    redefinequote 255 
+    redefinequote 256 
+    redefinequote 257 You and what army? 
+    redefinequote 258 
+    redefinequote 259 
+    redefinequote 260
+    redefinequote 261 How naive you are to 
+    redefinequote 262 believe you've destroyed 
+    redefinequote 263 our army.
+    redefinequote 264
+    redefinequote 265 You've managed to kill 
+    redefinequote 266 but a small fraction
+    redefinequote 267 of warriors, no more 
+    redefinequote 268 than a minor setback.
+    redefinequote 269 Our full army is safely 
+    redefinequote 270 located far from here as 
+    redefinequote 271 we prepare for the 
+    redefinequote 272 extinction of 
+    redefinequote 273 the human race.
+    redefinequote 274 I shall begin the process 
+    redefinequote 275 today with your extinction!
+    redefinequote 276 
+    redefinequote 277 Time for a little 
+    redefinequote 278 alien autopsy,
+    redefinequote 279 RPG style.
+    redefinequote 280 
+    redefinequote 281 Come get some! 
+    redefinequote 282 
+    redefinequote 283 
+    redefinequote 284
+    redefinequote 285 General, Area 51 is the 
+    redefinequote 286 tip of the iceberg.
+    redefinequote 287 There's a much larger 
+    redefinequote 288 army hidden elsewhere! 
+    redefinequote 289 Understood.
+    redefinequote 290 Stay put while we get 
+    redefinequote 291 a fix on their location.
+    redefinequote 292 
+    redefinequote 293 No can do.
+    redefinequote 294 If there's more of them
+    redefinequote 295 out there then every
+    redefinequote 296 second is precious.
+    redefinequote 297 The fastest way to locate
+    redefinequote 298 the army is for me to
+    redefinequote 299 follow their slimy trail
+    redefinequote 300 through this Teleporter.
+    redefinequote 301 Hail to the King, baby! 
+    redefinequote 302 
+    redefinequote 303
+    redefinequote 304
     //Security cam lines
-    redefinequote 291 I'm think I'll 
-    redefinequote 292 throw a pipe 
-    redefinequote 293 bomb party for
-    redefinequote 294 this guy.
+    redefinequote CAM_QUOTE1 I think I'll 
+    redefinequote CAM_QUOTE2 throw a pipe 
+    redefinequote CAM_QUOTE3 bomb party for
+    redefinequote CAM_QUOTE4 this guy.
     //Mission objective
-    redefinequote 295 Area 51
-    redefinequote 296 Stop the invasion!
-    redefinequote 297 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Area 51
+    redefinequote OBJECTIVE_QUOTE2 Stop the invasion!
+    redefinequote OBJECTIVE_QUOTE3 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 3 // Level 4 - Temple of Amun 
 {
@@ -1412,21 +1462,22 @@ else ifvare LEVEL 3 // Level 4 - Temple of Amun
     redefinequote 205 deep inside the complex. 
     redefinequote 206 You must find a way
     redefinequote 207 into the inner sanctum. 
-    redefinequote 208 
-    redefinequote 209 
+    redefinequote 208
+    redefinequote 209
     redefinequote 210 
     redefinequote 211 
-    redefinequote 212 The aliens must be using
-    redefinequote 213 the temple to store an 
-    redefinequote 214 entire Alien army. Ready to 
-    redefinequote 215 be defrosted when needed. 
-    redefinequote 216 
+    redefinequote 212 
+    redefinequote 213 The aliens must be using
+    redefinequote 214 the temple to store an 
+    redefinequote 215 entire Alien army. Ready to 
+    redefinequote 216 be defrosted when needed. 
     redefinequote 217 
+    redefinequote 218 
     //Mission objective
-    redefinequote 295 Egypt
-    redefinequote 296 Breach the Inner
-    redefinequote 297 Sanctum.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Egypt
+    redefinequote OBJECTIVE_QUOTE2 Breach the Inner
+    redefinequote OBJECTIVE_QUOTE3 Sanctum.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 4 //Level 5 - Inner Sanctum
 {
@@ -1441,36 +1492,37 @@ else ifvare LEVEL 4 //Level 5 - Inner Sanctum
     redefinequote 208 environmental regulators.
     redefinequote 209 We need more information 
     redefinequote 210 to know how to shut
-    redefinequote 211 them down. 
-    redefinequote 212 Leave it to me. 
-    redefinequote 213 Wherever I find these 
-    redefinequote 214 freakin' machines,
-    redefinequote 215 I'll find some answers. 
-    redefinequote 216 General! 
-    redefinequote 217 I've found schematics!  
-    redefinequote 218 I'm uploading them
-    redefinequote 219 with the SatLink. 
-    redefinequote 220 
+    redefinequote 211 them down.
+    redefinequote 212
+    redefinequote 213 Leave it to me. 
+    redefinequote 214 Wherever I find these 
+    redefinequote 215 freakin' machines,
+    redefinequote 216 I'll find some answers. 
+    redefinequote 217 General! 
+    redefinequote 218 I've found schematics!  
+    redefinequote 219 I'm uploading them
+    redefinequote 220 with the SatLink. 
     redefinequote 221 
-    redefinequote 222 We're downloading them now.
-    redefinequote 223 Our technicians will have 
-    redefinequote 224 some answers soon. 
-    redefinequote 225 There appears to be a
-    redefinequote 226 control center not far
-    redefinequote 227 from you. It's beyond a door 
-    redefinequote 228 that requires a blue key.
-    redefinequote 229 I'm on my way! 
-    redefinequote 230 
-    redefinequote 231 
-    redefinequote 232
-    redefinequote 233
+    redefinequote 222 
+    redefinequote 223 
+    redefinequote 224
+    redefinequote 225 We're downloading them now.
+    redefinequote 226 Our technicians will have 
+    redefinequote 227 some answers soon. 
+    redefinequote 228
+    redefinequote 229 There appears to be a
+    redefinequote 230 control center not far
+    redefinequote 231 from you. It's beyond a door 
+    redefinequote 232 that requires a blue key.
+    redefinequote 233 I'm on my way! 
     redefinequote 234 
     redefinequote 235 
+    redefinequote 236
     //Mission objective
-    redefinequote 295 Egypt
-    redefinequote 296 Find the Schematics.
-    redefinequote 297 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Egypt
+    redefinequote OBJECTIVE_QUOTE2 Find the Schematics.
+    redefinequote OBJECTIVE_QUOTE3 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 5 //AKA Level 6 - The Controller
 {
@@ -1557,15 +1609,15 @@ else ifvare LEVEL 5 //AKA Level 6 - The Controller
     redefinequote 280 
     redefinequote 281
     //Security cam lines
-    redefinequote 291 Looks like he's in 
-    redefinequote 292 control here! 
-    redefinequote 293
-    redefinequote 294
+    redefinequote CAM_QUOTE1 Looks like he's in 
+    redefinequote CAM_QUOTE2 control here! 
+    redefinequote CAM_QUOTE3
+    redefinequote CAM_QUOTE4
     //Mission objective
-    redefinequote 295 Egypt
-    redefinequote 296 Stop the alien 
-    redefinequote 297 controller.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Egypt
+    redefinequote OBJECTIVE_QUOTE2 Stop the alien 
+    redefinequote OBJECTIVE_QUOTE3 controller.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 6 //AKA Level 7 - Temple Run
 {
@@ -1597,10 +1649,10 @@ else ifvare LEVEL 6 //AKA Level 7 - Temple Run
     redefinequote 225 
     redefinequote 226 
     //Mission objective
-    redefinequote 295 Egypt
-    redefinequote 296 Escape before it
-    redefinequote 297 blows.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Egypt
+    redefinequote OBJECTIVE_QUOTE2 Escape before it
+    redefinequote OBJECTIVE_QUOTE3 blows.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 7 //AKA Level 8 - Down Under
 {
@@ -1687,10 +1739,10 @@ else ifvare LEVEL 7 //AKA Level 8 - Down Under
     redefinequote 280 
     redefinequote 281
     //Mission objective
-    redefinequote 295 Sydney
-    redefinequote 296 Find the undercover
-    redefinequote 297 operative.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Sydney
+    redefinequote OBJECTIVE_QUOTE2 Find the undercover
+    redefinequote OBJECTIVE_QUOTE3 operative.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 8 // Level 9 Eating Out
 {
@@ -1746,10 +1798,10 @@ else ifvare LEVEL 8 // Level 9 Eating Out
     redefinequote 249 
     redefinequote 250 
     //Mission objective
-    redefinequote 295 Sydney
-    redefinequote 296 Remove Sentry. Find the 
-    redefinequote 297 the Opera House.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Sydney
+    redefinequote OBJECTIVE_QUOTE2 Remove Sentry. Find the 
+    redefinequote OBJECTIVE_QUOTE3 the Opera House.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera 
 {
@@ -1795,10 +1847,10 @@ else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera
     redefinequote 239 
     redefinequote 240
     //Mission objective
-    redefinequote 295 Sydney
-    redefinequote 296 Find the doomsday
-    redefinequote 297 plans.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Sydney
+    redefinequote OBJECTIVE_QUOTE2 Find the doomsday
+    redefinequote OBJECTIVE_QUOTE3 plans.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
 {
@@ -1885,15 +1937,15 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 280 
     redefinequote 281
     //Security cam lines
-    redefinequote 291 This must be the weapon! 
-    redefinequote 292
-    redefinequote 293
-    redefinequote 294
+    redefinequote CAM_QUOTE1 This must be the weapon! 
+    redefinequote CAM_QUOTE2
+    redefinequote CAM_QUOTE3
+    redefinequote CAM_QUOTE4
     //Mission objective
-    redefinequote 295 Sydney
-    redefinequote 296 Stop the Doomsday 
-    redefinequote 297 weapon!
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Sydney
+    redefinequote OBJECTIVE_QUOTE2 Stop the Doomsday 
+    redefinequote OBJECTIVE_QUOTE3 weapon!
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
 {
@@ -1929,10 +1981,10 @@ else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
     redefinequote 229 
     redefinequote 230 
     //Mission objective
-    redefinequote 295 Alien Home World
-    redefinequote 296 Destroy the eggs. 
-    redefinequote 297 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Home World
+    redefinequote OBJECTIVE_QUOTE2 Destroy the eggs. 
+    redefinequote OBJECTIVE_QUOTE3 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
 {
@@ -1968,10 +2020,10 @@ else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
     redefinequote 229 
     redefinequote 230 
     //Mission objective
-    redefinequote 295 Alien Home World
-    redefinequote 296 Contact General
-    redefinequote 297 Graves.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Home World
+    redefinequote OBJECTIVE_QUOTE2 Contact General
+    redefinequote OBJECTIVE_QUOTE3 Graves.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
 {
@@ -1997,10 +2049,10 @@ else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
     redefinequote 219 
     redefinequote 220 
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Hack into the
-    redefinequote 297 Mainframe.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Hack into the
+    redefinequote OBJECTIVE_QUOTE3 Mainframe.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
 {
@@ -2066,10 +2118,10 @@ else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
     redefinequote 259
     redefinequote 260
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Rescue mission.
-    redefinequote 297 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Rescue mission.
+    redefinequote OBJECTIVE_QUOTE3 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
 {
@@ -2130,10 +2182,10 @@ else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
     redefinequote 254 
     redefinequote 255 
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Conserve your ammo.
-    redefinequote 297 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Conserve your ammo.
+    redefinequote OBJECTIVE_QUOTE3 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
 {
@@ -2179,15 +2231,15 @@ else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
     redefinequote 239 
     redefinequote 240 
     //Security cam lines
-    redefinequote 291 
-    redefinequote 292 Nothing like a
-    redefinequote 293 challenge...
-    redefinequote 294 
+    redefinequote CAM_QUOTE1 
+    redefinequote CAM_QUOTE2 Nothing like a
+    redefinequote CAM_QUOTE3 challenge...
+    redefinequote CAM_QUOTE4 
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Get to the engine
-    redefinequote 297 room. 
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Get to the engine
+    redefinequote OBJECTIVE_QUOTE3 room. 
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
 {
@@ -2263,15 +2315,15 @@ else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
     redefinequote 269 
     redefinequote 270
     //Security cam lines
-    redefinequote 291 He looks like the 
-    redefinequote 292 brains and brawn 
-    redefinequote 293 behind this operation. 
-    redefinequote 294
+    redefinequote CAM_QUOTE1 He looks like the 
+    redefinequote CAM_QUOTE2 brains and brawn 
+    redefinequote CAM_QUOTE3 behind this operation. 
+    redefinequote CAM_QUOTE4
     //Mission objective
-    redefinequote 295 Alien Ship
-    redefinequote 296 Blow the ship, Save 
-    redefinequote 297 the girl.
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Alien Ship
+    redefinequote OBJECTIVE_QUOTE2 Blow the ship, Save 
+    redefinequote OBJECTIVE_QUOTE3 the girl.
+    redefinequote OBJECTIVE_QUOTE4 
 }
 else ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
 {
@@ -2358,10 +2410,10 @@ else ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
     redefinequote 280 
     redefinequote 281
     //Mission objective
-    redefinequote 295 Escape
-    redefinequote 296 Get to the
-    redefinequote 297 Teleporter!
-    redefinequote 298 
+    redefinequote OBJECTIVE_QUOTE1 Escape
+    redefinequote OBJECTIVE_QUOTE2 Get to the
+    redefinequote OBJECTIVE_QUOTE3 Teleporter!
+    redefinequote OBJECTIVE_QUOTE4
 }
 ends
 

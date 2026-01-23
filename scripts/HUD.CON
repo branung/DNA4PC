@@ -256,10 +256,10 @@ defstate dna_camera_hud
 	setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
     rotatesprite 160 170 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
     rotatesprite 31 170 65536 0 CUTSCENE_SPRITE 0 0 2 0 0 xdim ydim
-    screentext STARTALPHANUM 55 153 65536 0 0 291 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-    screentext STARTALPHANUM 55 163 65536 0 0 292 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-    screentext STARTALPHANUM 55 173 65536 0 0 293 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-    screentext STARTALPHANUM 55 183 65536 0 0 294 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+    screentext STARTALPHANUM 55 153 65536 0 0 CAM_QUOTE1 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+    screentext STARTALPHANUM 55 163 65536 0 0 CAM_QUOTE2 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+    screentext STARTALPHANUM 55 173 65536 0 0 CAM_QUOTE3 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+    screentext STARTALPHANUM 55 183 65536 0 0 CAM_QUOTE4 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
 ends
 
 onevent EVENT_TURNAROUND
