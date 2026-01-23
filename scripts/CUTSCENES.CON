@@ -43,54 +43,6 @@ var OPCUTSCENEPOS 160
 define OPCUTSCENE12POS 95
 define OPCUTSCENE12DUKEPOS 40
 
-define CUTSCENESCREEN1 5415
-define CUTSCENESCREEN2 5416
-define CUTSCENESCREEN3 5417
-define CUTSCENESCREEN4 5418
-define CUTSCENESCREEN5 5419
-define CUTSCENESCREEN6 5420
-define CUTSCENESCREEN7 5421
-define CUTSCENESCREEN8 5422
-define CUTSCENESCREEN9 5423
-define CUTSCENESCREEN10 5424
-define CUTSCENESCREEN11 5425
-define CUTSCENESCREEN12 5426
-define CUTSCENESCREEN13 5427
-define CUTSCENESCREEN14 5428
-define CUTSCENESCREEN15 5429
-define CUTSCENESCREEN16 5430
-define CUTSCENESCREEN17 5431
-define CUTSCENESCREEN18 5432
-define CUTSCENESCREEN19 5433
-define CUTSCENESCREEN20 5434
-define CUTSCENESCREEN21 5435
-define CUTSCENESCREEN22 5436
-define CUTSCENESCREEN23 5437
-define CUTSCENESCREEN24 5438
-define CUTSCENESCREEN25 5439
-define CUTSCENESCREEN26 5440
-define CUTSCENESCREEN27 5441
-define CUTSCENESCREEN28 5442
-define CUTSCENESCREEN29 5443
-define CUTSCENESCREEN30 5444
-define CUTSCENESCREEN31 5445
-define CUTSCENESCREEN32 5446
-define CUTSCENESCREEN33 5447
-define CUTSCENESCREEN34 5448
-define CUTSCENESCREEN35 5449
-define CUTSCENESCREEN36 5450
-define CUTSCENESCREEN37 5451
-define CUTSCENESCREEN38 5452
-define CUTSCENESCREEN39 5453
-define CUTSCENESCREEN40 5454
-define CUTSCENESCREEN41 5455
-define CUTSCENESCREEN42 5456
-define CUTSCENESCREEN43 5457
-define CUTSCENESCREEN44 5458
-define CUTSCENESCREEN45 5459
-define CUTSCENESCREEN46 5460
-define CUTSCENESCREEN47 5461
-
 define ENDCUTSCENE1 5523
 define ENDCUTSCENE2 5524
 define ENDCUTSCENE3 5525
@@ -1355,8 +1307,6 @@ appendevent EVENT_SCREEN
         {
                 setvar SCREENALPHAWORLD 255
                 setvar worldprevtick -1 // Keep resetting world fade values while in cutscene so the fade returns once exiting
-                setvar CUTSCENE_DIALOGBOX 3921
-	        setvar y 164
                 ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
                 {
                         //LEVEL 1 OPENING SCENE
@@ -1364,7 +1314,6 @@ appendevent EVENT_SCREEN
                         {       
                                 ifvare CUTSCENE_STEP 0   
                                 {
-                                        setvar CUTSCENE_SCREEN 5415
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -1379,7 +1328,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN 5415
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -1394,7 +1342,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN 5415
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -1409,7 +1356,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN 5415
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -1424,7 +1370,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN 5415
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -1439,7 +1384,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 5
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN 5415
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -1455,7 +1399,6 @@ appendevent EVENT_SCREEN
                                 {
 
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN 5415
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
@@ -1470,7 +1413,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN2
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 229
                                         setvar textQuoteRow2 230
@@ -1489,7 +1431,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN2
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 233
                                         setvar textQuoteRow2 234
@@ -1504,7 +1445,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN2
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 237
                                         setvar textQuoteRow2 238
@@ -1519,7 +1459,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN2
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 241
                                         setvar textQuoteRow2 242
@@ -1537,7 +1476,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN2
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 245
                                         setvar textQuoteRow2 246
@@ -1554,7 +1492,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN3
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -1572,7 +1509,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN3
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -1586,7 +1522,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN4
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -1601,7 +1536,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN4
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -1616,7 +1550,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN4
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -1631,7 +1564,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN4
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -1646,7 +1578,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN4
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
@@ -1660,7 +1591,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN5
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 229
                                         setvar textQuoteRow2 230
@@ -1675,7 +1605,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN5
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 233
                                         setvar textQuoteRow2 234
@@ -1693,7 +1622,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN5
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 237
                                         setvar textQuoteRow2 238
@@ -1708,7 +1636,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN5
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 241
                                         setvar textQuoteRow2 242
@@ -1724,7 +1651,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN6
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -1736,7 +1662,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN6
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 204
                                         setvar textQuoteRow2 205
@@ -1754,7 +1679,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN6
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 207
                                         setvar textQuoteRow2 208
@@ -1769,7 +1693,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN6
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -1784,7 +1707,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4 
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN6
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -1802,7 +1724,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN6
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -1820,7 +1741,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN6
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 220
                                         setvar textQuoteRow2 200
@@ -1835,7 +1755,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 7
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN6
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -1853,7 +1772,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN6
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 223
                                         setvar textQuoteRow2 224
@@ -1867,7 +1785,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN7
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 226
                                         setvar textQuoteRow2 227
@@ -1882,7 +1799,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN7
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 230
                                         setvar textQuoteRow2 231
@@ -1897,7 +1813,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN7
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 234
                                         setvar textQuoteRow2 235
@@ -1911,7 +1826,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN8
                                         setvar CUTSCENE_SPRITE BOSS1HEADSPRITE
                                         setvar textQuoteRow1 236
                                         setvar textQuoteRow2 237
@@ -1929,7 +1843,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN8
                                         setvar CUTSCENE_SPRITE BOSS1HEADSPRITE
                                         setvar textQuoteRow1 240
                                         setvar textQuoteRow2 241
@@ -1944,7 +1857,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN8
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 242
                                         setvar textQuoteRow2 243
@@ -1959,7 +1871,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN8
                                         setvar CUTSCENE_SPRITE BOSS1HEADSPRITE
                                         setvar textQuoteRow1 246
                                         setvar textQuoteRow2 247
@@ -1974,7 +1885,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN8
                                         setvar CUTSCENE_SPRITE BOSS1HEADSPRITE
                                         setvar textQuoteRow1 250
                                         setvar textQuoteRow2 251
@@ -1989,7 +1899,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 5
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN8
                                         setvar CUTSCENE_SPRITE BOSS1HEADSPRITE
                                         setvar textQuoteRow1 254
                                         setvar textQuoteRow2 255
@@ -2007,7 +1916,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN8
                                         setvar CUTSCENE_SPRITE BOSS1HEADSPRITE
                                         setvar textQuoteRow1 258
                                         setvar textQuoteRow2 259
@@ -2022,7 +1930,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 7
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN8
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 261
                                         setvar textQuoteRow2 262
@@ -2040,7 +1947,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN8
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 264
                                         setvar textQuoteRow2 200
@@ -2055,7 +1961,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN9
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 265
                                         setvar textQuoteRow2 266
@@ -2070,7 +1975,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN9
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 269
                                         setvar textQuoteRow2 270
@@ -2085,7 +1989,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN9
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 272
                                         setvar textQuoteRow2 273
@@ -2100,7 +2003,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN9
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 276
                                         setvar textQuoteRow2 277
@@ -2115,7 +2017,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN9
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 280
                                         setvar textQuoteRow2 281
@@ -2131,7 +2032,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN10
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -2146,7 +2046,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN10
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -2164,7 +2063,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN10
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 208
                                         setvar textQuoteRow2 209
@@ -2178,7 +2076,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN11
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 212
                                         setvar textQuoteRow2 213
@@ -2194,7 +2091,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN12
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -2209,7 +2105,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN12
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -2224,7 +2119,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN12
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -2239,7 +2133,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN12
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 212
                                         setvar textQuoteRow2 213
@@ -2253,7 +2146,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN13
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 216
                                         setvar textQuoteRow2 217
@@ -2271,7 +2163,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN13
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 220
                                         setvar textQuoteRow2 221
@@ -2286,7 +2177,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN13
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 222
                                         setvar textQuoteRow2 223
@@ -2301,7 +2191,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN13
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
@@ -2316,7 +2205,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN13
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 229
                                         setvar textQuoteRow2 200
@@ -2332,7 +2220,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN14
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -2347,7 +2234,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN14
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -2362,7 +2248,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2 
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN14
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -2380,7 +2265,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN14
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -2394,7 +2278,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN15
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -2412,7 +2295,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN15
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
@@ -2427,7 +2309,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN15
                                         setvar CUTSCENE_SPRITE BOSS2HEADSPRITE 
                                         setvar textQuoteRow1 229
                                         setvar textQuoteRow2 230
@@ -2442,7 +2323,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN15
                                         setvar CUTSCENE_SPRITE BOSS2HEADSPRITE 
                                         setvar textQuoteRow1 233
                                         setvar textQuoteRow2 234
@@ -2460,7 +2340,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN15
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 237
                                         setvar textQuoteRow2 238
@@ -2474,7 +2353,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN16
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 241
                                         setvar textQuoteRow2 242
@@ -2489,7 +2367,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN16
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 245
                                         setvar textQuoteRow2 246
@@ -2504,7 +2381,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN16
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 249
                                         setvar textQuoteRow2 250
@@ -2521,7 +2397,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN17
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 253
                                         setvar textQuoteRow2 254
@@ -2539,7 +2414,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN17
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 257
                                         setvar textQuoteRow2 258
@@ -2557,7 +2431,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN17
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 261
                                         setvar textQuoteRow2 262
@@ -2573,7 +2446,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN18
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -2588,7 +2460,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN18
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -2603,7 +2474,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN18
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -2618,7 +2488,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN18
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -2633,7 +2502,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN18
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -2649,7 +2517,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN19
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -2667,7 +2534,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN19
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -2682,7 +2548,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN19
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -2697,7 +2562,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN19
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -2712,7 +2576,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN19
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -2727,7 +2590,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 5
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN19
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -2741,7 +2603,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN20
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
@@ -2756,7 +2617,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN20
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE 
                                         setvar textQuoteRow1 229
                                         setvar textQuoteRow2 230
@@ -2771,8 +2631,7 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN20
-                                        setvar CUTSCENE_SPRITE JENNYHEADSPRITE 
+                                        setvar CUTSCENE_SPRITE JENNYHEADSPRITE
                                         setvar textQuoteRow1 233
                                         setvar textQuoteRow2 234
                                         setvar textQuoteRow3 235
@@ -2786,7 +2645,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN20
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 237
                                         setvar textQuoteRow2 238
@@ -2801,7 +2659,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN20
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE 
                                         setvar textQuoteRow1 241
                                         setvar textQuoteRow2 242
@@ -2816,7 +2673,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 5
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN20
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 245
                                         setvar textQuoteRow2 246
@@ -2831,7 +2687,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 6
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN20
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE 
                                         setvar textQuoteRow1 249
                                         setvar textQuoteRow2 250
@@ -2846,7 +2701,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 7
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN20
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE 
                                         setvar textQuoteRow1 253
                                         setvar textQuoteRow2 254
@@ -2862,7 +2716,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN21
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -2877,7 +2730,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN21
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -2892,7 +2744,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN21
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -2911,7 +2762,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN22
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -2926,7 +2776,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN22
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -2940,7 +2789,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN23
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -2955,8 +2803,7 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN23
-                                        setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
+                                        setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
                                         setvar textQuoteRow3 227
@@ -2969,7 +2816,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN24
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 229
                                         setvar textQuoteRow2 230
@@ -2985,7 +2831,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN25
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -3000,7 +2845,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN25
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -3015,7 +2859,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN25
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -3029,7 +2872,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN26
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -3044,7 +2886,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN26
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -3059,7 +2900,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN26
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -3074,7 +2914,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN26
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
@@ -3090,7 +2929,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN27
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -3105,7 +2943,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN27
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -3120,7 +2957,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN27
                                         ifvare dna_localization 1 setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         else setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 209
@@ -3136,7 +2972,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN27
                                         ifvare dna_localization 1 setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         else setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 213
@@ -3155,7 +2990,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN27
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -3169,7 +3003,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN28
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
@@ -3184,7 +3017,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN28
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 229
                                         setvar textQuoteRow2 230
@@ -3202,7 +3034,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN28
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 233
                                         setvar textQuoteRow2 234
@@ -3217,7 +3048,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN28
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 237
                                         setvar textQuoteRow2 238
@@ -3232,7 +3062,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN28
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 241
                                         setvar textQuoteRow2 242
@@ -3250,7 +3079,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN28
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 245
                                         setvar textQuoteRow2 246
@@ -3268,7 +3096,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN28
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 249
                                         setvar textQuoteRow2 250
@@ -3286,7 +3113,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN28
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 253
                                         setvar textQuoteRow2 254
@@ -3300,7 +3126,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN29
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 257
                                         setvar textQuoteRow2 258
@@ -3314,7 +3139,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN30
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 261
                                         setvar textQuoteRow2 262
@@ -3329,7 +3153,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN30
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 265
                                         setvar textQuoteRow2 266
@@ -3344,7 +3167,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN30
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 269
                                         setvar textQuoteRow2 270
@@ -3359,7 +3181,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN30
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 273
                                         setvar textQuoteRow2 274
@@ -3375,7 +3196,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN31
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -3390,7 +3210,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN31
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -3405,7 +3224,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN31
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -3419,7 +3237,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN32
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -3434,7 +3251,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN32
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -3451,7 +3267,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN33
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -3466,7 +3281,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN33
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -3481,7 +3295,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN33
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -3495,7 +3308,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN34
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -3510,7 +3322,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN34
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -3525,7 +3336,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN34
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -3540,7 +3350,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN34
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
@@ -3556,7 +3365,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN35
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -3571,7 +3379,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN35
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -3585,7 +3392,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN36
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -3600,7 +3406,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN36
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -3616,7 +3421,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN37
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -3631,7 +3435,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN37
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -3646,7 +3449,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN37
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -3664,7 +3466,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN37
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -3682,7 +3483,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN37
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -3697,7 +3497,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 5
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN37
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -3714,7 +3513,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN38
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE
                                         setvar textQuoteRow1 229
                                         setvar textQuoteRow2 230
@@ -3729,7 +3527,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN38
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 233
                                         setvar textQuoteRow2 234
@@ -3744,7 +3541,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN38
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE
                                         setvar textQuoteRow1 237
                                         setvar textQuoteRow2 238
@@ -3759,7 +3555,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN38
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE
                                         setvar textQuoteRow1 241
                                         setvar textQuoteRow2 242
@@ -3777,7 +3572,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN38
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE
                                         setvar textQuoteRow1 245
                                         setvar textQuoteRow2 246
@@ -3792,7 +3586,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 5
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN38
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 249
                                         setvar textQuoteRow2 250
@@ -3807,7 +3600,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 6
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN38
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 253
                                         setvar textQuoteRow2 254
@@ -3824,7 +3616,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN39
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -3842,7 +3633,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN39
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -3857,7 +3647,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN39
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -3872,7 +3661,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN39
                                         setvar CUTSCENE_SPRITE BOSS4HEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -3887,7 +3675,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN39
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -3902,7 +3689,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 5
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN39
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -3917,7 +3703,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 6
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN39
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
@@ -3931,7 +3716,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN40
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 229
                                         setvar textQuoteRow2 230
@@ -3945,7 +3729,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN41
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 233
                                         setvar textQuoteRow2 234
@@ -3960,7 +3743,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN41
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE 
                                         setvar textQuoteRow1 237
                                         setvar textQuoteRow2 238
@@ -3975,7 +3757,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN41
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE 
                                         setvar textQuoteRow1 241
                                         setvar textQuoteRow2 242
@@ -3990,7 +3771,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN41
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 245
                                         setvar textQuoteRow2 246
@@ -4005,7 +3785,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN41
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 249
                                         setvar textQuoteRow2 250
@@ -4021,7 +3800,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN42
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -4036,7 +3814,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN42
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -4051,7 +3828,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN42
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -4065,7 +3841,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN43
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -4080,7 +3855,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN43
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE 
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -4098,7 +3872,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN43
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE 
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -4113,7 +3886,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN43
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
@@ -4128,7 +3900,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN43
                                         ifvare dna_localization 1 setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         else setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 229
@@ -4147,7 +3918,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN43
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 233
                                         setvar textQuoteRow2 234
@@ -4163,7 +3933,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN44
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -4178,7 +3947,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN44
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -4196,7 +3964,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN44
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -4214,7 +3981,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN44
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -4229,7 +3995,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN44
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -4247,7 +4012,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN44
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -4261,7 +4025,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN45
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 229
                                         setvar textQuoteRow2 230
@@ -4279,7 +4042,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN45
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE 
                                         setvar textQuoteRow1 233
                                         setvar textQuoteRow2 234
@@ -4294,7 +4056,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN45
                                         setvar CUTSCENE_SPRITE BOSS4HEADSPRITE
                                         setvar textQuoteRow1 237
                                         setvar textQuoteRow2 238
@@ -4309,7 +4070,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 3
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN45
                                         setvar CUTSCENE_SPRITE BOSS4HEADSPRITE
                                         setvar textQuoteRow1 241
                                         setvar textQuoteRow2 242
@@ -4324,7 +4084,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 4
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN45
                                         setvar CUTSCENE_SPRITE BOSS4HEADSPRITE
                                         setvar textQuoteRow1 245
                                         setvar textQuoteRow2 246
@@ -4339,7 +4098,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 5
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN45
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 249
                                         setvar textQuoteRow2 250
@@ -4357,7 +4115,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN45
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 253
                                         setvar textQuoteRow2 254
@@ -4371,7 +4128,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0  
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN46
                                         setvar CUTSCENE_SPRITE JENNYHEADSPRITE
                                         setvar textQuoteRow1 257
                                         setvar textQuoteRow2 258
@@ -4386,7 +4142,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 1   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN46
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 261
                                         setvar textQuoteRow2 262
@@ -4401,7 +4156,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN46
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         setvar textQuoteRow1 265
                                         setvar textQuoteRow2 266
@@ -4417,7 +4171,6 @@ appendevent EVENT_SCREEN
                                 ifvare CUTSCENE_STEP 0   
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN47
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 201
                                         setvar textQuoteRow2 202
@@ -4435,7 +4188,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN47
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 205
                                         setvar textQuoteRow2 206
@@ -4450,7 +4202,6 @@ appendevent EVENT_SCREEN
                                 else ifvare CUTSCENE_STEP 2
                                 {
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN47
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 209
                                         setvar textQuoteRow2 210
@@ -4468,7 +4219,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN47
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 213
                                         setvar textQuoteRow2 214
@@ -4486,7 +4236,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN47
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 217
                                         setvar textQuoteRow2 218
@@ -4504,7 +4253,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN47
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 221
                                         setvar textQuoteRow2 222
@@ -4522,7 +4270,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN47
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 225
                                         setvar textQuoteRow2 226
@@ -4540,7 +4287,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN47
                                         setvar CUTSCENE_SPRITE SARGEHEADSPRITE
                                         setvar textQuoteRow1 229
                                         setvar textQuoteRow2 230
@@ -4558,7 +4304,6 @@ appendevent EVENT_SCREEN
                                                 setvar RETURN 1         
                                         else
                                         state waste_time
-                                        setvar CUTSCENE_SCREEN CUTSCENESCREEN47
                                         setvar CUTSCENE_SPRITE DUKEHEADSPRITE
                                         setvar textQuoteRow1 233
                                         setvar textQuoteRow2 234
@@ -4568,31 +4313,20 @@ appendevent EVENT_SCREEN
                         }
                 }
         }
-        //rotatesprite 160 100 65536 0 CUTSCENE_SCREEN 0 0 2 0 0 xdim ydim
-        
-        rotatesprite16 160 181 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
-        state cutcam_render
-        rotatesprite 160 181 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
-        rotatesprite 31 181 65536 0 CUTSCENE_SPRITE 0 0 2 0 0 xdim ydim
-        screentext STARTALPHANUM 55 y 65536 0 0 textQuoteRow1 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-        addvar y 10
-        screentext STARTALPHANUM 55 y 65536 0 0 textQuoteRow2 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-        addvar y 10
-        screentext STARTALPHANUM 55 y 65536 0 0 textQuoteRow3 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-        addvar y 10
-        screentext STARTALPHANUM 55 y 65536 0 0 textQuoteRow4 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
 
-        // For original Dialogbox 
-        // rotatesprite 160 100 65536 0 CUTSCENE_SCREEN 0 0 2 0 0 xdim ydim
-        // rotatesprite 160 170 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
-        // rotatesprite 70 170 65536 0 CUTSCENE_SPRITE 0 0 2 0 0 xdim ydim
-        // screentext STARTALPHANUM 150 y 65536 0 0 textQuoteRow1 0 0 272 0 4 0 0 0 0 0 0 xdim ydim
-        // addvar y 10
-        // screentext STARTALPHANUM 150 y 65536 0 0 textQuoteRow2 0 0 272 0 4 0 0 0 0 0 0 xdim ydim
-        // addvar y 10
-        // screentext STARTALPHANUM 150 y 65536 0 0 textQuoteRow3 0 0 272 0 4 0 0 0 0 0 0 xdim ydim
-        // addvar y 10
-        // screentext STARTALPHANUM 150 y 65536 0 0 textQuoteRow4 0 0 272 0 4 0 0 0 0 0 0 xdim ydim
+        setvar y 176
+        set x 55
+        state cutcam_render
+        rotatesprite 160 201 65536 0 CUTSCENE_DIALOGBOX 0 0 8 0 0 xdim ydim
+        rotatesprite 31 196 65536 0 CUTSCENE_SPRITE 0 0 8 0 0 xdim ydim
+        rotatesprite 160 201 65536 0 CUTSCENE_OUTLINE 0 0 8 0 0 xdim ydim
+        screentext STARTALPHANUM x y 65536 0 0 textQuoteRow1 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+        addvar y 10
+        screentext STARTALPHANUM x y 65536 0 0 textQuoteRow2 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+        addvar y 10
+        screentext STARTALPHANUM x y 65536 0 0 textQuoteRow3 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+        addvar y 10
+        screentext STARTALPHANUM x y 65536 0 0 textQuoteRow4 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
         }
     }
     else
