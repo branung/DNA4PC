@@ -1,7 +1,6 @@
 // Special thanks to Hendricks266's World Tour stopgap code. 
 // This script utilizes the implementation of the audio commentary feature and reworks it to function as cutscene triggers
 // Also big thanks to the Cutting Room Floor for having a full page showing both scripts to this game 
-// Later note - This was my first con script and it's such a mess if you're looking through I'm so sorry
 
 
 var cutscene_myvar 0 2
@@ -75,8 +74,8 @@ define ENDCUTSCENEDIA5 5536
 gamevar ENDDIA1SLIDEINTIME 300
 gamevar ENDDIA2SLIDEINTIME 300
 gamevar ENDDIA3SLIDEINTIME 220
-var ENDCUTSCENEDIAPOSX1 130
-var ENDCUTSCENEDIAPOSX2 250
+var ENDCUTSCENEDIAPOSX1 140
+var ENDCUTSCENEDIAPOSX2 240
 var ENDCUTSCENEDIAPOSY1 180
 var ENDCUTSCENEDIAPOSY2 20
 
@@ -118,6 +117,8 @@ defstate cutscene_cleanup
                 set curr_cutscene -1
         ifn kill_cutscene 0
                 set kill_cutscene 0
+        ifn textQuoteRow1 201
+                set textQuoteRow1 201 // default to line 201 for new dialog
 ends
 
 defstate op_cutscene_cleanup
@@ -205,7 +206,7 @@ useractor notenemy CUTSCENEINDICATOR_OFF 0
                 }
             }
             
-            setvar in_cutscene 1
+            set in_cutscene 1
             break
         }
     }
@@ -294,15 +295,16 @@ endevent
 
 defstate get_cutscene_details
 {
-        ifvare VOLUME 0
+        ife VOLUME 0
         {
-        ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
+                switch LEVEL
+                case 0 // AKA Level 1 - Gathering Intel
                 {
                         //LEVEL 1 OPENING SCENE
-                        ifvare cutscene_num 1001
+                        ife cutscene_num 1001
                         {       
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break } 
+                                case 0 { set CUTSCENE_SPRITE SARGEHEADSPRITE break } 
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE
                                         ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_IMONIT }
@@ -320,7 +322,7 @@ defstate get_cutscene_details
                         }
 
                         //LEVEL 1 MID LEVEL SCENE
-                        ifvare cutscene_num 1002
+                        ife cutscene_num 1002
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1
@@ -334,14 +336,14 @@ defstate get_cutscene_details
                                         ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_DUKEOUT } break }
                                 endswitch
                         }
-
+                        break
                 }
-                ifvare LEVEL 1 //AKA Level 2 - Close Encounter
+                case 1 //AKA Level 2 - Close Encounter
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 { set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { ifvare dna_localization 1 set skip_this_panel 1 break }
                                 endswitch
                         }                      
@@ -369,13 +371,14 @@ defstate get_cutscene_details
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_WORKOVERTIME else screensound GM_RESURRECTOVERTIME } break }
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 2 //AKA Level 3 - Hybrid Army
+                case 2 //AKA Level 3 - Hybrid Army
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE
+                                case 0 { set CUTSCENE_SPRITE DUKEHEADSPRITE
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SUBWAYSYSTEM } else { screensound GM_SUBWAYSYSTEMEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 2 { ife dna_localization 1 set skip_this_panel 1 break }
@@ -432,13 +435,14 @@ defstate get_cutscene_details
                                         else { ife dna_dukecutscenevoc 2 screensound GM_TALKONOTHERSIDE } break }
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 3 //AKA Level 4 - Temple of Amun
+                case 3 //AKA Level 4 - Temple of Amun
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 2 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_EGYPTIAN } break }
@@ -452,14 +456,15 @@ defstate get_cutscene_details
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_WHEREHIDING } else ife dna_localization 1 { screensound GM_READYTODEFROST } } break }
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 4 //AKA Level 5 - Inner Sanctum
+                case 4 //AKA Level 5 - Inner Sanctum
                 {
                         
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ENTIREARMY } else ifvare dna_localization 1 { screensound GM_ENTIREARMYEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
@@ -482,13 +487,14 @@ defstate get_cutscene_details
                                                 else ife dna_dukecutscenevoc 1 screensound BONUS_SPEECH4 } break }
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 5 //AKA Level 6 - The Controller
+                case 5 //AKA Level 6 - The Controller
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 3 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_SWITCHFLIPPER } break } 
                                 endswitch
@@ -528,13 +534,14 @@ defstate get_cutscene_details
                                         } break }
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 6 //AKA Level 7 - Temple Run
+                case 6 //AKA Level 7 - Temple Run
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CRABCAKES } else ife dna_localization 1 { screensound GM_SELFDESTRUCT } } break }
                                 case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
@@ -543,13 +550,14 @@ defstate get_cutscene_details
                                 case 4 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ALIENTELE } else ife dna_localization 1 { screensound GM_SHOOTMYWAY } } break }        
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 7 //AKA Level 8 - Down Under
+                case 7 //AKA Level 8 - Down Under
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BEFOREHEDIED } else ife dna_localization 1 { screensound GM_BEFOREHEDIEDEU } } break }
@@ -574,13 +582,14 @@ defstate get_cutscene_details
                                 case 6 set CUTSCENE_SPRITE JENNYHEADSPRITE break
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 8 //AKA Level 9 - Eating Out
+                case 8 //AKA Level 9 - Eating Out
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 endswitch
                         }
                         //LEVEL 9 Secret Cheat.. don't know what Ill do with this
@@ -605,13 +614,14 @@ defstate get_cutscene_details
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HENDRIX } else ife dna_localization 1 { screensound GM_TUXEDO } } break }
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 9 //AKA Level 10 - Day at the Opera
+                case 9 //AKA Level 10 - Day at the Opera
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_IMIN } else ifvare dna_localization 1 { screensound GM_IMINEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
@@ -630,13 +640,14 @@ defstate get_cutscene_details
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
+                case 10 //AKA Level 11 - Doomsday Weapon
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 { ife dna_localization 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 screensound GM_ISEETHEIRPLAN } else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 3 { ife dna_localization 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 screensound GM_ISEETHEIRPLANS2 } else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
@@ -677,13 +688,14 @@ defstate get_cutscene_details
                                 case 3 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_GUTSTOMPINTIME } else ife dna_localization 1 { screensound GM_GOINGTOSTOPTHEM } } break
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 11 //AKA Level 12 - Alien Ship
+                case 11 //AKA Level 12 - Alien Ship
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CANYOUREADME } else ife dna_localization 1 { screensound GM_CANYOUREADMEEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JAMSSIGNAL } else ife dna_localization 1 { screensound GM_SIGNALJAMMED } } break } 
@@ -697,14 +709,15 @@ defstate get_cutscene_details
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_MOTHERLODE } else ife dna_localization 1 { screensound GM_INBREDALIENS } } break }
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
+                case 12 //AKA Level 13 - Cloaking Device
                 {
                         //LEVEL 13 Looking out the window
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SHIPORBITINGEARTH } else ife dna_localization 1 { screensound GM_SHIPORBITINGEARTHEU } } break }
                                 case 1 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CLOAKINGDEVICE } else ife dna_localization 1 { screensound GM_CLOAKINGDEVICEEU } } break 
                                 case 2 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_COMMUNICADO } else ife dna_localization 1 { screensound GM_COMMUNICADOEU } } break
@@ -722,13 +735,14 @@ defstate get_cutscene_details
                                 case 3 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 13 //AKA Level 14 - Mazeframe
+                case 13 //AKA Level 14 - Mazeframe
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 endswitch
                         }
                         //LEVEL 14 Found mainframe
@@ -741,12 +755,12 @@ defstate get_cutscene_details
                                 endswitch
                         }
                 }
-                ifvare LEVEL 14 //AKA Level 15 - Jenny 2
+                case 14 //AKA Level 15 - Jenny 2
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_KEEPANEYEOUT } else ife dna_localization 1 { screensound GM_WHATPARTISBAD } } break }
                                 case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
@@ -773,13 +787,14 @@ defstate get_cutscene_details
                                 case 6 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JENNY2STANDBY } else ife dna_localization 1 { screensound GM_CLONEBAKE } } break
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 15 //AKA Level 16 - Jenny 3
+                case 15 //AKA Level 16 - Jenny 3
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ifvare dna_dukecutscenevoc 2 { ife dna_localization 1 { screensound GM_LIKETHEIDEA } } break }
@@ -811,13 +826,14 @@ defstate get_cutscene_details
                                 case 4 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ONEBABEREADY } else ife dna_localization 1 { screensound GM_RESTOFTHEPARTY } } break
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 16 //AKA Level 17 - Jenny 4
+                case 16 //AKA Level 17 - Jenny 4
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_dukecutscenevoc 2 screensound GM_HOTBABE break }
                                 endswitch
@@ -836,13 +852,14 @@ defstate get_cutscene_details
                                 case 5 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 17 //AKA Level 18 - Alien Lord
+                case 17 //AKA Level 18 - Alien Lord
                 {
                         ifvare cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 3 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 4 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
@@ -873,13 +890,14 @@ defstate get_cutscene_details
                                 case 2 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JENNY5ENERGIZE } else ife dna_localization 1 { screensound GM_MYPLACE } } break }
                                 endswitch
                         }
+                        break
                 }
-                ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
+                case 18 //AKA Level 19 - Run Your Ass Off!
                 {
-                        ifvare cutscene_num 1001
+                        ife cutscene_num 1001
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_WATCHTHEFIREWORKS } else ife dna_localization 1 { screensound GM_SCRATCHBUTT } } break }
@@ -891,7 +909,9 @@ defstate get_cutscene_details
                                 case 8 { ife dna_localization 1 set skip_this_panel 1 else { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { screensound GM_BETONDUKE } } break }
                                 endswitch
                         }
+                        break
                 }
+                endswitch
         }
 }
 ends
@@ -910,7 +930,7 @@ defstate cutscene_killswitch_check
                         ife temp 0 {
                                 set kill_cutscene 1 
                                 ife cutscene_killswitch_start 0 {
-                                        qstrcpy newTextQuote 200
+                                        redefinequote newTextQuote 
                                 } else {
                                         qsubstr newTextQuote curr_quote 0 cutscene_killswitch_start
                                 }
@@ -1004,6 +1024,430 @@ defstate display_cutscene_dialogue
 }
 ends
 
+defstate process_introoutro_panels {
+        ifg SCREENALPHA 0
+                state screen_fadeout
+        else
+        ifvarg delayTime 0
+        {
+                state cutscene_timer
+        }
+        else
+        {
+                set SCREENALPHA 255
+                ifn temp 0 screensound temp // Next panel is about to be shown, so play its accompanying sound
+                ife dna_dukecutscenevoc 2 { ife CUTSCENE_SCREEN ENDCUTSCENE3 { set delayTime 3100 } else set delayTime OP_CUTSCENE_DELAY_TIME }
+                else set delayTime OP_CUTSCENE_DELAY_TIME
+                add CUTSCENE_STEP 1
+        }
+}
+ends
+
+defstate show_intro_cutscene {
+        ife in_opening_cutscene 1
+        {
+        switch CUTSCENE_STEP 
+        case 0    // FIRST SCREEN
+        {
+                set OPCUTSCENEPOS 160
+                ifvarg OPCUTSCENESLIDEINTIME 160  
+                {
+                                setvar delayTime OP_CUTSCENE_DELAY_TIME
+                                setvar CUTSCENE_SCREEN 5400
+                                setvar CUTSCENE_DIALOG 5400
+                                setvar CUTSCENE_DUKE 5400
+                                setvar RETURN 0
+                                getticks curtick
+                                ifvare prevtick -1 setvar ticktmp 0 else
+                                {
+                                setvarvar ticktmp curtick
+                                subvarvar ticktmp prevtick
+                                }
+
+                                divvar ticktmp 2
+                                subvarvar OPCUTSCENESLIDEINTIME ticktmp
+                                
+                                rotatesprite OPCUTSCENESLIDEINTIME 100 CUTSCENE_SIZE 0 OPCUTSCENE1 0 0 8 0 0 xdim ydim
+                                setvarvar prevtick curtick
+                }
+                else
+                setvar CUTSCENE_SCREEN OPCUTSCENE1
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar SCREENALPHA 255
+                        ife dna_dukecutscenevoc 2 screensound GM_WHOWANTSSOME
+                        else screensound DUKE_GETWEAPON4 // WHO WANTS SOME
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar CUTSCENE_STEP 1     // CHANGE TO THE NEXT SCREEN
+                }
+                break
+        }
+        case 1   // SECOND SCREEN
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE2
+                set temp A_SHRINK // SHRINKER FIRE
+                state process_introoutro_panels
+                break
+        }
+        case 2  // THIRD SCREEN
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE3
+                set temp PIG_DYING // PIG SQUEAL
+                state process_introoutro_panels
+                break
+        }
+        case 3
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE4
+                ife dna_dukecutscenevoc 2 set temp GM_COOL
+                else set temp DUKE_GETWEAPON1 // COOL
+                state process_introoutro_panels
+                break
+        }
+        case 4
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE5
+                set temp 0 // Play no audio
+                state process_introoutro_panels
+                break
+        }
+        case 5
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE6
+                ife dna_dukecutscenevoc 2 set temp GM_HAILTOKING
+                else set temp DUKE_GETWEAPON6 // HAIL TO THE KING
+                state process_introoutro_panels
+                break
+        }
+        case 6
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE7
+                set temp PIG_DYING // PIG SQUEAL
+                state process_introoutro_panels
+                break
+        }
+        case 7
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE8
+                set temp SQUISHED // ...SQUISH
+                state process_introoutro_panels
+                break
+        }
+        case 8
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE9
+                ife dna_dukecutscenevoc 2 set temp GM_THATSGOTTAHURT
+                else set temp JIBBED_ACTOR7 // THAT'S GOTTA HURT
+                state process_introoutro_panels
+                break
+        }
+        case 9
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE10
+                ife dna_dukecutscenevoc 2 set temp GM_BACONBITS else set temp 0
+                state process_introoutro_panels
+                break
+                
+        }
+        case 10
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE11
+                set CUTSCENE_DIALOG OPCUTSCENEDIALOG1
+                ife dna_dukecutscenevoc 2 set temp GM_TIMEMORE else set temp 0
+                state process_introoutro_panels
+                break
+        }
+        case 11
+        {
+                ifvarg SCREENALPHA 0
+                        state screen_fadeout
+                setvar CUTSCENE_SCREEN OPCUTSCENE12
+                setvar CUTSCENE_DIALOG OPCUTSCENEDIALOG2
+                setvar CUTSCENE_DUKE OPCUTSCENEDUKESPRITE
+                ifvarg OP12DUKESLIDEINTIME OPCUTSCENE12DUKEPOS  
+                {
+                                setvar delayTime OP_CUTSCENE_DELAY_TIME
+                                setvar CUTSCENE_SCREEN 5400
+                                setvar CUTSCENE_DIALOG 5400
+                                setvar CUTSCENE_DUKE 5400 // CUTSCENE_DUKE will be displayed at the final location, so keep it blank until animation finishes
+                                setvar OPCUTSCENEPOS OPCUTSCENE12POS
+                                getticks curtick
+                                ifvare prevtick -1 setvar ticktmp 0 else
+                                {
+                                setvarvar ticktmp curtick
+                                subvarvar ticktmp prevtick
+                                }
+                                setvarvar ticktmp2 ticktmp
+                                divvar ticktmp 4
+                                subvarvar OPCUTSCENE12SLIDEINTIME ticktmp
+                                ifvarg OPCUTSCENE12SLIDEINTIME 255 nullop else
+                                {
+                                        divvar ticktmp2 2
+                                        subvarvar OP12DUKESLIDEINTIME ticktmp2
+                                }
+                                
+                                ifvarg OPCUTSCENE12SLIDEINTIME OPCUTSCENE12POS
+                                rotatesprite OPCUTSCENE12SLIDEINTIME 100 CUTSCENE_SIZE 0 OPCUTSCENE12 0 0 8 0 0 xdim ydim
+                                else
+                                rotatesprite OPCUTSCENE12POS 100 CUTSCENE_SIZE 0 OPCUTSCENE12 0 0 8 0 0 xdim ydim
+                                rotatesprite OP12DUKESLIDEINTIME 120 CUTSCENE_SIZE 0 OPCUTSCENEDUKESPRITE 0 0 8 0 0 xdim ydim
+                                rotatesprite 130 180 81920 0 OPCUTSCENEDIALOG2 0 0 8 0 0 xdim ydim
+                                setvarvar prevtick curtick
+                }
+                else   
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        ifvare dna_dukecutscenevoc 2 screensound GM_LETSROCK
+                        else screensound BONUS_SPEECH1 // LET'S ROCK
+                        setvar SCREENALPHA 255
+                        setvar RETURN 1
+                }
+                break
+        }
+        endswitch
+        rotatesprite OPCUTSCENEPOS 100 CUTSCENE_SIZE 0 CUTSCENE_SCREEN 0 0 8 0 0 xdim ydim
+        rotatesprite OPCUTSCENE12DUKEPOS 120 CUTSCENE_SIZE 0 CUTSCENE_DUKE 0 0 8 0 0 xdim ydim
+        rotatesprite 130 180 81920 0 CUTSCENE_DIALOG 0 0 8 0 0 xdim ydim
+        }
+}
+ends
+
+defstate show_outro_cutscene {
+        ife in_ending_cutscene 1 { 
+        switch CUTSCENE_STEP
+        case 0    // FIRST SCREEN
+        {
+                setvar CUTSCENE_DIALOG 5400
+                setvar CUTSCENE_DIALOG2 5400
+                setvar CUTSCENE_SCREEN ENDCUTSCENE1
+                ifvarg SCREENALPHA 0
+                {
+                        state screen_fadeout
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                }
+                else
+                ifvarg delayTime 0
+                {
+                        setvar RETURN 0
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar SCREENALPHA 255
+                        screensound A51SIRENLOOP_CUTSCENE 
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar CUTSCENE_STEP 1
+                }
+                break
+        }
+        case 1   // SECOND SCREEN
+        {
+                setvar CUTSCENE_SCREEN ENDCUTSCENE2
+                set temp 0
+                state process_introoutro_panels
+                break
+        }
+        case 2  // THIRD SCREEN
+        {
+                setvar CUTSCENE_SCREEN ENDCUTSCENE3
+                ife dna_dukecutscenevoc 2 { set temp GM_HAVEABLAST }
+                state process_introoutro_panels
+                break
+        }
+        case 3
+        {
+                setvar CUTSCENE_DIALOG ENDCUTSCENEDIA1
+                setvar CUTSCENE_SCREEN ENDCUTSCENE4
+                ifvarg SCREENALPHA 0
+                        state screen_fadeout
+                else
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar SCREENALPHA 255
+                        stopallsounds
+                        screensound PIPEBOMB_EXPLODE
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar CUTSCENE_STEP 4  
+                }
+                break
+        }
+        case 4
+        {
+                setvar CUTSCENE_DIALOG 5400
+                setvar CUTSCENE_SCREEN ENDCUTSCENE5
+                set temp TELEPORTER
+                state process_introoutro_panels
+                break
+        }
+        case 5
+        {
+                setvar CUTSCENE_SCREEN ENDCUTSCENE6
+                set temp 0
+                state process_introoutro_panels
+                break
+        }
+        case 6
+        {
+                setvar CUTSCENE_DIALOG2 ENDCUTSCENEDIA2
+                setvar CUTSCENE_SCREEN ENDCUTSCENE7
+                ifvarg SCREENALPHA 0
+                        state screen_fadeout
+                else
+                ifvarg ENDDIA1SLIDEINTIME 180
+                {
+                        setvar CUTSCENE_SCREEN 5400
+                        setvar CUTSCENE_DIALOG 5400
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar RETURN 0
+                        getticks curtick
+                        ifvare prevtick -1 setvar ticktmp 0 else
+                        {
+                                setvarvar ticktmp curtick
+                                subvarvar ticktmp prevtick
+                        }
+
+                        divvar ticktmp 4
+                        subvarvar ENDDIA1SLIDEINTIME ticktmp
+
+                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE7 0 0 8 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA1SLIDEINTIME 81920 0 ENDCUTSCENEDIA3 0 0 8 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 8 0 0 xdim ydim
+
+                        setvarvar prevtick curtick
+                }
+                else
+                {
+                        setvar CUTSCENE_SCREEN ENDCUTSCENE7
+                        setvar CUTSCENE_DIALOG ENDCUTSCENEDIA3
+                }
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar SCREENALPHA 255
+                        setvar CUTSCENE_DIALOG 5400
+                        ifvare dna_dukecutscenevoc 2 screensound GM_DEBRIEFING
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar CUTSCENE_STEP 7
+                }
+                break
+        }
+        case 7
+        {
+                
+                setvar CUTSCENE_DIALOG2 5400
+                setvar CUTSCENE_SCREEN ENDCUTSCENE8
+                ifvarg SCREENALPHA 0
+                        state screen_fadeout
+                else
+                ifvarg ENDDIA2SLIDEINTIME 180
+                {
+                        setvar CUTSCENE_SCREEN 5400
+                        setvar CUTSCENE_DIALOG 5400
+                        ifvare dna_dukecutscenevoc 2 { setvar delayTime 5000 } else { setvar delayTime OP_CUTSCENE_DELAY_TIME }
+                        setvar RETURN 0
+                        getticks curtick
+                        ifvare prevtick -1 setvar ticktmp 0 else
+                        {
+                                setvarvar ticktmp curtick
+                                subvarvar ticktmp prevtick
+                        }
+
+                        divvar ticktmp 4
+                        subvarvar ENDDIA2SLIDEINTIME ticktmp
+
+                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE8 0 0 8 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA2SLIDEINTIME 81920 0 ENDCUTSCENEDIA4 0 0 8 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
+
+                        setvarvar prevtick curtick
+                }
+                else
+                {
+                        setvar CUTSCENE_SCREEN ENDCUTSCENE8
+                        setvar CUTSCENE_DIALOG ENDCUTSCENEDIA4
+                }
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar SCREENALPHA 255
+                        setvar CUTSCENE_DIALOG 5400
+                        ifvare dna_dukecutscenevoc 2 screensound GM_HAILTOKING
+                        else screensound DUKE_GETWEAPON6 // HAIL TO THE KING
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar CUTSCENE_STEP 8
+                }
+                break
+        }
+        case 8
+        {
+                setvar CUTSCENE_SCREEN ENDCUTSCENE9
+                ifvarg SCREENALPHA 0
+                        state screen_fadeout
+                else
+                ifvarg ENDDIA3SLIDEINTIME 180
+                {
+                        setvar CUTSCENE_SCREEN 5400
+                        setvar CUTSCENE_DIALOG 5400
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar RETURN 0
+                        getticks curtick
+                        ifvare prevtick -1 setvar ticktmp 0 else
+                        {
+                                setvarvar ticktmp curtick
+                                subvarvar ticktmp prevtick
+                        }
+
+                        divvar ticktmp 4
+                        subvarvar ENDDIA3SLIDEINTIME ticktmp
+
+                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE9 0 0 72 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA3SLIDEINTIME 81920 0 ENDCUTSCENEDIA5 0 0 72 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
+
+                        setvarvar prevtick curtick
+                }
+                else
+                {
+                        setvar CUTSCENE_SCREEN ENDCUTSCENE9
+                        setvar CUTSCENE_DIALOG ENDCUTSCENEDIA5
+                }
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar RETURN 1
+                }
+                break
+        }
+        endswitch
+
+        rotatesprite 160 100 CUTSCENE_SIZE 0 CUTSCENE_SCREEN 0 0 72 0 0 xdim ydim
+        rotatesprite ENDCUTSCENEDIAPOSX1 ENDCUTSCENEDIAPOSY1 81920 0 CUTSCENE_DIALOG 0 0 2 0 0 xdim ydim
+        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
+        }
+}
+ends
+
 appendevent EVENT_SCREEN
         state setsqraspect
     ifvarn in_cutscene 0
@@ -1029,567 +1473,11 @@ appendevent EVENT_SCREEN
         {
                 ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
                 {
-                        ife in_opening_cutscene 1
-                        { 
-                        ifvare CUTSCENE_STEP 0    // FIRST SCREEN
-                        {
-                                setvar OPCUTSCENEPOS 160
-                                ifvarg OPCUTSCENESLIDEINTIME 160  
-                                {
-                                                setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                                setvar CUTSCENE_SCREEN 5400
-                                                setvar CUTSCENE_DIALOG 5400
-                                                setvar CUTSCENE_DUKE 5400
-                                                setvar RETURN 0
-                                                getticks curtick
-                                                ifvare prevtick -1 setvar ticktmp 0 else
-                                                {
-                                                setvarvar ticktmp curtick
-                                                subvarvar ticktmp prevtick
-                                                }
-
-                                                divvar ticktmp 2
-                                                subvarvar OPCUTSCENESLIDEINTIME ticktmp
-                                                
-                                                rotatesprite OPCUTSCENESLIDEINTIME 100 CUTSCENE_SIZE 0 OPCUTSCENE1 0 0 72 0 0 xdim ydim
-                                                setvarvar prevtick curtick
-                                }
-                                else
-                                setvar CUTSCENE_SCREEN OPCUTSCENE1
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_WHOWANTSSOME
-                                        else screensound DUKE_GETWEAPON4 // WHO WANTS SOME
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 1     // CHANGE TO THE NEXT SCREEN
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 1   // SECOND SCREEN
-                        {
-                                
-                                setvar CUTSCENE_SCREEN OPCUTSCENE2
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        screensound A_SHRINK // SHRINKER FIRE
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 2     
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 2  // THIRD SCREEN
-                        {
-                                setvar CUTSCENE_SCREEN OPCUTSCENE3
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        screensound PIG_DYING // PIG SQUEAL
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 3     
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 3
-                        {
-                                setvar CUTSCENE_SCREEN OPCUTSCENE4
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_COOL
-                                        else screensound DUKE_GETWEAPON1 // COOL
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 4  
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 4
-                        {
-                                setvar CUTSCENE_SCREEN OPCUTSCENE5
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 5  
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 5
-                        {
-                                setvar CUTSCENE_SCREEN OPCUTSCENE6
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_HAILTOKING
-                                        else screensound DUKE_GETWEAPON6 // HAIL TO THE KING
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 6
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 6
-                        {
-                                setvar CUTSCENE_SCREEN OPCUTSCENE7
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        screensound PIG_DYING // PIG SQUEAL
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 7
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 7
-                        {
-                                setvar CUTSCENE_SCREEN OPCUTSCENE8
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        screensound SQUISHED // ...SQUISH
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 8
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 8
-                        {
-                                setvar CUTSCENE_SCREEN OPCUTSCENE9
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_THATSGOTTAHURT
-                                        else screensound JIBBED_ACTOR7 // THAT'S GOTTA HURT
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 9
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 9
-                        {
-                                setvar CUTSCENE_SCREEN OPCUTSCENE10
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_BACONBITS
-                                        else 
-                                        {
-                                                nullop
-                                        }
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 10
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 10
-                        {
-                                setvar CUTSCENE_SCREEN OPCUTSCENE11
-                                setvar CUTSCENE_DIALOG OPCUTSCENEDIALOG1
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_TIMEMORE
-                                        else 
-                                        {
-                                                nullop
-                                        }
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 11
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 11
-                        {
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                setvar CUTSCENE_SCREEN OPCUTSCENE12
-                                setvar CUTSCENE_DIALOG OPCUTSCENEDIALOG2
-                                setvar CUTSCENE_DUKE OPCUTSCENEDUKESPRITE
-                                ifvarg OP12DUKESLIDEINTIME OPCUTSCENE12DUKEPOS  
-                                {
-                                                setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                                setvar CUTSCENE_SCREEN 5400
-                                                setvar CUTSCENE_DIALOG 5400
-                                                setvar CUTSCENE_DUKE 5400
-                                                setvar OPCUTSCENEPOS OPCUTSCENE12POS
-                                                getticks curtick
-                                                ifvare prevtick -1 setvar ticktmp 0 else
-                                                {
-                                                setvarvar ticktmp curtick
-                                                subvarvar ticktmp prevtick
-                                                }
-                                                setvarvar ticktmp2 ticktmp
-                                                divvar ticktmp 4
-                                                subvarvar OPCUTSCENE12SLIDEINTIME ticktmp
-                                                ifvarg OPCUTSCENE12SLIDEINTIME 255 nullop else
-                                                {
-                                                        divvar ticktmp2 2
-                                                        subvarvar OP12DUKESLIDEINTIME ticktmp2
-                                                }
-                                                
-                                                
-                                                
-                                                
-                                                ifvarg OPCUTSCENE12SLIDEINTIME OPCUTSCENE12POS
-                                                rotatesprite OPCUTSCENE12SLIDEINTIME 100 CUTSCENE_SIZE 0 OPCUTSCENE12 0 0 72 0 0 xdim ydim
-                                                else
-                                                rotatesprite OPCUTSCENE12POS 100 CUTSCENE_SIZE 0 OPCUTSCENE12 0 0 72 0 0 xdim ydim
-                                                rotatesprite OP12DUKESLIDEINTIME 120 81920 0 OPCUTSCENEDUKESPRITE 0 0 2 0 0 xdim ydim
-                                                rotatesprite 130 180 81920 0 OPCUTSCENEDIALOG2 0 0 2 0 0 xdim ydim
-                                                setvarvar prevtick curtick
-                                }
-                                else   
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_LETSROCK
-                                        else screensound BONUS_SPEECH1 // LET'S ROCK
-                                        setvar SCREENALPHA 255
-                                        setvar RETURN 1
-                                }
-                        }
-                        rotatesprite OPCUTSCENEPOS 100 CUTSCENE_SIZE 0 CUTSCENE_SCREEN 0 0 72 0 0 xdim ydim
-                        rotatesprite OPCUTSCENE12DUKEPOS 120 CUTSCENE_SIZE 0 CUTSCENE_DUKE 0 0 72 0 0 xdim ydim
-                        rotatesprite 130 180 81920 0 CUTSCENE_DIALOG 0 0 8 0 0 xdim ydim
-                        }
+                       state show_intro_cutscene 
                 }
                 ifvare LEVEL 19
                 {
-                        ife in_ending_cutscene 1 { 
-                        ifvare CUTSCENE_STEP 0    // FIRST SCREEN
-                        {
-                                setvar CUTSCENE_DIALOG 5400
-                                setvar CUTSCENE_DIALOG2 5400
-                                setvar CUTSCENE_SCREEN ENDCUTSCENE1
-                                ifvarg SCREENALPHA 0
-                                {
-                                        state screen_fadeout
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                }
-                                else
-                                ifvarg delayTime 0
-                                {
-                                        setvar RETURN 0
-                                        state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        screensound A51SIRENLOOP_CUTSCENE 
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 1
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 1   // SECOND SCREEN
-                        {
-                                
-                                setvar CUTSCENE_SCREEN ENDCUTSCENE2
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        //screensound ACTOR_SHRINKING // 
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 2     
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 2  // THIRD SCREEN
-                        {
-                                setvar CUTSCENE_SCREEN ENDCUTSCENE3
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        screensound TELEPORTER
-                                        ifvare dna_dukecutscenevoc 2 { 
-                                                screensound GM_HAVEABLAST
-                                                setvar delayTime 3100
-                                        }
-                                        else {
-                                                setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        }
-                                        setvar CUTSCENE_STEP 3     
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 3
-                        {
-                                setvar CUTSCENE_DIALOG ENDCUTSCENEDIA1
-                                setvar CUTSCENE_SCREEN ENDCUTSCENE4
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        stopallsounds
-                                        screensound PIPEBOMB_EXPLODE  
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 4  
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 4
-                        {
-                                setvar CUTSCENE_DIALOG 5400
-                                setvar CUTSCENE_SCREEN ENDCUTSCENE5
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        screensound TELEPORTER
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 5  
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 5
-                        {
-                                setvar CUTSCENE_SCREEN ENDCUTSCENE6
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 6
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 6
-                        {
-                                setvar CUTSCENE_DIALOG2 ENDCUTSCENEDIA2
-                                setvar CUTSCENE_SCREEN ENDCUTSCENE7
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg ENDDIA1SLIDEINTIME 180
-                                {
-                                        setvar CUTSCENE_SCREEN 5400
-                                        setvar CUTSCENE_DIALOG 5400
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar RETURN 0
-                                        getticks curtick
-                                        ifvare prevtick -1 setvar ticktmp 0 else
-                                        {
-                                                setvarvar ticktmp curtick
-                                                subvarvar ticktmp prevtick
-                                        }
-
-                                        divvar ticktmp 4
-                                        subvarvar ENDDIA1SLIDEINTIME ticktmp
-
-                                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE7 0 0 72 0 0 xdim ydim
-                                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA1SLIDEINTIME CUTSCENE_SIZE 0 ENDCUTSCENEDIA3 0 0 72 0 0 xdim ydim
-                                        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
-
-                                        setvarvar prevtick curtick
-                                }
-                                else
-                                {
-                                        setvar CUTSCENE_SCREEN ENDCUTSCENE7
-                                        setvar CUTSCENE_DIALOG ENDCUTSCENEDIA3
-                                }
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        setvar CUTSCENE_DIALOG 5400
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_DEBRIEFING
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 7
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 7
-                        {
-                                
-                                setvar CUTSCENE_DIALOG2 5400
-                                setvar CUTSCENE_SCREEN ENDCUTSCENE8
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg ENDDIA2SLIDEINTIME 180
-                                {
-                                        setvar CUTSCENE_SCREEN 5400
-                                        setvar CUTSCENE_DIALOG 5400
-                                        ifvare dna_dukecutscenevoc 2 { setvar delayTime 5000 } else { setvar delayTime OP_CUTSCENE_DELAY_TIME }
-                                        setvar RETURN 0
-                                        getticks curtick
-                                        ifvare prevtick -1 setvar ticktmp 0 else
-                                        {
-                                                setvarvar ticktmp curtick
-                                                subvarvar ticktmp prevtick
-                                        }
-
-                                        divvar ticktmp 4
-                                        subvarvar ENDDIA2SLIDEINTIME ticktmp
-
-                                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE8 0 0 72 0 0 xdim ydim
-                                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA2SLIDEINTIME CUTSCENE_SIZE 0 ENDCUTSCENEDIA4 0 0 72 0 0 xdim ydim
-                                        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
-
-                                        setvarvar prevtick curtick
-                                }
-                                else
-                                {
-                                        setvar CUTSCENE_SCREEN ENDCUTSCENE8
-                                        setvar CUTSCENE_DIALOG ENDCUTSCENEDIA4
-                                }
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar SCREENALPHA 255
-                                        setvar CUTSCENE_DIALOG 5400
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_HAILTOKING
-                                        else screensound DUKE_GETWEAPON6 // HAIL TO THE KING
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar CUTSCENE_STEP 8
-                                }
-                        }
-                        else ifvare CUTSCENE_STEP 8
-                        {
-                                setvar CUTSCENE_SCREEN ENDCUTSCENE9
-                                ifvarg SCREENALPHA 0
-                                        state screen_fadeout
-                                else
-                                ifvarg ENDDIA3SLIDEINTIME 180
-                                {
-                                        setvar CUTSCENE_SCREEN 5400
-                                        setvar CUTSCENE_DIALOG 5400
-                                        setvar delayTime OP_CUTSCENE_DELAY_TIME
-                                        setvar RETURN 0
-                                        getticks curtick
-                                        ifvare prevtick -1 setvar ticktmp 0 else
-                                        {
-                                                setvarvar ticktmp curtick
-                                                subvarvar ticktmp prevtick
-                                        }
-
-                                        divvar ticktmp 4
-                                        subvarvar ENDDIA3SLIDEINTIME ticktmp
-
-                                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE9 0 0 72 0 0 xdim ydim
-                                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA3SLIDEINTIME 81920 0 ENDCUTSCENEDIA5 0 0 72 0 0 xdim ydim
-                                        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
-
-                                        setvarvar prevtick curtick
-                                }
-                                else
-                                {
-                                        setvar CUTSCENE_SCREEN ENDCUTSCENE9
-                                        setvar CUTSCENE_DIALOG ENDCUTSCENEDIA5
-                                }
-                                ifvarg delayTime 0
-                                {
-                                       state cutscene_timer
-                                }
-                                else
-                                {
-                                        setvar RETURN 1
-                                }
-                        }
-
-                        rotatesprite 160 100 CUTSCENE_SIZE 0 CUTSCENE_SCREEN 0 0 72 0 0 xdim ydim
-                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDCUTSCENEDIAPOSY1 81920 0 CUTSCENE_DIALOG 0 0 2 0 0 xdim ydim
-                        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
-                        }
-
+                        state show_outro_cutscene
                 
                 ife in_credits 1 { // Credits screens
                         state show_credits

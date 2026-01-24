@@ -253,13 +253,21 @@
 	ends
 
 defstate dna_camera_hud
-	setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
-    rotatesprite 160 170 65536 0 CUTSCENE_DIALOGBOX 0 0 2 0 0 xdim ydim
-    rotatesprite 31 170 65536 0 CUTSCENE_SPRITE 0 0 2 0 0 xdim ydim
-    screentext STARTALPHANUM 55 153 65536 0 0 CAM_QUOTE1 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-    screentext STARTALPHANUM 55 163 65536 0 0 CAM_QUOTE2 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-    screentext STARTALPHANUM 55 173 65536 0 0 CAM_QUOTE3 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-    screentext STARTALPHANUM 55 183 65536 0 0 CAM_QUOTE4 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+	state setsqraspect
+	set CUTSCENE_SPRITE DUKEHEADSPRITE 
+	setvar y 176
+	set x 55
+	rotatesprite 160 201 65536 0 CUTSCENE_DIALOGBOX 0 0 8 0 0 xdim ydim
+	rotatesprite 31 196 65536 0 CUTSCENE_SPRITE 0 0 8 0 0 xdim ydim
+	rotatesprite 160 201 65536 0 CUTSCENE_OUTLINE 0 0 8 0 0 xdim ydim
+	screentext STARTALPHANUM x y 65536 0 0 CAM_QUOTE1 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+	addvar y 10
+	screentext STARTALPHANUM x y 65536 0 0 CAM_QUOTE2 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+	addvar y 10
+	screentext STARTALPHANUM x y 65536 0 0 CAM_QUOTE3 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+	addvar y 10
+	screentext STARTALPHANUM x y 65536 0 0 CAM_QUOTE4 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+	state setdosaspect
 ends
 
 onevent EVENT_TURNAROUND
