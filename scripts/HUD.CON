@@ -100,52 +100,52 @@
 		{
 			ifvare INV_TEMP 1 // Medkit
 				{
-					rotatesprite INV_X INV_Y NORMALSIZE 0 2460 0 0 512 0 0 xdim ydim
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2460 0 0 256 0 0 xdim ydim
 					getplayer[THISACTOR].firstaid_amount INV_NUM_TEMP
-					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim NORMALSIZE 
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
 				}
 
 			ifvare INV_TEMP 2 // Steroids
 				{
-					rotatesprite INV_X INV_Y NORMALSIZE 0 2469 0 0 512 0 0 xdim ydim
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2469 0 0 256 0 0 xdim ydim
 					getplayer[THISACTOR].steroids_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 4
-					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim NORMALSIZE 
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
 				}
 			ifvare INV_TEMP 3 // Holoduke
 				{
-					rotatesprite INV_X INV_Y NORMALSIZE 0 2470 0 0 512 0 0 xdim ydim
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2470 0 0 256 0 0 xdim ydim
 					getplayer[THISACTOR].holoduke_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 24
-					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim NORMALSIZE 
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
 				}
 			ifvare INV_TEMP 4 // Jetpack
 				{
-					rotatesprite INV_X INV_Y NORMALSIZE 0 2467 0 0 512 0 0 xdim ydim
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2467 0 0 256 0 0 xdim ydim
 					getplayer[THISACTOR].jetpack_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 16
-					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim NORMALSIZE 
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
 				}
 			ifvare INV_TEMP 5 // Night Vision
 				{
-					rotatesprite INV_X INV_Y NORMALSIZE 0 2461 0 0 512 0 0 xdim ydim
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2461 0 0 256 0 0 xdim ydim
 					getplayer[THISACTOR].heat_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 12
-					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim NORMALSIZE 
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
 				}
 			ifvare INV_TEMP 6 // Scuba Gear
 				{
-					rotatesprite INV_X INV_Y NORMALSIZE 0 2468 0 0 512 0 0 xdim ydim
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2468 0 0 256 0 0 xdim ydim
 					getplayer[THISACTOR].scuba_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 64
-					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim NORMALSIZE 
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
 				}
 			ifvare INV_TEMP 7 // Boots
 				{
-					rotatesprite INV_X INV_Y NORMALSIZE 0 2463 0 0 512 0 0 xdim ydim
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2463 0 0 256 0 0 xdim ydim
 					getplayer[THISACTOR].boot_amount INV_NUM_TEMP
 					divvar INV_NUM_TEMP 2
-					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 512 0 0 xdim ydim NORMALSIZE
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE
 				}
 		}
 	}

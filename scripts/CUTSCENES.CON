@@ -39,6 +39,11 @@ gamevar OPCUTSCENESLIDEINTIME OPSLIDEINTIME
 gamevar OPCUTSCENE12SLIDEINTIME OP12SLIDEINTIME
 gamevar OP12DUKESLIDEINTIME OPDUKESLIDEINTIME
 
+var CUTSCENE_LIMIT 0 // Set this to the number of panels you want the cutscene to have - 0 is included in this count
+var curr_cutscene -1 // Tracks current panel
+var skip_this_panel 0 // Forcefully skips the panel it's on. Only needed for localization differences
+var dont_stop_sounds 0 // Set to 1 to prevent stopallsounds from being called, useful for letting the sound of a pickup play into the cutscene it triggers
+
 var OPCUTSCENEPOS 160
 define OPCUTSCENE12POS 95
 define OPCUTSCENE12DUKEPOS 40
@@ -99,6 +104,10 @@ defstate cutscene_cleanup
                 setvar CUTSCENE_STEP 0
         ifvarn prevtick -1
                 setvar prevtick -1
+        ifn CUTSCENE_LIMIT 0
+                set CUTSCENE_LIMIT 0
+        ifn curr_cutscene -1
+                set curr_cutscene -1
 ends
 
 defstate op_cutscene_cleanup
@@ -183,7 +192,6 @@ useractor notenemy CUTSCENEINDICATOR_OFF 0
                 ifvare sprite[cutscene_i].picnum CUTSCENEINDICATOR_ACTIVE
                 {
                         getactorvar[cutscene_i].cutscene_myvar cutscene_num
-                    
                 }
             }
             
@@ -274,14 +282,630 @@ appendevent EVENT_ENDLEVELSCREEN
         setvar RETURN -1
 endevent
 
+defstate get_cutscene_details
+{
+        ifvare VOLUME 0
+        {
+        ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
+                {
+                        //LEVEL 1 OPENING SCENE
+                        ifvare cutscene_num 1001
+                        {       
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break } 
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE
+                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_IMONIT }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_TELEBROKE } break }
+                                case 4 { ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_DAMNTELEMALFUNC }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_GONNAPAY } break }
+                                case 5 { ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_SIGNCHECKS }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_NEWHARDWARE } break }
+                                case 6 { ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_WHOWANTSSOME
+                                        else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON4 } //Who wants some! 
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_LETSROCK2
+                                        else ife dna_dukecutscenevoc 1 screensound BONUS_SPEECH1 } break } //Let's rock
+                                                
+                                endswitch
+                        }
+
+                        //LEVEL 1 MID LEVEL SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1
+                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_DATADISK  } else { ife dna_dukecutscenevoc 2 screensound GM_DATADISKEU } break }
+                                case 1 { ife dna_localization 0 set skip_this_panel 1
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_CONTAINSDETAILS } break }
+                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_ONMYWAY } else { ife dna_dukecutscenevoc 2 screensound GM_PLENTYTOKICK } break }
+                                case 4 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_DUKEOUT } break }
+                                endswitch
+                        }
+
+                }
+                ifvare LEVEL 1 //AKA Level 2 - Close Encounter
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { ifvare dna_localization 1 set skip_this_panel 1 break }
+                                endswitch
+                        }                      
+                        //LEVEL 2 MID LEVEL SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 209 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_SATLINK else screensound GM_SATLINKEU } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_ALGAEEATERS else screensound GM_FAIRFIGHT } break }
+                                case 4 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_WRONGPLANET else screensound GM_STACKEDODDS } } break
+                                endswitch
+                        }
+                        //LEVEL 2 GRAY SCENE
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1 
+                                        ife dna_dukecutscenevoc 2 screensound GM_CLOSEENCOUNTER break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
+                                case 2 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_WORKOVERTIME else screensound GM_RESURRECTOVERTIME } break }
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 2 //AKA Level 3 - Hybrid Army
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SUBWAYSYSTEM } else { screensound GM_SUBWAYSYSTEMEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 2 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_UNDEROURNOSES } else { screensound GM_UNDEROURNOSESEU } } break }
+                                case 4 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 5 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 6 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 7 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DERAILPLANS } else { screensound GM_DERAILED } } break }
+                                case 8 { ife dna_localization 1 set skip_this_panel 1 
+                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_BUBBLEGUM } else ife dna_dukecutscenevoc 1 { screensound WAR_AMBIENCE10 } break }
+                                endswitch
+                        }
+                        //LEVEL 3 Destroyed Hybrid Army
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 237 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_ALMOSTTOOEASY } else ifvare dna_localization 1 { screensound GM_PIECEOFCAKE } }
+                                        else ifvare dna_dukecutscenevoc 1 screensound JIBBED_ACTOR6 } break
+                                endswitch
+                        }
+                        //LEVEL 3 Spiderlord Encounter
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 249 set CUTSCENE_SPRITE BOSS1HEADSPRITE break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ALOTTATALK } else ifvare dna_localization 1 { screensound GM_YOUANDWHATARMY } } break }
+                                case 3 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE BOSS1HEADSPRITE break }
+                                case 7 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_ALIENAUTOPSYEU }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_ALIENAUTOPSY else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON2 } break }
+                                case 8 { ife dna_localization 0 set skip_this_panel 1 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_COMEGETSOME else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON2 } break }
+                                endswitch
+                        }
+                        //LEVEL 3 End Level Scene
+                        ifvare cutscene_num 1004
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 285 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_TIPOFICEBERG } else ifvare dna_localization 1 { screensound GM_TIPOFICEBERGEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_TOOBUSYDYIN } else ifvare dna_localization 1 { screensound GM_EVERYSECPRECIOUS } } break }
+                                case 3 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SEEWHEREITLEADS } else ifvare dna_localization 1 { screensound GM_FOLLOWTHEIRTRAIL } } break }
+                                case 4 { ife dna_localization 1 {       
+                                                ife dna_dukecutscenevoc 2 screensound GM_HAILTOKING
+                                                else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON6 }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_TALKONOTHERSIDE } break }
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 3 //AKA Level 4 - Temple of Amun
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 2 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_EGYPTIAN } break }
+                                endswitch
+                        }
+                        //LEVEL 4 MID LEVEL SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_WHEREHIDING } else ife dna_localization 1 { screensound GM_READYTODEFROST } } break }
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 4 //AKA Level 5 - Inner Sanctum
+                {
+                        
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ENTIREARMY } else ifvare dna_localization 1 { screensound GM_ENTIREARMYEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_PERMANENTHIBERNATION } else ifvare dna_localization 1 { screensound GM_ILLFINDSOMEANSWERS } } break }
+                                endswitch
+                        }
+
+                        //LEVEL 5 MID LEVEL SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 217 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1  
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_FOUNDSCHEMATICS } else ife dna_localization 1 { screensound GM_FOUNDSCHEMATICSEU } } break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 4 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_ONMYWAY }
+                                        else {
+                                                ife dna_dukecutscenevoc 2 screensound GM_ROCKIN
+                                                else ife dna_dukecutscenevoc 1 screensound BONUS_SPEECH4 } break }
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 5 //AKA Level 6 - The Controller
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 3 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_SWITCHFLIPPER } break } 
+                                endswitch
+                        }
+                        //LEVEL 6 Controller Encounter
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 221 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_SCORPIONKING else screensound GM_BIGBOSS } break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_CASEOFCRABS } break }
+                                case 2 set CUTSCENE_SPRITE BOSS2HEADSPRITE break
+                                case 4 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_HEARDTHATBEFORE } } break }
+                                endswitch
+                        }
+                        //LEVEL 6 Boss Hint
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 241 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CRUSTACEANCRETIN } else ife dna_localization 1 { screensound GM_MUTANTMAGGOT } } break }
+                                endswitch
+                        }
+                        //LEVEL 6
+                        ifvare cutscene_num 1004
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 253 ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE set dont_stop_sounds 1 break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 0 {
+                                                ife dna_dukecutscenevoc 2 screensound GM_DAMNIMGOOD
+                                                else ife dna_dukecutscenevoc 1 screensound JIBBED_ACTOR5
+                                        } break }
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 6 //AKA Level 7 - Temple Run
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CRABCAKES } else ife dna_localization 1 { screensound GM_SELFDESTRUCT } } break }
+                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_TWOWONDERS } else ife dna_localization 1 { screensound GM_BULLETSTOKILL } } break }
+                                case 4 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ALIENTELE } else ife dna_localization 1 { screensound GM_SHOOTMYWAY } } break }        
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 7 //AKA Level 8 - Down Under
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BEFOREHEDIED } else ife dna_localization 1 { screensound GM_BEFOREHEDIEDEU } } break }
+                                case 3 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_COOL else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON1 }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_ILLCONTACTYOU } break }
+                                endswitch
+                        }
+                        //LEVEL 8 JENNY SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 225 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DISTRESSCALL } else ife dna_localization 1 { screensound GM_DISTRESSCALLEU } } break }
+                                case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HELLOFAPARTY } else ife dna_localization 1 { screensound GM_HELLOFAPARTYEU } } break }
+                                case 4 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_OPERAHOUSE } else ife dna_localization 1 { screensound GM_OPERAHOUSEEU } } break }
+                                case 6 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 8 //AKA Level 9 - Eating Out
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                        //LEVEL 9 Secret Cheat.. don't know what Ill do with this
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                        //LEVEL 9 Killed Sentry
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 221 set CUTSCENE_SPRITE SARGEHEADSPRITE set dont_stop_sounds 1 break }
+                                endswitch
+                        }
+                        //LEVEL 9 Outro
+                        ifvare cutscene_num 1004
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HENDRIX } else ife dna_localization 1 { screensound GM_TUXEDO } } break }
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 9 //AKA Level 10 - Day at the Opera
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_IMIN } else ifvare dna_localization 1 { screensound GM_IMINEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 0 {       
+                                                ife dna_dukecutscenevoc 2 screensound GM_RODGERTHAT
+                                                else ife dna_dukecutscenevoc 1 screensound JIBBED_ACTOR6 } 
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_NOPROBLEMO } break }
+                                endswitch
+                        }
+                        //LEVEL 10 MID LEVEL SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_STARTDOWNLOADING } else ife dna_localization 1 { screensound GM_STARTDOWNLOADINGEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { ife dna_localization 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 screensound GM_ISEETHEIRPLAN } else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 3 { ife dna_localization 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 screensound GM_ISEETHEIRPLANS2 } else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                        //LEVEL 11 Weapon activated
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 225 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ACTIVATEDWEAPON } else ife dna_localization 1 { screensound GM_TOOLATE } } break }
+                                case 2 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CHARGINGUP } } break }
+                                case 3 { set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 5 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 6 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_TICKTOCK } } break }
+                                case 7 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                        //LEVEL 11 Weapon deactivated
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 257 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_NICKOFTIME } else ife dna_localization 1 { screensound GM_NICKOFTIMEEU } } break }
+                                endswitch
+                        }
+                        //LEVEL 11 End Scene
+                        ifvare cutscene_num 1004
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 261 set CUTSCENE_SPRITE DUKEHEADSPRITE
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BETTERGETATEAM } else ife dna_localization 1 { screensound GM_BETTERGETATEAMEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
+                                case 2 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SIZE15BOOT } else ife dna_localization 1 { screensound GM_SOURCEOFINFESTATION } } break }
+                                case 3 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_GUTSTOMPINTIME } else ife dna_localization 1 { screensound GM_GOINGTOSTOPTHEM } } break
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 11 //AKA Level 12 - Alien Ship
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JAMSSIGNAL } else ife dna_localization 1 { screensound GM_SIGNALJAMMED } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
+                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break 
+                                endswitch
+                        }
+                        //LEVEL 12 MID LEVEL SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_MOTHERLODE } else ife dna_localization 1 { screensound GM_INBREDALIENS } } break }
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
+                {
+                        //LEVEL 13 Looking out the window
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SHIPORBITINGEARTH } else ife dna_localization 1 { screensound GM_SHIPORBITINGEARTHEU } } break }
+                                case 1 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CLOAKINGDEVICE } else ife dna_localization 1 { screensound GM_CLOAKINGDEVICEEU } } break 
+                                case 2 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_COMMUNICADO } else ife dna_localization 1 { screensound GM_COMMUNICADOEU } } break
+                                endswitch
+                        }
+                        //LEVEL 13 Cloaking Device Disabled
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DOYOUREADME } else ife dna_localization 1 { screensound GM_DOYOUREADME } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ISHUTITDOWN } else ife dna_localization 1 { screensound GM_ISHUTITDOWN } } break }
+                                case 3 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 13 //AKA Level 14 - Mazeframe
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                        //LEVEL 14 Found mainframe
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 209 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HOOKEDINTOSYSTEMS } else ife dna_localization 1 { screensound GM_WHATYOUASKEDFOR } } break }
+                                case 1 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_GOTMYHANDSFULL } else ife dna_localization 1 { screensound GM_GONNAGETOUTTAHERE } } break
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 14 //AKA Level 15 - Jenny 2
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_KEEPANEYEOUT } else ife dna_localization 1 { screensound GM_WHATPARTISBAD } } break }
+                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 3 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HURRYUP } else ife dna_localization 1 { screensound GM_LAYFINGERS } } break }
+                                endswitch
+                        }
+                        //LEVEL 15 Met Jenny 2
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
+                                case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_YOULOOKFAMILIAREU }
+                                        else {
+                                                ife dna_dukecutscenevoc 2 screensound GM_YOULOOKFAMILIAR
+                                                else ife dna_dukecutscenevoc 1 screensound DUKE_TIP2 } break }
+                                case 2 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
+                                case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ILLFINDTHEM } else ife dna_localization 1 { screensound GM_CLAMBAKE } } break }
+                                case 6 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JENNY2STANDBY } else ife dna_localization 1 { screensound GM_CLONEBAKE } } break
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 15 //AKA Level 16 - Jenny 3
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 1 { screensound GM_LIKETHEIDEA } } break }
+                                case 3 set CUTSCENE_SPRITE BOSS4HEADSPRITE break
+                                case 4 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BREEDINGSTOCK } } break }
+                                case 5 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 6 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 screensound GM_ENGAGEMENTS break }
+                                endswitch
+                        }
+                        //LEVEL 16 Blue Key
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_NOTGONNABEEASY } else ife dna_localization 1 { screensound GM_NOTGONNABEEASY } } break }
+                                endswitch
+                        }
+                        //LEVEL 3 Met Jenny 3
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 233 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HAILTOKING } else ife dna_localization 1 { screensound GM_DONTTELLME } }
+                                        else ife dna_dukecutscenevoc 1 { ife dna_localization 0 { screensound DUKE_GETWEAPON6 } } break }
+                                case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ALIENANDSCHOOLGIRL } else ife dna_localization 1 { screensound GM_ALIENSANDCAPTIVES } } break }
+                                case 4 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ONEBABEREADY } else ife dna_localization 1 { screensound GM_RESTOFTHEPARTY } } break
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 16 //AKA Level 17 - Jenny 4
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 screensound GM_HOTBABE break }
+                                endswitch
+                        }
+                        //LEVEL 17 Met Jenny 4
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JENNY4 } else ife dna_localization 1 { screensound GM_DEJAVU } } break }
+                                case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                case 2 { ife dna_localization 0 set skip_this_panel 1 else set CUTSCENE_SPRITE JENNYHEADSPRITE break }
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SLIPPERYSNAKE } else ife dna_localization 1 { screensound GM_IMDUKE } } break }
+                                case 4 { ife dna_localization 1 set CUTSCENE_SPRITE SARGEHEADSPRITE else { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { screensound GM_TAKEHERAWAY } } break }
+                                case 5 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 17 //AKA Level 18 - Alien Lord
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 3 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 4 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DONTWORRY } else ife dna_localization 1 { screensound GM_OVERHEATALIENS } } break }
+                                case 5 { ife dna_localization 1 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { screensound GM_HOTFOOT } break }
+                                endswitch
+                        }
+                        //LEVEL 18 Cooling Units Shut Down
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_STARTINGTOHEATUP } else ife dna_localization 1 { screensound GM_STARTINGTOHEATUPEU } } break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 set CUTSCENE_SPRITE BOSS4HEADSPRITE break
+                                case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ASSGOBLIN } else ife dna_localization 1 { screensound GM_KICKINGBUTT } } break }
+                                case 6 { ife dna_localization 1 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { screensound GM_URANUS } break }
+                                endswitch
+                        }
+                        //LEVEL 18 Met Jenny 5
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 257 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
+                                case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BLOWISTHISSHIP } else ife dna_localization 1 { screensound GM_SHOWEREARTHWITHDUKE } } break }
+                                case 2 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JENNY5ENERGIZE } else ife dna_localization 1 { screensound GM_MYPLACE } } break }
+                                endswitch
+                        }
+                }
+                ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_WATCHTHEFIREWORKS } else ife dna_localization 1 { screensound GM_SCRATCHBUTT } } break }
+                                case 3 { ife dna_localization 0 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { screensound GM_FINDMYOWNWAY } break }
+                                case 4 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 5 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 6 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 7 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 8 { ife dna_localization 1 set skip_this_panel 1 else { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { screensound GM_BETONDUKE } } break }
+                                endswitch
+                        }
+                }
+        }
+}
+ends
+
+defstate cutscene_loop 
+{
+        whilel curr_cutscene CUTSCENE_LIMIT
+        {
+                state get_cutscene_details
+                ife dont_stop_sounds 1 set dont_stop_sounds 0
+                else stopallsounds
+                startscreen
+        }
+}
+ends
+
 appendevent EVENT_GAME
     ifvarn in_cutscene 0
     {
         ifvarn cutscene_num 0
         {
-        state get_script
+        state get_script // Gets the correct localization of the dialog in DIALOGDEF.CON
         state cutscene_cleanup
-        ifvare dna_cutscenes 1 { state end_cutscene }
+        ifvare dna_cutscenes 1 { state end_cutscene } // If level cutscenes are disabled, immediately stop cutscene from processing
         else ifvare dna_cutscenes 0 
         {
                 ifvare VOLUME 0
@@ -291,1010 +915,267 @@ appendevent EVENT_GAME
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        //stopallmusic
-                                        // starttrackslot 7 1 
-                                        startscreen
-                                        startscreen       
-                                        startscreen
-                                        ifvare dna_localization 0 { ifvare dna_dukecutscenevoc 2 screensound GM_IMONIT else nullop }
-                                        else { ifvare dna_dukecutscenevoc 2 screensound GM_TELEBROKE else nullop }
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 0 { ifvare dna_dukecutscenevoc 2 screensound GM_DAMNTELEMALFUNC else nullop }
-                                        else { ifvare dna_dukecutscenevoc 2 screensound GM_GONNAPAY else nullop }
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 1
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_SIGNCHECKS
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_NEWHARDWARE
-                                                else nullop
-                                        }
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 1
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_WHOWANTSSOME
-                                                else ifvare dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON4 //Who wants some!
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_LETSROCK2
-                                                else ifvare dna_dukecutscenevoc 1 screensound BONUS_SPEECH1 //Let's rock
-                                                else nullop
-                                        }
-                                        startscreen                                        
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 6
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_localization 0 { ifvare dna_dukecutscenevoc 2 screensound GM_DATADISK else nullop }
-                                        else { ifvare dna_dukecutscenevoc 2 screensound GM_DATADISKEU else nullop }
-                                        startscreen
-                                        stopallsounds   
-                                        ifvare dna_localization 0 { ifvare dna_dukecutscenevoc 2 nullop else nullop }
-                                        else { ifvare dna_dukecutscenevoc 2 screensound GM_CONTAINSDETAILS else nullop }
-                                        startscreen
-                                        stopallsounds  
-                                        startscreen
-                                        ifvare dna_localization 1
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_ONMYWAY
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_PLENTYTOKICK
-                                                else nullop
-                                        }
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_DUKEOUT
-                                                else nullop
-                                        }
-                                        else 
-                                        {
-                                                nullop
-                                        }
-                                        startscreen 
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 4       
                                 }
+                                
                                 
                         }
                         ifvare LEVEL 1 // AKA Level 2 - Close Encounter
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        stopallsounds
-                                        startscreen    
-                                        startscreen    
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 1
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_localization 0 { ifvare dna_dukecutscenevoc 2 screensound GM_SATLINK else nullop }
-                                        else { ifvare dna_dukecutscenevoc 2 screensound GM_SATLINKEU else nullop }
-                                        startscreen
-                                        stopallsounds
-                                        startscreen
-                                        startscreen
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_ALGAEEATERS
-                                                else 
-                                                {
-                                                        nullop
-                                                }
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_FAIRFIGHT
-                                                else
-                                                {
-                                                        nullop
-                                                }
-                                        }
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_WRONGPLANET
-                                                else 
-                                                {
-                                                        nullop
-                                                }
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_STACKEDODDS
-                                                else
-                                                {
-                                                        nullop
-                                                }
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 4
                                 }
                                 ifvare cutscene_num 1003
                                 {
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_CLOSEENCOUNTER
-                                        else
-                                        {
-                                                nullop
-                                        }
-                                        startscreen
-                                        stopallsounds
-                                        startscreen    
-                                        ifvare dna_localization 0 { ifvare dna_dukecutscenevoc 2 screensound GM_WORKOVERTIME else nullop }
-                                        else { ifvare dna_dukecutscenevoc 2 nullop else nullop }
-                                        startscreen
-                                        
-                                        ifvare dna_localization 0
-                                        {
-                                                nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_RESURRECTOVERTIME
-                                                else
-                                                {
-                                                        nullop
-                                                }
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 3
                                 }
                         }
                         ifvare LEVEL 2 // AKA Level 3 - Hybrid Army
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        stopallsounds
-                                        ifvare dna_localization 0 { ifvare dna_dukecutscenevoc 2 screensound GM_SUBWAYSYSTEM else nullop }
-                                        else { ifvare dna_dukecutscenevoc 2 screensound GM_SUBWAYSYSTEMEU else nullop }
-                                        startscreen
-                                        stopallsounds       
-                                        startscreen
-                                        startscreen
-                                        stopallsounds 
-                                        ifvare dna_localization 0 { ifvare dna_dukecutscenevoc 2 screensound GM_UNDEROURNOSES else nullop }
-                                        else { ifvare dna_dukecutscenevoc 2 screensound GM_UNDEROURNOSESEU else nullop }
-                                        startscreen
-                                        stopallsounds 
-                                        startscreen    
-                                        startscreen
-                                        startscreen
-                                        ifvare dna_localization 1
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_DERAILED
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_DERAILPLANS
-                                                else nullop
-                                        }
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 1
-                                        {
-                                                nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_BUBBLEGUM
-                                                else ifvare dna_dukecutscenevoc 1 screensound WAR_AMBIENCE10 //The Bubblegum Line
-                                                else nullop
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 8
                                 }
                                 //LEVEL 3 Destroyed Hybrid Army
                                 ifvare cutscene_num 1002
-                                {
-                                        startscreen    
-                                        startscreen
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_ALMOSTTOOEASY } else ifvare dna_localization 1 { screensound GM_PIECEOFCAKE } }
-                                        else ifvare dna_dukecutscenevoc 1 screensound JIBBED_ACTOR6 //Piece of Cake
-                                        else 
-                                        { 
-                                                nullop
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                {       
+                                        set CUTSCENE_LIMIT 2
                                 }
                                 //LEVEL 3 Spiderlord Encounter
                                 ifvare cutscene_num 1003
                                 {
-                                        startscreen    
-                                        startscreen
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_ALOTTATALK } else ifvare dna_localization 1 { screensound GM_YOUANDWHATARMY } }
-                                        startscreen
-                                        stopallsounds
-                                        startscreen
-                                        startscreen    
-                                        startscreen
-                                        startscreen
-                                        ifvare dna_localization 1
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_ALIENAUTOPSYEU
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_ALIENAUTOPSY
-                                                else ifvare dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON2 //Come Get Some
-                                                else nullop
-                                        }
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 1
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_COMEGETSOME
-                                                else ifvare dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON2 //Come Get Some
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                nullop
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 8
                                 }
                                 //LEVEL 3 End Level Scene
                                 ifvare cutscene_num 1004
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_TIPOFICEBERG } else ifvare dna_localization 1 { screensound GM_TIPOFICEBERGEU } }
-                                        startscreen
-                                        stopallsounds    
-                                        startscreen
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_TOOBUSYDYIN } else ifvare dna_localization 1 { screensound GM_EVERYSECPRECIOUS } }
-                                        startscreen
-                                        stopallsounds  
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_SEEWHEREITLEADS } else ifvare dna_localization 1 { screensound GM_FOLLOWTHEIRTRAIL } }
-                                        startscreen
-                                        stopallsounds   
-                                        ifvare dna_localization 1 
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_HAILTOKING
-                                                else ifvare dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON6 // HAIL TO THE KING
-                                                else nullop
-                                        }
-                                        else 
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_TALKONOTHERSIDE
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 4
                                 }
                         }
                         ifvare LEVEL 3 // Level 4 - Temple of Amun
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        startscreen    
-                                        startscreen
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_EGYPTIAN
-                                                else nullop
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 2
                                 }
                                 //LEVEL 4 MID LEVEL SCENE
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_WHEREHIDING } else ifvare dna_localization 1 { screensound GM_READYTODEFROST } }
-                                        startscreen     
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 1
                                 }
                         }
                         ifvare LEVEL 4 // Level 5 - Inner Sanctum
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_ENTIREARMY } else ifvare dna_localization 1 { screensound GM_ENTIREARMYEU } }
-                                        startscreen
-                                        startscreen    
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_PERMANENTHIBERNATION } else ifvare dna_localization 1 { screensound GM_ILLFINDSOMEANSWERS } }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 3
                                 }
                                 //LEVEL 5 MID LEVEL SCENE
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_FOUNDSCHEMATICS } else ifvare dna_localization 1 { screensound GM_FOUNDSCHEMATICSEU } }
-                                        startscreen  
-                                        startscreen    
-                                        startscreen
-                                        startscreen
-                                        ifvare dna_localization 1
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_ONMYWAY
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_ROCKIN
-                                                else ifvare dna_dukecutscenevoc 1 screensound BONUS_SPEECH4 //Rockin'
-                                                else nullop
-                                        }
-                                        startscreen  
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 4
                                 }
                         }
                         ifvare LEVEL 5 //AKA Level 6 - The Controller
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        startscreen    
-                                        startscreen    
-                                        startscreen
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_SWITCHFLIPPER
-                                                else nullop
-                                        } 
-                                        else
-                                        {
-                                                nullop
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 3
                                 }
                                 //LEVEL 6 Controller Encounter
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_SCORPIONKING
-                                                else nullop
-                                        } 
-                                        else
-                                        {
-                                                nullop
-                                        }
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_CASEOFCRABS
-                                                else nullop
-                                        } 
-                                        else
-                                        {
-                                                nullop
-                                        }
-                                        startscreen
-                                        stopallsounds
-                                        startscreen
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_HEARDTHATBEFORE } else ifvare dna_localization 1 { nullop } }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 4
                                 }
                                 //LEVEL 6 Boss Hint
                                 ifvare cutscene_num 1003
                                 {
-                                        startscreen    
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_CRUSTACEANCRETIN } else ifvare dna_localization 1 { screensound GM_MUTANTMAGGOT } }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 2
                                 }
                                 //LEVEL 6 
                                 ifvare cutscene_num 1004
                                 {
-                                        startscreen    
-                                        startscreen
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_DAMNIMGOOD
-                                                else ifvare dna_dukecutscenevoc 1 screensound JIBBED_ACTOR5 // DAMN IM GOOD
-                                                else nullop
-                                        } 
-                                        else 
-                                        {
-                                                nullop
-                                        } 
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 2
                                 }
                         }
                         ifvare LEVEL 6 //AKA Level 7 - Temple Run
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        startscreen    
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_CRABCAKES } else ifvare dna_localization 1 { screensound GM_SELFDESTRUCT } }
-                                        startscreen
-                                        startscreen
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_TWOWONDERS
-                                                else nullop
-                                        } 
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_BULLETSTOKILL
-                                                else nullop  
-                                        }
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_ALIENTELE
-                                                else nullop
-                                        } 
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_SHOOTMYWAY
-                                                else nullop  
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 4
                                 }
                         }
                         ifvare LEVEL 7 //AKA Level 8 - Down Under
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        startscreen    
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_BEFOREHEDIED } else ifvare dna_localization 1 { screensound GM_BEFOREHEDIEDEU } }
-                                        startscreen
-                                        stopallsounds
-                                        startscreen
-                                        startscreen
-                                        ifvare dna_localization 1
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_COOL
-                                                else ifvare dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON1 // COOL
-                                                else nullop
-                                        }
-                                        else 
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_ILLCONTACTYOU
-                                                else nullop
-                                        }  
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 5
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_DISTRESSCALL } else ifvare dna_localization 1 { screensound GM_DISTRESSCALLEU } }
-                                        startscreen
-                                        stopallsounds 
-                                        startscreen    
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_HELLOFAPARTY } else ifvare dna_localization 1 { screensound GM_HELLOFAPARTYEU } }
-                                        startscreen
-                                        stopallsounds 
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_OPERAHOUSE } else ifvare dna_localization 1 { screensound GM_OPERAHOUSEEU } }
-                                        startscreen
-                                        stopallsounds 
-                                        startscreen
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 7
                                 }
                         }
                         ifvare LEVEL 8 //AKA Level 9 - Eating Out
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        stopallsounds
-                                        startscreen    
-                                        startscreen    
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 2
                                 }
                                 //LEVEL 9 Secret Code
                                 ifvare cutscene_num 1002
                                 {
-                                        startscreen    
-                                        startscreen    
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 1
                                 }
                                 ifvare cutscene_num 1003
                                 {
-                                        startscreen    
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 1
+
                                 }
                                 ifvare cutscene_num 1004
                                 {
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_HENDRIX
-                                                else nullop
-                                        } 
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_TUXEDO
-                                                else nullop
-                                        }
-                                        startscreen    
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 0
                                 }
                         }
                         ifvare LEVEL 9 //AKA Level 10 - Day at the Opera 
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_IMIN } else ifvare dna_localization 1 { screensound GM_IMINEU } }
-                                        startscreen
-                                        stopallsounds
-                                        startscreen
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_RODGERTHAT
-                                                else ifvare dna_dukecutscenevoc 1 screensound JIBBED_ACTOR6 //Piece of Cake
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_NOPROBLEMO
-                                                else nullop
-                                        }      
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 2
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_STARTDOWNLOADING } else ifvare dna_localization 1 { screensound GM_STARTDOWNLOADINGEU } }
-                                        startscreen
-                                        stopallsounds    
-                                        startscreen  
-                                        startscreen
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 3
                                 }
                         }
                         ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        startscreen    
-                                        startscreen  
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { nullop } else ifvare dna_localization 1 { screensound GM_ISEETHEIRPLAN } }
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { nullop } else ifvare dna_localization 1 { screensound GM_ISEETHEIRPLANS2 } }
-                                        startscreen  
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 4
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        startscreen    
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_ACTIVATEDWEAPON } else ifvare dna_localization 1 { screensound GM_TOOLATE } }
-                                        startscreen 
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_CHARGINGUP } else ifvare dna_localization 1 { nullop } }
-                                        startscreen     
-                                        stopallsounds
-                                        startscreen  
-                                        startscreen
-                                        startscreen  
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_TICKTOCK } else ifvare dna_localization 1 { nullop } }
-                                        startscreen    
-                                        stopallsounds
-                                        startscreen 
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 7
                                 }
                                 ifvare cutscene_num 1003
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_NICKOFTIME } else ifvare dna_localization 1 { screensound GM_NICKOFTIMEEU } }
-                                        startscreen      
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 0
                                 }
                                 ifvare cutscene_num 1004
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_BETTERGETATEAM } else ifvare dna_localization 1 { screensound GM_BETTERGETATEAMEU } }
-                                        startscreen    
-                                        stopallsounds  
-                                        startscreen 
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_SIZE15BOOT } else ifvare dna_localization 1 { screensound GM_SOURCEOFINFESTATION } }
-                                        startscreen         
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_GUTSTOMPINTIME } else ifvare dna_localization 1 { screensound GM_GOINGTOSTOPTHEM } }
-                                        startscreen      
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 3
                                 }
                         }
                         ifvare LEVEL 11 //AKA Level 12 - Alien Ship
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_CANYOUREADME } else ifvare dna_localization 1 { screensound GM_CANYOUREADMEEU } }
-                                        startscreen    
-                                        stopallsounds     
-                                        startscreen  
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_JAMSSIGNAL
-                                                else nullop
-                                        } 
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_SIGNALJAMMED
-                                                else nullop  
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 2
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_MOTHERLODE
-                                                else nullop
-                                        } 
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_INBREDALIENS
-                                                else nullop  
-                                        }
-                                        startscreen
-                                        stopallsounds    
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_EGGCRACKINTIME
-                                                else nullop
-                                        } 
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_LIFEEXPECTANCY
-                                                else nullop  
-                                        }
-                                        startscreen 
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 1
                                 }
                         }
                         ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_SHIPORBITINGEARTH } else ifvare dna_localization 1 { screensound GM_SHIPORBITINGEARTHEU } }
-                                        startscreen    
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_CLOAKINGDEVICE } else ifvare dna_localization 1 { screensound GM_CLOAKINGDEVICEEU } }
-                                        startscreen    
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_COMMUNICADO } else ifvare dna_localization 1 { screensound GM_COMMUNICADOEU } }
-                                        startscreen    
-                                        stopallsounds 
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 2
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_DOYOUREADME } else ifvare dna_localization 1 { screensound GM_DOYOUREADME } }
-                                        startscreen    
-                                        stopallsounds    
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_ISHUTITDOWN } else ifvare dna_localization 1 { screensound GM_ISHUTITDOWN } }
-                                        startscreen    
-                                        stopallsounds
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 3
                                 }
                         }
                         ifvare LEVEL 13 //AKA Level 14 - Mazeframe
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        startscreen    
-                                        startscreen  
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 1
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_HOOKEDINTOSYSTEMS } else ifvare dna_localization 1 { screensound GM_WHATYOUASKEDFOR } }
-                                        startscreen    
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_GOTMYHANDSFULL } else ifvare dna_localization 1 { screensound GM_GONNAGETOUTTAHERE } }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 1
                                 }
                         }
                         ifvare LEVEL 14 //AKA Level 15 - Jenny 2
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        startscreen    
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_KEEPANEYEOUT } else ifvare dna_localization 1 { screensound GM_WHATPARTISBAD } }
-                                        startscreen
-                                        stopallsounds
-                                        startscreen    
-                                        startscreen  
-                                        startscreen    
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_HURRYUP
-                                                else nullop
-                                        } 
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_LAYFINGERS
-                                                else nullop  
-                                        }
-                                        startscreen   
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 5
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        startscreen    
-                                        ifvare dna_localization 1
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_YOULOOKFAMILIAREU
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_YOULOOKFAMILIAR
-                                                else ifvare dna_dukecutscenevoc 1 screensound DUKE_TIP2 //Shake it Baby
-                                                else nullop
-                                        }   
-                                        startscreen
-                                        stopallsounds     
-                                        startscreen  
-                                        startscreen    
-                                        startscreen  
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_ILLFINDTHEM } else ifvare dna_localization 1 { screensound GM_CLAMBAKE } }
-                                        startscreen     
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_JENNY2STANDBY } else ifvare dna_localization 1 { screensound GM_CLONEBAKE } }
-                                        startscreen
-                                        stopallsounds  
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 6
                                 }
                         }
                         ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        startscreen    
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { nullop } else ifvare dna_localization 1 { screensound GM_LIKETHEIDEA } }
-                                        startscreen       
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_BREEDINGSTOCK } else ifvare dna_localization 1 { nullop } }
-                                        startscreen     
-                                        stopallsounds
-                                        startscreen  
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_NEVERLEARN } else ifvare dna_localization 1 { screensound GM_KNOWIMHERE } }
-                                        startscreen     
-                                        stopallsounds    
-                                        startscreen  
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_ENGAGEMENTS
-                                        else 
-                                        {
-                                                nullop 
-                                        } 
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 6
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_NOTGONNABEEASY } else ifvare dna_localization 1 { screensound GM_NOTGONNABEEASY } }
-                                        startscreen        
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 0
                                 }
                                 ifvare cutscene_num 1003
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_HAILTOKING } else ifvare dna_localization 1 { screensound GM_DONTTELLME } }
-                                        else ifvare dna_dukecutscenevoc 1 { ifvare dna_localization 0 { screensound DUKE_GETWEAPON6 } else ifvare dna_localization 1 { nullop } }
-                                        startscreen     
-                                        stopallsounds    
-                                        startscreen    
-                                        startscreen  
-                                        stopallsounds
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_ALIENANDSCHOOLGIRL } else ifvare dna_localization 1 { screensound GM_ALIENSANDCAPTIVES } }
-                                        startscreen     
-                                        stopallsounds     
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_ONEBABEREADY } else ifvare dna_localization 1 { screensound GM_RESTOFTHEPARTY } }
-                                        startscreen        
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 4
                                 }
                         }
                         ifvare LEVEL 16 //AKA Level 17 - Jenny 4
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        startscreen    
-                                        startscreen
-                                        ifvare dna_dukecutscenevoc 2 screensound GM_HOTBABE
-                                        else 
-                                        {
-                                                nullop 
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 2
                                 }
                                 ifvare cutscene_num 1002
                                 {
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_JENNY4 } else ifvare dna_localization 1 { screensound GM_DEJAVU } }
-                                        startscreen       
-                                        stopallsounds  
-                                        startscreen
-                                        startscreen
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_SLIPPERYSNAKE
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_IMDUKE
-                                                else nullop
-                                        } 
-                                        startscreen
-                                        stopallsounds    
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_TAKEHERAWAY } else ifvare dna_localization 1 { nullop } }
-                                        startscreen       
-                                        stopallsounds 
-                                        startscreen    
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 5
                                 }
                         }
                         ifvare LEVEL 17 //AKA Level 18 - Alien Lord
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        startscreen    
-                                        startscreen  
-                                        startscreen
-                                        startscreen
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_DONTWORRY
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_OVERHEATALIENS
-                                                else nullop
-                                        } 
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_HOTFOOT
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                nullop
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 5
                                 }
                                 ifvare cutscene_num 1002
                                 {    
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_STARTINGTOHEATUP } else ifvare dna_localization 1 { screensound GM_STARTINGTOHEATUPEU } }
-                                        startscreen       
-                                        stopallsounds    
-                                        startscreen
-                                        startscreen    
-                                        startscreen
-                                        startscreen
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_ASSGOBLIN
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_KICKINGBUTT
-                                                else nullop
-                                        }
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_URANUS
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                nullop
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 6
                                 }
                                 ifvare cutscene_num 1003
                                 {
-                                        startscreen    
-                                        stopallsounds    
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_BLOWISTHISSHIP } else ifvare dna_localization 1 { screensound GM_SHOWEREARTHWITHDUKE } }
-                                        startscreen       
-                                        stopallsounds    
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_JENNY5ENERGIZE } else ifvare dna_localization 1 { screensound GM_MYPLACE } }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 3
                                 }
                         }
                         ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
                         {
                                 ifvare cutscene_num 1001
                                 {
-                                        startscreen    
-                                        startscreen
-                                        ifvare dna_localization 1
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_SCRATCHBUTT
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_WATCHTHEFIREWORKS
-                                                else nullop
-                                        }  
-                                        startscreen
-                                        stopallsounds
-                                        ifvare dna_localization 1
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_FINDMYOWNWAY
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                nullop
-                                        }  
-                                        startscreen
-                                        startscreen
-                                        startscreen
-                                        startscreen
-                                        startscreen
-                                        ifvare dna_localization 0
-                                        {
-                                                ifvare dna_dukecutscenevoc 2 screensound GM_BETONDUKE
-                                                else nullop
-                                        }
-                                        else
-                                        {
-                                                nullop
-                                        }
-                                        startscreen
-                                        state end_cutscene
+                                        set CUTSCENE_LIMIT 8
                                 }
                         }
                 }
+
+                state cutscene_loop                                  
+                state end_cutscene
         }
         }
     }
 endevent
-
-var CUTSCENE_LIMIT 0
-var curr_cutscene 0
-var skip_this_panel 0
 
 defstate setup_cutscene_panel {
         ife skip_this_panel 0 { state waste_time } // If panel isn't skipped, dont allow input immediately
@@ -1357,499 +1238,10 @@ appendevent EVENT_SCREEN
         {
                 setvar SCREENALPHAWORLD 255
                 setvar worldprevtick -1 // Keep resetting world fade values while in cutscene so the fade returns once exiting
-                ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
-                {
-                        //LEVEL 1 OPENING SCENE
-                        ifvare cutscene_num 1001
-                        {       
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break } 
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 3 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-
-                        //LEVEL 1 MID LEVEL SCENE
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 { ifvare dna_localization 0 set skip_this_panel 1  
-                                        set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 3 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 4 { ife dna_localization 1 set skip_this_panel 1 
-                                        set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-
-                }
-                ifvare LEVEL 1 //AKA Level 2 - Close Encounter
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 1 { ifvare dna_localization 1 set skip_this_panel 1 break }
-                                endswitch
-                        }                      
-                        //LEVEL 2 MID LEVEL SCENE
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 209 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
-                                case 3 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                        //LEVEL 2 GRAY SCENE
-                        ifvare cutscene_num 1003
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
-                                case 2 { ifvare dna_localization 0 set skip_this_panel 1  
-                                        set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 3 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 2 //AKA Level 3 - Hybrid Army
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 2 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 3 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 4 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 5 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 6 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 7 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 8 { ife dna_localization 1 set skip_this_panel 1 break }
-                                endswitch
-                        }
-                        //LEVEL 3 Destroyed Hybrid Army
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 237 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 2 setvar CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                        //LEVEL 3 Spiderlord Encounter
-                        ifvare cutscene_num 1003
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 249 set CUTSCENE_SPRITE BOSS1HEADSPRITE break }
-                                case 1 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 3 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE BOSS1HEADSPRITE break }
-                                case 7 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 8 { ife dna_localization 0 set skip_this_panel 1 break }
-                                endswitch
-                        }
-                        //LEVEL 3 End Level Scene
-                        ifvare cutscene_num 1004
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 285 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 3 //AKA Level 4 - Temple of Amun
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 2 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-                        //LEVEL 4 MID LEVEL SCENE
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 4 //AKA Level 5 - Inner Sanctum
-                {
-                        
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 3 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-
-                        //LEVEL 5 MID LEVEL SCENE
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 217 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 4 set CUTSCENE_SPRITE DUKEHEADSPRITE break 
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 5 //AKA Level 6 - The Controller
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 3 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break } 
-                                endswitch
-                        }
-                        //LEVEL 6 Controller Encounter
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 221 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 2 set CUTSCENE_SPRITE BOSS2HEADSPRITE break
-                                case 4 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-                        //LEVEL 6 Boss Hint
-                        ifvare cutscene_num 1003
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 241 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                        //LEVEL 6
-                        ifvare cutscene_num 1004
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 253 ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 2 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 6 //AKA Level 7 - Temple Run
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 3 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 7 //AKA Level 8 - Down Under
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 3 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 5 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                        //LEVEL 8 JENNY SCENE
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 225 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
-                                case 3 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 4 set CUTSCENE_SPRITE JENNYHEADSPRITE break
-                                case 5 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 6 set CUTSCENE_SPRITE JENNYHEADSPRITE break
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 8 //AKA Level 9 - Eating Out
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                endswitch
-                        }
-                        //LEVEL 9 Secret Cheat.. don't know what Ill do with this
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                endswitch
-                        }
-                        //LEVEL 9 Killed Sentry
-                        ifvare cutscene_num 1003
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 221 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                endswitch
-                        }
-                        //LEVEL 9 Outro
-                        ifvare cutscene_num 1004
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 9 //AKA Level 10 - Day at the Opera
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                        //LEVEL 10 MID LEVEL SCENE
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 2 { ife dna_localization 1 set CUTSCENE_SPRITE DUKEHEADSPRITE else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 2 { ife dna_localization 1 set CUTSCENE_SPRITE DUKEHEADSPRITE else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                endswitch
-                        }
-                        //LEVEL 11 Weapon activated
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 225 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 2 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 3 { set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 5 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 6 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 7 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                endswitch
-                        }
-                        //LEVEL 11 Weapon deactivated
-                        ifvare cutscene_num 1003
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 257 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-                        //LEVEL 11 End Scene
-                        ifvare cutscene_num 1004
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 261 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break 
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 11 //AKA Level 12 - Alien Ship
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break 
-                                endswitch
-                        }
-                        //LEVEL 12 MID LEVEL SCENE
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
-                {
-                        //LEVEL 13 Looking out the window
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-                        //LEVEL 13 Cloaking Device Disabled
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 3 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 13 //AKA Level 14 - Mazeframe
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                endswitch
-                        }
-                        //LEVEL 14 Found mainframe
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 209 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 14 //AKA Level 15 - Jenny 2
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 3 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 5 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                        //LEVEL 15 Met Jenny 2
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 229 ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 2 set CUTSCENE_SPRITE JENNYHEADSPRITE break
-                                case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
-                                case 5 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 15 //AKA Level 16 - Jenny 3
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 3 set CUTSCENE_SPRITE BOSS4HEADSPRITE break
-                                case 4 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 5 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 6 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                        //LEVEL 16 Blue Key
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-                        //LEVEL 3 Met Jenny 3
-                        ifvare cutscene_num 1003
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 233 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
-                                case 3 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 16 //AKA Level 17 - Jenny 4
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                        //LEVEL 17 Met Jenny 4
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
-                                case 2 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
-                                case 3 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 4 { ife dna_localization 1 set CUTSCENE_SPRITE SARGEHEADSPRITE else set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 5 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 17 //AKA Level 18 - Alien Lord
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 2 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 3 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 4 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 5 { ife dna_localization 1 set skip_this_panel 1 break }
-                                endswitch
-                        }
-                        //LEVEL 18 Cooling Units Shut Down
-                        ifvare cutscene_num 1002
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 2 set CUTSCENE_SPRITE BOSS4HEADSPRITE break
-                                case 5 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 6 { ife dna_localization 1 set skip_this_panel 1 break }
-                                endswitch
-                        }
-                        //LEVEL 18 Met Jenny 5
-                        ifvare cutscene_num 1003
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 257 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
-                                case 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                endswitch
-                        }
-                }
-                ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 1 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break
-                                case 3 { ife dna_localization 0 set skip_this_panel 1 break }
-                                case 4 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 5 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 6 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 7 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 8 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE DUKEHEADSPRITE break }
-                                endswitch
-                        }
-                }
         }
-                state setup_cutscene_panel
-                state cutcam_render
-                state display_cutscene_dialogue
+                state setup_cutscene_panel // Set up text
+                state cutcam_render // Set up the cutscene's visual
+                state display_cutscene_dialogue // And now display everything
         }
     }
     else
