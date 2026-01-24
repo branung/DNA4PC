@@ -9,7 +9,7 @@ ifvare LEVEL 0 // Level 1 - Gathering Intel
     redefinequote 204 
     redefinequote 205 We've lost contact with 
     redefinequote 206 Area 51 and scattered
-    redefinequote 207 reports are that an alien
+    redefinequote 207 reports are that an alien 
     redefinequote 208 species has infiltrated it.
     redefinequote 209 We need you to go in,
     redefinequote 210 gather intelligence on
@@ -31,7 +31,7 @@ ifvare LEVEL 0 // Level 1 - Gathering Intel
     redefinequote 225 Let's rock.
     redefinequote 226 
     redefinequote 227 
-    redefinequote 228 
+    redefinequote 228 /!&
     redefinequote 229 General, this place is
     redefinequote 230 crawling with alien scum,
     redefinequote 231 but I've recovered an
@@ -51,7 +51,7 @@ ifvare LEVEL 0 // Level 1 - Gathering Intel
     redefinequote 245 Duke out.
     redefinequote 246 
     redefinequote 247 
-    redefinequote 248 
+    redefinequote 248 /!&
     redefinequote 249 
     redefinequote 250
     //Security cam lines
@@ -75,7 +75,7 @@ else ifvare LEVEL 1 // Level 2 - Close Encounter
     redefinequote 205 Once you find it, you
     redefinequote 206 can use it to upload the
     redefinequote 207 data disk you've recovered. 
-    redefinequote 208 
+    redefinequote 208 /!&
     redefinequote 209 General, I've found the 
     redefinequote 210 Satlink laptop. Uploading 
     redefinequote 211 the data to you now.
@@ -93,9 +93,9 @@ else ifvare LEVEL 1 // Level 2 - Close Encounter
     redefinequote 223 algae-eaters.
     redefinequote 224 
     redefinequote 225 They picked the wrong
-    redefinequote 226 planet this time.
+    redefinequote 226 planet this time. 
     redefinequote 227 
-    redefinequote 228 
+    redefinequote 228 /!&
     redefinequote 229 I've just had a close
     redefinequote 230 encounter of the 
     redefinequote 231 ugliest kind.
@@ -111,7 +111,7 @@ else ifvare LEVEL 1 // Level 2 - Close Encounter
     redefinequote 241 If that's true, they better 
     redefinequote 242 get ready to work overtime.
     redefinequote 243 
-    redefinequote 244 
+    redefinequote 244 /!&
     redefinequote 245 
     redefinequote 246 
     redefinequote 247 
@@ -162,7 +162,7 @@ else ifvare LEVEL 2 // Level 3 - Hybrid Army
     redefinequote 233 It's time to kick ass 
     redefinequote 234 and chew bubblegum,
     redefinequote 235 and I'm all out of gum.
-    redefinequote 236 
+    redefinequote 236 /!&
     redefinequote 237 Good work, Duke! Shutting
     redefinequote 238 down the environmental
     redefinequote 239 regulators has destroyed
@@ -174,7 +174,7 @@ else ifvare LEVEL 2 // Level 3 - Hybrid Army
     redefinequote 245 Piece of cake.
     redefinequote 246 This was almost too easy.
     redefinequote 247
-    redefinequote 248
+    redefinequote 248 /!&
     redefinequote 249 You amuse me, 
     redefinequote 250 little human.
     redefinequote 251 As if your pathetic 
@@ -206,7 +206,7 @@ else ifvare LEVEL 2 // Level 3 - Hybrid Army
     redefinequote 277 Come Get Some.
     redefinequote 278 Time for an
     redefinequote 279 alien autopsy.
-    redefinequote 280 
+    redefinequote 280 /!&
     redefinequote 281 
     redefinequote 282 
     redefinequote 283
@@ -230,7 +230,7 @@ else ifvare LEVEL 2 // Level 3 - Hybrid Army
     redefinequote 301 Talk to you on 
     redefinequote 302 the other side.
     redefinequote 303
-    redefinequote 304
+    redefinequote 304 /!&
     //Security cam lines
     redefinequote CAM_QUOTE1 I think I'll 
     redefinequote CAM_QUOTE2 throw a pipe 
@@ -256,11 +256,11 @@ else ifvare LEVEL 3 // Level 4 - Temple of Amun
     redefinequote 209 Time to walk like an
     redefinequote 210 Egyptian, into the 
     redefinequote 211 Temple of Doom, and 
-    redefinequote 212 deliver some max payne. 
+    redefinequote 212 deliver some max payne. /!&
     redefinequote 213 So this is where they've
     redefinequote 214 been hiding their 
     redefinequote 215 alien hybrid army. 
-    redefinequote 216 
+    redefinequote 216 /!&
     redefinequote 217 
     redefinequote 218
     redefinequote 219 
@@ -289,7 +289,7 @@ else ifvare LEVEL 4 //Level 5 - Inner Sanctum
     redefinequote 213 Leave it to me. 
     redefinequote 214 Permanent hybernation, 
     redefinequote 215 coming up.
-    redefinequote 216 
+    redefinequote 216 /!&
     redefinequote 217 General, I've found 	
     redefinequote 218 some schematics on  
     redefinequote 219 the regulators  
@@ -309,7 +309,7 @@ else ifvare LEVEL 4 //Level 5 - Inner Sanctum
     redefinequote 233 Rockin'.
     redefinequote 234 
     redefinequote 235 
-    redefinequote 236
+    redefinequote 236 /!&
     //Mission objective
     redefinequote OBJECTIVE_QUOTE1 Egypt
     redefinequote OBJECTIVE_QUOTE2 Find data on the
@@ -334,7 +334,7 @@ else ifvare LEVEL 5 //AKA Level 6 - The Controller
     redefinequote 213 Damn it.
     redefinequote 214 I'm an ass kicker,
     redefinequote 215 not a tomb raiding
-    redefinequote 216 switch flipper!
+    redefinequote 216 switch flipper! /!&
     redefinequote 217 I'm gonna send him 
     redefinequote 218 crying to his mummy. 
     redefinequote 219 
@@ -358,7 +358,7 @@ else ifvare LEVEL 5 //AKA Level 6 - The Controller
     redefinequote 237 Yeah, yeah... prepare to die.
     redefinequote 238 I've heard that before.
     redefinequote 239 I'll kick your ass 
-    redefinequote 240 till your nose bleeds. 
+    redefinequote 240 till your nose bleeds. /!&
     redefinequote 241 Duke, we're detecting a 
     redefinequote 242 massive power reading 
     redefinequote 243 around the Controller. 
@@ -370,7 +370,7 @@ else ifvare LEVEL 5 //AKA Level 6 - The Controller
     redefinequote 249 Don't worry, General.
     redefinequote 250 Shields or not, I'll 
     redefinequote 251 find a way to crush 
-    redefinequote 252 this crustacean cretin.
+    redefinequote 252 this crustacean cretin. /!&
     redefinequote 253 Duke, the hibernation 
     redefinequote 254 tanks have been drained,
     redefinequote 255 and the alien army has
@@ -382,7 +382,7 @@ else ifvare LEVEL 5 //AKA Level 6 - The Controller
     redefinequote 261 Damn, I'm good. 
     redefinequote 262 
     redefinequote 263 
-    redefinequote 264
+    redefinequote 264 /!&
     redefinequote 265 
     redefinequote 266 
     redefinequote 267 
@@ -433,7 +433,7 @@ else ifvare LEVEL 6 //AKA Level 7 - Temple Run
     redefinequote 216 two wonders. 
     redefinequote 217 I'm heading for 
     redefinequote 218 another alien teleporter.
-    redefinequote 219 
+    redefinequote 219 /!&
     redefinequote 220 
     redefinequote 221 
     redefinequote 222 
@@ -473,7 +473,7 @@ else ifvare LEVEL 7 //AKA Level 8 - Down Under
     redefinequote 221 I'll contact you when 
     redefinequote 222 I find something. 
     redefinequote 223 Over and out. 
-    redefinequote 224 
+    redefinequote 224 /!&
     redefinequote 225 We got your  
     redefinequote 226 distress call.
     redefinequote 227 What's the situation?
@@ -505,7 +505,7 @@ else ifvare LEVEL 7 //AKA Level 8 - Down Under
     redefinequote 253 The Opera House 
     redefinequote 254 is a block away.
     redefinequote 255 
-    redefinequote 256 
+    redefinequote 256 /!&
     redefinequote 257 
     redefinequote 258
     redefinequote 259
@@ -551,7 +551,7 @@ else ifvare LEVEL 8 // Level 9 - Eating Out
     redefinequote 209 Try that. Also, you 
     redefinequote 210 need to dispatch the
     redefinequote 211 alien sentry so he doesn't 
-    redefinequote 212 warn them of your arrival.
+    redefinequote 212 warn them of your arrival. /!&
     redefinequote 213 Duke, I've intercepted 
     redefinequote 214 an alien transmission.
     redefinequote 215 It looks like a password...
@@ -559,7 +559,7 @@ else ifvare LEVEL 8 // Level 9 - Eating Out
     redefinequote 217 LUAU LASS.
     redefinequote 218 Does that mean 
     redefinequote 219 anything to you?
-    redefinequote 220 
+    redefinequote 220 /!&
     redefinequote 221 Good work, Duke.
     redefinequote 222 That was the sentry.
     redefinequote 223 
@@ -567,12 +567,12 @@ else ifvare LEVEL 8 // Level 9 - Eating Out
     redefinequote 225 Grab his security key 
     redefinequote 226 so you can get into  
     redefinequote 227 the opera house.
-    redefinequote 228 
+    redefinequote 228 /!&
     redefinequote 229 Gimme some 
     redefinequote 230 Hendrix or Ozzy.
     redefinequote 231 Hell, gimme anything 
-    redefinequote 232 but Opera. 
-    redefinequote 233
+    redefinequote 232 but Opera. /!&
+    redefinequote 233 
     redefinequote 234 
     redefinequote 235 
     redefinequote 236 
@@ -610,7 +610,7 @@ else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera
     redefinequote 209 Roger that. 
     redefinequote 210 Piece of cake. 
     redefinequote 211 
-    redefinequote 212 
+    redefinequote 212 /!&
     redefinequote 213 Duke to Graves. 
     redefinequote 214 I think I've 
     redefinequote 215 found something. 
@@ -626,7 +626,7 @@ else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera
     redefinequote 225 We'll continue to analyze 
     redefinequote 226 the alien plans you 
     redefinequote 227 transmitted. 
-    redefinequote 228 
+    redefinequote 228 /!&
     redefinequote 229 
     redefinequote 230 
     redefinequote 231 
@@ -663,7 +663,7 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 213 Hurry Duke! 
     redefinequote 214 We're running out of time! 
     redefinequote 215 
-    redefinequote 216 
+    redefinequote 216 /!&
     redefinequote 217 
     redefinequote 218 
     redefinequote 219 
@@ -683,7 +683,7 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 233 It's charging up to fire. 
     redefinequote 234 
     redefinequote 235 
-    redefinequote 236 
+    redefinequote 236 /!&
     redefinequote 237 Those alien bastards must 
     redefinequote 238 have anticipated you 
     redefinequote 239 getting the weapon data and 
@@ -703,11 +703,11 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 253 Duke, get a move on! 
     redefinequote 254 
     redefinequote 255 
-    redefinequote 256 
+    redefinequote 256 /!&
     redefinequote 257 Whew! 
     redefinequote 258 Just in the nick of time.
     redefinequote 259 But I still smell trouble.
-    redefinequote 260 
+    redefinequote 260 /!&
     redefinequote 261 General, you better get 
     redefinequote 262 a team down here to
     redefinequote 263 dismantle this weapon 
@@ -723,7 +723,7 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 273 It's gut stompin' time. 
     redefinequote 274 
     redefinequote 275 
-    redefinequote 276 
+    redefinequote 276 /!&
     redefinequote 277
     redefinequote 278 
     redefinequote 279 
@@ -754,7 +754,7 @@ else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
     redefinequote 209 Nobody jams my 
     redefinequote 210 signal...and lives! 
     redefinequote 211 
-    redefinequote 212 
+    redefinequote 212 /!&
     redefinequote 213 Whoa, looks like 
     redefinequote 214 I hit the mother-lode.
     redefinequote 215 
@@ -762,7 +762,7 @@ else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
     redefinequote 217 It's egg crackin' time.
     redefinequote 218 
     redefinequote 219 
-    redefinequote 220 
+    redefinequote 220 /!&
     redefinequote 221 
     redefinequote 222 
     redefinequote 223 
@@ -793,7 +793,7 @@ else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
     redefinequote 209 and that's probably
     redefinequote 210 what's knocked out my
     redefinequote 211 communications.
-    redefinequote 212 
+    redefinequote 212 /!&
     redefinequote 213 General, do you read me? 
     redefinequote 214 
     redefinequote 215 
@@ -809,7 +809,7 @@ else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
     redefinequote 225 Good work. Get to 
     redefinequote 226 a secure location so
     redefinequote 227 I can brief you of 
-    redefinequote 228 your new objectives. 
+    redefinequote 228 your new objectives./!&
     redefinequote 229 
     redefinequote 230 
     //Mission objective
@@ -828,7 +828,7 @@ else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
     redefinequote 205 We need you to 
     redefinequote 206 hack into their systems 
     redefinequote 207 so we can try to 
-    redefinequote 208 find a weakness.
+    redefinequote 208 find a weakness./!&
     redefinequote 209 Okay General, 
     redefinequote 210 you're hooked into 
     redefinequote 211 their systems.
@@ -836,7 +836,7 @@ else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
     redefinequote 213 See what you can find. 
     redefinequote 214 I've got my hands 
     redefinequote 215 full up here. 
-    redefinequote 216 
+    redefinequote 216 /!&
     redefinequote 217 
     redefinequote 218 
     redefinequote 219 
@@ -873,7 +873,7 @@ else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
     redefinequote 221 Hurry up. 
     redefinequote 222 It never takes me 
     redefinequote 223 long to find a woman. 
-    redefinequote 224 
+    redefinequote 224 /!&
     redefinequote 225 
     redefinequote 226 
     redefinequote 227 
@@ -905,7 +905,7 @@ else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
     redefinequote 253 General, Jenny 2 
     redefinequote 254 is standing by. 
     redefinequote 255 Get her out of here. 
-    redefinequote 256 
+    redefinequote 256 /!&
     redefinequote 257 
     redefinequote 258
     redefinequote 259
@@ -946,11 +946,11 @@ else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
     redefinequote 225 Fine by me. 
     redefinequote 226 I've never liked 
     redefinequote 227 engagements.
-    redefinequote 228 
+    redefinequote 228 /!&
     redefinequote 229 Taking them head on 
     redefinequote 230 is not going to be easy. 
     redefinequote 231 
-    redefinequote 232
+    redefinequote 232 /!&
     redefinequote 233 Hail to the king, baby! 
     redefinequote 234 
     redefinequote 235 
@@ -970,7 +970,7 @@ else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
     redefinequote 249 General, 
     redefinequote 250 one babe ready 
     redefinequote 251 to beam down. 
-    redefinequote 252 
+    redefinequote 252 /!&
     redefinequote 253 
     redefinequote 254 
     redefinequote 255 
@@ -994,7 +994,7 @@ else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
     redefinequote 209 One hot babe coming up. 
     redefinequote 210 
     redefinequote 211 
-    redefinequote 212 
+    redefinequote 212 /!&
     redefinequote 213 Jenny 4, I presume? 
     redefinequote 214 
     redefinequote 215 
@@ -1014,7 +1014,7 @@ else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
     redefinequote 229 General, take her away.
     redefinequote 230 
     redefinequote 231 
-    redefinequote 232
+    redefinequote 232 /!&
     redefinequote 233
     redefinequote 234 
     redefinequote 235 
@@ -1060,7 +1060,7 @@ else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
     redefinequote 221 I'll give these alien 
     redefinequote 222 maggots a hotfoot they'll 
     redefinequote 223 feel all the way to hell. 
-    redefinequote 224 
+    redefinequote 224 /!&
     redefinequote 225 I'm coming for you! 
     redefinequote 226 
     redefinequote 227 
@@ -1092,7 +1092,7 @@ else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
     redefinequote 253 I'll be vacationing
     redefinequote 254 with hot babes, 
     redefinequote 255 while your atoms are 
-    redefinequote 256 flying past Uranus.
+    redefinequote 256 flying past Uranus./!&
     redefinequote 257 Oh, Duke, 
     redefinequote 258 I'm so happy 
     redefinequote 259 I could just 
@@ -1104,7 +1104,7 @@ else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
     redefinequote 265 General, Jenny 5 is ready. 
     redefinequote 266 Energize. 
     redefinequote 267 
-    redefinequote 268 
+    redefinequote 268 /!&
     redefinequote 269 
     redefinequote 270
     //Security cam lines
@@ -1156,7 +1156,7 @@ else ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
     redefinequote 233 Who needs luck? 
     redefinequote 234 Always bet on Duke. 
     redefinequote 235 
-    redefinequote 236 
+    redefinequote 236 /!&
     redefinequote 237 
     redefinequote 238
     redefinequote 239 
@@ -1241,7 +1241,7 @@ ifvare LEVEL 0 // Level 1 - Gathering Intel
     redefinequote 225 Who wants some!
     redefinequote 226 
     redefinequote 227 
-    redefinequote 228 
+    redefinequote 228 /!&
     redefinequote 229 General! 
     redefinequote 230 I have found  
     redefinequote 231 a Data Disk!
@@ -1257,7 +1257,7 @@ ifvare LEVEL 0 // Level 1 - Gathering Intel
     redefinequote 241 I'm on my way...
     redefinequote 242 
     redefinequote 243 
-    redefinequote 244 
+    redefinequote 244 /!&
     redefinequote 245 
     redefinequote 246  
     redefinequote 247 
@@ -1285,7 +1285,7 @@ else ifvare LEVEL 1 // Level 2 - Close Encounter
     redefinequote 205 
     redefinequote 206 
     redefinequote 207 
-    redefinequote 208 
+    redefinequote 208 /!&
     redefinequote 209 I've found the Satlink.
     redefinequote 210 Uploading the data now.
     redefinequote 211 
@@ -1305,7 +1305,7 @@ else ifvare LEVEL 1 // Level 2 - Close Encounter
     redefinequote 225 The odds are stacked too 
     redefinequote 226 heavily against them!  
     redefinequote 227 
-    redefinequote 228 
+    redefinequote 228 /!&
     redefinequote 229 I've just had a close
     redefinequote 230 encounter of the 
     redefinequote 231 ugliest kind.
@@ -1321,7 +1321,7 @@ else ifvare LEVEL 1 // Level 2 - Close Encounter
     redefinequote 241 If they can resurrect the 
     redefinequote 242 dead they'll be working  
     redefinequote 243 overtime in my wake. 
-    redefinequote 244 
+    redefinequote 244 /!&
     redefinequote 245 
     redefinequote 246 
     redefinequote 247 
@@ -1368,7 +1368,7 @@ else ifvare LEVEL 2 // Level 3 - Hybrid Army
     redefinequote 229 Don't worry, their plans
     redefinequote 230 are about to be derailed.
     redefinequote 231 
-    redefinequote 232 
+    redefinequote 232 /!&
     redefinequote 233 
     redefinequote 234 
     redefinequote 235 
@@ -1384,7 +1384,7 @@ else ifvare LEVEL 2 // Level 3 - Hybrid Army
     redefinequote 245 Piece of cake.
     redefinequote 246 
     redefinequote 247 
-    redefinequote 248 
+    redefinequote 248 /!&
     redefinequote 249 The futility of your 
     redefinequote 250 persistence amuses me.
     redefinequote 251 It's a shame that I
@@ -1420,7 +1420,7 @@ else ifvare LEVEL 2 // Level 3 - Hybrid Army
     redefinequote 281 Come get some! 
     redefinequote 282 
     redefinequote 283 
-    redefinequote 284
+    redefinequote 284 /!&
     redefinequote 285 General, Area 51 is the 
     redefinequote 286 tip of the iceberg.
     redefinequote 287 There's a much larger 
@@ -1440,7 +1440,7 @@ else ifvare LEVEL 2 // Level 3 - Hybrid Army
     redefinequote 301 Hail to the King, baby! 
     redefinequote 302 
     redefinequote 303
-    redefinequote 304
+    redefinequote 304 /!&
     //Security cam lines
     redefinequote CAM_QUOTE1 I think I'll 
     redefinequote CAM_QUOTE2 throw a pipe 
@@ -1462,7 +1462,7 @@ else ifvare LEVEL 3 // Level 4 - Temple of Amun
     redefinequote 205 deep inside the complex. 
     redefinequote 206 You must find a way
     redefinequote 207 into the inner sanctum. 
-    redefinequote 208
+    redefinequote 208 /!&
     redefinequote 209
     redefinequote 210 
     redefinequote 211 
@@ -1470,7 +1470,7 @@ else ifvare LEVEL 3 // Level 4 - Temple of Amun
     redefinequote 213 The aliens must be using
     redefinequote 214 the temple to store an 
     redefinequote 215 entire Alien army. Ready to 
-    redefinequote 216 be defrosted when needed. 
+    redefinequote 216 be defrosted when needed. /!&
     redefinequote 217 
     redefinequote 218 
     //Mission objective
@@ -1497,7 +1497,7 @@ else ifvare LEVEL 4 //Level 5 - Inner Sanctum
     redefinequote 213 Leave it to me. 
     redefinequote 214 Wherever I find these 
     redefinequote 215 freakin' machines,
-    redefinequote 216 I'll find some answers. 
+    redefinequote 216 I'll find some answers. /!&
     redefinequote 217 General! 
     redefinequote 218 I've found schematics!  
     redefinequote 219 I'm uploading them
@@ -1517,7 +1517,7 @@ else ifvare LEVEL 4 //Level 5 - Inner Sanctum
     redefinequote 233 I'm on my way! 
     redefinequote 234 
     redefinequote 235 
-    redefinequote 236
+    redefinequote 236 /!&
     //Mission objective
     redefinequote OBJECTIVE_QUOTE1 Egypt
     redefinequote OBJECTIVE_QUOTE2 Find the Schematics.
@@ -1538,7 +1538,7 @@ else ifvare LEVEL 5 //AKA Level 6 - The Controller
     redefinequote 209 drains the   
     redefinequote 210 hibernation tanks.
     redefinequote 211 
-    redefinequote 212 
+    redefinequote 212 /!&
     redefinequote 213 
     redefinequote 214 
     redefinequote 215 
@@ -1562,7 +1562,7 @@ else ifvare LEVEL 5 //AKA Level 6 - The Controller
     redefinequote 233 weapon we shall
     redefinequote 234 defrost our armies 
     redefinequote 235 and rule your world! 
-    redefinequote 236 
+    redefinequote 236 /!&
     redefinequote 237 
     redefinequote 238 
     redefinequote 239 
@@ -1578,7 +1578,7 @@ else ifvare LEVEL 5 //AKA Level 6 - The Controller
     redefinequote 249 Shields, huh? 
     redefinequote 250 Don't worry, General.
     redefinequote 251 I'll find a way to squash 
-    redefinequote 252 this mutant maggot!
+    redefinequote 252 this mutant maggot! /!&
     redefinequote 253 
     redefinequote 254 
     redefinequote 255 
@@ -1641,7 +1641,7 @@ else ifvare LEVEL 6 //AKA Level 7 - Temple Run
     redefinequote 217 I'll shoot my way out.
     redefinequote 218 
     redefinequote 219 
-    redefinequote 220 
+    redefinequote 220 /!&
     redefinequote 221 
     redefinequote 222 
     redefinequote 223 
@@ -1680,7 +1680,7 @@ else ifvare LEVEL 7 //AKA Level 8 - Down Under
     redefinequote 221 Cool...
     redefinequote 222 
     redefinequote 223 
-    redefinequote 224 
+    redefinequote 224 /!&
     redefinequote 225 Honey, 
     redefinequote 226 we got your  
     redefinequote 227 distress call.
@@ -1712,7 +1712,7 @@ else ifvare LEVEL 7 //AKA Level 8 - Down Under
     redefinequote 253 The Opera House 
     redefinequote 254 is only a block away. 
     redefinequote 255 
-    redefinequote 256 
+    redefinequote 256 /!&
     redefinequote 257 
     redefinequote 258
     redefinequote 259
@@ -1758,7 +1758,7 @@ else ifvare LEVEL 8 // Level 9 Eating Out
     redefinequote 209 But first, you must 
     redefinequote 210 dispatch their sentry so 
     redefinequote 211 he can't warn them 
-    redefinequote 212 of your arrival. 
+    redefinequote 212 of your arrival. /!&
     redefinequote 213 Duke I've aquired a
     redefinequote 214 strange alien transmission.
     redefinequote 215 It looks like a password... 
@@ -1766,7 +1766,7 @@ else ifvare LEVEL 8 // Level 9 Eating Out
     redefinequote 217 LUAU LASS.
     redefinequote 218 Can you make sense  
     redefinequote 219 of that, Duke? 
-    redefinequote 220 
+    redefinequote 220 /!&
     redefinequote 221 Duke,   
     redefinequote 222 that was  
     redefinequote 223 the sentry alien.
@@ -1774,11 +1774,11 @@ else ifvare LEVEL 8 // Level 9 Eating Out
     redefinequote 225 Grab his key so 
     redefinequote 226 you can get into 
     redefinequote 227 the Opera House. 
-    redefinequote 228 
+    redefinequote 228 /!&
     redefinequote 229 Going to the opera  
     redefinequote 230 and me without 
     redefinequote 231 my tuxedo!
-    redefinequote 232
+    redefinequote 232 /!&
     redefinequote 233
     redefinequote 234 
     redefinequote 235 
@@ -1817,7 +1817,7 @@ else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera
     redefinequote 209 No problemo! 
     redefinequote 210 
     redefinequote 211 
-    redefinequote 212 
+    redefinequote 212 /!&
     redefinequote 213 I think I've  
     redefinequote 214 found something. 
     redefinequote 215 Start downloading
@@ -1833,7 +1833,7 @@ else ifvare LEVEL 9 //AKA Level 10 - Day at the Opera
     redefinequote 225 You can access
     redefinequote 226 it from a door in
     redefinequote 227 one of the band pits.
-    redefinequote 228 
+    redefinequote 228 /!&
     redefinequote 229 
     redefinequote 230 
     redefinequote 231 
@@ -1874,11 +1874,11 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 217 You've got to locate 
     redefinequote 218 the weapon.
     redefinequote 219 But please, 
-    redefinequote 220 don't touch any switches!
+    redefinequote 220 don't touch any switches!/!&
     redefinequote 221 This must be the weapon! 
     redefinequote 222 
     redefinequote 223 
-    redefinequote 224 
+    redefinequote 224 /!&
     redefinequote 225 What happened? 
     redefinequote 226 We're picking up a 
     redefinequote 227 huge power surge from 
@@ -1886,7 +1886,7 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 229 Ummm... Too late. 
     redefinequote 230 They've already 
     redefinequote 231 started the weapon. 
-    redefinequote 232
+    redefinequote 232 /!&
     redefinequote 233 
     redefinequote 234 
     redefinequote 235 
@@ -1898,7 +1898,7 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 241 There are four 
     redefinequote 242 switches that will
     redefinequote 243 neutralize the weapon.
-    redefinequote 244 Get to them!! 
+    redefinequote 244 Get to them!! /!&
     redefinequote 245 
     redefinequote 246 
     redefinequote 247 
@@ -1914,7 +1914,7 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 257 I deactivated 
     redefinequote 258 it just in time.
     redefinequote 259 Now it's time I fight 
-    redefinequote 260 them their own turf! 
+    redefinequote 260 them their own turf! /!&
     redefinequote 261 You better send a 
     redefinequote 262 team down here to 
     redefinequote 263 dismantle this weapon. 
@@ -1930,7 +1930,7 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 273 I'm going to stop them.
     redefinequote 274 
     redefinequote 275 
-    redefinequote 276 
+    redefinequote 276 /!&
     redefinequote 277
     redefinequote 278 
     redefinequote 279 
@@ -1961,7 +1961,7 @@ else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
     redefinequote 209 Looks like my 
     redefinequote 210 signal is being jammed.
     redefinequote 211 
-    redefinequote 212 
+    redefinequote 212 /!&
     redefinequote 213 Looks like the mother-lode 
     redefinequote 214 of inbred aliens.
     redefinequote 215 This must be their
@@ -1969,7 +1969,7 @@ else ifvare LEVEL 11 //AKA Level 12 - Alien Ship
     redefinequote 217 Time to reduce these
     redefinequote 218 eggs' life expectancy.
     redefinequote 219 
-    redefinequote 220 
+    redefinequote 220 /!&
     redefinequote 221 
     redefinequote 222 
     redefinequote 223 
@@ -2000,7 +2000,7 @@ else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
     redefinequote 209 If I can shut it off,  
     redefinequote 210 I'll be in comunicado 
     redefinequote 211 again with the General. 
-    redefinequote 212 
+    redefinequote 212 /!&
     redefinequote 213 General, do you read me?
     redefinequote 214 
     redefinequote 215 
@@ -2016,7 +2016,7 @@ else ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
     redefinequote 225 Get yourself to a 
     redefinequote 226 safe location so 
     redefinequote 227 I can brief you 
-    redefinequote 228 of your new mission.
+    redefinequote 228 of your new mission./!&
     redefinequote 229 
     redefinequote 230 
     //Mission objective
@@ -2035,7 +2035,7 @@ else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
     redefinequote 205 I need you to hack into 
     redefinequote 206 their mainframe so we can  
     redefinequote 207 download information that
-    redefinequote 208 will help to destroy them.
+    redefinequote 208 will help to destroy them./!&
     redefinequote 209 Okay, General. 
     redefinequote 210 You've got what 
     redefinequote 211 you've asked for!
@@ -2043,7 +2043,7 @@ else ifvare LEVEL 13 //AKA Level 14 - Mazeframe
     redefinequote 213 Start downloading. 
     redefinequote 214 I'm going to get out of here
     redefinequote 215 before the aliens are 
-    redefinequote 216 alerted to my presence. 
+    redefinequote 216 alerted to my presence. /!&
     redefinequote 217 
     redefinequote 218 
     redefinequote 219 
@@ -2080,7 +2080,7 @@ else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
     redefinequote 221 No-one's laying any fingers 
     redefinequote 222 but me. I'll get off with
     redefinequote 223 all the girls, General. 
-    redefinequote 224 It's what I do. 
+    redefinequote 224 It's what I do. /!&
     redefinequote 225 
     redefinequote 226 
     redefinequote 227 
@@ -2112,7 +2112,7 @@ else ifvare LEVEL 14 //AKA Level 15 - Jenny 2
     redefinequote 253 Bring your sisters 
     redefinequote 254 and have a clonebake 
     redefinequote 255 with the Duke. 
-    redefinequote 256 Yeah. 
+    redefinequote 256 Yeah. /!&
     redefinequote 257 
     redefinequote 258
     redefinequote 259
@@ -2152,12 +2152,12 @@ else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
     redefinequote 224 the aliens. 
     redefinequote 225 Fine by me. 
     redefinequote 226 I've never liked 
-    redefinequote 227 engagements.
+    redefinequote 227 engagements./!&
     redefinequote 228 
     redefinequote 229 Taking them head on 
     redefinequote 230 is not going to be easy!
     redefinequote 231 
-    redefinequote 232
+    redefinequote 232 /!&
     redefinequote 233 Don't tell me, 
     redefinequote 234 your name's Jenny, 
     redefinequote 235 right? 
@@ -2177,7 +2177,7 @@ else ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
     redefinequote 249 But first, I'll save 
     redefinequote 250 the rest of the party.
     redefinequote 251 General, I've got one 
-    redefinequote 252 babe here ready to go. 
+    redefinequote 252 babe here ready to go. /!&
     redefinequote 253 
     redefinequote 254 
     redefinequote 255 
@@ -2201,7 +2201,7 @@ else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
     redefinequote 209 One hot babe, coming up. 
     redefinequote 210 
     redefinequote 211 
-    redefinequote 212 
+    redefinequote 212 /!&
     redefinequote 213 Again with the 
     redefinequote 214 de ja vous... 
     redefinequote 215 
@@ -2221,11 +2221,11 @@ else ifvare LEVEL 16 //AKA Level 17 - Jenny 4
     redefinequote 229 Save the love for later, 
     redefinequote 230 Number 1.
     redefinequote 231 
-    redefinequote 232
+    redefinequote 232 
     redefinequote 233 Proceed to the 
     redefinequote 234 engine room. 
     redefinequote 235 
-    redefinequote 236 
+    redefinequote 236 /!&
     redefinequote 237 
     redefinequote 238
     redefinequote 239 
@@ -2263,7 +2263,7 @@ else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
     redefinequote 217 Cool. 
     redefinequote 218 We'll overheat the aliens, 
     redefinequote 219 so they can get used
-    redefinequote 220 to being in hell! 
+    redefinequote 220 to being in hell! /!&
     redefinequote 221 
     redefinequote 222 
     redefinequote 223 
@@ -2295,7 +2295,7 @@ else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
     redefinequote 249 I'd prefer to 
     redefinequote 250 spend my time 
     redefinequote 251 kicking your butt. 
-    redefinequote 252 
+    redefinequote 252 /!&
     redefinequote 253 
     redefinequote 254 
     redefinequote 255 
@@ -2311,7 +2311,7 @@ else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
     redefinequote 265 Meet you back home, 
     redefinequote 266 you can finish thanking 
     redefinequote 267 me at my place. 
-    redefinequote 268 
+    redefinequote 268 /!&
     redefinequote 269 
     redefinequote 270
     //Security cam lines
@@ -2343,7 +2343,7 @@ else ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
     redefinequote 213 Thanks, General, 
     redefinequote 214 but I'll find 
     redefinequote 215 my own way out. 
-    redefinequote 216 
+    redefinequote 216 /!&
     redefinequote 217 
     redefinequote 218 
     redefinequote 219 

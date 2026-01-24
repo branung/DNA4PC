@@ -39,10 +39,20 @@ gamevar OPCUTSCENESLIDEINTIME OPSLIDEINTIME
 gamevar OPCUTSCENE12SLIDEINTIME OP12SLIDEINTIME
 gamevar OP12DUKESLIDEINTIME OPDUKESLIDEINTIME
 
-var CUTSCENE_LIMIT 0 // Set this to the number of panels you want the cutscene to have - 0 is included in this count
 var curr_cutscene -1 // Tracks current panel
 var skip_this_panel 0 // Forcefully skips the panel it's on. Only needed for localization differences
 var dont_stop_sounds 0 // Set to 1 to prevent stopallsounds from being called, useful for letting the sound of a pickup play into the cutscene it triggers
+
+gamevar cutscene_length 0 0
+var cutscene_killswitch_start 0
+define cutscene_quote_check 190
+definequote cutscene_quote_check TEST
+gamevar kill_cutscene 0 0
+define KILLSWITCH_LINE 191
+definequote KILLSWITCH_LINE /!&
+define newTextQuote 192
+definequote newTextQuote TEMP QUOTE STORAGE
+var curr_quote 0
 
 var OPCUTSCENEPOS 160
 define OPCUTSCENE12POS 95
@@ -104,10 +114,10 @@ defstate cutscene_cleanup
                 setvar CUTSCENE_STEP 0
         ifvarn prevtick -1
                 setvar prevtick -1
-        ifn CUTSCENE_LIMIT 0
-                set CUTSCENE_LIMIT 0
         ifn curr_cutscene -1
                 set curr_cutscene -1
+        ifn kill_cutscene 0
+                set kill_cutscene 0
 ends
 
 defstate op_cutscene_cleanup
@@ -663,7 +673,7 @@ defstate get_cutscene_details
                                 case 0 { set textQuoteRow1 261 set CUTSCENE_SPRITE DUKEHEADSPRITE
                                         ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BETTERGETATEAM } else ife dna_localization 1 { screensound GM_BETTERGETATEAMEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
-                                case 2 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SIZE15BOOT } else ife dna_localization 1 { screensound GM_SOURCEOFINFESTATION } } break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SIZE15BOOT } else ife dna_localization 1 { screensound GM_SOURCEOFINFESTATION } } break }
                                 case 3 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_GUTSTOMPINTIME } else ife dna_localization 1 { screensound GM_GOINGTOSTOPTHEM } } break
                                 endswitch
                         }
@@ -674,9 +684,9 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 201 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JAMSSIGNAL } else ife dna_localization 1 { screensound GM_SIGNALJAMMED } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CANYOUREADME } else ife dna_localization 1 { screensound GM_CANYOUREADMEEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
-                                case 2 set CUTSCENE_SPRITE DUKEHEADSPRITE break 
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JAMSSIGNAL } else ife dna_localization 1 { screensound GM_SIGNALJAMMED } } break } 
                                 endswitch
                         }
                         //LEVEL 12 MID LEVEL SCENE
@@ -886,280 +896,42 @@ defstate get_cutscene_details
 }
 ends
 
+defstate cutscene_killswitch_check
+{
+        for i range 4 {
+                set curr_quote textQuoteRow1
+                add curr_quote i
+                qstrlen cutscene_length curr_quote
+                ifge cutscene_length 3 {
+                        set cutscene_killswitch_start cutscene_length
+                        sub cutscene_killswitch_start 3
+                        qsubstr cutscene_quote_check curr_quote cutscene_killswitch_start 3
+                        qstrcmp cutscene_quote_check KILLSWITCH_LINE temp
+                        ife temp 0 {
+                                set kill_cutscene 1 
+                                ife cutscene_killswitch_start 0 {
+                                        qstrcpy newTextQuote 200
+                                } else {
+                                        qsubstr newTextQuote curr_quote 0 cutscene_killswitch_start
+                                }
+                        qstrcpy curr_quote newTextQuote
+                        }
+                        
+                }
+                add i 1
+        }
+        
+}
+ends
+
 defstate cutscene_loop 
 {
-        whilel curr_cutscene CUTSCENE_LIMIT
+        whilen kill_cutscene 1
         {
                 state get_cutscene_details
                 ife dont_stop_sounds 1 set dont_stop_sounds 0
                 else stopallsounds
                 startscreen
-        }
-}
-ends
-
-// Sets the CUTSCENE_LIMIT value, which determines how many panels a cutscene has
-defstate set_cutscene_panel_amount
-{
-        ifvare VOLUME 0
-        {
-                ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 6
-                        }
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 4       
-                        }
-                        
-                        
-                }
-                ifvare LEVEL 1 // AKA Level 2 - Close Encounter
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 1
-                        }
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 4
-                        }
-                        ifvare cutscene_num 1003
-                        {
-                                set CUTSCENE_LIMIT 3
-                        }
-                }
-                ifvare LEVEL 2 // AKA Level 3 - Hybrid Army
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 8
-                        }
-                        //LEVEL 3 Destroyed Hybrid Army
-                        ifvare cutscene_num 1002
-                        {       
-                                set CUTSCENE_LIMIT 2
-                        }
-                        //LEVEL 3 Spiderlord Encounter
-                        ifvare cutscene_num 1003
-                        {
-                                set CUTSCENE_LIMIT 8
-                        }
-                        //LEVEL 3 End Level Scene
-                        ifvare cutscene_num 1004
-                        {
-                                set CUTSCENE_LIMIT 4
-                        }
-                }
-                ifvare LEVEL 3 // Level 4 - Temple of Amun
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 2
-                        }
-                        //LEVEL 4 MID LEVEL SCENE
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 1
-                        }
-                }
-                ifvare LEVEL 4 // Level 5 - Inner Sanctum
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 3
-                        }
-                        //LEVEL 5 MID LEVEL SCENE
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 4
-                        }
-                }
-                ifvare LEVEL 5 //AKA Level 6 - The Controller
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 3
-                        }
-                        //LEVEL 6 Controller Encounter
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 4
-                        }
-                        //LEVEL 6 Boss Hint
-                        ifvare cutscene_num 1003
-                        {
-                                set CUTSCENE_LIMIT 2
-                        }
-                        //LEVEL 6 
-                        ifvare cutscene_num 1004
-                        {
-                                set CUTSCENE_LIMIT 2
-                        }
-                }
-                ifvare LEVEL 6 //AKA Level 7 - Temple Run
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 4
-                        }
-                }
-                ifvare LEVEL 7 //AKA Level 8 - Down Under
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 5
-                        }
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 7
-                        }
-                }
-                ifvare LEVEL 8 //AKA Level 9 - Eating Out
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 2
-                        }
-                        //LEVEL 9 Secret Code
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 1
-                        }
-                        ifvare cutscene_num 1003
-                        {
-                                set CUTSCENE_LIMIT 1
-
-                        }
-                        ifvare cutscene_num 1004
-                        {
-                                set CUTSCENE_LIMIT 0
-                        }
-                }
-                ifvare LEVEL 9 //AKA Level 10 - Day at the Opera 
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 2
-                        }
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 3
-                        }
-                }
-                ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 4
-                        }
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 7
-                        }
-                        ifvare cutscene_num 1003
-                        {
-                                set CUTSCENE_LIMIT 0
-                        }
-                        ifvare cutscene_num 1004
-                        {
-                                set CUTSCENE_LIMIT 3
-                        }
-                }
-                ifvare LEVEL 11 //AKA Level 12 - Alien Ship
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 2
-                        }
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 1
-                        }
-                }
-                ifvare LEVEL 12 //AKA Level 13 - Cloaking Device
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 2
-                        }
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 3
-                        }
-                }
-                ifvare LEVEL 13 //AKA Level 14 - Mazeframe
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 1
-                        }
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 1
-                        }
-                }
-                ifvare LEVEL 14 //AKA Level 15 - Jenny 2
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 5
-                        }
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 6
-                        }
-                }
-                ifvare LEVEL 15 ///AKA Level 16 - Jenny 3
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 6
-                        }
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 0
-                        }
-                        ifvare cutscene_num 1003
-                        {
-                                set CUTSCENE_LIMIT 4
-                        }
-                }
-                ifvare LEVEL 16 //AKA Level 17 - Jenny 4
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 2
-                        }
-                        ifvare cutscene_num 1002
-                        {
-                                set CUTSCENE_LIMIT 5
-                        }
-                }
-                ifvare LEVEL 17 //AKA Level 18 - Alien Lord
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 5
-                        }
-                        ifvare cutscene_num 1002
-                        {    
-                                set CUTSCENE_LIMIT 6
-                        }
-                        ifvare cutscene_num 1003
-                        {
-                                set CUTSCENE_LIMIT 2
-                        }
-                }
-                ifvare LEVEL 18 //AKA Level 19 - Run Your Ass Off!
-                {
-                        ifvare cutscene_num 1001
-                        {
-                                set CUTSCENE_LIMIT 8
-                        }
-                }
         }
 }
 ends
@@ -1175,7 +947,6 @@ appendevent EVENT_GAME
         else ifvare dna_cutscenes 0 
         {
                 setvar delayTime 500 // Inital delay on cutscene start
-                state set_cutscene_panel_amount
                 state cutscene_loop                                  
                 state end_cutscene
         }
@@ -1205,6 +976,7 @@ defstate setup_cutscene_panel {
                         set curr_cutscene CUTSCENE_STEP
                 }
         }
+        state cutscene_killswitch_check
         ife skip_this_panel 1 { 
                 set RETURN 1 set skip_this_panel 0 } // If panel is skipped - due to localization - set return after text quote has been calulated so its accurate next panel
         ife RETURN 1     // IF THE PLAYER USES ANY KEY TO SKIP THE SCENE
