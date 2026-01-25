@@ -254,6 +254,7 @@
 
 defstate dna_camera_hud
 	state setsqraspect
+	rotatesprite 285 5 65536 0 CAM_REC 0 0 8 0 0 xdim ydim
 	set CUTSCENE_SPRITE DUKEHEADSPRITE 
 	set textQuoteRow1 CAM_QUOTE1
 	state display_cutscene_dialogue
@@ -1004,5 +1005,6 @@ onevent EVENT_DISPLAYCAMERAOSD
 	state get_script
 	state dna_camera_hud
 	state get_cam_quote
+	set RETURN 1
 }
 endevent

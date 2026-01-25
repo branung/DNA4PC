@@ -17,8 +17,6 @@ texture 2405 { pal 0 { file "tiles/2405.png" } }
 texture 2406 { pal 0 { file "tiles/2406.png" } }
 texture 2407 { pal 0 { file "tiles/2407.png" } }
 
-texture 2482 { pal 0 { file "tiles/2482.png" } }
-texture 2483 { pal 0 { file "tiles/2483.png" } }
 texture 2536 { pal 0 { file "tiles/2536.png" } }
 texture 2537 { pal 0 { file "tiles/2537.png" } }
 texture 2538 { pal 0 { file "tiles/2538.png" } }
@@ -818,6 +816,9 @@ texture 5561 { pal 0 { file "tiles/5561.png" } }
 texture 5562 { pal 0 { file "tiles/5562.png" } }
 
 texture 5564 { pal 0 { file "tiles/5564.png" } }
+
+texture 5566 { pal 0 { file "tiles/5566.png" } }
+texture 5567 { pal 0 { file "tiles/5567.png" } }
 
 texture 5626 { pal 0 { file "tiles/5626.png" } }
 texture 5627 { pal 0 { file "tiles/5627.png" } }

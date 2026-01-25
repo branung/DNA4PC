@@ -228,6 +228,7 @@ var cutscene_temp 0 0
 var in_cutscene 0 0
 // Moved from dna4pc.con
 
+define CAM_REC 5566 // Recording icon when in security camera
 define CAM_QUOTE1 391
 define CAM_QUOTE2 392
 define CAM_QUOTE3 393
