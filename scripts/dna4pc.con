@@ -63,6 +63,7 @@ appendevent EVENT_PRELEVEL
   state endscreen_cleanup
   setvar worldprevtick -1
   setvar SCREENALPHAWORLD 255
+  set played_camquote 0
   setp[myconnectindex].max_ammo_amount 12 100
 endevent
 

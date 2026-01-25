@@ -226,6 +226,7 @@ define CAM_QUOTE1 391
 define CAM_QUOTE2 392
 define CAM_QUOTE3 393
 define CAM_QUOTE4 394
+var played_camquote 0 // Used to prevent Gianni security voice clip from playing repeatedly
 
 define OBJECTIVE_QUOTE1 395
 define OBJECTIVE_QUOTE2 396

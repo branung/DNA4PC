@@ -978,9 +978,31 @@ onevent EVENT_DISPLAYSBAR
 }
 endevent
 
+// If Gianni lines are enabled, this plays the corresponding camera quote voice line once per level  
+defstate get_cam_quote {
+	ife dna_dukecutscenevoc 2 {
+		ifn played_camquote 1
+		{
+			ife VOLUME 0 {
+				switch LEVEL
+				case 0 globalsound GM_LOTTASECURITY break
+				// case 2 globalsound  wait I forgot to include this line in the script I sent..
+				case 5 ife dna_localization 0 globalsound GM_CRYINGTOMUMMY else globalsound GM_HESINCONTROL break
+				case 10 ife dna_localization 0 globalsound GM_MOSTIMPRESSIVE else globalsound GM_MUSTBETHEWEAPON break
+				case 16 globalsound GM_NOTHINGLIKECHALLENGE break
+				case 17 ife dna_localization 0 globalsound GM_IMCOMINGFORYOU else globalsound GM_BRAINSANDBRAWN break
+				endswitch
+			}
+			set played_camquote 1
+		}
+	}
+}
+ends
+
 onevent EVENT_DISPLAYCAMERAOSD
 {
 	state get_script
 	state dna_camera_hud
+	state get_cam_quote
 }
 endevent
