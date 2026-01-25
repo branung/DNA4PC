@@ -182,6 +182,9 @@ gamevar bits 0 1
 
 definequote 131       GOLDEN GUN
 
+// Overhead map sprite
+define DNAMAPDUKEHEAD 5564
+
 // Textures
 define HYBRIDCAPSULE 3648
 define HYBRIDCAPSULEBROKE 3649

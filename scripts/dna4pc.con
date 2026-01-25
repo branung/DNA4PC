@@ -32,6 +32,13 @@ onevent EVENT_GETLOADTILE
     setvar RETURN -1
 endevent
 
+// Change overhead map icon to DNA Duke head
+onevent EVENT_DISPLAYOVERHEADMAPPLAYER
+{
+    set RETURN DNAMAPDUKEHEAD // Pretty small on screen, if resizing possible when its drawn that'd be good
+}
+endevent
+
 //Set all Liztroops to blue on spawn rather than the hardcoded green 
 onevent EVENT_SPAWN
     switch sprite[].picnum
@@ -51,7 +58,7 @@ onevent EVENT_SPAWN
             geta[].lotag temp2
             ifg temp2 temp break
             else seta[].xrepeat 48 seta[].yrepeat 40 break
-        } 
+        }
     endswitch
 
     // Disable monster respawn
