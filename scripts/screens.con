@@ -550,6 +550,7 @@ defstate show_title {
             }
             else
             {
+                sound ALIENLORDROAM
                 setvar name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY 
                 setvar advance_slideup_time TITLE_ADVANCE_FINAL_POSY
                 addvar title_ani 1
