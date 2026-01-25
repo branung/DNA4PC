@@ -808,7 +808,14 @@ texture 5542 { pal 0 { file "tiles/5542.png" } }
 texture 5543 { pal 0 { file "tiles/5543.png" } }
 texture 5544 { pal 0 { file "tiles/5544.png" } }
 
-texture 5548 { pal 0 { file "tiles/5548.png" } }
+texture 5555 { pal 0 { file "tiles/5555.png" } }
+texture 5556 { pal 0 { file "tiles/5556.png" } }
+texture 5557 { pal 0 { file "tiles/5557.png" } }
+texture 5558 { pal 0 { file "tiles/5558.png" } }
+texture 5559 { pal 0 { file "tiles/5559.png" } }
+texture 5560 { pal 0 { file "tiles/5560.png" } }
+texture 5561 { pal 0 { file "tiles/5561.png" } }
+texture 5562 { pal 0 { file "tiles/5562.png" } }
 
 texture 5626 { pal 0 { file "tiles/5626.png" } }
 texture 5627 { pal 0 { file "tiles/5627.png" } }

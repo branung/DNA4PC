@@ -309,10 +309,6 @@ ends
 defstate fade_logo
 {
     ifn curr_logo 0 { rotatesprite 160 100 LOGO_SIZE 0 curr_logo 0 0 72 0 0 xdim ydim  }
-    ife curr_logo TITLE_BACKGROUND { 
-        rotatesprite TITLE_DUKE_FINAL_POSX TITLE_DUKENUKEM_FINAL_POSY 81935 0 TITLE_DUKE 0 0 8 0 0 xdim ydim
-        rotatesprite TITLE_NUKEM_FINAL_POSX TITLE_DUKENUKEM_FINAL_POSY 81935 0 TITLE_NUKEM 0 0 8 0 0 xdim ydim
-        rotatesprite 160 TITLE_ADVANCE_FINAL_POSY 81935 0 TITLE_ADVANCE 0 0 8 0 0 xdim ydim }
          
     ifvarl SCREENALPHA 255
     {
@@ -398,8 +394,58 @@ defstate get_title_ticks {
 }
 ends
 
+
+
+// Timer for Press Start sprite on main menu
+// Reuses delaytimers from end level screen since there wouldn't be any chance of conflict
+defstate press_start_title_ani {
+    ifvarg bonusDelayTime 0
+    {
+        getticks curtick
+        ifvare bonus_screen_prevtick -1 setvar ticktmp 0 else
+        {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp bonus_screen_prevtick
+        }
+        divvar ticktmp 4      
+        subvarvar bonusDelayTime ticktmp           
+        setvarvar bonus_screen_prevtick curtick
+    }
+    else
+    {
+        switch press_start_ani { // Messy switch to avoid making several redundant tiles for animation
+            case 0 
+            case 10 set curr_ps_sprite PRESS_START_START break
+            case 1 
+            case 9 set curr_ps_sprite 5556 break
+            case 2 
+            case 8 set curr_ps_sprite 5557 break
+            case 3
+            case 4
+            case 5
+            case 6
+            case 7 set curr_ps_sprite 5558 break
+            case 11
+            case 20 set curr_ps_sprite 5559 break
+            case 12 
+            case 19 set curr_ps_sprite 5560 break
+            case 13 
+            case 17 
+            case 18 set curr_ps_sprite 5561 break
+            case 14 
+            case 15 
+            case 16 set curr_ps_sprite 5562 break
+        endswitch
+        }
+        ifl press_start_ani 20 { add press_start_ani 1 } else set press_start_ani 0
+        setvar bonusDelayTime 7 // Change this to adjust animation speed
+    }
+}
+ends
+
 defstate show_title {
-    ife in_startup 10 
+    switch in_startup
+    case 10 
     {
         rotatesprite 160 100 LOGO_SIZE 0 TITLE_BACKGROUND 0 0 72 0 0 xdim ydim
         ifvarg SCREENALPHA 0
@@ -412,7 +458,6 @@ defstate show_title {
         {
             ifvarl duke_title_slidein_time TITLE_DUKE_FINAL_POSX  
             {
-                setvar delayTime LOGO_DELAY_TIME
                 state get_title_ticks
                 
                 addvarvar duke_title_slidein_time ticktmp
@@ -430,8 +475,6 @@ defstate show_title {
         {
             ifvarg nukem_title_slidein_time TITLE_NUKEM_MID_POSX  
             {
-                setvar delayTime LOGO_DELAY_TIME
-
                 state get_title_ticks
                 subvarvar nukem_title_slidein_time ticktmp
                 ifvarl nukem_title_slidein_time TITLE_NUKEM_FINAL_POSX
@@ -452,7 +495,6 @@ defstate show_title {
         {
             ifvarl duke_title_slidein_time TITLE_DUKE_FINAL_POSX  
             {
-                setvar delayTime LOGO_DELAY_TIME
                 state get_title_ticks
                 
                 addvarvar duke_title_slidein_time ticktmp
@@ -475,7 +517,6 @@ defstate show_title {
         {
             ifvarg advance_slideup_time TITLE_ADVANCE_MID_POSY  
             {
-                setvar delayTime LOGO_DELAY_TIME
 
                 state get_title_ticks
                 subvarvar advance_slideup_time ticktmp
@@ -498,8 +539,6 @@ defstate show_title {
         {
             ifvarl advance_slideup_time TITLE_ADVANCE_FINAL_POSY  
             {
-                setvar delayTime LOGO_DELAY_TIME
-
                 state get_title_ticks
                 addvarvar advance_slideup_time ticktmp
                 ifvarl name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY
@@ -512,31 +551,41 @@ defstate show_title {
             else
             {
                 setvar name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY 
-                setvar advance_slideup_time TITLE_ADVANCE_FINAL_POSY  
-                ifvarg delayTime 0
-                {
-                    state cutscene_timer
-                }
-                else
-                {
-                    addvar in_startup 1
-                }
+                setvar advance_slideup_time TITLE_ADVANCE_FINAL_POSY
+                addvar title_ani 1
             }
             break
         }
+        case 6
+        {
+            state get_title_ticks
+            state press_start_title_ani
+            rotatespritea 160 192 81935 0 curr_ps_sprite 0 0 8 0 0 0 xdim ydim
+            setvarvar prevtick curtick
+            break
+        }
         endswitch
-
         rotatesprite duke_title_slidein_time name_title_slideup_time 81935 0 TITLE_DUKE 0 0 8 0 0 xdim ydim
         rotatesprite nukem_title_slidein_time name_title_slideup_time 81935 0 TITLE_NUKEM 0 0 8 0 0 xdim ydim
         rotatesprite 160 advance_slideup_time 81935 0 TITLE_ADVANCE 0 0 8 0 0 xdim ydim
-
+        break
     }
-    else ife in_startup 11
+    case 11
     {
-        set curr_logo TITLE_BACKGROUND
-        state fade_logo
-        ifvare SCREENALPHA 255 { setvar RETURN 1 } 
+        rotatesprite 160 100 LOGO_SIZE 0 TITLE_BACKGROUND 0 0 8 0 0 xdim ydim
+        rotatesprite duke_title_slidein_time name_title_slideup_time 81935 0 TITLE_DUKE 0 0 8 0 0 xdim ydim
+        rotatesprite nukem_title_slidein_time name_title_slideup_time 81935 0 TITLE_NUKEM 0 0 8 0 0 xdim ydim
+        rotatesprite 160 advance_slideup_time 81935 0 TITLE_ADVANCE 0 0 8 0 0 xdim ydim
+        ife title_ani 6 { rotatespritea 160 192 81935 0 curr_ps_sprite 0 0 8 0 0 0 xdim ydim }
+
+        ifvarl SCREENALPHA 255
+        {
+            state screen_fadein
+        }
+        else set RETURN 1
+        break
     }
+    endswitch
 }
 ends
 
@@ -544,8 +593,8 @@ appendevent EVENT_SCREEN
 {
     ifg in_startup 0 {
         state setsqraspect
-        ifl in_startup 10 state show_logos
-        ifg in_startup 9 state show_title
+        ifle in_startup 9 state show_logos
+        ifge in_startup 10 state show_title
         state setdosaspect
     }
 }
@@ -555,6 +604,8 @@ defstate startup_cleanup // Reset values when back at startup
 {
     set in_startup 1
     set title_ani 1
+    set press_start_ani 0
+    set curr_ps_sprite PRESS_START_START
     set in_opening_cutscene 0
     set in_endlevel_screen 0
     set in_ending_cutscene 0
@@ -569,12 +620,11 @@ appendevent EVENT_MAINMENUSCREEN
 {
     state startup_cleanup
     setvar delayTime LOGO_DELAY_TIME
-    whilel in_startup 10 {
+    whilel in_startup 11 {
         startscreen
         addvar in_startup 1
     }
-    setvar in_startup 10
-    setvar delayTime LOGO_DELAY_TIME
+    sound A_PISTOL
     startscreen
     setvar in_startup 0
 }

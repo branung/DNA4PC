@@ -58,6 +58,9 @@ gamevar duke_title_slidein_time TITLE_DUKE_START_POSX 0
 gamevar nukem_title_slidein_time TITLE_NUKEM_START_POSX 0
 gamevar name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY 0
 gamevar advance_slideup_time TITLE_ADVANCE_START_POSY 0
+gamevar press_start_ani 0 0
+define PRESS_START_START 5555
+var curr_ps_sprite PRESS_START_START
 
 gamevar skull_skill_ani 0 0
 define SKULL_SKILL_START 7008
