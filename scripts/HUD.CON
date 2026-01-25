@@ -255,18 +255,8 @@
 defstate dna_camera_hud
 	state setsqraspect
 	set CUTSCENE_SPRITE DUKEHEADSPRITE 
-	setvar y 176
-	set x 55
-	rotatesprite 160 201 65536 0 CUTSCENE_DIALOGBOX 0 0 8 0 0 xdim ydim
-	rotatesprite 31 196 65536 0 CUTSCENE_SPRITE 0 0 8 0 0 xdim ydim
-	rotatesprite 160 201 65536 0 CUTSCENE_OUTLINE 0 0 8 0 0 xdim ydim
-	screentext STARTALPHANUM x y 65536 0 0 CAM_QUOTE1 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-	addvar y 10
-	screentext STARTALPHANUM x y 65536 0 0 CAM_QUOTE2 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-	addvar y 10
-	screentext STARTALPHANUM x y 65536 0 0 CAM_QUOTE3 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-	addvar y 10
-	screentext STARTALPHANUM x y 65536 0 0 CAM_QUOTE4 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+	set textQuoteRow1 CAM_QUOTE1
+	state display_cutscene_dialogue
 	state setdosaspect
 ends
 

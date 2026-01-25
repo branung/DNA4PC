@@ -916,6 +916,9 @@ defstate get_cutscene_details
 }
 ends
 
+// This checks each printed line of dialog for the string /!& at the end
+// If this is found in any line, it tells the game that this is the last panel of the cutscene,
+// and will break out of the while loop cutscene_loop on next input press
 defstate cutscene_killswitch_check
 {
         for i range 4 {
@@ -996,7 +999,7 @@ defstate setup_cutscene_panel {
                         set curr_cutscene CUTSCENE_STEP
                 }
         }
-        state cutscene_killswitch_check
+        ifn kill_cutscene 1 { state cutscene_killswitch_check }
         ife skip_this_panel 1 { 
                 set RETURN 1 set skip_this_panel 0 } // If panel is skipped - due to localization - set return after text quote has been calulated so its accurate next panel
         ife RETURN 1     // IF THE PLAYER USES ANY KEY TO SKIP THE SCENE
@@ -1014,13 +1017,14 @@ defstate display_cutscene_dialogue
         rotatesprite 160 201 65536 0 CUTSCENE_DIALOGBOX 0 0 8 0 0 xdim ydim
         rotatesprite 31 196 65536 0 CUTSCENE_SPRITE 0 0 8 0 0 xdim ydim
         rotatesprite 160 201 65536 0 CUTSCENE_OUTLINE 0 0 8 0 0 xdim ydim
-        screentext STARTALPHANUM x y 65536 0 0 textQuoteRow1 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-        addvar y 10
-        screentext STARTALPHANUM x y 65536 0 0 textQuoteRow2 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-        addvar y 10
-        screentext STARTALPHANUM x y 65536 0 0 textQuoteRow3 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-        addvar y 10
-        screentext STARTALPHANUM x y 65536 0 0 textQuoteRow4 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+        for i range 4 
+        {
+                set curr_quote textQuoteRow1
+                add curr_quote i
+                screentext STARTALPHANUM x y 65536 0 0 curr_quote 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                ifl y 216 { add y 10 } else set y 176
+                add i 1
+        }
 }
 ends
 
@@ -1461,7 +1465,7 @@ appendevent EVENT_SCREEN
                 setvar SCREENALPHAWORLD 255
                 setvar worldprevtick -1 // Keep resetting world fade values while in cutscene so the fade returns once exiting
         }
-                state setup_cutscene_panel // Set up text
+                state setup_cutscene_panel // Set up text, check them for killswitch string
                 state cutcam_render // Set up the cutscene's visual
                 state display_cutscene_dialogue // And now display everything
         }
