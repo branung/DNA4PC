@@ -1040,7 +1040,7 @@ defstate process_introoutro_panels {
         {
                 set SCREENALPHA 255
                 ifn temp 0 screensound temp // Next panel is about to be shown, so play its accompanying sound
-                ife dna_dukecutscenevoc 2 { ife CUTSCENE_SCREEN ENDCUTSCENE3 { set delayTime 3100 } else set delayTime OP_CUTSCENE_DELAY_TIME }
+                ife dna_dukecutscenevoc 2 { ife CUTSCENE_SCREEN ENDCUTSCENE3 { set delayTime 3100 screensound GM_HAVEABLAST } else set delayTime OP_CUTSCENE_DELAY_TIME }
                 else set delayTime OP_CUTSCENE_DELAY_TIME
                 add CUTSCENE_STEP 1
         }
@@ -1262,7 +1262,7 @@ defstate show_outro_cutscene {
         case 2  // THIRD SCREEN
         {
                 setvar CUTSCENE_SCREEN ENDCUTSCENE3
-                ife dna_dukecutscenevoc 2 { set temp GM_HAVEABLAST }
+                set temp TELEPORTER
                 state process_introoutro_panels
                 break
         }
@@ -1291,7 +1291,7 @@ defstate show_outro_cutscene {
         {
                 setvar CUTSCENE_DIALOG 5400
                 setvar CUTSCENE_SCREEN ENDCUTSCENE5
-                set temp TELEPORTER
+                set temp 0
                 state process_introoutro_panels
                 break
         }
