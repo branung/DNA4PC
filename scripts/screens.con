@@ -896,27 +896,36 @@ ends
 
 defstate print_credit_title {
     add temp CREDITS_INDIVIDUAL_GAP
+    set y temp
+    shiftvarl y 16
     ifg temp 20
-    screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    screentext DNASMALLTEXT x y 75536 0 0 CREDITS_QUOTE 0 0 2064 0 xspace 0 0 0 2 0 0 xdim ydim
 }
 ends
 
 defstate print_credit_title_line2 {
     add temp CREDITS_TITLENAME_GAP
+    set y temp 
+    shiftvarl y 16
     ifg temp 20
-    screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    screentext DNASMALLTEXT x y 75536 0 0 CREDITS_QUOTE 0 0 2064 0 xspace 0 0 0 2 0 0 xdim ydim
 }
 ends
 
 defstate print_credit_name {
     add temp CREDITS_TITLENAME_GAP
+    set y temp 
+    shiftvarl y 16
     ifg temp 20
-    screentext DNASMALLTEXT x temp 75536 0 0 CREDITS_QUOTE 10 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    screentext DNASMALLTEXT x y 75536 0 0 CREDITS_QUOTE 10 0 2064 0 xspace 0 0 0 2 0 0 xdim ydim
 }
 ends
 
 defstate show_credits {
     set x 160
+    set xspace 4
+    shiftvarl x 16
+    shiftvarl xspace 16
     
     ife conclude_credits_scoll 0 {
     state get_credit_ticks
@@ -1382,16 +1391,16 @@ defstate show_credits {
         redefinequote CREDITS_QUOTE SPECIAL MENTIONS TO
         state print_credit_title
 
-        ife dna_localization 0 redefinequote CREDITS_QUOTE J.J. SUAREZ 
+        ife dna_localization 0 redefinequote CREDITS_QUOTE J.J. SUAREZ
         else redefinequote CREDITS_QUOTE KAI NEUMANN 
         state print_credit_name
 
-        ife dna_localization 0 redefinequote CREDITS_QUOTE ALEJANDRO SUAREZ 
+        ife dna_localization 0 redefinequote CREDITS_QUOTE ALEJANDRO SUAREZ
         else redefinequote CREDITS_QUOTE THOMAS LEE BROWN
         state print_credit_name
 
         ife dna_localization 0 redefinequote CREDITS_QUOTE MUGSY TABORA
-        else redefinequote CREDITS_QUOTE GAGE DECABRAL 
+        else redefinequote CREDITS_QUOTE GAGE DECABRAL
         state print_credit_name
     
     ifl temp CREDITS_FINAL_POSY { set conclude_credits_scoll 1 }
@@ -1400,6 +1409,7 @@ defstate show_credits {
     }
     else setvar RETURN 1
 
+    set x 160
     state setdosaspect
     rotatesprite x 100 ENDSCREEN_SIZE 0 5761 0 0 8 0 0 xdim ydim // Background, printed after text so they scroll under
 
