@@ -122,6 +122,12 @@ define LIZMANFEEDING 6479
 define LIZMANJUMP 6484
 define LIZMANDEADSPRITE 6504
 define TANK 6741
+define APLAYER 7165
+define PLAYERONWATER 7180
+define DUKELYINGDEAD 7278
+define DUKETORSO 7280
+define DUKEGUN 7288
+define DUKELEG 7296
 
 // These defs below cause problems on remap
 // define HEAVYHBOMB 5630
