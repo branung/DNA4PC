@@ -916,7 +916,6 @@ defstate print_credit_name {
 ends
 
 defstate show_credits {
-    state setdosaspect
     set x 160
     
     ife conclude_credits_scoll 0 {
@@ -1401,6 +1400,7 @@ defstate show_credits {
     }
     else setvar RETURN 1
 
+    state setdosaspect
     rotatesprite x 100 ENDSCREEN_SIZE 0 5761 0 0 8 0 0 xdim ydim // Background, printed after text so they scroll under
 
     ifg credits_slideup_time CREDITS_3DR_TIME { set credits_ani 0 }

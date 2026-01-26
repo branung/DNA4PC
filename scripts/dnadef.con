@@ -9,7 +9,7 @@ gamevar dna_crosshair 0 // 0 is the default crosshair in DNA. Set it anywhere fr
 gamevar dna_key_hud 0 // 0 has key items take up colored key slots in the hud when obtained. 1 displays their sprites below the key section of the hud. 
 
 // Disable built in episode cutscene
-gamevar LOGO_FLAGS 37746913 0
+gamevar LOGO_FLAGS 104855777 0
 
 // Changes DNSTUFF cheat to DNLUAULASS, a phrase used to access the cheat menu in DNA
 definecheat 1 LUAULASS
