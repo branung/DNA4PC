@@ -61,7 +61,8 @@
 
 		rotatesprite 286 29 NORMALSIZE 0 5370 0 0 512 0 0 xdim ydim
 		
-        switch player[THISACTOR].curr_weapon
+		getp[].curr_weapon temp
+        switch temp
             case 10
                 getplayer[THISACTOR].ammo_amount 5 INV_TEMP
                 break
@@ -69,7 +70,7 @@
                 getplayer[THISACTOR].ammo_amount 2 INV_TEMP
                 break
             default
-                getplayer[THISACTOR].ammo_amount currentweapon INV_TEMP
+                getplayer[THISACTOR].ammo_amount temp INV_TEMP
                 break
         endswitch
         
