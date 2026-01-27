@@ -285,6 +285,7 @@ appendevent EVENT_ENDLEVELSCREEN
                         stopallsounds
                         setvar in_ending_cutscene 0
                         setvar SCREENALPHA 255
+                        set delayTime 1000
                         setvar in_credits 1
                         startscreen
                         startscreen

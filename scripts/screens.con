@@ -1095,7 +1095,7 @@ defstate show_credits {
     redefinequote CREDITS_QUOTE KEVIN MCINTOSH
     state print_credit_name
 
-    add temp 140
+    add temp 160
 
     // 3D REALMS
     ife dna_localization 0 // US credits
@@ -1175,7 +1175,7 @@ defstate show_credits {
         state print_credit_name
     }
 
-        add temp 140
+        add temp 160
 
         // TAKE-TWO
         redefinequote CREDITS_QUOTE EXECUTIVE PRODUCER
