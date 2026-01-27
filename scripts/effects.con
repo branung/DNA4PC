@@ -1357,9 +1357,11 @@ endevent
 // Any visible sprites are cloned to temporary "TheSprites"
 // From there we can do all sort of temporary changes to them.
 appendevent EVENT_ANIMATESPRITES
-    // Disable drawing Duke if we're doing quakemode
+    // Disable drawing Duke if we're doing quakemode when in first person view
     ife kcsunshinemode 1 {
-        settspr[THISACTOR].tsprpicnum 13
+        ife player.over_shoulder_on 0 {
+            settspr[THISACTOR].tsprpicnum 13
+        }
     }
     // Disable drawing Duke if we're in cutscene
     ife in_cutscene 1 {

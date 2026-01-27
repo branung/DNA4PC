@@ -178,31 +178,44 @@
 	gamevar quote_y 0 0
 	gamevar mid_quote_timer 0 0
 	appendevent EVENT_DISPLAYSTART // before anything shows up on screen
-		ifge player.fta 99 // if the player had the quote timer bumped
-		{
-			ifn player.ftq 400 
+		ife player.dead_flag 0 {
+			ifge player.fta 99 // if the player had the quote timer bumped
 			{
-				// quotes pertaining to secrets or locks are checked
-				// if one of these quotes are found the seperate quote display is triggered
-				ife player.ftq 9 {
-					ifrnd 128
-						soundonce DUKE_GETWEAPON1
-					else 
-						soundonce JIBBED_ACTOR2
-					qstrcpy 402 player.ftq
-					// setting timer here will display the midscreen quote display
-					setvar mid_quote_timer 3000
-				}
-				else ife player.ftq LOCKQUOTE {
-					qstrcpy 402 player.ftq
-					setvar mid_quote_timer 3000
-				}
-				else
-				qstrcpy 401 player.ftq
-				// set the quote the game will try and display to our blank one
-				setp[].ftq 400
+				ifn player.ftq 400 
+				{
+					// quotes pertaining to secrets or locks are checked
+					// if one of these quotes are found the seperate quote display is triggered
+					switch player.ftq
+					case 9 {
+						ifrnd 128
+							soundonce DUKE_GETWEAPON1
+						else 
+							soundonce JIBBED_ACTOR2
+						qstrcpy 402 player.ftq
+						// setting timer here will display the midscreen quote display
+						setvar mid_quote_timer 3000
+						break
+					}
+					case LOCKQUOTE {
+						qstrcpy 402 player.ftq
+						setvar mid_quote_timer 3000
+						break
+					}
+					default {
+						qstrcpy 401 player.ftq
+						break
+					}
+					endswitch
+
+					// set the quote the game will try and display to our blank one
+					setp[].ftq 400
+				}			
 			}
-			
+		}
+		else {
+			qstrcpy 402 400
+			qstrcpy 401 400
+			setp[].fta 0
 		}
 	endevent
 
@@ -249,6 +262,12 @@
 				qstrcpy 402 400
 				setvar quote_prevtick -1
 			}	
+		}
+
+		ifn player.dead_flag 0 {
+			state setsqraspect
+			screentext DNASMALLTEXT 160 100 65536 0 0 13 0 0 16 0 8 0 0 0 8202 0 0 xdim ydim // Death quote
+			state setdosaspect
 		}
 	}
 	ends
