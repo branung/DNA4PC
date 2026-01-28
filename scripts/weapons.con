@@ -739,19 +739,19 @@ endevent
 appendevent EVENT_GAME
     ife player[THISACTOR].curr_weapon LEAD_WEAPON { 
         // --- This hack is to handle the swapping when less than 4 ---
-        ife weaponcount 3 state transfer_lead_ammo
-        ifg weaponcount 20 {
+        ife player[].kickback_pic 3 state transfer_lead_ammo
+        ifg player[].kickback_pic 20 {
             getplayer[THISACTOR].ammo_amount LEAD_WEAPON temp
-            ifl temp 4 setplayer[THISACTOR].ammo_amount LEAD_WEAPON 0
+            ifl temp 3 setplayer[THISACTOR].ammo_amount LEAD_WEAPON 0
         }
-        ife weaponcount 0 {
+        ife player[].kickback_pic 0 {
             getplayer[THISACTOR].ammo_amount LEAD_WEAPON temp
-            ifl temp 4 setplayer[THISACTOR].ammo_amount LEAD_WEAPON 0
+            ifl temp 3 setplayer[THISACTOR].ammo_amount LEAD_WEAPON 0
         }
         // This is to handle shell spawning from the weapon.
         // I don't do all four since it looks silly in combination with that ART baked shells
         ifactor APLAYER {
-            ife weaponcount 20 {
+            ife player[].kickback_pic 20 {
                 spawn SHOTGUNSHELL
                 spawn SHOTGUNSHELL
             }
@@ -762,16 +762,35 @@ appendevent EVENT_GAME
     }
 endevent
 
+gamevar leadcannon_depleted 0 0
+
 // When LEAD is fired, check that we have 4 or more shells, otherwise cancel it. Wait 20 ticks.
 // If this is fired too soon then it will cancel before the animation gets even started.
 appendevent EVENT_FIRE
     ife player[THISACTOR].curr_weapon LEAD_WEAPON {
-        getplayer[THISACTOR].ammo_amount LEAD_WEAPON temp
-        ifl temp 4 {
-            ifg weaponcount 20 set RETURN -1
-        } else {
-            sub temp 4
-            setplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON temp
+        getplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON temp
+        ifle temp 3 {
+            set RETURN -1
+        } else 
+            ife temp 4 {
+                set leadcannon_depleted 1
+                setplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON 1 // Allow last four shots to be fired by setting bullets to 1 rather than 0, then set it to 0 in DOFIRE
+            } 
+            else {
+                sub temp 4
+                setplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON temp
+            }
+        
+    }
+endevent
+
+appendevent EVENT_DOFIRE
+    ife player[THISACTOR].curr_weapon LEAD_WEAPON {
+        ife leadcannon_depleted 1 {
+            getplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON temp
+            ife temp 1 { // This check probably isnt necessary but Im paranoid 
+                ifg player[].kickback_pic 3 { setplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON 0 set leadcannon_depleted 0 }
+            } 
         }
     }
 endevent
