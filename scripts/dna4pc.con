@@ -154,6 +154,26 @@ onevent EVENT_GAME
     }
 endevent
 
+// Prepending this state to access hitstate for APLAYER and add custom enemy attack palfroms
+prependstate random_wall_jibs
+{
+    ifactor APLAYER 
+    {
+        ifhitweapon ifdead nullop 
+        else {
+        ifwasweapon COOLEXPLOSION1
+          palfrom 48 48 0 48
+        ifwasweapon GREYPROJECTILE
+          palfrom 16 0 32 32
+        ifwasweapon SLIMECRABPROJECTILE
+          palfrom 16 0 64
+        ifwasweapon ALIENLORDPROJECTILE
+          palfrom 48 32
+        }
+    }
+}
+ends
+
 // Prepending this state to override player insta kill when being crushed
 prependstate random_ooz
     ifactor APLAYER 
