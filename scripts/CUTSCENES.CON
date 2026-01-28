@@ -755,6 +755,7 @@ defstate get_cutscene_details
                                 case 1 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_GOTMYHANDSFULL } else ife dna_localization 1 { screensound GM_GONNAGETOUTTAHERE } } break
                                 endswitch
                         }
+                        break
                 }
                 case 14 //AKA Level 15 - Jenny 2
                 {

@@ -39,9 +39,9 @@ onevent EVENT_DISPLAYOVERHEADMAPPLAYER
 }
 endevent
 
-//Set all Liztroops to blue on spawn rather than the hardcoded green 
 onevent EVENT_SPAWN
     switch sprite[].picnum
+        //Set all Liztroops to blue on spawn rather than the hardcoded green 
         case LIZTROOP seta[].pal 0 break
         case LIZTROOPRUNNING seta[].pal 0 break
         case LIZTROOPSTAYPUT seta[].pal 0 break
