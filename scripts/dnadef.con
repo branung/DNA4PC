@@ -7,6 +7,7 @@ gamevar dna_menu_tutorial 0 // 0 tells the game to show the prompt telling the p
 gamevar dna_level_music 0 // 0 means the music specifically for the levels will play. Setting it to 1 disables level music, meaning only menus and cutscenes will have music like in the original 
 gamevar dna_crosshair 0 // 0 is the default crosshair in DNA. Set it anywhere from 0-8 for all variations
 gamevar dna_key_hud 0 // 0 has key items take up colored key slots in the hud when obtained. 1 displays their sprites below the key section of the hud.
+gamevar dna_lessalarm 0
 
 //array player_settings 1 GAMEARRAY_RESTORE GAMEARRAY_UINT16
 //define enable_autoshade 1           // Toggle CON based wall/ceiling/visibility shading
@@ -140,7 +141,7 @@ define CONTROLLERBOSS 5296
 define CONTROLLERBOSSSTRENGTH 2500
 define CYBERALIEN 3948
 define CYBERALIENSTRENGTH 3000
-define A51ALARM 5600
+//define A51ALARM 5600
 define MBMACHINE 5601
 define CUTCAM 5602
 define ALIENLORD 4001

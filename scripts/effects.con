@@ -990,6 +990,60 @@ defstate do_se81
     endswitch
 ends
 
+//// -- SE82: Alarm sound trigger  --
+// Lets out a gaudy alarm upon play
+// Waits 1 second on trigger (if enabled) or vision based if not tagged
+// Hitag = Trigger channel
+// fx_extra = If not -1 then allow retrigger after some time
+// fx_int = how many honks, depends on setting flags
+// fx_int2 = rich man's poor actioncount
+// IDLE: Wait for trigger source -> If quiet alarms, do 3 blares, otherwise 10 -> Sleep, if quiet mode then don't reset
+defstate do_se82
+    switch fx_state
+        case disabled
+            ifg sprite[].hitag 0 {
+                ife fx_activate[sprite[].hitag] 1 set fx_state pre_enable
+            } else {
+                ifcansee {
+                    set fx_state pre_enable
+                }
+            }
+            break
+        case pre_enable
+            ife dna_lessalarm 1 set fx_int 3 else set fx_int 10
+            set fx_state enabled
+            set fx_int2 0
+            break
+        case enabled
+            ifg fx_int 0 {
+                ifg fx_int2 35 {
+                    globalsound AAMB_A51SIRENLOOP
+                    sub fx_int 1
+                    set fx_int2 0
+                }
+            }
+            add fx_int2 1
+            ife fx_int 0 {
+                set fx_state completed
+                set fx_int2 300
+            }
+            break
+        case completed
+            ife dna_lessalarm 1 {
+                nullop
+            } else {
+                ifn fx_extra -1 {
+                    ifg fx_int2 0 {
+                        sub fx_int2 1
+                    } else {
+                        set fx_state disabled
+                    }
+                }
+            }
+            break
+    endswitch
+ends
+
 //// -- SE32767: Secret room --
 // Alternate secret tagging, essentailly sector tag 32767 but a sprite
 // Place in a sector with this tag.
@@ -1030,10 +1084,10 @@ appendevent EVENT_PRELEVEL
 endevent
 
 // Quickly do things to actors before they get muddled by the game code
-eventloadactor A51ALARM
-    state get_fxtags
-    seta .cstat 32768
-enda
+//eventloadactor A51ALARM
+//    state get_fxtags
+//    seta .cstat 32768
+//enda
 eventloadactor ACTIVATOR
     state get_fxtags
 enda
@@ -1050,7 +1104,6 @@ eventloadactor SECTOREFFECTOR
         }
     }
     
-    
     ife sprite.lotag 72 {
         ifn fx_extra -1 {
             ifand fx_extra 2 { set rot_target 0 }
@@ -1058,8 +1111,6 @@ eventloadactor SECTOREFFECTOR
             set fx_extra 0
         }
     }
-    
-
     
     ife sprite.lotag 76 {
         // Places the SE in the middle x/y of the sector (Pretty surely a rectangle)
@@ -1121,8 +1172,13 @@ eventloadactor SECTOREFFECTOR
                 set fx_state completed
             }
         }
-
     }
+    
+    // Delay upon trigger/vision
+    ife sprite.lotag 82 {
+        set fx_int 30
+    }
+    
     
 enda
 eventloadactor CUTCAM
@@ -1240,6 +1296,7 @@ appendevent EVENT_WORLD
             ife sprite[i].lotag 79 state do_se79
             ife sprite[i].lotag 80 state do_se80
             ife sprite[i].lotag 81 state do_se81
+            ife sprite[i].lotag 82 state do_se82
             ife sprite[i].lotag 32767 state do_se32767
         }
     }
