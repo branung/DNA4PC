@@ -41,6 +41,8 @@ ai AIGREYSHRUNK             GREYWALKING GREYSHRUNKVELS fleeenemy
 ai AIGREYGROW               GREYGROW GREYSTOPPED geth
 
 // Revive projectile actor defines
+// Grey's will prioritize case 0, each following case gets next dibs
+// So you can organize the cases here based on which enemies you want them to target first
 state getReviveEnemy {
   switch targetLoop {
     case 0 findnearactor LIZMAN REVIVEDISTANCE reviveFound break 
@@ -68,7 +70,7 @@ state checkGreyRevive {
                 set targetLoop 7
               } else {
           set reviveFound -1
-        } 
+          } 
         }
         else {
           set reviveFound -1
