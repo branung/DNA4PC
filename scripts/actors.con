@@ -763,20 +763,23 @@ prependstate troopcode
 ends
 
 //// --------- EXTRA SCREENFLASH FOR THE PLAYER ---------
-// This hijacks into the common "checksquished" state from original GAME.CON
-
-appendevent EVENT_DAMAGESPRITE
-    setu .vm_player myconnectindex
-    ife sprite[RETURN].picnum APLAYER {
-        set temp sprite[THISACTOR].picnum
-        ife temp GREYPROJECTILE
-            palfrom 16 0 32 32
-        ife temp SLIMECRABPROJECTILE
-            palfrom 16 0 64
-        ife temp ALIENLORDPROJECTILE
-            palfrom 48 32
+// Prepending this state to access hitstate for APLAYER and add custom enemy attack palfroms
+prependstate random_wall_jibs
+{
+    ifactor APLAYER 
+    {
+        ifhitweapon ifdead nullop 
+        else {
+        ifwasweapon GREYPROJECTILE
+          palfrom 16 0 32 32
+        ifwasweapon SLIMECRABPROJECTILE
+          palfrom 16 0 64
+        ifwasweapon ALIENLORDPROJECTILE
+          palfrom 48 32
+        }
     }
-endevent
+}
+ends
 
 eventloadactor MBMACHINE
     seta .cstat 32768
