@@ -1,5 +1,15 @@
 actor GREYPROJECTILE GREYPROJECTILESTRENGTH enda
-actor GREYREVIVEPROJECTILE GREYPROJECTILESTRENGTH enda
+// actor GREYREVIVEPROJECTILE GREYPROJECTILESTRENGTH enda
+
+var REVIVEDISTANCE 20000
+
+gamevar reviveFound -1 2
+gamevar reviveID -1 0 
+gamevar targetLoop 0 2
+gamevar angx 0 2
+gamevar angy 0 2
+gamevar angz 0 2
+gamevar targetAng 0 2
 
 spriteflags GREY 4194304
 
@@ -30,6 +40,96 @@ ai AIGREYFROZEN             GREYFROZEN GREYSTOPPED geth
 ai AIGREYSHRUNK             GREYWALKING GREYSHRUNKVELS fleeenemy
 ai AIGREYGROW               GREYGROW GREYSTOPPED geth
 
+// Revive projectile actor defines
+state getReviveEnemy {
+  switch targetLoop {
+    case 0 findnearactor LIZMAN REVIVEDISTANCE reviveFound break 
+    case 1 findnearactor PIGCOP REVIVEDISTANCE reviveFound break 
+    case 2 findnearactor LIZTROOP REVIVEDISTANCE reviveFound break 
+    case 3 findnearactor OCTABRAIN REVIVEDISTANCE reviveFound break 
+    case 4 findnearactor GREY REVIVEDISTANCE reviveFound break 
+    case 5 findnearactor SLIMECRAB REVIVEDISTANCE reviveFound break
+    case 6 findnearactor SLIMEREGG REVIVEDISTANCE reviveFound break
+  }
+  endswitch
+}
+ends
+
+state checkGreyRevive {
+  ife reviveFound -1 {
+    whilel targetLoop 6 {
+      state getReviveEnemy
+      ifn reviveFound -1 { 
+        geta[reviveFound].extra temp
+        ife temp 0 {
+          cansee sprite[THISACTOR].x sprite[THISACTOR].y sprite[THISACTOR].z sprite[THISACTOR].sectnum 
+          sprite[reviveFound].x sprite[reviveFound].y sprite[reviveFound].z sprite[reviveFound].sectnum temp
+          ife temp 1 {
+                set targetLoop 7
+              } else {
+          set reviveFound -1
+        } 
+        }
+        else {
+          set reviveFound -1
+        } 
+      }
+      add targetLoop 1
+    }
+  }
+}
+ends
+
+eventloadactor GREYREVIVEPROJECTILE
+    seta .cstat 0
+enda
+
+move REVPROJVEL 300
+action  GREYREVPROJSHOOT         0   3  3  1  22
+
+ai PROJCHECK GREYREVPROJSHOOT 0
+ai PROJSHOOT GREYREVPROJSHOOT REVPROJVEL
+
+useractor notenemy GREYREVIVEPROJECTILE GREYPROJECTILESTRENGTH 
+  ifaction 0 {
+    seta .xrepeat 26
+    seta .yrepeat 26
+    set targetLoop 0
+    ifn reviveID -1 { set reviveFound reviveID } else killit
+    set reviveID -1
+    ai PROJCHECK
+    }
+    ifai PROJCHECK {
+        ifcount 1 {
+            geta[reviveFound].extra temp
+            ife temp 0
+            {
+              getactor[reviveFound].x angx
+                getactor[reviveFound].y angy
+                subvarvar angx sprite[THISACTOR].x
+                subvarvar angy sprite[THISACTOR].y
+                getangle targetAng angx angy
+                seta[THISACTOR].ang targetAng
+                ai PROJSHOOT
+            } else killit
+        } 
+    }
+    ifai PROJSHOOT {
+        geta[].ang targetAng
+        cos xvel targetAng
+	      sin yvel targetAng
+        //geta[].zvel angz
+        shiftvarr xvel 6
+        shiftvarr yvel 6
+        movesprite THISACTOR xvel yvel 0 0 temp
+        //addlogvar temp
+        ifge temp 32768 { ifl temp 49152 { killit } } // Kill if hits wall
+        geta[reviveFound].extra temp 
+        ifn temp 0 killit // Kill if target enemy is no longer dead 
+        //ifcount 40 killit
+    }
+enda
+
 state greyhitstate
         ifcount 9 ai AIGREYWAIT
 ends
@@ -54,12 +154,17 @@ state greyseekstate
                 sound GREYATTACK
             }
           else
-            ifrnd 4 
-            { 
-                
-                ai AIGREYREVIVING 
-                sound GREYATTACK
+            ifrnd 4
+            {
+              set targetLoop 0
+              state checkGreyRevive
+              ifn reviveFound -1
+              {
+                  ai AIGREYREVIVING 
+                  sound GREYATTACK
+              }
             }
+            else nullop
         }
 
         ifrnd 4 ifpdistg 6144 ai AIGREYWAIT    
@@ -103,8 +208,10 @@ state greyrevivestate
       setvarvar greycurrpos greyprojpos
       subvar greyprojpos 3000
       seta[THISACTOR].z greyprojpos
-      shoot GREYREVIVEPROJECTILE
-      seta[THISACTOR].z greycurrpos    
+      set reviveID reviveFound
+      spawn GREYREVIVEPROJECTILE
+      seta[THISACTOR].z greycurrpos
+      set reviveFound -1
   }
    else
 	 ifactioncount 6
@@ -334,4 +441,6 @@ enda
 eventloadactor GREY
     sizeat 48 40
     state enemy_fxload
+    set reviveFound -1
+    set targetLoop 0
 enda
