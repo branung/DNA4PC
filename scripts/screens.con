@@ -761,6 +761,36 @@ appendevent EVENT_DISPLAYMENUREST
                 sub temp temp2
                 screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
             }
+            ife m_atscreen 2 {
+
+                redefinequote 200 Partial: 3D lines used when appropriate.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 45152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 125 45152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+                redefinequote 200 Gianni: Gianni Matragrano voices all Duke lines.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 45152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 131 45152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+        
+                redefinequote 200 CHANGE ANYTIME IN-GAME WITH [BACKSPACE]
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            }
             break
         // MENU: At skill
         case 110:
@@ -960,6 +990,27 @@ appendevent EVENT_NEWGAMECUSTOM
             ife userdef.return 2 1 {
                 // EU SELECTED
                 set dna_localization 1
+                set m_return 1
+                sound 443
+            }
+        }
+        ife userdef.return 1 2 {
+            set m_atscreen 2
+            ife userdef.return 2 0 {
+                // NONE SELECTED
+                set dna_dukecutscenevoc 0
+                set m_return 1
+                sound 443
+            }
+            ife userdef.return 2 1 {
+                // 3D SELECTED
+                set dna_dukecutscenevoc 1
+                set m_return 1
+                sound 443
+            }
+            ife userdef.return 2 2 {
+                // GIANNI SELECTED
+                set dna_dukecutscenevoc 2
                 set m_return 1
                 sound 443
             }

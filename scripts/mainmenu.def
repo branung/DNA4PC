@@ -17,6 +17,11 @@ newgamechoices {
                 choice 0 { name "USA" }
                 choice 1 { name "EUROPE" }
                 }
+	   choice 2 { name "Duke cutscene voice"
+                choice 0 { name "NONE" }
+                choice 1 { name "PARTIAL" }
+                choice 2 { name "GIANNI" }
+                }
    }
    choice 3 { name "User map" usercontent }
 }
