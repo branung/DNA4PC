@@ -8,18 +8,19 @@ gamevar dna_level_music 0 // 0 means the music specifically for the levels will 
 gamevar dna_crosshair 0 // 0 is the default crosshair in DNA. Set it anywhere from 0-8 for all variations
 gamevar dna_key_hud 0 // 0 has key items take up colored key slots in the hud when obtained. 1 displays their sprites below the key section of the hud.
 gamevar dna_lessalarm 0
+gamevar dna_progression -1 0
 
-//array player_settings 1 GAMEARRAY_RESTORE GAMEARRAY_UINT16
-//define enable_autoshade 1           // Toggle CON based wall/ceiling/visibility shading
-//define enable_lessalarm 2           // Gaudy alarm sound heard in some maps gets toned down
-//define enable_key_hud 4             // HUD display of completed mission objectives
-//define enable_cutscenes 8           // Whether to show cutscenes or not
-//define enable_voice_none 16         // Cutscenes: Use of no voice acting 
-//define enable_voice_partial 32      // Cutscenes: "Enhanced", uses Duke voices where appropriate
-//define enable_voice_gianni 48       // Cutscenes: Enables full voice acting by Gianni (opt-int)
-//define enable_music 64              // DNA by default has no music, enabling this slots in some Duke tracks
-//define is_firstboot 128             // Gets toggled ON in case the settings have been applied at least once
 
+array player_settings 1 GAMEARRAY_UINT16
+define pset_autoshade 1           // Toggle CON based wall/ceiling/visibility shading
+define pset_lessalarm 2           // Gaudy alarm sound heard in some maps gets toned down
+define pset_key_hud 4             // HUD display of completed mission objectives
+define pset_cutscenes 8           // Whether to show cutscenes or not
+define pset_voice_none 16         // Cutscenes: Use of no voice acting 
+define pset_voice_partial 32      // Cutscenes: "Enhanced", uses Duke voices where appropriate
+define pset_voice_gianni 48       // Cutscenes: Enables full voice acting by Gianni (opt-int)
+define pset_music 64              // DNA by default has no music, enabling this slots in some Duke tracks
+define pset_firstboot 128         // Gets toggled ON in case the settings have been applied at least once
 
 // Disable built in episode cutscene
 gamevar LOGO_FLAGS 104855777 0

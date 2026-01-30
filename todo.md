@@ -2,17 +2,17 @@
 
 ### Bugs:
 - [ x ] The elevator secret in level 2 is broken
-- [ ] The Lead Cannon sometimes uses 1 or 5 bullets in a shot rather than 4
+- [ x ] The Lead Cannon sometimes uses 1 or 5 bullets in a shot rather than 4
 	- Needs repro steps!
 - [ ] Greys' projectile that revives dead enemies currently is fired in a random direction when it should home in on the nearest dead body.
 - [ x ] Securty monitors don't work with proximity trigger (should proximity trigger logic be updated or should monitor screen be changed to cutscenes?)
 
 ### Menu/Settings:
 - [ ] toggle for whistling frequency
-- [ ] toggle for alarm sound (once per map)
+- [ x ] toggle for alarm sound (once per map)
 - [ ] toggle for step sounds
 - [ ] toggle for autoshade
-- [ ] on first start it should ask "Enable recommended settings? - you wont miss out on anything but some  cosmetics and gameplay will be tweaked for better enjoyment on PC. these can be adjusted freely later on"
+- [ Almost ] on first start it should ask "Enable recommended settings? - you wont miss out on anything but some  cosmetics and gameplay will be tweaked for better enjoyment on PC. these can be adjusted freely later on"
 - [ ] toggle for automatic door/elevator trigger (proximity) .. only check for manual use
 - [ ] toggle for "modern" cutscenes
 - [ ] toggle for GBA enemy ai boost (exclusive enemies/boss, more pseudo PC whatif)

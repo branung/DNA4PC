@@ -3,6 +3,10 @@ gamevar m_at_skill 0 0
 gamevar m_draw_x 0 0
 gamevar m_draw_y 0 0
 gamevar m_anim_frames 8
+gamevar m_return 0
+
+// 0 - Style, 1 - Region
+gamevar m_atscreen 0
 
 // DOS by default stretches rotatesprite calls from 1:1 mapped to 320x200 as 4:3
 // Calling "sqr aspect" before such calls will change the draw looks
@@ -14,6 +18,17 @@ ends
 defstate setdosaspect
     // Normal = 65535
     setu[].draw_yxaspect 65535
+ends
+
+defstate unlockmenu
+    ife dna_progression -1 readgamevar dna_progression
+    ifg dna_progression -1 setu .newgamecustomopen 0x02
+    ifg dna_progression -1 setu .newgamecustomsubopen 1 0x01
+    ifg dna_progression 2  setu .newgamecustomsubopen 1 0x03
+    ifg dna_progression 6  setu .newgamecustomsubopen 1 0x07
+    ifg dna_progression 10  setu .newgamecustomsubopen 1 0x0F
+    ifg dna_progression 12  setu .newgamecustomsubopen 1 0x1F
+    ifg dna_progression 15  setu .newgamecustomsubopen 1 0x3F
 ends
 
 // States to control fading the screen out of black and fading into black 
@@ -660,56 +675,92 @@ defstate skull_panel_ani {
 ends
 
 
+// 0 - Style, 1 - Region
+//gamevar m_atscreen 0
+
+
 appendevent EVENT_DISPLAYMENUREST
     switch userdef.return 0
         // newgame custom 1st level
-        case 102:
-            // Reset the nukesymbol override if we're in any other menu than skill
-            // Each print mostly gets the current slide and then just does gametext where needed.
+        case 104:
             set m_at_skill 0
-            redefinequote 200 CHOOSE STYLE
-            getu[].return 1 temp
-            shiftvarr temp 16
-            qstrdim temp2 temp3 DNASMALLTEXT 0 50 65536 0 200 16 8 0 0 0 0 0 0 xdim ydim
-            div temp2 2
-            add temp 160
-            sub temp temp2
-            add temp 1
-            screentext DNASMALLTEXT temp 44 65536 0 0 200 32 0 16 0 8 0 0 0 0 0 0 xdim ydim
-            sub temp 1
-            screentext DNASMALLTEXT temp 43 65536 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-    
-            getu[].return 3 temp
-            ife temp 0 redefinequote 200 Apply map shading and minor QoL tweaks.
-            ife temp 1 redefinequote 200 Match the GBA original.
-            getu[].return 1 temp
-            shiftvarr temp 16
-            qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
-            div temp2 2
-            add temp 160
-            sub temp temp2
-            screentext STARTALPHANUM temp 115 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-            
-            getu[].return 3 temp
-            ife temp 0 redefinequote 200 This is the recommended way to play.
-            ife temp 1 redefinequote 200 Aims for a more vanilla experience.
-            getu[].return 1 temp
-            shiftvarr temp 16
-            qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
-            div temp2 2
-            add temp 160
-            sub temp temp2
-            screentext STARTALPHANUM temp 121 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
-            
-    
-            redefinequote 200 CUSTOMIZE MORE IN-GAME WITH [BACKSPACE]
-            getu[].return 1 temp
-            shiftvarr temp 16
-            qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
-            div temp2 2
-            add temp 160
-            sub temp temp2
-            screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            ife m_atscreen 0 {
+                // Reset the nukesymbol override if we're in any other menu than skill
+                // Each print mostly gets the current slide and then just does gametext where needed.
+                redefinequote 200 CHOOSE STYLE
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 DNASMALLTEXT 0 50 65536 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                add temp 1
+                screentext DNASMALLTEXT temp 44 65536 0 0 200 32 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                sub temp 1
+                screentext DNASMALLTEXT temp 43 65536 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+        
+                getu[].return 3 temp
+                ife temp 0 redefinequote 200 Apply map shading and minor QoL tweaks.
+                ife temp 1 redefinequote 200 Match the GBA original.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 115 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+                getu[].return 3 temp
+                ife temp 0 redefinequote 200 This is the recommended way to play.
+                ife temp 1 redefinequote 200 Aims for a more vanilla experience.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 121 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+        
+                redefinequote 200 CUSTOMIZE MORE IN-GAME WITH [BACKSPACE]
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            }
+            ife m_atscreen 1 {
+
+                redefinequote 200 USA: The original script and recommended.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 115 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+                redefinequote 200 EU: Revised for localization purposes.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 121 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+        
+                redefinequote 200 CHANGE ANYTIME IN-GAME WITH [BACKSPACE]
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            }
             break
         // MENU: At skill
         case 110:
@@ -813,35 +864,114 @@ appendevent EVENT_MENUCURSORRIGHT
     ife m_at_skill 1 set RETURN -1
 endevent
 
-appendevent EVENT_NEWGAMECUSTOM
-    switch userdef.return 0
-        case 0
-            setu[].m_volume_number 0
-            setu[].m_level_number 0
-            redefinequote 200 ENHANCED SELECTED
-            quote 200
-            break
-        case 1
-            setu[].m_volume_number 0
-            setu[].m_level_number 0
-            redefinequote 200 VANILLA SELECTED
-            quote 200
-            break
-    endswitch
+appendevent EVENT_CHANGEMENU
+// Only used to kick back from our fake menu
+    ife RETURN 110 {
+        //ife m_return 1 set RETURN -1
+        ife m_return 1 set RETURN -2147483648
+        set m_return 0
+    }
+    ife RETURN 102 state unlockmenu
 endevent
 
-//appendevent EVENT_DISPLAYMENU
-//    switch userdef.return 0
-//        case 110
-//            
-//            break
-//    endswitch
-//endevent
+appendevent EVENT_NEWGAMECUSTOM
 
-defineskillname 0 
-defineskillname 1 
-defineskillname 2 
-defineskillname 3 
+    // This was converted to IFE out of spite...
+    //  NEW GAME        (0 -1 0)
+    //  
+    //  CHAPTER SELECT  (1 -1 0)
+    //  -- BASE         (1 0 -1)
+    //  -- EGYPT        (1 1 -1)
+    //  -- SYDNEY       (1 2 -1)
+    //  -- ALIEN 1      (1 3 -1)
+    //  -- ALIEN 2      (1 4 -1)
+    //  -- ALIEN 3      (1 5 -1)
+    //  
+    //  CUSTOMIZE        (2 -1 0)
+    //  -- GAME PRESETS  (2 0 -1)
+    //  ---- PC          (2 0 0)
+    //  ---- GBA         (2 0 1)
+    //  -- CHANGE REGION (2 1 -1)
+    //  ---- USA         (2 1 0)
+    //  ---- EU          (2 1 1)
+    //  USER MAP
+
+    // START CAMPAIGN
+    ife userdef.return 0 0 {
+        setu[].m_volume_number 0
+        setu[].m_level_number 0
+        redefinequote 200 New campaign
+        quote 200
+    }
+    // CHAPTER SELECT
+    ife userdef.return 0 1 {
+        ife userdef.return 1 0 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 0
+        }
+        ife userdef.return 1 1 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 3
+        }
+        ife userdef.return 1 2 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 7
+        }
+        ife userdef.return 1 3 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 11
+        }
+        ife userdef.return 1 4 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 13
+        }
+        ife userdef.return 1 5 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 16
+        }
+    }
+    // CUSTOMIZE -- m_atscreen is used to abuse additional drawing at EVENT_DISPLAYMENUREST
+    ife userdef.return 0 2 {
+        ife userdef.return 1 0 {
+            set m_atscreen 0
+            ife userdef.return 2 0 {
+                // USER SELECTED PC ENHANCED
+                set dna_lessalarm 1
+                set s_state 2
+                set m_return 1
+                sound 443
+            }
+            ife userdef.return 2 1 {
+                // USER SELECTED GBA
+                set dna_lessalarm 0
+                set s_state 1
+                set m_return 1
+                sound 443
+            }
+        }
+        ife userdef.return 1 1 {
+            set m_atscreen 1
+            ife userdef.return 2 0 {
+                // USA SELECTED
+                set dna_localization 0
+                set m_return 1
+                sound 443
+            }
+            ife userdef.return 2 1 {
+                // EU SELECTED
+                set dna_localization 1
+                set m_return 1
+                sound 443
+            }
+        }
+    }
+    
+endevent
+
+defineskillname 0  
+defineskillname 1  
+defineskillname 2  
+defineskillname 3  
 
 
 defstate get_credit_ticks {

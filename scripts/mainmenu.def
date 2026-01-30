@@ -1,11 +1,22 @@
-newgamechoices
-{
-   choice 0
-   {
-       name "PC Enhanced"
+newgamechoices {
+   choice 0 { name "Start campaign" }
+   choice 1 { name "Chapter select" locked
+       choice 0 { name "Area 51" locked }
+       choice 1 { name "Egyptian lover" locked }
+       choice 2 { name "Kangaroos with Utes" locked }
+       choice 3 { name "Alien shit" locked }
+       choice 4 { name "Two aliens" locked }
+       choice 5 { name "Return of the alien" locked }
    }
-   choice 1
-   {
-       name "Original"
+   choice 2 { name "Customize"
+       choice 0 { name "Game presets"
+                choice 0 { name "PC Enhanced" }
+                choice 1 { name "GBA Original" }
+                }
+       choice 1 { name "Change region"
+                choice 0 { name "USA" }
+                choice 1 { name "EUROPE" }
+                }
    }
+   choice 3 { name "User map" usercontent }
 }
