@@ -10,6 +10,10 @@ gamevar angx 0 2
 gamevar angy 0 2
 gamevar angz 0 2
 gamevar targetAng 0 2
+gamevar reviveZ 0 2
+gamevar targetZ 0 2
+
+gamevar zvel 0 0 // NOTE move to dnadef later
 
 spriteflags GREY 4194304
 
@@ -59,15 +63,17 @@ ends
 
 state checkGreyRevive {
   ife reviveFound -1 {
-    whilel targetLoop 6 {
+    whilel targetLoop 7 {
       state getReviveEnemy
       ifn reviveFound -1 { 
         geta[reviveFound].extra temp
         ife temp 0 {
-          cansee sprite[THISACTOR].x sprite[THISACTOR].y sprite[THISACTOR].z sprite[THISACTOR].sectnum 
+          geta[THISACTOR].z temp2
+          sub temp2 9000 // sets actors cansee height to around the Grey's eye height, so he can see :D
+          cansee sprite[THISACTOR].x sprite[THISACTOR].y temp2 sprite[THISACTOR].sectnum
           sprite[reviveFound].x sprite[reviveFound].y sprite[reviveFound].z sprite[reviveFound].sectnum temp
           ife temp 1 {
-                set targetLoop 7
+                set targetLoop 10
               } else {
           set reviveFound -1
           } 
@@ -107,12 +113,23 @@ useractor notenemy GREYREVIVEPROJECTILE GREYPROJECTILESTRENGTH
             ife temp 0
             {
               getactor[reviveFound].x angx
-                getactor[reviveFound].y angy
-                subvarvar angx sprite[THISACTOR].x
-                subvarvar angy sprite[THISACTOR].y
-                getangle targetAng angx angy
-                seta[THISACTOR].ang targetAng
-                ai PROJSHOOT
+              getactor[reviveFound].y angy
+              subvarvar angx sprite[THISACTOR].x
+              subvarvar angy sprite[THISACTOR].y
+              getangle targetAng angx angy
+
+              seta[THISACTOR].ang targetAng
+
+              getactor[reviveFound].z angz
+              subvarvar angz sprite[THISACTOR].z
+              shiftvarr angz 4
+
+              ldist temp2 THISACTOR reviveFound
+              getangle targetAng temp2 angz
+              
+              seta[THISACTOR].zvel targetAng
+
+              ai PROJSHOOT
             } else killit
         } 
     }
@@ -120,10 +137,21 @@ useractor notenemy GREYREVIVEPROJECTILE GREYPROJECTILESTRENGTH
         geta[].ang targetAng
         cos xvel targetAng
 	      sin yvel targetAng
-        //geta[].zvel angz
         shiftvarr xvel 6
         shiftvarr yvel 6
-        movesprite THISACTOR xvel yvel 0 0 temp
+        
+        geta[].zvel reviveZ
+        cos zvel reviveZ
+        shiftvarr zvel 3
+
+        getactor[reviveFound].z angz
+        sub angz 20
+        geta[].z reviveZ
+
+        ifg reviveZ angz { mul zvel -1 set angy 1 } //angy from last ai process used to store temp value telling proj not to keep switching up and down
+        else ifn angy 1 abs zvel else set zvel 0
+        
+        movesprite THISACTOR xvel yvel zvel 0 temp
         //addlogvar temp
         ifge temp 32768 { ifl temp 49152 { killit } } // Kill if hits wall
         geta[reviveFound].extra temp 
@@ -208,7 +236,7 @@ state greyrevivestate
       //Need to find a way to look for multiple enemy fallen sprites and have grey face it 
       geta[THISACTOR].z greyprojpos
       setvarvar greycurrpos greyprojpos
-      subvar greyprojpos 3000
+      subvar greyprojpos 9000
       seta[THISACTOR].z greyprojpos
       set reviveID reviveFound
       spawn GREYREVIVEPROJECTILE
