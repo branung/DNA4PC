@@ -17,6 +17,8 @@ texture 2405 { pal 0 { file "tiles/2405.png" } }
 texture 2406 { pal 0 { file "tiles/2406.png" } }
 texture 2407 { pal 0 { file "tiles/2407.png" } }
 
+texture 2457 { pal 0 { file "tiles/2457.png" } } // 3D menu banner
+
 texture 2536 { pal 0 { file "tiles/2536.png" } }
 texture 2537 { pal 0 { file "tiles/2537.png" } }
 texture 2538 { pal 0 { file "tiles/2538.png" } }
