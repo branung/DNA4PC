@@ -159,6 +159,9 @@ gamevar knockbackforce 0 0
 gamevar xvel 0 0
 gamevar yvel 0 0
 
+// Used in Grey revival projectile code
+gamevar zvel 0 0
+
 //Cutscene sprites
 define DUKEHEADSPRITE 3923
 define SARGEHEADSPRITE 3924

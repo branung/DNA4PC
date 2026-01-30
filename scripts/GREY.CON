@@ -1,5 +1,6 @@
-actor GREYPROJECTILE GREYPROJECTILESTRENGTH enda
-// actor GREYREVIVEPROJECTILE GREYPROJECTILESTRENGTH enda
+//============================================================
+// GREY REVIVE PROJECTILE CODE - Grey code located below this 
+//============================================================
 
 var REVIVEDISTANCE 20000
 
@@ -11,38 +12,7 @@ gamevar angy 0 2
 gamevar angz 0 2
 gamevar targetAng 0 2
 gamevar reviveZ 0 2
-gamevar targetZ 0 2
-
-gamevar zvel 0 0 // NOTE move to dnadef later
-
-spriteflags GREY 4194304
-
-action GREYWALKING          0   3  5  1  22
-action GREYSTANDING         16  1  5  1  10
-action GREYATTACKING        23  4  1  1  30
-action GREYREVIVING         28  5  1  1  20
-action GREYDYING            39  5  1  1  8
-action GREYDEADBODY         43  1  1  1  10
-action GREYFROZEN           0   1  5  1  10
-action GREYFLINCH           33  1  5  1  10
-action GREYGROW             0   1  1  1  10
-
-move GREYSTOPPED
-move GREYWALKVEL 132
-move GREYSHRUNKVELS 32
-
-gamevar greyprojpos 0 0
-gamevar greycurrpos 0 0
-
-ai AIGREYWAIT               GREYSTANDING GREYSTOPPED geth
-ai AIGREYSEEK               GREYWALKING GREYWALKVEL seekplayer
-ai AIGREYATTACKPLAYER       GREYATTACKING GREYSTOPPED faceplayer
-ai AIGREYREVIVING           GREYREVIVING GREYSTOPPED faceplayer //figure out direction for this
-ai AIGREYDYING	            GREYDYING GREYSTOPPED geth
-ai AIGREYHIT                GREYFLINCH GREYSTOPPED faceplayer
-ai AIGREYFROZEN             GREYFROZEN GREYSTOPPED geth
-ai AIGREYSHRUNK             GREYWALKING GREYSHRUNKVELS fleeenemy
-ai AIGREYGROW               GREYGROW GREYSTOPPED geth
+//gamevar targetZ 0 2
 
 // Revive projectile actor defines
 // Grey's will prioritize case 0, each following case gets next dibs
@@ -159,6 +129,41 @@ useractor notenemy GREYREVIVEPROJECTILE GREYPROJECTILESTRENGTH
         //ifcount 40 killit
     }
 enda
+
+//==================
+// GREY ENEMY CODE
+//==================
+
+actor GREYPROJECTILE GREYPROJECTILESTRENGTH enda
+
+spriteflags GREY 4194304
+
+action GREYWALKING          0   3  5  1  22
+action GREYSTANDING         16  1  5  1  10
+action GREYATTACKING        23  4  1  1  30
+action GREYREVIVING         28  5  1  1  20
+action GREYDYING            39  5  1  1  8
+action GREYDEADBODY         43  1  1  1  10
+action GREYFROZEN           0   1  5  1  10
+action GREYFLINCH           33  1  5  1  10
+action GREYGROW             0   1  1  1  10
+
+move GREYSTOPPED
+move GREYWALKVEL 132
+move GREYSHRUNKVELS 32
+
+gamevar greyprojpos 0 0
+gamevar greycurrpos 0 0
+
+ai AIGREYWAIT               GREYSTANDING GREYSTOPPED geth
+ai AIGREYSEEK               GREYWALKING GREYWALKVEL seekplayer
+ai AIGREYATTACKPLAYER       GREYATTACKING GREYSTOPPED faceplayer
+ai AIGREYREVIVING           GREYREVIVING GREYSTOPPED faceplayer //figure out direction for this
+ai AIGREYDYING	            GREYDYING GREYSTOPPED geth
+ai AIGREYHIT                GREYFLINCH GREYSTOPPED faceplayer
+ai AIGREYFROZEN             GREYFROZEN GREYSTOPPED geth
+ai AIGREYSHRUNK             GREYWALKING GREYSHRUNKVELS fleeenemy
+ai AIGREYGROW               GREYGROW GREYSTOPPED geth
 
 state greyhitstate
         ifcount 9 ai AIGREYWAIT
