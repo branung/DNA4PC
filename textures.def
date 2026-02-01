@@ -1,5 +1,7 @@
 // Tint definitions for hires textures
 tint { pal 1 red 127 green 148 blue 255 flags 1 }
+tint { pal 2 red 255 green 127 blue 127 flags 1 }
+tint { pal 3 red 127 green 255 blue 127 flags 1 }
 tint { pal 140 red 32 green 16 blue 4 flags 64 }
 tint { pal 141 red 48 green 40 blue 0 flags 64 }
 tint { pal 142 red 32 green 8 blue 4 flags 64 }

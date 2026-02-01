@@ -11,8 +11,11 @@ gamevar m_return 0
 gamevar m_lastentry 0 0
 gamevar m_menudir 0 0
 
+gamevar m_debug 0 0
+
 // 0 - Style, 1 - Region, 2 - Cutscene voice, 3 - Crosshair
-gamevar m_atscreen 0
+gamevar m_atscreen 0 0
+gamevar m_tmp_dnacrosshair 0 0
 
 // DOS by default stretches rotatesprite calls from 1:1 mapped to 320x200 as 4:3
 // Calling "sqr aspect" before such calls will change the draw looks
@@ -850,7 +853,7 @@ appendevent EVENT_DISPLAYMENUREST
                 getu[].return 1 m_draw_x
                 shiftvarr m_draw_x 16
                 set temp4 DIGITALNUM
-                add temp4 dna_crosshair
+                add temp4 m_tmp_dnacrosshair
                 add temp4 1
                 add m_draw_x 190
                 set m_draw_y 100
@@ -869,23 +872,25 @@ appendevent EVENT_DISPLAYMENUREST
                 // Hardcode Y to be here
                 set m_draw_y 100
                 
-                set temp2 dna_crosshair
+                set temp2 m_tmp_dnacrosshair
                 state m_getcrosshairtile
                 state setsqraspect
                 add temp3 0
                 state m_getrsdim
                 rotatesprite temp3 m_draw_y 32768 0 3905 32 0 9 128 0 xdim ydim
-                rotatesprite m_draw_x m_draw_y 65536 0 temp5 0 0 9 0 0 xdim ydim
+                ife temp2 dna_crosshair set temp4 3 else set temp4 0
+                rotatesprite m_draw_x m_draw_y 65536 0 temp5 0 temp4 9 0 0 xdim ydim
                 
-                set temp2 dna_crosshair
+                set temp2 m_tmp_dnacrosshair
                 sub temp2 1
                 ifl temp2 0 set temp2 8
                 state m_getcrosshairtile
                 sub m_draw_y 24
                 state m_getrsdim
-                rotatesprite m_draw_x m_draw_y 32768 0 temp5 0 0 9 0 0 xdim ydim
+                ife temp2 dna_crosshair set temp4 3 else set temp4 0
+                rotatesprite m_draw_x m_draw_y 32768 0 temp5 0 temp4 9 0 0 xdim ydim
                 
-                set temp2 dna_crosshair
+                set temp2 m_tmp_dnacrosshair
                 sub temp2 1
                 ifl temp2 0 set temp2 8
                 sub temp2 1
@@ -893,18 +898,20 @@ appendevent EVENT_DISPLAYMENUREST
                 state m_getcrosshairtile
                 sub m_draw_y 16
                 state m_getrsdim
-                rotatesprite m_draw_x m_draw_y 20480 0 temp5 0 0 9 0 0 xdim ydim
+                ife temp2 dna_crosshair set temp4 3 else set temp4 0
+                rotatesprite m_draw_x m_draw_y 20480 0 temp5 0 temp4 9 0 0 xdim ydim
                 add m_draw_y 16
                 
-                set temp2 dna_crosshair
+                set temp2 m_tmp_dnacrosshair
                 add temp2 1
                 ifg temp2 8 set temp2 0
                 state m_getcrosshairtile
                 add m_draw_y 48
                 state m_getrsdim
-                rotatesprite m_draw_x m_draw_y 32768 0 temp5 0 0 9 0 0 xdim ydim
+                ife temp2 dna_crosshair set temp4 3 else set temp4 0
+                rotatesprite m_draw_x m_draw_y 32768 0 temp5 0 temp4 9 0 0 xdim ydim
                 
-                set temp2 dna_crosshair
+                set temp2 m_tmp_dnacrosshair
                 add temp2 1
                 ifg temp2 8 set temp2 0
                 add temp2 1
@@ -912,8 +919,8 @@ appendevent EVENT_DISPLAYMENUREST
                 state m_getcrosshairtile
                 add m_draw_y 16
                 state m_getrsdim
-
-                rotatesprite m_draw_x m_draw_y 20480 0 temp5 0 0 9 0 0 xdim ydim
+                ife temp2 dna_crosshair set temp4 3 else set temp4 0
+                rotatesprite m_draw_x m_draw_y 20480 0 temp5 0 temp4 9 0 0 xdim ydim
                 
                 state setdosaspect
 
@@ -921,7 +928,7 @@ appendevent EVENT_DISPLAYMENUREST
                 add m_draw_y 16
                 
                 getu[].return 3 temp3
-                redefinequote 200 [ENTER] to cycle
+                redefinequote 200 [ENTER] to select
                 set temp m_draw_x
                 qstrdim temp2 temp4 STARTALPHANUM 0 50 65536 0 200 16 8 0 0 0 0 0 0 xdim ydim
                 div temp2 2
@@ -941,10 +948,10 @@ appendevent EVENT_DISPLAYMENUREST
                 
                 // Figure out where we have been moving to from 3 entries
                 state menu_getdir
-                ife m_menudir 1 add dna_crosshair 1
-                ife m_menudir -1 sub dna_crosshair 1
-                ifg dna_crosshair 8 set dna_crosshair 0
-                ifl dna_crosshair 0 set dna_crosshair 8
+                ife m_menudir 1 add m_tmp_dnacrosshair 1
+                ife m_menudir -1 sub m_tmp_dnacrosshair 1
+                ifg m_tmp_dnacrosshair 8 set m_tmp_dnacrosshair 0
+                ifl m_tmp_dnacrosshair 0 set m_tmp_dnacrosshair 8
             }
             break
         // MENU: At skill
@@ -1053,8 +1060,7 @@ appendevent EVENT_CHANGEMENU
 // Only used to kick back from our fake menu
     ife RETURN 110 {
         ife m_return 1 set RETURN -1
-        //ife m_return 1 set RETURN -2147483648
-        set m_return 2
+        ife m_return 2 set RETURN -2147483648
     }
     ife RETURN 102 state unlockmenu
 endevent
@@ -1165,9 +1171,10 @@ appendevent EVENT_NEWGAMECUSTOM
         }
         ife userdef.return 1 3 {
             set m_atscreen 3
-            ife userdef.return 2 0 set m_return 1
-            ife userdef.return 2 1 set m_return 1
-            ife userdef.return 2 2 set m_return 1
+            ife userdef.return 2 0 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair }
+            ife userdef.return 2 1 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair }
+            ife userdef.return 2 2 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair }
+            ife userdef.return 2 -1 { set m_tmp_dnacrosshair dna_crosshair set m_lastentry -1 }
         }
     }
     //set m_inkey 0
