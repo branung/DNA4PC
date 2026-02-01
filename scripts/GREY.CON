@@ -14,6 +14,12 @@ gamevar targetAng 0 2
 gamevar reviveZ 0 2
 //gamevar targetZ 0 2
 
+move REVPROJVEL 300
+action  GREYREVPROJSHOOT         0   3  3  1  22
+
+ai PROJCHECK GREYREVPROJSHOOT 0
+ai PROJSHOOT GREYREVPROJSHOOT 0
+
 // Revive projectile actor defines
 // Grey's will prioritize case 0, each following case gets next dibs
 // So you can organize the cases here based on which enemies you want them to target first
@@ -61,12 +67,6 @@ ends
 eventloadactor GREYREVIVEPROJECTILE
     seta .cstat 0
 enda
-
-move REVPROJVEL 300
-action  GREYREVPROJSHOOT         0   3  3  1  22
-
-ai PROJCHECK GREYREVPROJSHOOT 0
-ai PROJSHOOT GREYREVPROJSHOOT REVPROJVEL
 
 useractor notenemy GREYREVIVEPROJECTILE GREYPROJECTILESTRENGTH 
   ifaction 0 {

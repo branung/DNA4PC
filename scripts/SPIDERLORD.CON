@@ -1,3 +1,13 @@
+// Setting up Locator waypoints for Spiderlord
+// On SpiderLord sprite: set hitag as unique Id, set xvel as anount of Locators
+// On Locator nodes: set hitag as sequence # (first one he goes to is 0, next one he'll got to is 1 etc), xvel is the enemy unique id
+
+gamevar locatorFound -1 2
+gamevar locatorLength 0 2
+gamevar locatorID 0 2
+gamevar enemyTag 0 2
+//gamevar targetZ 0 2
+
 spriteflags SPIDERLORD 4194304
 
 action SPIDERLORDWALKING          0   4  5  1  22
@@ -10,11 +20,13 @@ action SPIDERLORDFLINCH           24  1  5  1  10
 action SPIDERLORDGROW             0   1  1  1  10
 
 move SPIDERLORDSTOPPED
-move SPIDERLORDWALKVEL 132
+move SPIDERLORDWALKVEL 232
 move SPIDERLORDSHRUNKVELS 32
 
 ai AISPIDERLORDWAIT               SPIDERLORDSTANDING SPIDERLORDSTOPPED geth
 ai AISPIDERLORDSEEK               SPIDERLORDWALKING SPIDERLORDWALKVEL seekplayer
+ai AISPIDERLORDLOCCHECK           SPIDERLORDWALKING 0 seekplayer
+ai AISPIDERLORDLOCATE             SPIDERLORDWALKING SPIDERLORDWALKVEL dodgebullet
 ai AISPIDERLORDATTACKPLAYER       SPIDERLORDATTACKING SPIDERLORDSTOPPED faceplayer
 ai AISPIDERLORDDYING	            SPIDERLORDDYING SPIDERLORDSTOPPED geth
 ai AISPIDERLORDHIT                SPIDERLORDFLINCH SPIDERLORDSTOPPED faceplayer
@@ -23,37 +35,124 @@ ai AISPIDERLORDSHRUNK             SPIDERLORDWALKING SPIDERLORDSHRUNKVELS fleeene
 ai AISPIDERLORDGROW               SPIDERLORDGROW SPIDERLORDSTOPPED geth
 
 state spiderlordhitstate
-        ifcount 9 ai AISPIDERLORDWAIT
+  ifcount 9 ai AISPIDERLORDWAIT
 ends
 
 state spiderlordwaitstate
-	ifcount 30 ai AISPIDERLORDSEEK
+  ifcount 30 ai AISPIDERLORDLOCCHECK
+ends
+
+state incrementLocatorID {
+  getav[THISACTOR].locatorID temp
+  getav[THISACTOR].locatorLength temp2
+  ifl temp temp2 {
+      add temp 1
+      setactorvar[THISACTOR].locatorID temp
+    }
+    else { 
+      set temp 0
+      setactorvar[THISACTOR].locatorID temp 
+    }
+}
+ends 
+
+// Look for next Locator in LocatorId sequence
+state spiderLordLocCheckState {
+  for i sprofstat STAT_LOCATOR {
+    getactorvar[THISACTOR].enemyTag temp
+    ife temp sprite[i].xvel
+    {
+    getactorvar[THISACTOR].locatorID temp
+    ife sprite[i].hitag temp {
+      //addlogvar i
+      set locatorFound i
+
+      cansee sprite[THISACTOR].x sprite[THISACTOR].y temp2 sprite[THISACTOR].sectnum
+      sprite[locatorFound].x sprite[locatorFound].y sprite[locatorFound].z sprite[locatorFound].sectnum temp
+      //addlogvar temp
+      ifn temp 0 {
+      getactor[locatorFound].x angx
+      getactor[locatorFound].y angy
+      subvarvar angx sprite[THISACTOR].x
+      subvarvar angy sprite[THISACTOR].y
+      getangle targetAng angx angy
+
+      seta[THISACTOR].ang targetAng
+      
+      //ai AISPIDERLORDLOCATE
+      }
+      else {
+        findnearsprite LOCATORS 20000 locatorFound
+        //addlogvar locatorFound
+          ifn locatorFound -1 {
+            getactorvar[THISACTOR].locatorID temp2
+            ifn sprite[locatorFound].hitag temp2 {
+              getactorvar[THISACTOR].enemyTag temp
+              ife sprite[locatorFound].xvel enemyTag {
+                cansee sprite[THISACTOR].x sprite[THISACTOR].y temp2 sprite[THISACTOR].sectnum
+                sprite[locatorFound].x sprite[locatorFound].y sprite[locatorFound].z sprite[locatorFound].sectnum temp
+
+                ifn temp 0 {
+                  //addlogvar sprite[locatorFound].hitag
+                  setactorvar[THISACTOR].locatorID sprite[locatorFound].hitag
+                } else {
+                  state incrementLocatorID
+                }
+              } else state incrementLocatorID
+            } else state incrementLocatorID
+          }
+          //ai AISPIDERLORDLOCATE
+        } 
+      }
+    }
+  }
+  ai AISPIDERLORDLOCATE
+}
+ends
+
+state spiderLordLocateState {
+  ifcansee ifpdistl 6144
+  ifrnd 2
+  {
+    soundonce SPIDERLORDROAM
+  }
+  ifcount 10
+  ifcansee ifpdistl 12288
+  ifp palive
+  {
+  ifrnd 8 
+    { 
+      ai AISPIDERLORDATTACKPLAYER 
+      // add sound here
+    }
+  }
+
+  ifn locatorFound -1 {
+  ldist temp THISACTOR locatorFound
+  ifl temp 300 {
+    state incrementLocatorID
+    ai AISPIDERLORDLOCCHECK
+  }
+  }
+}
 ends
 
 state spiderlordseekstate
-       ifcansee ifpdistl 6144
-        ifrnd 2
-        {
-          soundonce SPIDERLORDROAM
-        }
-        ifcount 10
-        ifcansee ifpdistl 6144
-        ifp palive
-        {
-			ifrnd 8 
-            { 
-                ai AISPIDERLORDATTACKPLAYER 
-                // add sound here
-            }
-        }
+  ifcansee ifpdistl 6144
+  ifrnd 2
+  {
+    soundonce SPIDERLORDROAM
+  }
+  ifcount 10
+  ifcansee ifpdistl 6144
 
-        ifrnd 4 ifpdistg 6144 ai AISPIDERLORDWAIT    
+  ifrnd 4 ifpdistg 6144 ai AISPIDERLORDWAIT
 ends
 
 state spiderlordattackstate
   
   ifcount 72
-    state spiderlordseekstate
+    ai AISPIDERLORDLOCCHECK
   else
     ifaction SPIDERLORDATTACKING
       ifactioncount 2
@@ -65,8 +164,8 @@ ends
 
 
 state spiderlordgrowstate
-        state genericgrowcode
-        sizeto 255 192
+  state genericgrowcode
+  sizeto 255 192
 ends
 
 state spiderlordshrunkstate
@@ -74,11 +173,11 @@ state spiderlordshrunkstate
     ai AISPIDERLORDWAIT
   else
     ifcount SHRUNKCOUNT
-        {
-          ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
-          else
+    {
+      ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
+      else
       sizeto 48 40
-        }
+    }
   else
     state genericshrunkcode
 ends
@@ -129,7 +228,7 @@ ifai 0
 {
 	// play alert sound here
     cstat 257
-	ai AISPIDERLORDSEEK
+	ai AISPIDERLORDLOCCHECK
 }
 
 ifai AISPIDERLORDDYING
@@ -211,21 +310,22 @@ ifai AISPIDERLORDSHRUNK state spiderlordshrunkstate else
 ifai AISPIDERLORDWAIT state spiderlordwaitstate else
 ifai AISPIDERLORDHIT state spiderlordhitstate else
 ifai AISPIDERLORDATTACKPLAYER state spiderlordattackstate else
-ifai AISPIDERLORDSEEK state spiderlordseekstate
+ifai AISPIDERLORDLOCCHECK { state spiderLordLocCheckState break } 
+ifai AISPIDERLORDLOCATE { state spiderLordLocateState break }
 
 
 ifhitweapon
 {
     ifwasweapon SHRINKSPARK
         {
-                ifstrength 600
-                {
-                  sound ACTOR_SHRINKING
-                  ai AISPIDERLORDSHRUNK
-                  // set shrunken 1
-                  break
-                }
-                else addstrength -60
+          ifstrength 600
+          {
+            sound ACTOR_SHRINKING
+            ai AISPIDERLORDSHRUNK
+            // set shrunken 1
+            break
+          }
+          else addstrength -60
         }
         else
         ifwasweapon GROWSPARK
@@ -257,15 +357,15 @@ ifhitweapon
                 ifspritepal 0 break
                 ifwasweapon RPG
                 {
-                        sound SQUISHED
-                        spawn BLOODPOOL
-                        killit
+                  sound SQUISHED
+                  spawn BLOODPOOL
+                  killit
                 }
                 ifwasweapon RADIUSEXPLOSION
                 {
-                        sound SQUISHED
-                        spawn BLOODPOOL
-                        killit
+                  sound SQUISHED
+                  spawn BLOODPOOL
+                  killit
                 }
                 break
         }
@@ -284,9 +384,27 @@ ifhitweapon
         debris SCRAP1 1
         guts JIBS6 1
 
-}
+} 
 enda
 
 eventloadactor SPIDERLORD
     sizeat 60 60
+
+    ife enemyTag 0 {
+    geta[THISACTOR].hitag temp
+    ifn temp 0 {
+      setactorvar[THISACTOR].enemyTag temp
+    }
+  }
+
+  ife locatorLength 0 {
+    geta[THISACTOR].xvel temp
+    ifn temp 0 {
+      setactorvar[THISACTOR].locatorLength temp
+      seta .xvel 0
+    }
+  }
+
+  setactorvar[THISACTOR].locatorID 0
+
 enda
