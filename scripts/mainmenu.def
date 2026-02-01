@@ -1,12 +1,12 @@
 newgamechoices {
    choice 0 { name "Start campaign" }
    choice 1 { name "Chapter select" locked
-       choice 0 { name "Area 51" locked }
-       choice 1 { name "Egyptian lover" locked }
-       choice 2 { name "Kangaroos with Utes" locked }
-       choice 3 { name "Alien shit" locked }
-       choice 4 { name "Two aliens" locked }
-       choice 5 { name "Return of the alien" locked }
+       choice 0 { name "Area 51" locked hidden }
+       choice 1 { name "Egypt" locked  hidden }
+       choice 2 { name "Sydney" locked  hidden }
+       choice 3 { name "Alien ship ACT I" locked  hidden }
+       choice 4 { name "Alien ship ACT II" locked  hidden }
+       choice 5 { name "Alien ship ACT III" locked  hidden }
    }
    choice 2 { name "Customize"
        choice 0 { name "Game presets"
@@ -24,6 +24,8 @@ newgamechoices {
                 }
 	   choice 3 { name "Crosshair"
                 choice 0 { name " " }
+                choice 1 { name " " }
+                choice 2 { name " " }
                 }
    }
    choice 3 { name "User map" usercontent }

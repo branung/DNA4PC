@@ -8,6 +8,9 @@ gamevar m_draw_yc 0 0
 gamevar m_anim_frames 8
 gamevar m_return 0
 
+gamevar m_lastentry 0 0
+gamevar m_menudir 0 0
+
 // 0 - Style, 1 - Region, 2 - Cutscene voice, 3 - Crosshair
 gamevar m_atscreen 0
 
@@ -33,6 +36,22 @@ defstate unlockmenu
     ifg dna_progression 12  setu .newgamecustomsubopen 1 0x1F
     ifg dna_progression 15  setu .newgamecustomsubopen 1 0x3F
 ends
+
+defstate menu_getdir
+    // ONLY works on last submenu for now
+    getu[].return 3 temp
+    ifn temp m_lastentry {
+        ife temp 0 ife m_lastentry 2 set m_menudir 1
+        ife temp 1 ife m_lastentry 0 set m_menudir 1
+        ife temp 2 ife m_lastentry 1 set m_menudir 1
+        ife temp 2 ife m_lastentry 0 set m_menudir -1
+        ife temp 1 ife m_lastentry 2 set m_menudir -1
+        ife temp 0 ife m_lastentry 1 set m_menudir -1
+    } else set m_menudir 0
+    set m_lastentry temp
+ends
+
+
 
 // States to control fading the screen out of black and fading into black 
 defstate screen_fadeout
@@ -919,6 +938,13 @@ appendevent EVENT_DISPLAYMENUREST
                 add temp 160
                 sub temp temp2
                 screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+                // Figure out where we have been moving to from 3 entries
+                state menu_getdir
+                ife m_menudir 1 add dna_crosshair 1
+                ife m_menudir -1 sub dna_crosshair 1
+                ifg dna_crosshair 8 set dna_crosshair 0
+                ifl dna_crosshair 0 set dna_crosshair 8
             }
             break
         // MENU: At skill
@@ -1026,9 +1052,9 @@ endevent
 appendevent EVENT_CHANGEMENU
 // Only used to kick back from our fake menu
     ife RETURN 110 {
-        //ife m_return 1 set RETURN -1
-        ife m_return 1 set RETURN -2147483648
-        set m_return 0
+        ife m_return 1 set RETURN -1
+        //ife m_return 1 set RETURN -2147483648
+        set m_return 2
     }
     ife RETURN 102 state unlockmenu
 endevent
@@ -1098,14 +1124,12 @@ appendevent EVENT_NEWGAMECUSTOM
                 set dna_lessalarm 1
                 set s_state 2
                 set m_return 1
-                sound 443
             }
             ife userdef.return 2 1 {
                 // USER SELECTED GBA
                 set dna_lessalarm 0
                 set s_state 1
                 set m_return 1
-                sound 443
             }
         }
         ife userdef.return 1 1 {
@@ -1114,13 +1138,11 @@ appendevent EVENT_NEWGAMECUSTOM
                 // USA SELECTED
                 set dna_localization 0
                 set m_return 1
-                sound 443
             }
             ife userdef.return 2 1 {
                 // EU SELECTED
                 set dna_localization 1
                 set m_return 1
-                sound 443
             }
         }
         ife userdef.return 1 2 {
@@ -1129,35 +1151,26 @@ appendevent EVENT_NEWGAMECUSTOM
                 // NONE SELECTED
                 set dna_dukecutscenevoc 0
                 set m_return 1
-                sound 443
             }
             ife userdef.return 2 1 {
                 // 3D SELECTED
                 set dna_dukecutscenevoc 1
                 set m_return 1
-                sound 443
             }
             ife userdef.return 2 2 {
                 // GIANNI SELECTED
                 set dna_dukecutscenevoc 2
                 set m_return 1
-                sound 443
             }
         }
         ife userdef.return 1 3 {
             set m_atscreen 3
-            ife userdef.return 2 0 {
-                // CROSSHAIR SELECTION, cycling is automatic. Only one dummy entry!
-                set temp dna_crosshair
-                add temp 1
-                ifg temp 8 set temp 0
-                set dna_crosshair temp
-                set m_return 1
-                //sound 443
-            }
+            ife userdef.return 2 0 set m_return 1
+            ife userdef.return 2 1 set m_return 1
+            ife userdef.return 2 2 set m_return 1
         }
     }
-    
+    //set m_inkey 0
 endevent
 
 defineskillname 0  
