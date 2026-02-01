@@ -1,11 +1,14 @@
 
-gamevar m_at_skill 0 0
+gamevar m_customdraw 0 0
 gamevar m_draw_x 0 0
 gamevar m_draw_y 0 0
+gamevar m_draw_xc 0 0
+gamevar m_draw_yc 0 0
+
 gamevar m_anim_frames 8
 gamevar m_return 0
 
-// 0 - Style, 1 - Region
+// 0 - Style, 1 - Region, 2 - Cutscene voice, 3 - Crosshair
 gamevar m_atscreen 0
 
 // DOS by default stretches rotatesprite calls from 1:1 mapped to 320x200 as 4:3
@@ -679,11 +682,37 @@ ends
 //gamevar m_atscreen 0
 
 
+defstate m_getcrosshairtile
+    switch temp2
+        case 1 { setvar temp5 5744 break }
+        case 2 { setvar temp5 5745 break }
+        case 3 { setvar temp5 5746 break }
+        case 4 { setvar temp5 5747 break }
+        case 5 { setvar temp5 5748 break }
+        case 6 { setvar temp5 5749 break }
+        case 7 { setvar temp5 5750 break }
+        case 8 { setvar temp5 5751 break }
+        default { setvar temp5 5743 break }
+    endswitch
+ends
+
+defstate m_getrsdim
+    gettiledata[temp4].xsize m_draw_xc
+    div m_draw_xc 2
+    sub m_draw_xc m_draw_x
+    inv m_draw_xc
+    
+    gettiledata[temp4].ysize m_draw_yc
+    div m_draw_yc 2
+    sub m_draw_yc m_draw_y
+    inv m_draw_yc
+ends
+
 appendevent EVENT_DISPLAYMENUREST
     switch userdef.return 0
         // newgame custom 1st level
         case 104:
-            set m_at_skill 0
+            set m_customdraw 0
             ife m_atscreen 0 {
                 // Reset the nukesymbol override if we're in any other menu than skill
                 // Each print mostly gets the current slide and then just does gametext where needed.
@@ -762,26 +791,126 @@ appendevent EVENT_DISPLAYMENUREST
                 screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
             }
             ife m_atscreen 2 {
+                getu[].return 3 temp
+                ife temp 0 redefinequote 200 No extra voice lines during cutscenes
+                ife temp 1 redefinequote 200 Adds oneliners to select cutscenes
+                ife temp 2 redefinequote 200 Fully voiced Duke in all cutscenes
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 125 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+                getu[].return 3 temp
+                ife temp 0 redefinequote 200 This matches the GBA original.
+                ife temp 1 redefinequote 200 using existing JSJ samples.
+                ife temp 2 redefinequote 200 courtesy of Gianni Matragrano.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 131 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+                redefinequote 200 CHANGE ANYTIME IN-GAME WITH [BACKSPACE]
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            }
+            ife m_atscreen 3 {
+                set m_customdraw 1
+                
+                // Do top yellow text but not yellow
+                getu[].return 1 m_draw_x
+                shiftvarr m_draw_x 16
+                set temp4 DIGITALNUM
+                add temp4 dna_crosshair
+                add temp4 1
+                add m_draw_x 190
+                set m_draw_y 100
+                state m_getrsdim
+                rotatesprite m_draw_xc m_draw_yc 81920 0 temp4 32 0 25 0 0 xdim ydim
+                sub m_draw_xc 1
+                sub m_draw_yc 1
+                rotatesprite m_draw_xc m_draw_yc 81920 0 temp4 0 0 25 0 0 xdim ydim
+                
+                // X = Start at 80, get the transition X scroll amount from userdef 1
+                set m_draw_x 160
+                getu[].return 1 temp
+                shiftvarr temp 16
+                add m_draw_x temp
+                set temp3 m_draw_x
+                // Hardcode Y to be here
+                set m_draw_y 100
+                
+                set temp2 dna_crosshair
+                state m_getcrosshairtile
+                state setsqraspect
+                add temp3 0
+                state m_getrsdim
+                rotatesprite temp3 m_draw_y 32768 0 3905 32 0 9 128 0 xdim ydim
+                rotatesprite m_draw_x m_draw_y 65536 0 temp5 0 0 9 0 0 xdim ydim
+                
+                set temp2 dna_crosshair
+                sub temp2 1
+                ifl temp2 0 set temp2 8
+                state m_getcrosshairtile
+                sub m_draw_y 24
+                state m_getrsdim
+                rotatesprite m_draw_x m_draw_y 32768 0 temp5 0 0 9 0 0 xdim ydim
+                
+                set temp2 dna_crosshair
+                sub temp2 1
+                ifl temp2 0 set temp2 8
+                sub temp2 1
+                ifl temp2 0 set temp2 8
+                state m_getcrosshairtile
+                sub m_draw_y 16
+                state m_getrsdim
+                rotatesprite m_draw_x m_draw_y 20480 0 temp5 0 0 9 0 0 xdim ydim
+                add m_draw_y 16
+                
+                set temp2 dna_crosshair
+                add temp2 1
+                ifg temp2 8 set temp2 0
+                state m_getcrosshairtile
+                add m_draw_y 48
+                state m_getrsdim
+                rotatesprite m_draw_x m_draw_y 32768 0 temp5 0 0 9 0 0 xdim ydim
+                
+                set temp2 dna_crosshair
+                add temp2 1
+                ifg temp2 8 set temp2 0
+                add temp2 1
+                ifg temp2 8 set temp2 0
+                state m_getcrosshairtile
+                add m_draw_y 16
+                state m_getrsdim
 
-                redefinequote 200 Partial: 3D lines used when appropriate.
-                getu[].return 1 temp
-                shiftvarr temp 16
-                qstrdim temp2 temp3 STARTALPHANUM 0 50 45152 0 200 16 8 0 0 0 0 0 0 xdim ydim
-                div temp2 2
-                add temp 160
-                sub temp temp2
-                screentext STARTALPHANUM temp 125 45152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                rotatesprite m_draw_x m_draw_y 20480 0 temp5 0 0 9 0 0 xdim ydim
                 
-                redefinequote 200 Gianni: Gianni Matragrano voices all Duke lines.
-                getu[].return 1 temp
-                shiftvarr temp 16
-                qstrdim temp2 temp3 STARTALPHANUM 0 50 45152 0 200 16 8 0 0 0 0 0 0 xdim ydim
-                div temp2 2
-                add temp 160
-                sub temp temp2
-                screentext STARTALPHANUM temp 131 45152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                state setdosaspect
+
                 
-        
+                add m_draw_y 16
+                
+                getu[].return 3 temp3
+                redefinequote 200 [ENTER] to cycle
+                set temp m_draw_x
+                qstrdim temp2 temp4 STARTALPHANUM 0 50 65536 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                //add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp m_draw_y 65536 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                add m_draw_y 8
+                
                 redefinequote 200 CHANGE ANYTIME IN-GAME WITH [BACKSPACE]
                 getu[].return 1 temp
                 shiftvarr temp 16
@@ -795,7 +924,7 @@ appendevent EVENT_DISPLAYMENUREST
         // MENU: At skill
         case 110:
             // This variable tracks whether to hide the nuke symbols in other events
-            set m_at_skill 1
+            set m_customdraw 1
             
             // X = Start at 80, get the transition X scroll amount from userdef 1
             set m_draw_x 80
@@ -881,17 +1010,17 @@ appendevent EVENT_DISPLAYMENUREST
             break
         default:
             // Reset the nukesymbol override if we're in any other menu than skill
-            set m_at_skill 0
+            set m_customdraw 0
             break
     endswitch
 endevent
 
 appendevent EVENT_MENUCURSORLEFT
-    ife m_at_skill 1 set RETURN -1
+    ife m_customdraw 1 set RETURN -1
 endevent
 
 appendevent EVENT_MENUCURSORRIGHT
-    ife m_at_skill 1 set RETURN -1
+    ife m_customdraw 1 set RETURN -1
 endevent
 
 appendevent EVENT_CHANGEMENU
@@ -1013,6 +1142,18 @@ appendevent EVENT_NEWGAMECUSTOM
                 set dna_dukecutscenevoc 2
                 set m_return 1
                 sound 443
+            }
+        }
+        ife userdef.return 1 3 {
+            set m_atscreen 3
+            ife userdef.return 2 0 {
+                // CROSSHAIR SELECTION, cycling is automatic. Only one dummy entry!
+                set temp dna_crosshair
+                add temp 1
+                ifg temp 8 set temp 0
+                set dna_crosshair temp
+                set m_return 1
+                //sound 443
             }
         }
     }
