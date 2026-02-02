@@ -1063,6 +1063,7 @@ appendevent EVENT_CHANGEMENU
         ife m_return 2 set RETURN -2147483648
     }
     ife RETURN 102 state unlockmenu
+    set m_return 0
 endevent
 
 appendevent EVENT_NEWGAMECUSTOM
