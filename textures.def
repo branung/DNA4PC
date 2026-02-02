@@ -1069,7 +1069,7 @@ texture 6017 { pal 0 { file "tiles/6017.png" } }
 texture 6018 { pal 0 { file "tiles/6018.png" } }
 texture 6019 { pal 0 { file "tiles/6019.png" } }
 texture 6020 { pal 0 { file "tiles/6020.png" } }
-
+texture 6021 { pal 0 { file "tiles/6021.png" } }
 texture 6022 { pal 0 { file "tiles/6022.png" } }
 
 texture 6033 { pal 0 { file "tiles/6033.png" } }
