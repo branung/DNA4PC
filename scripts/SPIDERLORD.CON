@@ -62,47 +62,25 @@ state spiderLordLocCheckState {
     getactorvar[THISACTOR].enemyTag temp
     ife temp sprite[i].xvel
     {
-    getactorvar[THISACTOR].locatorID temp
-    ife sprite[i].hitag temp {
-      //addlogvar i
-      set locatorFound i
+      getactorvar[THISACTOR].locatorID temp
+      ife sprite[i].hitag temp {
+        //addlogvar i
+        set locatorFound i
 
-      cansee sprite[THISACTOR].x sprite[THISACTOR].y temp2 sprite[THISACTOR].sectnum
-      sprite[locatorFound].x sprite[locatorFound].y sprite[locatorFound].z sprite[locatorFound].sectnum temp
-      //addlogvar temp
-      ifn temp 0 {
-      getactor[locatorFound].x angx
-      getactor[locatorFound].y angy
-      subvarvar angx sprite[THISACTOR].x
-      subvarvar angy sprite[THISACTOR].y
-      getangle targetAng angx angy
+        cansee sprite[THISACTOR].x sprite[THISACTOR].y sprite[THISACTOR].z sprite[THISACTOR].sectnum
+        sprite[locatorFound].x sprite[locatorFound].y sprite[locatorFound].z sprite[locatorFound].sectnum temp
+        //addlogvar temp
+        ifn temp 0 {
+        getactor[locatorFound].x angx
+        getactor[locatorFound].y angy
+        subvarvar angx sprite[THISACTOR].x
+        subvarvar angy sprite[THISACTOR].y
+        getangle targetAng angx angy
 
-      seta[THISACTOR].ang targetAng
-      
-      //ai AISPIDERLORDLOCATE
+        seta[THISACTOR].ang targetAng
+        
+        //ai AISPIDERLORDLOCATE
       }
-      else {
-        findnearsprite LOCATORS 20000 locatorFound
-        //addlogvar locatorFound
-          ifn locatorFound -1 {
-            getactorvar[THISACTOR].locatorID temp2
-            ifn sprite[locatorFound].hitag temp2 {
-              getactorvar[THISACTOR].enemyTag temp
-              ife sprite[locatorFound].xvel enemyTag {
-                cansee sprite[THISACTOR].x sprite[THISACTOR].y temp2 sprite[THISACTOR].sectnum
-                sprite[locatorFound].x sprite[locatorFound].y sprite[locatorFound].z sprite[locatorFound].sectnum temp
-
-                ifn temp 0 {
-                  //addlogvar sprite[locatorFound].hitag
-                  setactorvar[THISACTOR].locatorID sprite[locatorFound].hitag
-                } else {
-                  state incrementLocatorID
-                }
-              } else state incrementLocatorID
-            } else state incrementLocatorID
-          }
-          //ai AISPIDERLORDLOCATE
-        } 
       }
     }
   }
@@ -111,6 +89,9 @@ state spiderLordLocCheckState {
 ends
 
 state spiderLordLocateState {
+
+  seta[THISACTOR].ang targetAng
+
   ifcansee ifpdistl 6144
   ifrnd 2
   {
@@ -128,7 +109,14 @@ state spiderLordLocateState {
   }
 
   ifn locatorFound -1 {
+  cansee sprite[THISACTOR].x sprite[THISACTOR].y sprite[THISACTOR].z sprite[THISACTOR].sectnum
+  sprite[locatorFound].x sprite[locatorFound].y sprite[locatorFound].z sprite[locatorFound].sectnum temp
+  ife temp 0 {
+    state incrementLocatorID
+    ai AISPIDERLORDLOCCHECK
+  }
   ldist temp THISACTOR locatorFound
+
   ifl temp 300 {
     state incrementLocatorID
     ai AISPIDERLORDLOCCHECK
@@ -310,8 +298,8 @@ ifai AISPIDERLORDSHRUNK state spiderlordshrunkstate else
 ifai AISPIDERLORDWAIT state spiderlordwaitstate else
 ifai AISPIDERLORDHIT state spiderlordhitstate else
 ifai AISPIDERLORDATTACKPLAYER state spiderlordattackstate else
-ifai AISPIDERLORDLOCCHECK { state spiderLordLocCheckState break } 
-ifai AISPIDERLORDLOCATE { state spiderLordLocateState break }
+ifai AISPIDERLORDLOCCHECK state spiderLordLocCheckState else 
+ifai AISPIDERLORDLOCATE state spiderLordLocateState 
 
 
 ifhitweapon
