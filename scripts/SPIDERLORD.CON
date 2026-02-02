@@ -26,7 +26,7 @@ move SPIDERLORDSHRUNKVELS 32
 ai AISPIDERLORDWAIT               SPIDERLORDSTANDING SPIDERLORDSTOPPED geth
 ai AISPIDERLORDSEEK               SPIDERLORDWALKING SPIDERLORDWALKVEL seekplayer
 ai AISPIDERLORDLOCCHECK           SPIDERLORDWALKING 0 seekplayer
-ai AISPIDERLORDLOCATE             SPIDERLORDWALKING SPIDERLORDWALKVEL dodgebullet
+ai AISPIDERLORDLOCATE             SPIDERLORDWALKING 0
 ai AISPIDERLORDATTACKPLAYER       SPIDERLORDATTACKING SPIDERLORDSTOPPED faceplayer
 ai AISPIDERLORDDYING	            SPIDERLORDDYING SPIDERLORDSTOPPED geth
 ai AISPIDERLORDHIT                SPIDERLORDFLINCH SPIDERLORDSTOPPED faceplayer
@@ -58,6 +58,10 @@ ends
 
 // Look for next Locator in LocatorId sequence
 state spiderLordLocCheckState {
+  getav[THISACTOR].locatorLength temp
+  ife temp 0 { ai AISPIDERLORDSEEK } // If no locator length is defined, spiderlord will just seek
+  else
+  {
   for i sprofstat STAT_LOCATOR {
     getactorvar[THISACTOR].enemyTag temp
     ife temp sprite[i].xvel
@@ -75,22 +79,34 @@ state spiderLordLocCheckState {
         getactor[locatorFound].y angy
         subvarvar angx sprite[THISACTOR].x
         subvarvar angy sprite[THISACTOR].y
-        getangle targetAng angx angy
+        getangle temp2 angx angy
+        setav[THISACTOR].targetAng temp2
 
-        seta[THISACTOR].ang targetAng
+        seta[THISACTOR].ang temp2
         
         //ai AISPIDERLORDLOCATE
-      }
+        }
       }
     }
   }
   ai AISPIDERLORDLOCATE
+  }
 }
 ends
 
 state spiderLordLocateState {
 
-  seta[THISACTOR].ang targetAng
+  getactorvar[THISACTOR].targetAng temp
+  addlogvar temp
+  seta[THISACTOR].ang temp
+  cos xvel temp
+  sin yvel temp
+  mul xvel 3
+  mul yvel 3
+  shiftvarr xvel 8
+  shiftvarr yvel 8
+  
+  movesprite THISACTOR xvel yvel 0 0 temp
 
   ifcansee ifpdistl 6144
   ifrnd 2
@@ -133,6 +149,14 @@ state spiderlordseekstate
   }
   ifcount 10
   ifcansee ifpdistl 6144
+  ifp palive
+  {
+    ifrnd 8 
+    { 
+      ai AISPIDERLORDATTACKPLAYER 
+      // add sound here
+    }
+  }
 
   ifrnd 4 ifpdistg 6144 ai AISPIDERLORDWAIT
 ends
@@ -297,7 +321,8 @@ ifai AISPIDERLORDWAIT state spiderlordwaitstate else
 ifai AISPIDERLORDHIT state spiderlordhitstate else
 ifai AISPIDERLORDATTACKPLAYER state spiderlordattackstate else
 ifai AISPIDERLORDLOCCHECK state spiderLordLocCheckState else 
-ifai AISPIDERLORDLOCATE state spiderLordLocateState 
+ifai AISPIDERLORDLOCATE state spiderLordLocateState else
+ifai AISPIDERLORDSEEK state spiderlordseekstate
 
 getactor[THISACTOR].htextra temp
 ifg temp 0                           
