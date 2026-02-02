@@ -40,6 +40,29 @@ defstate unlockmenu
     ifg dna_progression 15  setu .newgamecustomsubopen 1 0x3F
 ends
 
+// Handle loading dna_progression
+appendevent EVENT_INITCOMPLETE
+    readgamevar dna_progression
+endevent
+
+appendevent EVENT_ENTERLEVEL
+    ife VOLUME 0 {
+        switch LEVEL
+        case 3
+        case 7
+        case 11
+        case 13
+        case 16
+        {
+            ifl dna_progression LEVEL
+            set dna_progression LEVEL
+            savegamevar dna_progression
+            break
+        }
+        endswitch
+    }
+endevent
+
 defstate menu_getdir
     // ONLY works on last submenu for now
     getu[].return 3 temp
