@@ -1466,7 +1466,11 @@ texture 6755 { pal 0 { file "tiles/6755.png" } }
 texture 6756 { pal 0 { file "tiles/6756.png" } }
 texture 6757 { pal 0 { file "tiles/6757.png" } }
 
+texture 6915 { pal 0 { file "tiles/6915.png" } }
+
 texture 6919 { pal 0 { file "tiles/6919.png" } }
+
+texture 6921 { pal 0 { file "tiles/6921.png" } }
 
 texture 6927 { pal 0 { file "tiles/6927.png" } }
 texture 6928 { pal 0 { file "tiles/6928.png" } }

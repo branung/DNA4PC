@@ -999,21 +999,21 @@ appendevent EVENT_DISPLAYMENUREST
                     case 1:
                         ife temp2 i {
                             set temp 7000
-                            redefinequote 200 PISS OF CAKE
+                            redefinequote 200 PIECE OF CAKE
                         } else set temp 7001
                         
                         break
                     case 2:
                         ife temp2 i {
                             set temp 7002
-                            redefinequote 200 LETS KNOCK
+                            redefinequote 200 LET'S ROCK
                         } else set temp 7003
                         
                         break
                     case 3:
                         ife temp2 i {
                             set temp 7006
-                            redefinequote 200 COME GET SUN
+                            redefinequote 200 COME GET SOME
                         } else set temp 7007
                         
                         break
@@ -1021,7 +1021,7 @@ appendevent EVENT_DISPLAYMENUREST
                         ife temp2 i {
                             state skull_panel_ani
                             set temp curr_skull 
-                            redefinequote 200 DAMN IM GOD
+                            redefinequote 200 DAMN I'M GOOD!
                         } else { set temp 7016 set skull_skill_ani 0 }
                         break
                 endswitch
