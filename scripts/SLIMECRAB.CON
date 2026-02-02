@@ -25,7 +25,7 @@ ai AICRABSHRUNK             CRABWALKING CRABSHRUNKVELS fleeenemy
 ai AICRABGROW               CRABGROW CRABSTOPPED geth
 
 state crabhitstate
-        ifcount 9 ai AICRABWAIT
+  ifcount 9 ai AICRABWAIT
 ends
 
 state crabwaitstate
@@ -33,27 +33,26 @@ state crabwaitstate
 ends
 
 state crabseekstate
-       ifcansee ifpdistl 6144
-        ifrnd 2
-        {
-			// add sound here
-        }
-        ifcount 10
-        ifcansee ifpdistl 6144
-        ifp palive
-        {
-			ifrnd 8 
-            { 
-                ai AICRABATTACKPLAYER 
-                sound SLIMERATTACK
-            }
-        }
+  ifcansee ifpdistl 6144
+  ifrnd 2
+  {
+    // add sound here
+  }
+  ifcount 10
+  ifcansee ifpdistl 6144
+  ifp palive
+  {
+    ifrnd 8 
+    { 
+      ai AICRABATTACKPLAYER 
+      sound SLIMERATTACK
+    }
+  }
 
-        ifrnd 4 ifpdistg 6144 ai AICRABWAIT    
+  ifrnd 4 ifpdistg 6144 ai AICRABWAIT
 ends
 
 state crabattackstate
-  
   ifcount 25
   {
     ifcount 27
@@ -61,16 +60,16 @@ state crabattackstate
   }
   else
 	ifcount 24
-		  shoot SLIMECRABPROJECTILE
-   else
+		shoot SLIMECRABPROJECTILE
+  else
 	 ifactioncount 6
 	   resetactioncount
 ends
 
 
 state crabgrowstate
-        state genericgrowcode
-        sizeto 255 192
+  state genericgrowcode
+  sizeto 255 192
 ends
 
 state crabshrunkstate
@@ -78,51 +77,49 @@ state crabshrunkstate
     ai AICRABWAIT
   else
     ifcount SHRUNKCOUNT
-        {
-          ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
-          else
+    {
+      ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
+      else
       sizeto 48 40
-        }
+    }
   else
     state genericshrunkcode
 ends
 
 state crabfrozenstate
-
-    ifcount THAWTIME
+  ifcount THAWTIME
 	{
 		ai AICRABWAIT
 		getlastpal
-    }
-    else
-		ifcount FROZENDRIPTIME
+  }
+  else
+  ifcount FROZENDRIPTIME
+  {
+    ifactioncount 26
     {
-      ifactioncount 26
-      {
-        spawn WATERDRIP
-        resetactioncount
-      }
+      spawn WATERDRIP
+      resetactioncount
     }
-    ifhitweapon
+  }
+  ifhitweapon
+  {
+    ifwasweapon FREEZEBLAST
     {
-      ifwasweapon FREEZEBLAST
-      {
-		strength 0
-        break
-      }
-      addkills 1 
-          // state enemy_death
+      strength 0
+      break
+    }
+    addkills 1 
+      // state enemy_death
 
-      ifrnd 84
-        spawn BLOODPOOL
-          lotsofglass 30
-      sound GLASS_BREAKING
-      killit
-    }
-    ifp pfacing
-      ifpdistl FROZENQUICKKICKDIST
-        pkick
-  
+    ifrnd 84
+      spawn BLOODPOOL
+        lotsofglass 30
+    sound GLASS_BREAKING
+    killit
+  }
+  ifp pfacing
+    ifpdistl FROZENQUICKKICKDIST
+      pkick
 ends
 
 useractor enemy SLIMECRAB SLIMECRABSTRENGTH
@@ -132,80 +129,78 @@ state checksquished
 ifai 0
 {
 	// play alert sound here
-    cstat 257
+  cstat 257
 	ai AICRABSEEK
 }
 
 ifai AICRABDYING
 {
-        strength 0
-		ifwasweapon RPG
-		{
-				sound SQUISHED
-				spawn BLOODPOOL
-				state standard_jibs
-				killit
-		}
-		ifwasweapon RADIUSEXPLOSION
-		{
-				sound SQUISHED
-				spawn BLOODPOOL
-				state standard_jibs
-				killit
-		}
-        
-        ifaction CRABDYING
-        {
-                ifactioncount 5
-                {
-						        cstat 0
-						            globalsound THUD
-                        action CRABDEADBODY
-                        break
-                }
-        }    
-        ifaction CRABDEADBODY
-        {
-          findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
-            ifn temp -1
-            {
-                  addkills -1
-                  spawn TRANSPORTERSTAR
-                  cstat 257
-                  strength SLIMECRABSTRENGTH
-                  ai AICRABWAIT
-                  // play sound here
-            }
-                ifhitweapon
-                {
-                        ifwasweapon RPG
-                        {
-                                sound SQUISHED
-                                spawn BLOODPOOL
-                                state standard_jibs
-                                killit
-                        }
-                        ifwasweapon RADIUSEXPLOSION
-                        {
-                          sound SQUISHED
-                          spawn BLOODPOOL
-                          state standard_jibs
-                          killit
-                        }
-                }
-                ifcount RESPAWNACTORTIME
-                ifrespawn
-                {
-                  addkills -1
-                  spawn TRANSPORTERSTAR
-                  cstat 257
-                  strength SLIMECRABSTRENGTH
-                  ai AICRABWAIT
-                  // play sound here
-                }
-        }
-        
-        break
+  strength 0
+  ifwasweapon RPG
+  {
+    sound SQUISHED
+    spawn BLOODPOOL
+    state standard_jibs
+    killit
+  }
+  ifwasweapon RADIUSEXPLOSION
+  {
+    sound SQUISHED
+    spawn BLOODPOOL
+    state standard_jibs
+    killit
+  }
+  ifaction CRABDYING
+  {
+    ifactioncount 5
+    {
+      cstat 0
+      globalsound THUD
+      action CRABDEADBODY
+      break
+    }
+  }    
+  ifaction CRABDEADBODY
+  {
+    findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+    ifn temp -1
+    {
+      addkills -1
+      spawn TRANSPORTERSTAR
+      cstat 257
+      strength SLIMECRABSTRENGTH
+      ai AICRABWAIT
+      // play sound here
+    }
+    ifhitweapon
+    {
+      ifwasweapon RPG
+      {
+              sound SQUISHED
+              spawn BLOODPOOL
+              state standard_jibs
+              killit
+      }
+      ifwasweapon RADIUSEXPLOSION
+      {
+        sound SQUISHED
+        spawn BLOODPOOL
+        state standard_jibs
+        killit
+      }
+    }
+    ifcount RESPAWNACTORTIME
+    ifrespawn
+    {
+      addkills -1
+      spawn TRANSPORTERSTAR
+      cstat 257
+      strength SLIMECRABSTRENGTH
+      ai AICRABWAIT
+      // play sound here
+    }
+  }
+  break
 }
 
 
@@ -220,73 +215,72 @@ ifai AICRABSEEK state crabseekstate
 
 ifhitweapon
 {
-    //guts JIBS6 1
-    //spawn BLOOD
-    ifwasweapon SHRINKSPARK
-        {
-                ifstrength 600
-                {
-                  sound ACTOR_SHRINKING
-                  ai AICRABSHRUNK
-                  // set shrunken 1
-                  break
-                }
-                else addstrength -60
-        }
-        else
-        ifwasweapon GROWSPARK
-          sound EXPANDERHIT
+  //guts JIBS6 1
+  //spawn BLOOD
+  ifwasweapon SHRINKSPARK
+  {
+    ifstrength 600
+    {
+      sound ACTOR_SHRINKING
+      ai AICRABSHRUNK
+      // set shrunken 1
+      break
+    }
+    else addstrength -60
+  }
+  else
+  ifwasweapon GROWSPARK
+    sound EXPANDERHIT
 		//guts JIBS2 1
-        ifdead
-        {
-                ifwasweapon FREEZEBLAST
-                {
-                  sound SOMETHINGFROZE
-                  spritepal 1
-                  ai AICRABFROZEN
-                  strength 0
-                  // state freezeme
-                  break
-                }
-                ifwasweapon GROWSPARK
-                {
-					cstat 0
-					sound ACTOR_GROWING
-					ai AICRABGROW
-					break
-                }
-                addkills 1
-                sound SLIM_DYING
-                ai AICRABDYING
-                //guts JIBS6 8
-                ifspritepal 0 break
-                ifwasweapon RPG
-                {
-                        sound SQUISHED
-                        spawn BLOODPOOL
-                        killit
-                }
-                ifwasweapon RADIUSEXPLOSION
-                {
-                        sound SQUISHED
-                        spawn BLOODPOOL
-                        killit
-                }
-                break
-        }
-		
-        
-        // play pain sound here
-        ifrnd 2
-                spawn BLOODPOOL
-		ifai AICRABHIT nullop else
-        ifai AICRABSHRUNK nullop else
-        {
-			ifrnd 16 
-			ai AICRABHIT        
-        }
-
+  ifdead
+  {
+    ifwasweapon FREEZEBLAST
+    {
+      sound SOMETHINGFROZE
+      spritepal 1
+      ai AICRABFROZEN
+      strength 0
+      // state freezeme
+      break
+    }
+    ifwasweapon GROWSPARK
+    {
+      cstat 0
+      sound ACTOR_GROWING
+      ai AICRABGROW
+      break
+    }
+    addkills 1
+    sound SLIM_DYING
+    ai AICRABDYING
+    //guts JIBS6 8
+    ifspritepal 0 break
+    ifwasweapon RPG
+    {
+      sound SQUISHED
+      spawn BLOODPOOL
+      killit
+    }
+    ifwasweapon RADIUSEXPLOSION
+    {
+      sound SQUISHED
+      spawn BLOODPOOL
+      killit
+    }
+    break
+  }
+  // play pain sound here
+  ifrnd 2
+    spawn BLOODPOOL
+  ifai AICRABHIT nullop else
+  ifai AICRABSHRUNK nullop else
+  {
+    ifrnd 16 
+      ai AICRABHIT        
+  }
 }
+enda
 
-
+eventloadactor SLIMECRAB
+  sizeat 24 20
 enda

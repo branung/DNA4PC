@@ -1,0 +1,65 @@
+===========================================================================
+Review                  : Do you have a good DooM WAD and want to play it 
+                          in Duke3D? If so, try this tool!
+===========================================================================
+Primary purpose         : Level converter
+===========================================================================
+Title                   : DMDKCONV  V1.00 (960805)
+                          Doom -> Duke3D Level Converter
+
+Filename                : DMDKCONV.EXE
+Release date            : 08/05/96 MM/DD/YY (Timestamp of the files)
+Author                  : Olaf Wendlandt
+Email Address           : 100754.2513@compuserve.com
+
+Description             : DMDKCONV  V1.00 (960805) is a for converting
+						  Doom I/II Levels to Duke Nukem 3D Levels.
+						  It does a much better job than WAD2MAP.
+						  
+Additional Credits to   : - Mathew S Fell (msfell@aol.com)
+                            for the "Unofficial Doom Specs"
+                          - My friend Harvey Gerbl
+                            for playing and testing WADs/MAPs with me.
+                          - Apogee/3DRealms for an excellent game
+
+===========================================================================
+* Construction *
+
+Base                    : New from scratch
+
+
+* Copyright / Permissions *
+
+The converter program DMDKCONV.EXE and this documentation is Copyright
+Olaf Wendlandt, 100754.2513@compuserve.com
+and my be used without of charge (freeware) and can be distribute freely,
+as long as it remains unmodified and complete.
+
+
+* Where to get the file that this text file describes *
+
+The mirrors of the /idgames -ftp-archives:
+           ftp://ftp.fu-berlin.de/pc/msdos/games/idgames/
+           http://public.ftp.planetmirror.com/pub/idgames/
+           http://www.gamers.org/pub/idgames/
+           ftp://ftp.ntua.gr/pub/vendors/idgames/
+           http://ftp.ntua.gr/pub/vendors/idgames/
+           ftp://ftp.chg.ru/pub/games/idgames/
+           http://ftp.chg.ru/pub/games/idgames/
+           ftp://ftp.mancubus.net/pub/idgames/
+           http://ftp.mancubus.net/pub/idgames/
+           http://youfailit.net/pub/idgames/
+           http://ftp.fdn.fr/games/idgames/
+           ftp://ftp.clinet.fi/pub/mirrors/archives.3dgamers.com/idgames/
+           ftp://ftp.task.gda.pl/pub/games/idgames/
+           ftp://ftp.netc.pt/pub/idgames/
+           http://ftp.netc.pt/pub/idgames/
+           http://crydee.sai.msu.ru/ftproot/pub/rec/games/idgames/
+
+           The upload-server of the /idgames-archives is:
+           ftp://archives.3dgamers.com/pub/idgames/
+           But please use the above listed mirrors for your downloads.
+
+===========================================================================
+Submitted to the /idgames-ftp-archives by FunDuke --> funduke@hotmail.com
+The review at the beginning of this template has been written by FunDuke.

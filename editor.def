@@ -1,1 +1,8 @@
 tilefromtexture 5600 { file "/editor/a51speaker.png" }
+
+// Shade6, "tan", lavaroom map4
+fogpal 140 32 16 4
+// Shade13, "piss yellow", map5/7 lava cracks and map17/18 lava sections
+fogpal 141 48 40 0
+// Shade1, "reddish tan", map8 backstage / map16 rightmost room
+fogpal 142 32 8 4

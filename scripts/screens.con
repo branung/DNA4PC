@@ -1,0 +1,1823 @@
+
+gamevar m_customdraw 0 0
+gamevar m_draw_x 0 0
+gamevar m_draw_y 0 0
+gamevar m_draw_xc 0 0
+gamevar m_draw_yc 0 0
+
+gamevar m_anim_frames 8
+gamevar m_return 0
+
+gamevar m_lastentry 0 0
+gamevar m_menudir 0 0
+
+gamevar m_debug 0 0
+
+// 0 - Style, 1 - Region, 2 - Cutscene voice, 3 - Crosshair
+gamevar m_atscreen 0 0
+gamevar m_tmp_dnacrosshair 0 0
+
+// DOS by default stretches rotatesprite calls from 1:1 mapped to 320x200 as 4:3
+// Calling "sqr aspect" before such calls will change the draw looks
+defstate setsqraspect
+    // Square = (65536 * 5 / 6)
+    setu[].draw_yxaspect 54613
+ends
+
+defstate setdosaspect
+    // Normal = 65535
+    setu[].draw_yxaspect 65535
+ends
+
+defstate unlockmenu
+    ife dna_progression -1 readgamevar dna_progression
+    ifg dna_progression -1 setu .newgamecustomopen 0x02
+    ifg dna_progression -1 setu .newgamecustomsubopen 1 0x01
+    ifg dna_progression 2  setu .newgamecustomsubopen 1 0x03
+    ifg dna_progression 6  setu .newgamecustomsubopen 1 0x07
+    ifg dna_progression 10  setu .newgamecustomsubopen 1 0x0F
+    ifg dna_progression 12  setu .newgamecustomsubopen 1 0x1F
+    ifg dna_progression 15  setu .newgamecustomsubopen 1 0x3F
+ends
+
+// Handle loading dna_progression
+appendevent EVENT_INITCOMPLETE
+    readgamevar dna_progression
+endevent
+
+appendevent EVENT_ENTERLEVEL
+    ife VOLUME 0 {
+        switch LEVEL
+        case 3
+        case 7
+        case 11
+        case 13
+        case 16
+        {
+            ifl dna_progression LEVEL
+            set dna_progression LEVEL
+            savegamevar dna_progression
+            break
+        }
+        endswitch
+    }
+endevent
+
+defstate menu_getdir
+    // ONLY works on last submenu for now
+    getu[].return 3 temp
+    ifn temp m_lastentry {
+        ife temp 0 ife m_lastentry 2 set m_menudir 1
+        ife temp 1 ife m_lastentry 0 set m_menudir 1
+        ife temp 2 ife m_lastentry 1 set m_menudir 1
+        ife temp 2 ife m_lastentry 0 set m_menudir -1
+        ife temp 1 ife m_lastentry 2 set m_menudir -1
+        ife temp 0 ife m_lastentry 1 set m_menudir -1
+    } else set m_menudir 0
+    set m_lastentry temp
+ends
+
+
+
+// States to control fading the screen out of black and fading into black 
+defstate screen_fadeout
+        //ife RETURN 1 ifg SCREENALPHA 0 set SCREENALPHA 1
+        ifvarg SCREENALPHA 0
+        {
+            getticks curtick
+            setvar RETURN 0
+            screenpal 0 0 0 SCREENALPHA
+            
+            ifvare prevtick -1 setvar ticktmp 0 else
+            {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp prevtick
+            }
+            
+            divvar ticktmp 2
+            subvarvar SCREENALPHA ticktmp
+            clamp SCREENALPHA 0 255
+            setvarvar prevtick curtick
+        }
+        else {
+            setvar prevtick -1
+        }
+ends
+
+defstate screen_fadein
+{
+        ife RETURN 1 ifl SCREENALPHA 255 set SCREENALPHA 254
+        ifvarl SCREENALPHA 255
+        {
+            getticks curtick
+            setvar RETURN 0
+            screenpal 0 0 0 SCREENALPHA
+            
+            ifvare prevtick -1 setvar ticktmp 0 else
+            {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp prevtick
+            }
+            
+            divvar ticktmp 2
+            addvarvar SCREENALPHA ticktmp
+            clamp SCREENALPHA 0 255
+            setvarvar prevtick curtick
+        }
+        else {
+            setvar prevtick -1
+        }
+}
+ends
+
+defstate cutscene_timer //same as waste_time in cutscenes.con but without input restriction 
+{
+        ifvarg delayTime 0
+        {
+            getticks curtick
+            ifvare prevtick -1 setvar ticktmp 0 else
+            {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp prevtick
+            }
+
+            subvarvar delayTime ticktmp
+            
+            setvarvar prevtick curtick
+        }
+}
+ends
+
+// Fade-in effect when starting a level
+appendevent EVENT_DISPLAYSTART
+{
+    ifvarg SCREENALPHAWORLD 0   
+        {
+            // ife SCREENALPHAWORLD 255 { palfrom 63 0 0 0 } // Prevents screen flash at level start, but causes slow fade
+            getticks worldcurtick
+            screenpal 0 0 0 SCREENALPHAWORLD
+            
+            ifvare worldprevtick -1 setvar worldticktmp 0 else
+            {
+            setvarvar worldticktmp worldcurtick
+            subvarvar worldticktmp worldprevtick
+            }
+            
+            divvar worldticktmp 2
+            subvarvar SCREENALPHAWORLD worldticktmp
+            clamp SCREENALPHAWORLD 0 255
+            setvarvar worldprevtick worldcurtick
+        }
+}
+endevent
+
+// Timer for the LEVEL COMPLETE animation on end level screen
+// Given its own prevtick value due to conflicting with prevtick in fade timer
+defstate bonus_screen_ani {
+    getticks curtick
+    ifvare bonus_screen_prevtick -1 setvar ticktmp 0 else
+    {
+        setvarvar ticktmp curtick
+        subvarvar ticktmp bonus_screen_prevtick
+    }
+
+    divvar ticktmp 4
+    
+    subvarvar bonusDelayTime ticktmp
+        
+    setvarvar bonus_screen_prevtick curtick
+}
+ends
+
+// End screen drawing state
+// Usage can be found at the end of EVENT_GAME in CUTSCENES.CON
+defstate display_end_screen
+{
+    state setdosaspect
+    rotatesprite 160 100 ENDSCREEN_SIZE 0 5761 0 0 72 0 0 xdim ydim
+    rotatesprite 160 30 83920 0 5762 0 0 8 0 0 xdim ydim
+    set y 23
+
+    // When level complete phrase is not fully spelt
+    ifvarl level_complete_ani 15
+    {    
+        // level_complete_ani 0 means no letters yet, therefore no screentext needed
+        ifvarg level_complete_ani 0 {
+            ife level_complete_ani 6 { set level_complete_ani 7 } // Skip space between words
+            qsubstr 140 132 0 level_complete_ani
+            screentext DNABIGTEXTBRIGHT 66 y ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 2 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+        }
+ 
+        ifvarg bonusDelayTime 0
+        {
+            state bonus_screen_ani
+        }
+        else
+        {
+            addvar level_complete_ani 1
+            setvar bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
+        }
+    }
+    // Level complete is now spelt out, now to flash it
+    else ifvarl level_complete_ani 24
+    {
+        setvarvar temp level_complete_ani
+        mod temp 2
+        ifvare temp 0 {
+            qsubstr 140 132 0 level_complete_ani
+            screentext DNABIGTEXTBRIGHT 160 y ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        }
+
+        ifvarg bonusDelayTime 0
+        {
+                state bonus_screen_ani
+        }
+        else
+        {
+                addvar level_complete_ani 1
+                setvar bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
+        }
+    }
+    else 
+        screentext DNABIGTEXTBRIGHT 160 y ENDSCREEN_TEXT_SIZE 0 0 140 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+
+
+    // Kill count
+    set y 62
+    set x 60
+    screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 133 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    getplayer[THISACTOR].actors_killed temp
+    getplayer[THISACTOR].max_actors_killed temp2
+    redefinequote 134 %d/%d
+    qsprintf 134 134 temp temp2
+    screentext DNABIGTEXTBRIGHT 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    addvar y 24
+
+    // Secret count
+    screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 135 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    getplayer[THISACTOR].secret_rooms temp
+    getplayer[THISACTOR].max_secret_rooms temp2
+    redefinequote 134 %d/%d
+    qsprintf 134 134 temp temp2
+    screentext DNABIGTEXTBRIGHT 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    addvar y 24
+
+    // Time
+    screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 136 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    //getplayer[THISACTOR].max_secret_rooms temp2
+    qgetsysstr 134 STR_YOURTIME 
+    screentext DNABIGTEXTBRIGHT 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    addvar y 24
+
+    // Par Time
+    screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 137 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+    qgetsysstr 134 STR_PARTIME 
+    screentext DNABIGTEXTBRIGHT 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    addvar y 24
+    
+    // Best Time - Only shown when player has a previous record
+    qgetsysstr 134 STR_BESTTIME
+    qstrcmp 134 139 temp
+    ifvarn temp 0 {
+        screentext DNABIGTEXTBRIGHT x y ENDSCREEN_TEXT_SIZE 0 0 138 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 260 y ENDSCREEN_TEXT_SIZE 0 0 134 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 1 0 0 xdim ydim
+    }
+
+    state setsqraspect
+}
+ends
+
+// Reset important values on level load
+defstate endscreen_cleanup 
+{
+  setvar level_complete_ani 0
+  setvar in_endlevel_screen 0
+  setvar bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
+}
+ends
+
+// Objective drawing state
+defstate display_objective_screen
+{
+    rotatesprite 160 100 OBJECTIVEPANEL_SIZE 0 5758 0 0 72 0 0 xdim ydim
+    rotatesprite 160 100 ENDSCREEN_PANEL_SIZE 0 3933 0 0 8 0 0 xdim ydim
+    rotatesprite 160 25 MISSIONBRIEF_SIZE 0 MISSIONBRIEF 0 0 8 0 0 xdim ydim
+    setvar x 49
+    rotatesprite x 178 PLAY_BUTTON_SIZE 0 5759 0 0 8 0 0 xdim ydim
+    screentext DNABIGTEXTBRIGHT 21 170 76536 0 0 141 0 0 16 0 8 0 ENDSCREEN_TEXT_SPACE 0 16 0 0 xdim ydim
+
+    state get_script
+
+    setvar y 63
+    screentext DNASMALLTEXT x y 75536 0 0 OBJECTIVE_QUOTE1 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+    addvar y 40
+    screentext DNASMALLTEXT x y 75536 0 0 OBJECTIVE_QUOTE2 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 OBJECTIVE_QUOTE3 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 OBJECTIVE_QUOTE4 0 0 16 0 4 0 0 0 8208 0 0 xdim ydim
+}
+ends
+
+defstate display_copyright_screen
+{
+    setvar y 20
+    setvar x 160
+    screentext DNASMALLTEXT x y 75536 0 0 150 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 151 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 152 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 153 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 20
+    screentext DNASMALLTEXT x y 75536 0 0 154 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 155 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 156 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 157 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 158 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 159 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 20
+    screentext DNASMALLTEXT x y 75536 0 0 160 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 10
+    screentext DNASMALLTEXT x y 75536 0 0 161 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+    addvar y 20
+    screentext DNASMALLTEXT x y 75536 0 0 162 0 0 16 0 4 0 0 0 2 0 0 xdim ydim
+}
+ends
+
+defstate display_logo
+{
+    ifn curr_logo 0 { rotatesprite 160 100 LOGO_SIZE 0 curr_logo 0 0 72 0 0 xdim ydim  }
+    ifvarg SCREENALPHA 0
+    {
+        state screen_fadeout
+    }
+    ifvarg delayTime 0
+    {
+        state cutscene_timer
+    }
+    else
+    {
+        addvar in_startup 1
+    }
+}
+ends
+
+defstate fade_logo
+{
+    ifn curr_logo 0 { rotatesprite 160 100 LOGO_SIZE 0 curr_logo 0 0 72 0 0 xdim ydim  }
+         
+    ifvarl SCREENALPHA 255
+    {
+        state screen_fadein
+    }
+    else {
+        setvar prevtick -1
+        setvar SCREENALPHA 255
+        setvar delayTime LOGO_DELAY_TIME
+        setvar RETURN 1
+    }
+}
+ends
+
+defstate show_logos {
+    switch in_startup
+    case 1 {
+        sound GBA_INTRO
+        startcutscene 149 // logo.ivf
+        stopallmusic
+        starttrackslot 7 0 
+        addvar in_startup 1
+        break
+    }
+    case 2 {
+        stopallsounds
+        state display_copyright_screen
+        set curr_logo 0
+        state display_logo
+        break
+    }
+    case 3
+    {
+        state display_copyright_screen
+        state fade_logo
+        break
+    }
+    case 4 {
+        set curr_logo LOGO_3DR
+        state display_logo
+        break
+    }
+    case 5
+    {
+        state fade_logo
+        break
+    }
+    case 6 {
+        
+        set curr_logo LOGO_TAKETWO
+        state display_logo
+        break
+    }
+    case 7
+    {
+        state fade_logo
+        break
+    }
+    case 8
+    {
+        set curr_logo LOGO_TORUS
+        state display_logo
+        break
+    }
+    case 9
+    {
+        state fade_logo
+        break
+    }
+    endswitch
+}
+ends
+
+defstate get_title_ticks {
+    getticks curtick
+    ifvare prevtick -1 setvar ticktmp 0 else
+    {
+    setvarvar ticktmp curtick
+    subvarvar ticktmp prevtick
+    }
+    ifl title_ani 3 { divvar ticktmp 3 }
+    else divvar ticktmp 2
+}
+ends
+
+
+
+// Timer for Press Start sprite on main menu
+// Reuses delaytimers from end level screen since there wouldn't be any chance of conflict
+defstate press_start_title_ani {
+    ifvarg bonusDelayTime 0
+    {
+        getticks curtick
+        ifvare bonus_screen_prevtick -1 setvar ticktmp 0 else
+        {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp bonus_screen_prevtick
+        }
+        divvar ticktmp 4      
+        subvarvar bonusDelayTime ticktmp           
+        setvarvar bonus_screen_prevtick curtick
+    }
+    else
+    {
+        switch press_start_ani { // Messy switch to avoid making several redundant tiles for animation
+            case 0 
+            case 10 set curr_ps_sprite PRESS_START_START break
+            case 1 
+            case 9 set curr_ps_sprite 5556 break
+            case 2 
+            case 8 set curr_ps_sprite 5557 break
+            case 3
+            case 4
+            case 5
+            case 6
+            case 7 set curr_ps_sprite 5558 break
+            case 11
+            case 20 set curr_ps_sprite 5559 break
+            case 12 
+            case 19 set curr_ps_sprite 5560 break
+            case 13 
+            case 17 
+            case 18 set curr_ps_sprite 5561 break
+            case 14 
+            case 15 
+            case 16 set curr_ps_sprite 5562 break
+        endswitch
+        }
+        ifl press_start_ani 20 { add press_start_ani 1 } else set press_start_ani 0
+        setvar bonusDelayTime 7 // Change this to adjust animation speed
+    }
+}
+ends
+
+defstate show_title {
+    switch in_startup
+    case 10 
+    {
+        rotatesprite 160 100 LOGO_SIZE 0 TITLE_BACKGROUND 0 0 72 0 0 xdim ydim
+        ifvarg SCREENALPHA 0
+        {
+            state screen_fadeout
+        }
+        else 
+        switch title_ani 
+        case 1
+        {
+            ifvarl duke_title_slidein_time TITLE_DUKE_FINAL_POSX  
+            {
+                state get_title_ticks
+                
+                addvarvar duke_title_slidein_time ticktmp
+                
+                setvarvar prevtick curtick
+            }
+            else 
+            {
+                addvar title_ani 1
+                sound A_EXPLOSION
+            }
+            break
+        }
+        case 2
+        {
+            ifvarg nukem_title_slidein_time TITLE_NUKEM_MID_POSX  
+            {
+                state get_title_ticks
+                subvarvar nukem_title_slidein_time ticktmp
+                ifvarl nukem_title_slidein_time TITLE_NUKEM_FINAL_POSX
+                {
+                    subvarvar duke_title_slidein_time ticktmp
+                }
+                
+                setvarvar prevtick curtick
+            }
+            else
+            {
+                addvar title_ani 1
+                sound A_EXPLOSION
+            }
+            break
+        }
+        case 3
+        {
+            ifvarl duke_title_slidein_time TITLE_DUKE_FINAL_POSX  
+            {
+                state get_title_ticks
+                
+                addvarvar duke_title_slidein_time ticktmp
+                ifvarl nukem_title_slidein_time TITLE_NUKEM_FINAL_POSX
+                {
+                    addvarvar nukem_title_slidein_time ticktmp
+                }
+                
+                setvarvar prevtick curtick
+            }
+            else 
+            { 
+                setvar duke_title_slidein_time TITLE_DUKE_FINAL_POSX 
+                setvar nukem_title_slidein_time TITLE_NUKEM_FINAL_POSX  
+                addvar title_ani 1
+            }
+            break
+        }
+        case 4
+        {
+            ifvarg advance_slideup_time TITLE_ADVANCE_MID_POSY  
+            {
+
+                state get_title_ticks
+                subvarvar advance_slideup_time ticktmp
+
+                ifvarl advance_slideup_time TITLE_ADVANCE_FINAL_POSY
+                {
+                    subvarvar name_title_slideup_time ticktmp
+                }
+                
+                setvarvar prevtick curtick
+            }
+            else
+            {
+                addvar title_ani 1
+                sound A_EXPLOSION
+            }
+            break
+        }
+        case 5
+        {
+            ifvarl advance_slideup_time TITLE_ADVANCE_FINAL_POSY  
+            {
+                state get_title_ticks
+                addvarvar advance_slideup_time ticktmp
+                ifvarl name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY
+                {
+                    addvarvar name_title_slideup_time ticktmp
+                }
+                
+                setvarvar prevtick curtick
+            }
+            else
+            {
+                sound ALIENLORDROAM
+                setvar name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY 
+                setvar advance_slideup_time TITLE_ADVANCE_FINAL_POSY
+                addvar title_ani 1
+            }
+            break
+        }
+        case 6
+        {
+            state get_title_ticks
+            state press_start_title_ani
+            rotatespritea 160 192 81935 0 curr_ps_sprite 0 0 8 0 0 0 xdim ydim
+            setvarvar prevtick curtick
+            break
+        }
+        endswitch
+        rotatesprite duke_title_slidein_time name_title_slideup_time 81935 0 TITLE_DUKE 0 0 8 0 0 xdim ydim
+        rotatesprite nukem_title_slidein_time name_title_slideup_time 81935 0 TITLE_NUKEM 0 0 8 0 0 xdim ydim
+        rotatesprite 160 advance_slideup_time 81935 0 TITLE_ADVANCE 0 0 8 0 0 xdim ydim
+        break
+    }
+    case 11
+    {
+        rotatesprite 160 100 LOGO_SIZE 0 TITLE_BACKGROUND 0 0 8 0 0 xdim ydim
+        rotatesprite duke_title_slidein_time name_title_slideup_time 81935 0 TITLE_DUKE 0 0 8 0 0 xdim ydim
+        rotatesprite nukem_title_slidein_time name_title_slideup_time 81935 0 TITLE_NUKEM 0 0 8 0 0 xdim ydim
+        rotatesprite 160 advance_slideup_time 81935 0 TITLE_ADVANCE 0 0 8 0 0 xdim ydim
+        ife title_ani 6 { rotatespritea 160 192 81935 0 curr_ps_sprite 0 0 8 0 0 0 xdim ydim }
+
+        ifvarl SCREENALPHA 255
+        {
+            state screen_fadein
+        }
+        else set RETURN 1
+        break
+    }
+    endswitch
+}
+ends
+
+appendevent EVENT_SCREEN
+{
+    ifg in_startup 0 {
+        state setsqraspect
+        ifle in_startup 9 state show_logos
+        ifge in_startup 10 state show_title
+        state setdosaspect
+    }
+}
+endevent
+
+defstate startup_cleanup // Reset values when back at startup
+{
+    set in_startup 1
+    set title_ani 1
+    set press_start_ani 0
+    set curr_ps_sprite PRESS_START_START
+    set in_opening_cutscene 0
+    set in_endlevel_screen 0
+    set in_ending_cutscene 0
+    set duke_title_slidein_time TITLE_DUKE_START_POSX
+    set nukem_title_slidein_time TITLE_NUKEM_START_POSX
+    set name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY
+    set advance_slideup_time TITLE_ADVANCE_START_POSY
+}
+ends
+
+appendevent EVENT_MAINMENUSCREEN
+{
+    state startup_cleanup
+    setvar delayTime LOGO_DELAY_TIME
+    whilel in_startup 11 {
+        startscreen
+        addvar in_startup 1
+    }
+    sound A_PISTOL
+    startscreen
+    setvar in_startup 0
+}
+endevent
+
+// Timer for DIG skull panel
+// Reuses delaytimers from end level screen since there wouldn't be any chance of conflict
+defstate skull_panel_ani {
+    ifvarg bonusDelayTime 0
+    {
+        getticks curtick
+        ifvare bonus_screen_prevtick -1 setvar ticktmp 0 else
+        {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp bonus_screen_prevtick
+        }
+        divvar ticktmp 4      
+        subvarvar bonusDelayTime ticktmp           
+        setvarvar bonus_screen_prevtick curtick
+    }
+    else
+    {
+        ife skull_skill_ani 0 { 
+            set curr_skull SKULL_SKILL_START
+            set skull_skill_ani 1
+        }
+        else ife curr_skull SKULL_SKILL_END set curr_skull SKULL_SKILL_START
+        else { add curr_skull 1 }
+        setvar bonusDelayTime 20 // Change this to adjust skull animation speed
+    }
+}
+ends
+
+
+// 0 - Style, 1 - Region
+//gamevar m_atscreen 0
+
+
+defstate m_getcrosshairtile
+    switch temp2
+        case 1 { setvar temp5 5744 break }
+        case 2 { setvar temp5 5745 break }
+        case 3 { setvar temp5 5746 break }
+        case 4 { setvar temp5 5747 break }
+        case 5 { setvar temp5 5748 break }
+        case 6 { setvar temp5 5749 break }
+        case 7 { setvar temp5 5750 break }
+        case 8 { setvar temp5 5751 break }
+        default { setvar temp5 5743 break }
+    endswitch
+ends
+
+defstate m_getrsdim
+    gettiledata[temp4].xsize m_draw_xc
+    div m_draw_xc 2
+    sub m_draw_xc m_draw_x
+    inv m_draw_xc
+    
+    gettiledata[temp4].ysize m_draw_yc
+    div m_draw_yc 2
+    sub m_draw_yc m_draw_y
+    inv m_draw_yc
+ends
+
+appendevent EVENT_DISPLAYMENUREST
+    switch userdef.return 0
+        // newgame custom 1st level
+        case 104:
+            set m_customdraw 0
+            ife m_atscreen 0 {
+                // Reset the nukesymbol override if we're in any other menu than skill
+                // Each print mostly gets the current slide and then just does gametext where needed.
+                redefinequote 200 CHOOSE STYLE
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 DNASMALLTEXT 0 50 65536 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                add temp 1
+                screentext DNASMALLTEXT temp 44 65536 0 0 200 32 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                sub temp 1
+                screentext DNASMALLTEXT temp 43 65536 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+        
+                getu[].return 3 temp
+                ife temp 0 redefinequote 200 Apply map shading and minor QoL tweaks.
+                ife temp 1 redefinequote 200 Match the GBA original.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 115 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+                getu[].return 3 temp
+                ife temp 0 redefinequote 200 This is the recommended way to play.
+                ife temp 1 redefinequote 200 Aims for a more vanilla experience.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 121 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+        
+                redefinequote 200 CUSTOMIZE MORE IN-GAME WITH [BACKSPACE]
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            }
+            ife m_atscreen 1 {
+
+                redefinequote 200 USA: The original script and recommended.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 115 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+                redefinequote 200 EU: Revised for localization purposes.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 121 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+        
+                redefinequote 200 CHANGE ANYTIME IN-GAME WITH [BACKSPACE]
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            }
+            ife m_atscreen 2 {
+                getu[].return 3 temp
+                ife temp 0 redefinequote 200 No extra voice lines during cutscenes
+                ife temp 1 redefinequote 200 Adds oneliners to select cutscenes
+                ife temp 2 redefinequote 200 Fully voiced Duke in all cutscenes
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 125 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+                getu[].return 3 temp
+                ife temp 0 redefinequote 200 This matches the GBA original.
+                ife temp 1 redefinequote 200 using existing JSJ samples.
+                ife temp 2 redefinequote 200 courtesy of Gianni Matragrano.
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 STARTALPHANUM 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp 131 49152 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+                redefinequote 200 CHANGE ANYTIME IN-GAME WITH [BACKSPACE]
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+            }
+            ife m_atscreen 3 {
+                set m_customdraw 1
+                
+                // Do top yellow text but not yellow
+                getu[].return 1 m_draw_x
+                shiftvarr m_draw_x 16
+                set temp4 DIGITALNUM
+                add temp4 m_tmp_dnacrosshair
+                add temp4 1
+                add m_draw_x 190
+                set m_draw_y 100
+                state m_getrsdim
+                rotatesprite m_draw_xc m_draw_yc 81920 0 temp4 32 0 25 0 0 xdim ydim
+                sub m_draw_xc 1
+                sub m_draw_yc 1
+                rotatesprite m_draw_xc m_draw_yc 81920 0 temp4 0 0 25 0 0 xdim ydim
+                
+                // X = Start at 80, get the transition X scroll amount from userdef 1
+                set m_draw_x 160
+                getu[].return 1 temp
+                shiftvarr temp 16
+                add m_draw_x temp
+                set temp3 m_draw_x
+                // Hardcode Y to be here
+                set m_draw_y 100
+                
+                set temp2 m_tmp_dnacrosshair
+                state m_getcrosshairtile
+                state setsqraspect
+                add temp3 0
+                state m_getrsdim
+                rotatesprite temp3 m_draw_y 32768 0 3905 32 0 9 128 0 xdim ydim
+                ife temp2 dna_crosshair set temp4 3 else set temp4 0
+                rotatesprite m_draw_x m_draw_y 65536 0 temp5 0 temp4 9 0 0 xdim ydim
+                
+                set temp2 m_tmp_dnacrosshair
+                sub temp2 1
+                ifl temp2 0 set temp2 8
+                state m_getcrosshairtile
+                sub m_draw_y 24
+                state m_getrsdim
+                ife temp2 dna_crosshair set temp4 3 else set temp4 0
+                rotatesprite m_draw_x m_draw_y 32768 0 temp5 0 temp4 9 0 0 xdim ydim
+                
+                set temp2 m_tmp_dnacrosshair
+                sub temp2 1
+                ifl temp2 0 set temp2 8
+                sub temp2 1
+                ifl temp2 0 set temp2 8
+                state m_getcrosshairtile
+                sub m_draw_y 16
+                state m_getrsdim
+                ife temp2 dna_crosshair set temp4 3 else set temp4 0
+                rotatesprite m_draw_x m_draw_y 20480 0 temp5 0 temp4 9 0 0 xdim ydim
+                add m_draw_y 16
+                
+                set temp2 m_tmp_dnacrosshair
+                add temp2 1
+                ifg temp2 8 set temp2 0
+                state m_getcrosshairtile
+                add m_draw_y 48
+                state m_getrsdim
+                ife temp2 dna_crosshair set temp4 3 else set temp4 0
+                rotatesprite m_draw_x m_draw_y 32768 0 temp5 0 temp4 9 0 0 xdim ydim
+                
+                set temp2 m_tmp_dnacrosshair
+                add temp2 1
+                ifg temp2 8 set temp2 0
+                add temp2 1
+                ifg temp2 8 set temp2 0
+                state m_getcrosshairtile
+                add m_draw_y 16
+                state m_getrsdim
+                ife temp2 dna_crosshair set temp4 3 else set temp4 0
+                rotatesprite m_draw_x m_draw_y 20480 0 temp5 0 temp4 9 0 0 xdim ydim
+                
+                state setdosaspect
+
+                
+                add m_draw_y 16
+                
+                getu[].return 3 temp3
+                redefinequote 200 [ENTER] to select
+                set temp m_draw_x
+                qstrdim temp2 temp4 STARTALPHANUM 0 50 65536 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                //add temp 160
+                sub temp temp2
+                screentext STARTALPHANUM temp m_draw_y 65536 0 0 200 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                add m_draw_y 8
+                
+                redefinequote 200 CHANGE ANYTIME IN-GAME WITH [BACKSPACE]
+                getu[].return 1 temp
+                shiftvarr temp 16
+                qstrdim temp2 temp3 DNASMALLTEXT 0 50 49152 0 200 16 8 0 0 0 0 0 0 xdim ydim
+                div temp2 2
+                add temp 160
+                sub temp temp2
+                screentext DNASMALLTEXT temp 178 49152 0 0 200 8 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                
+                // Figure out where we have been moving to from 3 entries
+                state menu_getdir
+                ife m_menudir 1 add m_tmp_dnacrosshair 1
+                ife m_menudir -1 sub m_tmp_dnacrosshair 1
+                ifg m_tmp_dnacrosshair 8 set m_tmp_dnacrosshair 0
+                ifl m_tmp_dnacrosshair 0 set m_tmp_dnacrosshair 8
+            }
+            break
+        // MENU: At skill
+        case 110:
+            // This variable tracks whether to hide the nuke symbols in other events
+            set m_customdraw 1
+            
+            // X = Start at 80, get the transition X scroll amount from userdef 1
+            set m_draw_x 80
+            getu[].return 1 temp
+            shiftvarr temp 16
+            add m_draw_x temp
+            // Hardcode Y to be here
+            set m_draw_y 90
+            // Get currently selected skill and bump the minimum from 0 to 1
+            getu[].return 3 temp2
+            add temp2 1
+            // For loop for all 4 skills, determine what tile to draw and quote
+            for i range 4 {
+                add i 1
+                switch i
+                    case 1:
+                        ife temp2 i {
+                            set temp 7000
+                            redefinequote 200 PIECE OF CAKE
+                        } else set temp 7001
+                        
+                        break
+                    case 2:
+                        ife temp2 i {
+                            set temp 7002
+                            redefinequote 200 LET'S ROCK
+                        } else set temp 7003
+                        
+                        break
+                    case 3:
+                        ife temp2 i {
+                            set temp 7006
+                            redefinequote 200 COME GET SOME
+                        } else set temp 7007
+                        
+                        break
+                    case 4:
+                        ife temp2 i {
+                            state skull_panel_ani
+                            set temp curr_skull 
+                            redefinequote 200 DAMN I'M GOOD!
+                        } else { set temp 7016 set skull_skill_ani 0 }
+                        break
+                endswitch
+                // Draw the current picture frame
+                rotatesprite m_draw_x m_draw_y 65536 0 temp 0 0 8 0 0 xdim ydim
+                // Draw the selection blinker if current iterated skill is the selected one
+                ife temp2 i {
+                    ifg m_anim_frames 15 {
+                        rotatesprite m_draw_x m_draw_y 65536 0 7004 0 0 8 0 0 xdim ydim
+                    } else {
+                        rotatesprite m_draw_x m_draw_y 65536 0 7005 0 0 8 0 0 xdim ydim
+                    }
+                }
+                // Add 54px after each portrait that gets iterated
+                add m_draw_x 54
+            }
+            // Now we draw the text box
+            // Get the X coords and transition scroll as usual
+            set m_draw_x 160
+            getu[].return 1 temp
+            shiftvarr temp 16
+            add m_draw_x temp
+            // Y coords and set the tilenum
+            set m_draw_y 160
+            set temp 5539
+            rotatesprite m_draw_x m_draw_y 65536 0 temp 0 0 8 0 0 xdim ydim
+            // Box done, let's do the text now and get it's length
+            qstrdim temp2 temp3 DNABIGTEXTBRIGHT 0 50 65536 0 200 8 8 0 0 0 0 0 0 xdim ydim
+            div temp3 2
+            div temp2 2
+            sub m_draw_x temp2
+            sub m_draw_y temp3
+            sub m_draw_y 1
+            sub m_draw_x 8
+            // Where we want to put it is pretty much same as the box coords, given lengths divided by two. Slight padding.
+            screentext DNABIGTEXTBRIGHT m_draw_x m_draw_y ENDSCREEN_TEXT_SIZE 0 0 200 0 0 16 0 4 0 0 0 0 0 0 xdim ydim
+            
+            // Track animation for 1->30 (~1s) needs something better!
+            add m_anim_frames 1
+            ifg m_anim_frames 30 set m_anim_frames 1
+            
+            break
+        default:
+            // Reset the nukesymbol override if we're in any other menu than skill
+            set m_customdraw 0
+            break
+    endswitch
+endevent
+
+appendevent EVENT_MENUCURSORLEFT
+    ife m_customdraw 1 set RETURN -1
+endevent
+
+appendevent EVENT_MENUCURSORRIGHT
+    ife m_customdraw 1 set RETURN -1
+endevent
+
+appendevent EVENT_CHANGEMENU
+// Only used to kick back from our fake menu
+    ife RETURN 110 {
+        ife m_return 1 set RETURN -1
+        ife m_return 2 set RETURN -2147483648
+    }
+    ife RETURN 102 state unlockmenu
+    set m_return 0
+endevent
+
+appendevent EVENT_NEWGAMECUSTOM
+
+    // This was converted to IFE out of spite...
+    //  NEW GAME        (0 -1 0)
+    //  
+    //  CHAPTER SELECT  (1 -1 0)
+    //  -- BASE         (1 0 -1)
+    //  -- EGYPT        (1 1 -1)
+    //  -- SYDNEY       (1 2 -1)
+    //  -- ALIEN 1      (1 3 -1)
+    //  -- ALIEN 2      (1 4 -1)
+    //  -- ALIEN 3      (1 5 -1)
+    //  
+    //  CUSTOMIZE        (2 -1 0)
+    //  -- GAME PRESETS  (2 0 -1)
+    //  ---- PC          (2 0 0)
+    //  ---- GBA         (2 0 1)
+    //  -- CHANGE REGION (2 1 -1)
+    //  ---- USA         (2 1 0)
+    //  ---- EU          (2 1 1)
+    //  USER MAP
+
+    // START CAMPAIGN
+    ife userdef.return 0 0 {
+        setu[].m_volume_number 0
+        setu[].m_level_number 0
+        redefinequote 200 New campaign
+        quote 200
+    }
+    // CHAPTER SELECT
+    ife userdef.return 0 1 {
+        ife userdef.return 1 0 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 0
+        }
+        ife userdef.return 1 1 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 3
+        }
+        ife userdef.return 1 2 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 7
+        }
+        ife userdef.return 1 3 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 11
+        }
+        ife userdef.return 1 4 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 13
+        }
+        ife userdef.return 1 5 {
+            setu[].m_volume_number 0
+            setu[].m_level_number 16
+        }
+    }
+    // CUSTOMIZE -- m_atscreen is used to abuse additional drawing at EVENT_DISPLAYMENUREST
+    ife userdef.return 0 2 {
+        ife userdef.return 1 0 {
+            set m_atscreen 0
+            ife userdef.return 2 0 {
+                // USER SELECTED PC ENHANCED
+                set dna_lessalarm 1
+                set s_state 2
+                set m_return 1
+            }
+            ife userdef.return 2 1 {
+                // USER SELECTED GBA
+                set dna_lessalarm 0
+                set s_state 1
+                set m_return 1
+            }
+        }
+        ife userdef.return 1 1 {
+            set m_atscreen 1
+            ife userdef.return 2 0 {
+                // USA SELECTED
+                set dna_localization 0
+                set m_return 1
+            }
+            ife userdef.return 2 1 {
+                // EU SELECTED
+                set dna_localization 1
+                set m_return 1
+            }
+        }
+        ife userdef.return 1 2 {
+            set m_atscreen 2
+            ife userdef.return 2 0 {
+                // NONE SELECTED
+                set dna_dukecutscenevoc 0
+                set m_return 1
+            }
+            ife userdef.return 2 1 {
+                // 3D SELECTED
+                set dna_dukecutscenevoc 1
+                set m_return 1
+            }
+            ife userdef.return 2 2 {
+                // GIANNI SELECTED
+                set dna_dukecutscenevoc 2
+                set m_return 1
+            }
+        }
+        ife userdef.return 1 3 {
+            set m_atscreen 3
+            ife userdef.return 2 0 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair }
+            ife userdef.return 2 1 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair }
+            ife userdef.return 2 2 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair }
+            ife userdef.return 2 -1 { set m_tmp_dnacrosshair dna_crosshair set m_lastentry -1 }
+        }
+    }
+    //set m_inkey 0
+endevent
+
+defineskillname 0  
+defineskillname 1  
+defineskillname 2  
+defineskillname 3  
+
+
+defstate get_credit_ticks {
+    ifvarg delayTime 0
+    {
+        getticks curtick
+        ifvare credits_screen_prevtick -1 setvar ticktmp 0 else
+        {
+        setvarvar ticktmp curtick
+        subvarvar ticktmp credits_screen_prevtick
+        }
+
+        subvarvar delayTime ticktmp
+        
+        setvarvar credits_screen_prevtick curtick
+    }
+    else {
+        subvarvar credits_slideup_time 1
+        set delayTime 50
+    }
+}
+ends
+
+// Timer for company panel closing and opening
+// Reuses bonus screen prevtick and delaytime to avoid conflicts
+defstate credits_screen_ani {
+    ifvarg bonusDelayTime 0
+    {
+        getticks curtick
+        ifvare bonus_screen_prevtick -1 setvar ticktmp 0 else
+        {
+            setvarvar ticktmp curtick
+            subvarvar ticktmp bonus_screen_prevtick
+        }
+
+        divvar ticktmp 4
+        
+        subvarvar bonusDelayTime ticktmp
+            
+        setvarvar bonus_screen_prevtick curtick
+    }
+    else
+    {
+        ife credits_panel_ani 0 { add curr_panel 1 }
+        else { sub curr_panel 1 }
+        ife curr_panel CREDITS_PANEL_CLOSED { set credits_panel_ani 1 }
+        else ife curr_panel CREDITS_PANEL { set credits_panel_ani 0 add credits_ani 1 } 
+        setvar bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
+    }
+}
+ends
+
+defstate print_credit_title {
+    add temp CREDITS_INDIVIDUAL_GAP
+    set y temp
+    shiftvarl y 16
+    ifg temp 20
+    screentext DNASMALLTEXT x y 75536 0 0 CREDITS_QUOTE 0 0 2064 0 xspace 0 0 0 2 0 0 xdim ydim
+}
+ends
+
+defstate print_credit_title_line2 {
+    add temp CREDITS_TITLENAME_GAP
+    set y temp 
+    shiftvarl y 16
+    ifg temp 20
+    screentext DNASMALLTEXT x y 75536 0 0 CREDITS_QUOTE 0 0 2064 0 xspace 0 0 0 2 0 0 xdim ydim
+}
+ends
+
+defstate print_credit_name {
+    add temp CREDITS_TITLENAME_GAP
+    set y temp 
+    shiftvarl y 16
+    ifg temp 20
+    screentext DNASMALLTEXT x y 75536 0 0 CREDITS_QUOTE 10 0 2064 0 xspace 0 0 0 2 0 0 xdim ydim
+}
+ends
+
+defstate show_credits {
+    set x 160
+    set xspace 4
+    shiftvarl x 16
+    shiftvarl xspace 16
+    
+    ife conclude_credits_scoll 0 {
+    state get_credit_ticks
+    //addlogvar credits_slideup_time
+
+    // TORUS GAMES
+    set temp credits_slideup_time
+    redefinequote CREDITS_QUOTE MANAGING DIRECTOR
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE BILL MCINTOSH
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE PRODUCER
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE BRIAN UNIACKE
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE ART DIRECTION
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE JEREMY GEDDES
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE TECHNICAL DIRECTOR
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE STEVE WHITE
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE DESIGN
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE CRAIG DUTURBURE
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE ALEX HUTCHINSON
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE SIMON SHORT
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE BRIAN UNIACKE
+    state print_credit_name
+    
+    redefinequote CREDITS_QUOTE LEAD PROGRAMMER
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE LUKE RYAN
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE LEAD ARTIST
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE DAVE BIGGS
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE PROGRAMMERS
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE CHRIS HAYTON
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE MARK WAYLAND
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE MATT ELLISON
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE ADDITIONAL
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE PROGRAMMING
+    state print_credit_title_line2
+
+    redefinequote CREDITS_QUOTE STUART CAMERON
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE ROB SHAW
+    state print_credit_name
+    
+    redefinequote CREDITS_QUOTE ARTISTS
+    state print_credit_title
+    
+    redefinequote CREDITS_QUOTE MARK DAY
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JEREMY DOWER
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE TEUVO HEIKKILA
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE DAMIEN HOLDER
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE DARRYL MILLS
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE ADDITIONAL
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE ARTWORK
+    state print_credit_title_line2
+
+    redefinequote CREDITS_QUOTE STUART CAMPBELL
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE PAUL CLARKE
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE IVAN KENNY-SUMIGA
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE MARCUS MESTROV
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JOE TABOR
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE SOUND
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE BRIAN UNIACKE
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JAMES LANGFORD
+    state print_credit_name
+    
+    redefinequote CREDITS_QUOTE QA TESTING
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE ANDREW MAJOR
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JIM BATT
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JAMES LANGFORD
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE BRAD LEWIS
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE DAVID MCINTOSH
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JOHN WEAVER
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE JUSTIN WILKINS
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE SPECIAL THANKS
+    state print_credit_title
+
+    redefinequote CREDITS_QUOTE STEPHEN LEONARD
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE DAVE GAUNT
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE BRIAN POST
+    state print_credit_name
+
+    redefinequote CREDITS_QUOTE KEVIN MCINTOSH
+    state print_credit_name
+
+    add temp 160
+
+    // 3D REALMS
+    ife dna_localization 0 // US credits
+    {
+        redefinequote CREDITS_QUOTE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE STEVEN BLACKBURN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE EXECUTIVE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE SCOTT MILLER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GEORGE BROUSSARD
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE BETA TESTING
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE BRYAN TURNER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE VOICE OF DUKE NUKEM
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE JON ST JOHN
+        state print_credit_name
+    }
+    else // EU credits
+    {
+        redefinequote CREDITS_QUOTE ASSOCIATE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE STEVEN BLACKBURN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE ORIGINAL DUKE3D
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE ART ASSETS
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE DIRK JONES
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE STEPHEN HORNBACK
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE JAMES STOREY
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DAVID DEMARET
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DOUGLAS R WOOD
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DUKE VOICE
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE JON ST. JOHN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE LOTS AND LOTS
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE OF THANKS TO
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE SCOTT MILLER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GEORGE BROUSSARD
+        state print_credit_name
+    }
+
+        add temp 160
+
+        // TAKE-TWO
+        redefinequote CREDITS_QUOTE EXECUTIVE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE SAM HOUSER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE CHIEF TECHNOLOGY
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE OFFICER
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE GARY FOREMAN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DIRECTOR OF
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE PRODUCT DEVELOPMENT
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE JAMIE KING
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE RICH ROSADO
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GAME ANALYST
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE OSWALD 'OZ' GREENE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE QA TESTING
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE JAVIER NEGRETE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE AMANDA RICHARDS
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE MARKETING
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE TERRY DONOVAN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE JENNIFER KOLBE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE COREY WADE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE KEVIN HOPKINS
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE CHRIS CARRO
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE JEFF CASTANEDA
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE STANTON SARGEANT
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE ADAM TEDMAN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE TAKE 2 UK 
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE ASSOCIATE PRODUCER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE LEE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE 'COME GET SOME'
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE BROWN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DEVELOPMENT MANAGER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE LUKE VERNON
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE PRODUCT MANAGER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE NIJIKO WALKER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE INTERNATIONAL
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE PRODUCT MANAGER
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE KARL UNTERHOLZNER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GROUP PRODUCTION
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE MANAGER
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE JON
+        state print_credit_name
+        
+        redefinequote CREDITS_QUOTE 'DAVE'
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE BROADBRIDGE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GROUP PRODUCTION
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE COORDINATOR
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE JOANNA
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE 'EARTH BABE'
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE FOSTER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE GROUP DESIGN MANAGER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE JAMES CROCKER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DESIGN TEAM
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE JAMES QUINLAN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE TOM BAKER
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE SELENA MIFFLING
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE QA MANAGER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE MARK LLOYD
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE TEST LEADER
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE TIM BATES
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE TARANTULA
+        state print_credit_title
+
+        redefinequote CREDITS_QUOTE QA TEAM
+        state print_credit_title_line2
+
+        redefinequote CREDITS_QUOTE CHRIS 'KIT' BROWN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE PAUL BYERS
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE KEVIN HOBSON
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE CHARLIE KINLOCH
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE ANDY MASON
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE DENBY GRACE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE LEE JOHNSON
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE MATT HEWITT
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE MICHAEL EMENY
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE JAMES CREE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE ROBERT DUNKIN
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE PHIL DEANE
+        state print_credit_name
+
+        redefinequote CREDITS_QUOTE SPECIAL MENTIONS TO
+        state print_credit_title
+
+        ife dna_localization 0 redefinequote CREDITS_QUOTE J.J. SUAREZ
+        else redefinequote CREDITS_QUOTE KAI NEUMANN 
+        state print_credit_name
+
+        ife dna_localization 0 redefinequote CREDITS_QUOTE ALEJANDRO SUAREZ
+        else redefinequote CREDITS_QUOTE THOMAS LEE BROWN
+        state print_credit_name
+
+        ife dna_localization 0 redefinequote CREDITS_QUOTE MUGSY TABORA
+        else redefinequote CREDITS_QUOTE GAGE DECABRAL
+        state print_credit_name
+    
+    ifl temp CREDITS_FINAL_POSY { set conclude_credits_scoll 1 }
+
+
+    }
+    else setvar RETURN 1
+
+    set x 160
+    state setdosaspect
+    rotatesprite x 100 ENDSCREEN_SIZE 0 5761 0 0 8 0 0 xdim ydim // Background, printed after text so they scroll under
+
+    ifg credits_slideup_time CREDITS_3DR_TIME { set credits_ani 0 }
+    else ifg credits_slideup_time CREDITS_T2_TIME { ife credits_ani 0 { set credits_ani 1 } }
+    else { ife credits_ani 2 { set credits_ani 3 } }
+
+    set y 28
+    switch credits_ani 
+    case 0 { 
+        redefinequote CREDITS_COMPANY TORUS GAMES
+        rotatesprite x y CREDITS_PANEL_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
+        break
+    }
+    case 1 { 
+        state credits_screen_ani
+        rotatesprite x y CREDITS_PANEL_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        break
+    }
+    case 2 { 
+        redefinequote CREDITS_COMPANY 3D REALMS
+        rotatesprite x y CREDITS_PANEL_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
+        break
+    }
+    case 3 { 
+        state credits_screen_ani
+        rotatesprite x y CREDITS_PANEL_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        break
+    }
+    case 4 { 
+        redefinequote CREDITS_COMPANY TAKE-TWO
+        rotatesprite x y CREDITS_PANEL_SIZE 0 curr_panel 0 0 8 0 0 xdim ydim
+        screentext DNABIGTEXTBRIGHT 160 20 ENDSCREEN_TEXT_SIZE 0 0 CREDITS_COMPANY 0 0 16 0 4 0 ENDSCREEN_TEXT_SPACE 0 2 0 0 xdim ydim
+        set bonusDelayTime LEVEL_COMPLETE_ANI_DELAY
+        break
+    }
+    endswitch
+
+    state setsqraspect
+}
+ends

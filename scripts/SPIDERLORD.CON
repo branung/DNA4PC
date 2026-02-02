@@ -1,3 +1,12 @@
+// Setting up Locator waypoints for Spiderlord
+// On SpiderLord sprite: set hitag as unique Id, set xvel as amount of Locators
+// On Locator nodes: set hitag as sequence # (first one he goes to is 0, next one he'll got to is 1 etc), xvel is the enemy unique id
+
+gamevar locatorFound -1 2
+gamevar locatorLength 0 2
+gamevar locatorID 0 2
+gamevar enemyTag 0 2
+
 spriteflags SPIDERLORD 4194304
 
 action SPIDERLORDWALKING          0   4  5  1  22
@@ -10,11 +19,13 @@ action SPIDERLORDFLINCH           24  1  5  1  10
 action SPIDERLORDGROW             0   1  1  1  10
 
 move SPIDERLORDSTOPPED
-move SPIDERLORDWALKVEL 132
+move SPIDERLORDWALKVEL 232
 move SPIDERLORDSHRUNKVELS 32
 
 ai AISPIDERLORDWAIT               SPIDERLORDSTANDING SPIDERLORDSTOPPED geth
 ai AISPIDERLORDSEEK               SPIDERLORDWALKING SPIDERLORDWALKVEL seekplayer
+ai AISPIDERLORDLOCCHECK           SPIDERLORDWALKING 0 seekplayer
+ai AISPIDERLORDLOCATE             SPIDERLORDWALKING 0
 ai AISPIDERLORDATTACKPLAYER       SPIDERLORDATTACKING SPIDERLORDSTOPPED faceplayer
 ai AISPIDERLORDDYING	            SPIDERLORDDYING SPIDERLORDSTOPPED geth
 ai AISPIDERLORDHIT                SPIDERLORDFLINCH SPIDERLORDSTOPPED faceplayer
@@ -23,50 +34,148 @@ ai AISPIDERLORDSHRUNK             SPIDERLORDWALKING SPIDERLORDSHRUNKVELS fleeene
 ai AISPIDERLORDGROW               SPIDERLORDGROW SPIDERLORDSTOPPED geth
 
 state spiderlordhitstate
-        ifcount 9 ai AISPIDERLORDWAIT
+  ifcount 9 ai AISPIDERLORDWAIT
 ends
 
 state spiderlordwaitstate
-	ifcount 30 ai AISPIDERLORDSEEK
+  ifcount 20 ai AISPIDERLORDLOCCHECK
+ends
+
+state incrementLocatorID {
+  getav[THISACTOR].locatorID temp
+  getav[THISACTOR].locatorLength temp2
+  ifl temp temp2 {
+      add temp 1
+      setactorvar[THISACTOR].locatorID temp
+    }
+    else { 
+      set temp 0
+      setactorvar[THISACTOR].locatorID temp 
+    }
+}
+ends 
+
+// Look for next Locator in LocatorId sequence
+state spiderLordLocCheckState {
+  getav[THISACTOR].locatorLength temp
+  ife temp 0 { ai AISPIDERLORDSEEK } // If no locator length is defined, spiderlord will just seek
+  else
+  {
+  for i sprofstat STAT_LOCATOR {
+    getactorvar[THISACTOR].enemyTag temp
+    ife temp sprite[i].xvel
+    {
+      getactorvar[THISACTOR].locatorID temp
+      ife sprite[i].hitag temp {
+        //addlogvar i
+        set locatorFound i
+
+        cansee sprite[THISACTOR].x sprite[THISACTOR].y sprite[THISACTOR].z sprite[THISACTOR].sectnum
+        sprite[locatorFound].x sprite[locatorFound].y sprite[locatorFound].z sprite[locatorFound].sectnum temp
+        //addlogvar temp
+        ifn temp 0 {
+        getactor[locatorFound].x angx
+        getactor[locatorFound].y angy
+        subvarvar angx sprite[THISACTOR].x
+        subvarvar angy sprite[THISACTOR].y
+        getangle temp2 angx angy
+        setav[THISACTOR].targetAng temp2
+
+        seta[THISACTOR].ang temp2
+        
+        //ai AISPIDERLORDLOCATE
+        }
+      }
+    }
+  }
+  ai AISPIDERLORDLOCATE
+  }
+}
+ends
+
+state spiderLordLocateState {
+
+  getactorvar[THISACTOR].targetAng temp
+  //addlogvar temp
+  seta[THISACTOR].ang temp
+  cos xvel temp
+  sin yvel temp
+  mul xvel 3
+  mul yvel 3
+  shiftvarr xvel 8
+  shiftvarr yvel 8
+  
+  movesprite THISACTOR xvel yvel 0 0 temp
+
+  ifcansee ifpdistl 6144
+  ifrnd 2
+  {
+    soundonce SPIDERLORDROAM
+  }
+  ifcount 10
+  ifcansee ifpdistl 12288
+  ifp palive
+  {
+  ifrnd 16
+    { 
+      ai AISPIDERLORDATTACKPLAYER 
+      // add sound here
+    }
+  }
+
+  ifn locatorFound -1 {
+  cansee sprite[THISACTOR].x sprite[THISACTOR].y sprite[THISACTOR].z sprite[THISACTOR].sectnum
+  sprite[locatorFound].x sprite[locatorFound].y sprite[locatorFound].z sprite[locatorFound].sectnum temp
+  ife temp 0 {
+    state incrementLocatorID
+    ai AISPIDERLORDLOCCHECK
+  }
+  ldist temp THISACTOR locatorFound
+
+  ifl temp 300 {
+    state incrementLocatorID
+    ai AISPIDERLORDLOCCHECK
+  }
+  }
+}
 ends
 
 state spiderlordseekstate
-       ifcansee ifpdistl 6144
-        ifrnd 2
-        {
-          soundonce SPIDERLORDROAM
-        }
-        ifcount 10
-        ifcansee ifpdistl 6144
-        ifp palive
-        {
-			ifrnd 8 
-            { 
-                ai AISPIDERLORDATTACKPLAYER 
-                // add sound here
-            }
-        }
+  ifcansee ifpdistl 6144
+  ifrnd 2
+  {
+    soundonce SPIDERLORDROAM
+  }
+  ifcount 10
+  ifcansee ifpdistl 6144
+  ifp palive
+  {
+    ifrnd 8 
+    { 
+      ai AISPIDERLORDATTACKPLAYER 
+      // add sound here
+    }
+  }
 
-        ifrnd 4 ifpdistg 6144 ai AISPIDERLORDWAIT    
+  ifrnd 4 ifpdistg 6144 ai AISPIDERLORDWAIT
 ends
 
 state spiderlordattackstate
-  
-  ifcount 72
-    state spiderlordseekstate
+  ifcount 20
+    ai AISPIDERLORDLOCCHECK
   else
     ifaction SPIDERLORDATTACKING
-      ifactioncount 2
-  {
-    shoot RPG
-    resetactioncount
-  }
+      ifactioncount 1
+      {
+        shoot RPG
+        resetactioncount
+      }
 ends
 
 
 state spiderlordgrowstate
-        state genericgrowcode
-        sizeto 255 192
+  state genericgrowcode
+  sizeto 255 192
 ends
 
 state spiderlordshrunkstate
@@ -74,23 +183,22 @@ state spiderlordshrunkstate
     ai AISPIDERLORDWAIT
   else
     ifcount SHRUNKCOUNT
-        {
-          ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
-          else
+    {
+      ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
+      else
       sizeto 48 40
-        }
+    }
   else
     state genericshrunkcode
 ends
 
 state spiderlordfrozenstate
-
-    ifcount THAWTIME
+  ifcount THAWTIME
 	{
 		ai AISPIDERLORDWAIT
 		getlastpal
-    }
-    else
+  }
+  else
 		ifcount FROZENDRIPTIME
     {
       ifactioncount 26
@@ -103,7 +211,7 @@ state spiderlordfrozenstate
     {
       ifwasweapon FREEZEBLAST
       {
-		strength 0
+		    strength 0
         break
       }
       addkills 1 
@@ -128,80 +236,79 @@ fall
 ifai 0
 {
 	// play alert sound here
-    cstat 257
-	ai AISPIDERLORDSEEK
+  cstat 257
+	ai AISPIDERLORDLOCCHECK
 }
 
 ifai AISPIDERLORDDYING
 {
-        strength 0
-		/*ifwasweapon RPG
-		{
-				sound SQUISHED
-				spawn BLOODPOOL
-				state standard_jibs
-				killit
-		}
-		ifwasweapon RADIUSEXPLOSION
-		{
-				sound SQUISHED
-				spawn BLOODPOOL
-				state standard_jibs
-				killit
-		}*/
+  strength 0
+  /*ifwasweapon RPG
+  {
+      sound SQUISHED
+      spawn BLOODPOOL
+      state standard_jibs
+      killit
+  }
+  ifwasweapon RADIUSEXPLOSION
+  {
+      sound SQUISHED
+      spawn BLOODPOOL
+      state standard_jibs
+      killit
+  }*/
         
-        ifaction SPIDERLORDDYING
-        {
-                ifactioncount 5
-                {
-						cstat 0
-						globalsound THUD
-                        action SPIDERLORDDEADBODY
-                        break
-                }
-        }    
-        ifaction SPIDERLORDDEADBODY
-        {
-          findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
-            ifn temp -1
-            {
-                  addkills -1
-                  spawn TRANSPORTERSTAR
-                  cstat 257
-                  strength SPIDERLORDSTRENGTH
-                  ai AISPIDERLORDWAIT
-                  // play sound here
-            }
-                ifhitweapon
-                {
-                        ifwasweapon RPG
-                        {
-                                sound SQUISHED
-                                spawn BLOODPOOL
-								state standard_jibs
-                                killit
-                        }
-                        ifwasweapon RADIUSEXPLOSION
-                        {
-                                sound SQUISHED
-                                spawn BLOODPOOL
-								state standard_jibs
-                                killit
-                        }
-                }
-                ifcount RESPAWNACTORTIME
-                ifrespawn
-                {
-                  addkills -1
-                  spawn TRANSPORTERSTAR
-                  cstat 257
-                  strength SPIDERLORDSTRENGTH
-                  ai AISPIDERLORDWAIT
-                  // play sound here
-                }
-        }
-        
-        break
+  ifaction SPIDERLORDDYING
+  {
+    ifactioncount 5
+    {
+      cstat 0
+      globalsound THUD
+      action SPIDERLORDDEADBODY
+      break
+    }
+  }    
+  ifaction SPIDERLORDDEADBODY
+  {
+    findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+    ifn temp -1
+    {
+      addkills -1
+      spawn TRANSPORTERSTAR
+      cstat 257
+      strength SPIDERLORDSTRENGTH
+      ai AISPIDERLORDWAIT
+      // play sound here
+    }
+    ifhitweapon
+    {
+      ifwasweapon RPG
+      {
+        sound SQUISHED
+        spawn BLOODPOOL
+        state standard_jibs
+        killit
+      }
+      ifwasweapon RADIUSEXPLOSION
+      {
+        sound SQUISHED
+        spawn BLOODPOOL
+        state standard_jibs
+        killit
+      }
+    }
+    ifcount RESPAWNACTORTIME
+    ifrespawn
+    {
+      addkills -1
+      spawn TRANSPORTERSTAR
+      cstat 257
+      strength SPIDERLORDSTRENGTH
+      ai AISPIDERLORDWAIT
+      // play sound here
+    }
+  }      
+  break
 }
 
 
@@ -211,80 +318,109 @@ ifai AISPIDERLORDSHRUNK state spiderlordshrunkstate else
 ifai AISPIDERLORDWAIT state spiderlordwaitstate else
 ifai AISPIDERLORDHIT state spiderlordhitstate else
 ifai AISPIDERLORDATTACKPLAYER state spiderlordattackstate else
+ifai AISPIDERLORDLOCCHECK state spiderLordLocCheckState else 
+ifai AISPIDERLORDLOCATE state spiderLordLocateState else
 ifai AISPIDERLORDSEEK state spiderlordseekstate
 
+getactor[THISACTOR].htextra temp
+ifg temp 0                           
+{
+  getactor[THISACTOR].htowner temp      
+  ife temp THISACTOR {
+    // Prevents SpiderLord from damaging itself with rockets
+    setactor[THISACTOR].htextra -1 
+  }       
+}
 
 ifhitweapon
 {
-    ifwasweapon SHRINKSPARK
-        {
-                ifstrength 600
-                {
-                  sound ACTOR_SHRINKING
-                  ai AISPIDERLORDSHRUNK
-                  // set shrunken 1
-                  break
-                }
-                else addstrength -60
-        }
-        else
-        ifwasweapon GROWSPARK
-          sound EXPANDERHIT
-		guts JIBS2 1
-        ifdead
-        {
-              spawn ACCESSCARD
-                ifwasweapon FREEZEBLAST
-                {
-                  sound SOMETHINGFROZE
-                  spritepal 1
-                  ai AISPIDERLORDFROZEN
-                  strength 0
-                  // state freezeme
-                  break
-                }
-                ifwasweapon GROWSPARK
-                {
-					cstat 0
-					sound ACTOR_GROWING
-					ai AISPIDERLORDGROW
-					break
-                }
-                addkills 1
-                sound SPIDERLORDDEATH
-                ai AISPIDERLORDDYING
-                //guts JIBS6 8
-                ifspritepal 0 break
-                ifwasweapon RPG
-                {
-                        sound SQUISHED
-                        spawn BLOODPOOL
-                        killit
-                }
-                ifwasweapon RADIUSEXPLOSION
-                {
-                        sound SQUISHED
-                        spawn BLOODPOOL
-                        killit
-                }
-                break
-        }
-		
-        
-        // play pain sound here
-        ifrnd 2
-          spawn BLOODPOOL
-		    ifai AISPIDERLORDHIT nullop else
-        ifai AISPIDERLORDSHRUNK nullop else
-        {
-			    ifrnd 32
-			    ai AISPIDERLORDHIT        
-        }
+  ifwasweapon SHRINKSPARK
+  {
+  ifstrength 600
+  {
+    sound ACTOR_SHRINKING
+    ai AISPIDERLORDSHRUNK
+    // set shrunken 1
+    break
+  }
+  else addstrength -60
+  }
+  else
+  ifwasweapon GROWSPARK
+    sound EXPANDERHIT
+    guts JIBS2 1
+  ifdead
+  {
+    spawn DNA_REDKEY
+    ifwasweapon FREEZEBLAST
+    {
+      sound SOMETHINGFROZE
+      spritepal 1
+      ai AISPIDERLORDFROZEN
+      strength 0
+      // state freezeme
+      break
+    }
+    ifwasweapon GROWSPARK
+    {
+      cstat 0
+      sound ACTOR_GROWING
+      ai AISPIDERLORDGROW
+      break
+    }
+    addkills 1
+    sound SPIDERLORDDEATH
+    ai AISPIDERLORDDYING
+    //guts JIBS6 8
+    ifspritepal 0 break
+    ifwasweapon RPG
+    {
+      sound SQUISHED
+      spawn BLOODPOOL
+      killit
+    }
+    ifwasweapon RADIUSEXPLOSION
+    {
+      sound SQUISHED
+      spawn BLOODPOOL
+      killit
+    }
+    break
+  }
 
-        debris SCRAP1 1
-        guts JIBS6 1
+  
+  // play pain sound here
+  ifrnd 2
+    spawn BLOODPOOL
+  ifai AISPIDERLORDHIT nullop else
+  ifai AISPIDERLORDSHRUNK nullop else
+  {
+    ifrnd 32
+    ai AISPIDERLORDHIT        
+  }
+  debris SCRAP1 1
+  guts JIBS6 1
+} 
+enda
 
-}
+eventloadactor SPIDERLORD
+    sizeat 60 60
 
+    ife enemyTag 0 {
+    geta[THISACTOR].hitag temp
+    ifn temp 0 {
+      setactorvar[THISACTOR].enemyTag temp
+    }
+  }
+
+  ife locatorLength 0 {
+    geta[THISACTOR].xvel temp
+    ifn temp 0 {
+      setactorvar[THISACTOR].locatorLength temp
+      seta .xvel 0
+    }
+  }
+
+  setactorvar[THISACTOR].locatorID 0
 
 enda

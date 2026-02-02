@@ -79,6 +79,7 @@ define hud_ypos 32
 // Setup iterator variables
 gamevar i 0 0                   // Iterator #1
 gamevar o 0 0                   // Iterator #2
+gamevar u 0 0                   // Iterator #2
 gamevar h 0 0                   // Iterator: Highlighted index
 gamevar t 0 0                   // Iterator: T-Sprite
 

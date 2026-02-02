@@ -24,6 +24,11 @@ define LONGMONITORBROKE 3696
 define GASPUMP 3939
 define DNANUKEBARREL 4050
 define DNAGASCYLINDER 4056
+define DNAHYDROPLANT 3659
+define DNATRASHCAN 4060
+define DNATOILET 5701
+define DNASTALL 5706
+define DNACHAIR 5729
 
 damageeventtilerange TERMINAL1 TERMINALBROKE
 damageeventtilerange TERMINAL2 TERMINALBROKE
@@ -65,6 +70,7 @@ endevent
 action GASPUMPFRAME     0   3   1   1   15
 actor GASPUMP 26
   fall
+  cstator 257 
   ifaction GASPUMPFRAME
   {
     ifactioncount 2
@@ -90,6 +96,7 @@ enda
 action NUKEBARRELFRAME     0   5   1   1   15
 actor DNANUKEBARREL 26
   fall
+  cstator 257 
   ifaction NUKEBARRELFRAME
   {
     ifactioncount 2
@@ -116,6 +123,7 @@ action DNAGASCYLINDERFRAME     0   3   1   1   15
 actor DNAGASCYLINDER 26
   sizeat 36 36
   fall
+  cstator 257
   ifaction DNAGASCYLINDERFRAME
   {
     ifactioncount 2
@@ -136,4 +144,120 @@ actor DNAGASCYLINDER 26
   }
   ifhitweapon
     action DNAGASCYLINDERFRAME
+enda
+
+action TRASHCANBROKE     1   1   1   1  10
+actor DNATRASHCAN
+  fall
+  sizeat 48 48
+  cstator 257 
+  ifaction TRASHCANBROKE
+  {
+      break
+  }
+  ifsquished
+  {
+    debris SCRAP1 5
+    killit
+    break
+  }
+  ifhitweapon
+  {
+    //sound PIPEBOMB_EXPLODE
+    action TRASHCANBROKE
+  }
+enda
+
+action DNAHYDROPLANTBREAKING     0   5   1   1  15
+action DNAHYDROPLANTBROKE        4   1   1   1  10
+actor DNAHYDROPLANT 
+  fall
+  sizeat 48 48
+  cstator 257 
+  ifaction DNAHYDROPLANTBREAKING
+  {
+      ifactioncount 4
+      {
+        action DNAHYDROPLANTBROKE
+      }
+  }
+  ifaction DNAHYDROPLANTBROKE
+  {
+    cstat 0
+    break
+  }
+  ifsquished
+  {
+    debris SCRAP1 5
+    killit
+    break
+  }
+  ifhitweapon
+  {
+    //sound PIPEBOMB_EXPLODE
+    action DNAHYDROPLANTBREAKING
+  }
+enda
+
+action DNATOILETWATER     1   4   1   1   1
+actor DNATOILET
+  fall
+  cstator 257 
+  ifaction DNATOILETWATER
+  {
+    cstat 0
+    break
+  }
+  ifsquished
+  {
+    killit
+    break
+  }
+  ifhitweapon
+  {
+    action DNATOILETWATER
+  }
+enda
+
+action DNASTALLWATER     1   4   1   1   1
+actor DNASTALL
+  fall
+  cstator 257 
+  ifaction DNASTALLWATER
+  {
+    cstat 0
+    break
+  }
+  ifsquished
+  {
+    killit
+    break
+  }
+  ifhitweapon
+  {
+    action DNASTALLWATER
+  }
+enda
+
+action DNACHAIRBROKE        1   1   1   1  10
+actor DNACHAIR
+  fall
+  sizeat 54 54
+  cstator 257 
+  ifaction DNACHAIRBROKE
+  {
+    cstat 0
+    break
+  }
+  ifsquished
+  {
+    debris SCRAP1 5
+    killit
+    break
+  }
+  ifhitweapon
+  {
+    //sound PIPEBOMB_EXPLODE
+    action DNACHAIRBROKE
+  }
 enda

@@ -1,0 +1,485 @@
+// I'll merge this file to other things later on..
+
+
+
+// Checks if the sector is simply dark due to cycler presence
+defstate apply_pal
+    redefinequote txt Found sector %ld with palshade %ld - 
+    qsprintf txt txt i temp
+    set temp3 0
+    // Check for cycler presence, if valid then this isn't the sector you're looking for...
+    for u spritesofsector i {
+        ife sprite[u].picnum 7 {
+            set temp3 1
+            redefinequote txt2 skipping due to cyclers!
+            qstrcat txt txt2
+        }
+    }
+    ife temp3 0 {
+        // Change walls to corret PAL and SHADE
+        for u wallsofsector i {
+            set wall[u].pal temp
+            ife temp 140 set wall[u].shade 12
+            ife temp 141 set wall[u].shade 8
+            ife temp 142 set wall[u].shade 12
+        }
+        // Change sectors to corret PAL and SHADE
+        set sector[i].floorpal temp
+        set sector[i].ceilingpal temp
+        ife temp 140 set sector[i].floorshade 4
+        ife temp 141 set sector[i].floorshade 8
+        ife temp 142 set sector[i].floorshade 12
+        ife temp 140 set sector[i].ceilingshade 12
+        ife temp 141 set sector[i].ceilingshade 8
+        ife temp 142 set sector[i].ceilingshade 12
+        
+        ife temp 140 {
+            set sector[i].visibility 0
+        } else ife temp 141 {
+            set sector[i].visibility 241
+        } else ife temp 142 {
+            set sector[i].visibility 241
+        }
+        redefinequote txt2 redone!
+        qstrcat txt txt2
+    }
+    print txt
+ends
+
+//// --------- PALETTE FIX ---------
+// This enables palette edge cases for maps that are meant to have alernative "fog palette" setups
+// PAL140 = 6=>22, "tan", lavaroom map4
+    // floor/ceiling/wall 5
+
+// PAL141 = 13=>21, "piss yellow", map5/7 lava cracks and map17/18 lava sections
+    // Floor is 4
+    // Ceiling is 8
+    // Walls 8
+// PAL142 = 1=>23, "reddish tan", map8 backstage / map16 rightmost room
+    // Floor is 6
+    // Ceiling 12
+    // Walls 12
+// Since the game barely uses darker shades, these were hardcoded to be PAL overrides and appear "bright" ingame.
+
+defstate enable_palfix
+    for i allsectors {
+        set temp2 sector[i].floorshade
+        switch temp2
+            // Piss yellow
+            case 21
+                set temp 141
+                state apply_pal
+                break
+            // Tan
+            case 22
+                set temp 140
+                state apply_pal
+                break
+            // Reddish tan
+            case 23
+                set temp 142
+                state apply_pal
+                break
+        endswitch
+    }
+ends
+
+
+
+
+
+// Copypaste multifunction script, lazy edition 1.0
+// Purpose of this helpfully named script is to store sprites in a map to an array and then allow you to selectively restore/paste in another map
+
+// 
+// >include d3d
+// >include pastafari
+// 
+// Then you can do stuff with following vars
+// pastesprite = picnum to paste
+// pastelolo = Lotag must be greater than this
+// pastelohi = Lotag must be lower than this
+// 
+// Typical workflow:
+// - Open source map
+// > do copy_sprites
+// 
+// - Open target map
+// > do set pastesprite X
+// > do paste_sprites
+// 
+// You can clean all three vars with
+// > do paste_clean
+// 
+// 
+// Other helper functions exist for SPECIFIC things
+// > do paste_ambient -- Will paste sounds 560-571 (ambient ones)
+// > do paste_newse -- Will paste any SE70-89
+// 
+// 
+// You might get errors on sprite sector numbers, this is normal. They should fix themselves.
+
+gamevar pastesprite -1 0
+gamevar pastelolo -1 0
+gamevar pastelohi -1 0
+
+
+
+// I stole some of the code we had in Ion Fury for this (Don't tell Jon!)
+gamearray cp_x 16384
+gamearray cp_y 16384
+gamearray cp_z 16384
+gamearray cp_sectnum 16384
+gamearray cp_statnum 16384
+gamearray cp_hitag 16384
+gamearray cp_lotag 16384
+gamearray cp_cstat 16384
+gamearray cp_shade 16384
+gamearray cp_pal 16384
+gamearray cp_blend 16384
+gamearray cp_xrepeat 16384
+gamearray cp_yrepeat 16384
+gamearray cp_xoffset 16384
+gamearray cp_yoffset 16384
+gamearray cp_picnum 16384
+gamearray cp_ang 16384
+gamearray cp_xvel 16384
+gamearray cp_yvel 16384
+gamearray cp_zvel 16384
+gamearray cp_owner 16384
+gamearray cp_clipdist 16384
+gamearray cp_extra 16384
+gamevar cp_num 0 0
+
+
+defstate copy_sprites
+    set cp_num numsprites
+    sub cp_num 1
+    for i range cp_num
+    {
+        setarray cp_x[i] sprite[i].x
+        setarray cp_y[i] sprite[i].y
+        setarray cp_z[i] sprite[i].z
+        setarray cp_sectnum[i] sprite[i].sectnum
+        setarray cp_statnum[i] sprite[i].statnum
+        setarray cp_hitag[i] sprite[i].hitag
+        setarray cp_lotag[i] sprite[i].lotag
+        setarray cp_cstat[i] sprite[i].cstat
+        setarray cp_shade[i] sprite[i].shade
+        setarray cp_pal[i] sprite[i].pal
+        setarray cp_blend[i] sprite[i].blend
+        setarray cp_xrepeat[i] sprite[i].xrepeat
+        setarray cp_yrepeat[i] sprite[i].yrepeat
+        setarray cp_xoffset[i] sprite[i].xoffset
+        setarray cp_yoffset[i] sprite[i].yoffset
+        setarray cp_picnum[i] sprite[i].picnum
+        setarray cp_ang[i] sprite[i].ang
+        setarray cp_xvel[i] sprite[i].xvel
+        setarray cp_yvel[i] sprite[i].yvel
+        setarray cp_zvel[i] sprite[i].zvel
+        setarray cp_owner[i] sprite[i].owner
+        setarray cp_clipdist[i] sprite[i].clipdist
+        setarray cp_extra[i] sprite[i].extra
+    }
+    redefinequote txt || X-COPY v1.0 UNREGISTERED || Blocks copied: %ld
+    qsprintf txt txt cp_num
+    print txt
+ends
+
+defstate paste_clean
+    set pastesprite -1
+    set pastelolo -1
+    set pastelohi -1
+ends
+
+defstate paste_sprites
+    ifg cp_num 0 {
+        set temp 0
+        for i range cp_num
+        {
+            set temp2 0
+            ife cp_picnum[i] pastesprite {
+                ifn pastelolo -1 ifl cp_lotag[i] pastelolo set temp2 1
+                ifn pastelohi -1 ifl cp_lotag[i] pastelolo set temp2 1
+                insertsprite 0
+                ife temp2 0 {
+                    set .x cp_x[i]
+                    set .y cp_y[i]
+                    set .z cp_z[i]
+                    set .sectnum cp_sectnum[i]
+                    set .statnum cp_statnum[i]
+                    set .hitag cp_hitag[i]
+                    set .lotag cp_lotag[i]
+                    set .cstat cp_cstat[i]
+                    set .shade cp_shade[i]
+                    set .pal cp_pal[i]
+                    set .blend cp_blend[i]
+                    set .xrepeat cp_xrepeat[i]
+                    set .yrepeat cp_yrepeat[i]
+                    set .xoffset cp_xoffset[i]
+                    set .yoffset cp_yoffset[i]
+                    set .picnum cp_picnum[i]
+                    set .ang cp_ang[i]
+                    set .xvel cp_xvel[i]
+                    set .yvel cp_yvel[i]
+                    set .zvel cp_zvel[i]
+                    set .owner cp_owner[i]
+                    set .clipdist cp_clipdist[i]
+                    set .extra cp_extra[i]
+                    add temp 1
+                    set temp2 .sectnum
+                    updatesectorz .x .y .z temp2
+                    ifn temp2 -1 set .sectnum temp2
+                }
+            }
+        }
+        ife temp 0 {
+            redefinequote 400 || X-COPY v1.0 UNREGISTERED || No sprites with picnum %ld found!
+            qsprintf 400 400 temp
+            print 400
+        } else {
+            redefinequote 400 || X-COPY v1.0 UNREGISTERED || Pasted %ld sprites!
+            qsprintf 400 400 temp
+            print 400
+        }
+    } else {
+        redefinequote 400 || X-COPY v1.0 UNREGISTERED || No sprites in clipboard!?
+        qsprintf 400 400 temp
+        print 400
+    }
+ends
+
+
+defstate paste_ambient
+    state paste_clean
+    set pastesprite 5
+    set pastelolo 559
+    set pastelohi 572
+    state paste_sprites
+    state paste_clean
+ends
+
+
+defstate paste_newse
+    state paste_clean
+    set pastesprite 1
+    set pastelolo 69
+    set pastelohi 90
+    state paste_sprites
+    state paste_clean
+ends
+
+
+
+
+defstate doorfx
+    ifn searchsector -1 {
+        // Sector coords
+        set i searchsector
+        set temp 0
+        set temp2 0
+        set temp3 0
+        for u wallsofsector i {
+            add temp wall[u].x
+            add temp2 wall[u].y
+            add temp3 1
+        }
+        div temp temp3
+        div temp2 temp3
+        set temp3 -1
+        
+        // SE71 CHECK
+        for u spritesofsector i {
+            ife sprite[u].picnum 1 ife sprite[u].lotag 71 set temp3 u
+        }
+        ife temp3 -1 {
+            insertsprite 0
+            set .picnum 1
+            set .lotag 71
+            set .x temp
+            set .y temp2
+            set .z sector[i].floorz
+            set .cstat 0
+            set .xrepeat 32
+            set .yrepeat 32
+            set .pal 0
+            set .extra -1
+            set temp4 i
+            updatesectorz .x .y .z temp4
+            ifn temp2 -1 set .sectnum temp4
+        }
+        // MusicAndFX
+        set temp3 -1
+        for u spritesofsector i {
+            ife sprite[u].picnum 5 {
+                set sprite[u].lotag 434
+                set sprite[u].hitag 0
+                set temp3 u
+            }
+        }
+        add temp 16
+        add temp2 16
+        ife temp3 -1 {
+            insertsprite 0
+            set .picnum 5
+            set .x temp
+            set .y temp2
+            set .z sector[i].floorz
+            set .lotag 434
+            set .cstat 0
+            set .xrepeat 32
+            set .yrepeat 32
+            set .pal 0
+            set .extra -1
+            set temp4 i
+            updatesectorz .x .y .z temp4
+            ifn temp2 -1 set .sectnum temp4
+        }
+        // Auto-close SE
+        set temp3 -1
+        for u spritesofsector i {
+            ife sprite[u].picnum 1 ife sprite[u].lotag 10 {
+                set sprite[u].lotag 10
+                set sprite[u].hitag 128
+                set temp3 u
+            }
+        }
+        sub temp 32
+        ife temp3 -1 {
+            insertsprite 0
+            set .picnum 1
+            set .x temp
+            set .y temp2
+            set .z sector[i].floorz
+            set .lotag 10
+            set .hitag 128
+            set .cstat 0
+            set .xrepeat 32
+            set .yrepeat 32
+            set .pal 0
+            set .extra -1
+            set temp4 i
+            updatesectorz .x .y .z temp4
+            ifn temp2 -1 set .sectnum temp4
+        }
+    }
+ends
+
+defstate elevatorfx
+    ifn searchsector -1 {
+        // Sector coords
+        set i searchsector
+        set temp 0
+        set temp2 0
+        set temp3 0
+        for u wallsofsector i {
+            add temp wall[u].x
+            add temp2 wall[u].y
+            add temp3 1
+        }
+        div temp temp3
+        div temp2 temp3
+        set temp3 -1
+        
+        // SE76 CHECK
+        for u spritesofsector i {
+            ife sprite[u].picnum 1 ife sprite[u].lotag 76 set temp3 u
+        }
+        ife temp3 -1 {
+            insertsprite 0
+            set .picnum 1
+            set .lotag 76
+            set .x temp
+            set .y temp2
+            set .z sector[i].floorz
+            set .cstat 0
+            set .xrepeat 32
+            set .yrepeat 32
+            set .pal 0
+            set .extra -1
+            set temp4 i
+            updatesectorz .x .y .z temp4
+            ifn temp2 -1 set .sectnum temp4
+        }
+        // MusicAndFX
+        set temp3 -1
+        for u spritesofsector i {
+            ife sprite[u].picnum 5 {
+                deletesprite u
+            }
+        }
+        // Autoclose
+        set temp3 -1
+        for u spritesofsector i {
+            ife sprite[u].picnum 1 ife sprite[u].lotag 10 {
+                deletesprite u
+            }
+        }
+        // Activator
+        set temp3 -1
+        for u spritesofsector i {
+            ife sprite[u].picnum 2 {
+                deletesprite u
+            }
+        }
+    }
+ends
+
+
+defstate fixfx
+    ifn searchsector -1 {
+        ife sector[searchsector].lotag 20 state doorfx
+        ife sector[searchsector].lotag 16 state elevatorfx
+    }
+ends
+
+
+
+
+onevent EVENT_DRAW2DSCREEN
+    // Check for doors
+    for i allsectors {
+        ife sector[i].lotag 20 {
+            set temp3 0
+            for u spritesofsector i {
+                ife sprite[u].picnum 1 ife sprite[u].lotag 71 set temp3 1
+            }
+            ife temp3 0 {
+                set temp 0
+                set temp2 0
+                for u wallsofsector i {
+                    add temp wall[u].x
+                    add temp2 wall[u].y
+                    add temp3 1
+                }
+                div temp temp3
+                div temp2 temp3
+                drawcircle16b temp temp2 1536 -245
+            }
+        }
+    }
+    // Check for elevators
+    for i allsectors {
+        ife sector[i].lotag 16 {
+            set temp3 0
+            for u spritesofsector i {
+                ife sprite[u].picnum 1 ife sprite[u].lotag 76 set temp3 1
+            }
+            ife temp3 0 {
+                set temp 0
+                set temp2 0
+                for u wallsofsector i {
+                    add temp wall[u].x
+                    add temp2 wall[u].y
+                    add temp3 1
+                }
+                div temp temp3
+                div temp2 temp3
+                drawcircle16b temp temp2 1536 -215
+            }
+        }
+    }
+    
+    
+    state drawloop
+endevent

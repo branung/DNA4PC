@@ -1,0 +1,991 @@
+defstate enemy_fxload
+    // For now just process HTIAG to fx_hitag for enemies!
+    geta .hitag fx_hitag
+    seta .hitag 0
+ends
+
+defstate enemy_deathtrigger
+    ifn fx_hitag 0 {
+        setarray fx_preactivate[fx_hitag] 1
+        setvar fx_hitag 0
+    }
+ends
+
+// Below is a custom get code state for the various sound effects pick ups have.
+// Following it are prepends for the standard get states in order to override 
+// their behavior and add the dna_getcode. Palfrom are also removed (Might be added back as a toggle)
+defstate dna_getcode
+  geta[THISACTOR].picnum temp
+  switch temp
+  case ATOMICHEALTH
+    globalsound GETATOMICHEALTH
+    break
+  case SHIELD
+  case ARMORSHARD
+    globalsound A_PICKARMOR
+    break
+  case DNA_BLUEKEY
+  case DNA_REDKEY
+  case DNA_YELLOWKEY
+  case DNA_SYSKEY
+  case DNA_CDKEY
+  case DNA_CHIPKEY
+    globalsound A_ACTIVATE
+    break
+  case SIXPAK
+  case HEALTHPACKSMALL
+  case COLA
+    globalsound ADUKE_USEMEDKIT2
+    break
+  default
+    globalsound A_PICKWEAPON
+    break
+  endswitch
+ends
+
+prependstate getcode
+  state dna_getcode
+  //palfrom 16 0 32
+  ifrespawn
+  {
+    move RESPAWN_ACTOR_FLAG
+    spawn RESPAWNMARKERRED
+    cstat 32768
+  }
+  else
+    killit
+terminate
+ends
+
+prependstate quikget
+  state dna_getcode
+  //palfrom 16 0 32
+  killit
+  terminate
+ends
+
+// Gives a chance for Duke to not say anything for weapon pickups mainly due to increased drop rate of shotguns
+prependstate randgetweapsnds
+  ifrnd 32
+    globalsound DUKE_GETWEAPON1
+  else
+    ifrnd 32
+      globalsound DUKE_GETWEAPON2
+  else
+    ifrnd 32
+      globalsound DUKE_GETWEAPON3
+  else
+    ifrnd 32
+      globalsound DUKE_GETWEAPON4
+  else
+    ifrnd 32
+      globalsound DUKE_GETWEAPON6
+  terminate
+ends
+
+prependstate getweaponcode
+
+  globalsound A_PICKWEAPON
+  state randgetweapsnds
+
+  //palfrom 32 0 32
+  ifgotweaponce 1
+    break
+  ifrespawn
+  {
+    move RESPAWN_ACTOR_FLAG
+    spawn RESPAWNMARKERRED
+    cstat 32768
+  }
+  else
+    killit
+  terminate
+ends
+
+
+prependstate quikweaponget
+  globalsound A_PICKWEAPON
+  state randgetweapsnds
+  //palfrom 32 0 32
+  ifgotweaponce 1
+    break
+  killit
+  terminate
+ends
+
+// Have to copy this whole state just to remove the shield drop chance
+prependstate checkpighitstate
+  spawn BLOOD
+  ifdead
+  {
+    state random_wall_jibs
+    state drop_shotgun
+    ifwasweapon GROWSPARK
+    {
+      sound ACTOR_GROWING
+      ai AIPIGGROW
+      break
+    }
+
+    addkills 1
+
+    ifwasweapon FREEZEBLAST
+    {
+      sound SOMETHINGFROZE
+      spritepal 1
+      move 0
+      action APIGFROZEN
+      strength 0
+      break
+    }
+    ifwasweapon RADIUSEXPLOSION
+    {
+      sound SQUISHED
+      state standard_jibs
+      killit
+    }
+    else
+      ifwasweapon RPG
+    {
+      sound SQUISHED
+      state standard_jibs
+      killit
+    }
+    else
+      ai AIPIGDYING
+        sound PIG_DYING
+  }
+  else
+  {
+    sound PIG_PAIN
+    state random_wall_jibs
+
+    ifwasweapon SHRINKSPARK
+    {
+      sound ACTOR_SHRINKING
+      ai AIPIGSHRINK
+    }
+    else
+      ifwasweapon GROWSPARK
+        sound EXPANDERHIT
+    else
+      ifrnd 32
+        ai AIPIGHIT
+    else
+      ifrnd 64
+        ai AIPIGSHOOTENEMY
+    else
+      ifrnd 64
+      {
+        ai AIPIGDIVING
+        action APIGDIVESHOOT
+      }
+  }
+  terminate
+ends
+
+
+// DNA enemy initialization
+include scripts/grey.con
+include scripts/slimecrab.con
+include scripts/slimeregg.con
+include scripts/spiderlord.con
+include scripts/controllerboss.con
+include scripts/cyberalien.con
+include scripts/alienlord.con
+
+// Knockback state for enemies
+// Thanks to Dan G's DukePlus mod - whose genericknockcode state was referenced for this
+defstate enemyknockback
+
+  ifaction ATROOPDYING addvar knockbackvel 20
+  else ifaction GREYDYING addvar knockbackvel 20
+  else ifaction APIGDYING addvar knockbackvel 20
+  else ifaction ALIZDYING addvar knockbackvel 20
+  else ifaction AOCTADYING addvar knockbackvel 20
+  else ifaction CRABDYING addvar knockbackvel 20
+  else ifaction SLIMEREGGDYING addvar knockbackvel 20
+  else ifaction ANEWBEASTDYING addvar knockbackvel 20
+  ifvarg knockbackvel 0
+  {
+    cos xvel knockbackang
+    sin yvel knockbackang
+    setvarvar temp knockbackvel
+    ifvarg temp 768 setvar temp 768
+    mulvarvar xvel temp
+    mulvarvar yvel temp
+    shiftvarr xvel 13
+    shiftvarr yvel 13
+    movesprite THISACTOR xvel yvel 0 CLIPMASK0 RETURN
+    shiftvarr knockbackvel 1
+    ifvarl knockbackvel 3 setvar knockbackvel 0
+  }
+  else
+  {
+    ifg sprite[].htextra 0
+    {
+      geta[].htextra knockbackforce
+      ifl knockbackforce 32 set knockbackforce 32
+      geta[].htowner temp
+      ife temp player[].i {
+        //Checks the current weapon and forces certain knockback power if defined
+        ife player[].curr_weapon DEVISTATOR_WEAPON ifwasweapon SHOTSPARK1 setvar knockbackforce 200
+        else ife player[].curr_weapon FREEZE_WEAPON ifwasweapon FREEZEBLAST setvar knockbackforce 0
+        else ife player[].curr_weapon SHRINKER_WEAPON ifwasweapon SHRINKSPARK setvar knockbackforce 0 else ifwasweapon GROWSPARK setvar knockbackforce 0
+      }
+      geta[].htang knockbackang 
+      setvarvar knockbackvel knockbackforce
+      mulvarvar knockbackvel 2 
+      setvarvar temp 2
+      shiftvarl temp 1
+      subvarvar knockbackvel temp
+      ifvarl knockbackvel 0 setvar knockbackvel 0
+    }
+  }
+ends
+
+defstate transfer_lead_ammo
+    getplayer[].ammo_amount SHOTGUN_WEAPON temp
+    setplayer[].ammo_amount LEAD_WEAPON temp
+    setplayer[].ammo_amount SHOTGUN_WEAPON temp
+ends
+
+defstate transfer_pistol_ammo
+    getplayer[].ammo_amount PISTOL_WEAPON temp
+    setplayer[].ammo_amount TRIPBOMB_WEAPON temp
+    setplayer[].ammo_amount PISTOL_WEAPON temp
+ends
+
+gamevar explosion_snd 0 1
+
+// Moved from GAME.CON
+actor LEAD_CANNON_SPRITE
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifcanseetarget
+      {
+          ifgotweaponce 0
+            break
+
+        addweapon LEAD_WEAPON 1
+        ifn player.ammo_amount SHOTGUN_WEAPON MAXSHOTGUNAMMO
+            addammo SHOTGUN_WEAPON 10
+            
+            quote 125
+          
+        state transfer_lead_ammo
+        ifspawnedby LEAD_CANNON_SPRITE
+            state getweaponcode
+          else
+            state quikweaponget
+        }
+enda
+// Moved from GAME.CON
+
+actor GOLDENGUN_SPRITE
+  fall
+  sizeat 39 40
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifcanseetarget
+      {
+        ifgotweaponce 0
+          break
+
+        addweapon TRIPBOMB_WEAPON 48
+        quote 131
+        state transfer_pistol_ammo
+        ifspawnedby GOLDENGUN_SPRITE
+          state getweaponcode
+        else
+          state quikweaponget
+      }
+enda
+
+actor PISTOLAMMOBOX
+  fall
+  sizeat 39 40
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifcanseetarget
+      {
+        addammo PISTOL_WEAPON PISTOLAMMOBOXAMOUNT
+        quote 128
+        state transfer_pistol_ammo
+        ifspawnedby PISTOLAMMOBOX
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor SHOTGUNSHELLS
+  fall
+  sizeat 32 32
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifcanseetarget
+      {
+        addammo SHOTGUN_WEAPON SHOTGUNSHELLSAMOUNT
+        quote 129
+        state transfer_lead_ammo
+        ifspawnedby SHOTGUNSHELLS
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor ARMORSHARD
+  fall
+  sizeat 48 40
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifpinventory GET_SHIELD SHIELD_AMOUNT
+              ifcanseetarget
+              {
+                  addinventory GET_SHIELD ARMORSHARD_AMOUNT
+                  ifvare dna_localization 0 quote 126     
+                  else quote 127
+                  ifspawnedby ARMORSHARD
+                  state getcode
+              }
+enda
+
+actor HEALTHPACKSMALL
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifphealthl MAXPLAYERATOMICHEALTH
+              ifcanseetarget
+      {
+        setplayer[THISACTOR].max_player_health MAXPLAYERATOMICHEALTH
+        addphealth 5
+        setplayer[THISACTOR].max_player_health MAXPLAYERHEALTH
+        quote 130
+        ifspawnedby HEALTHPACKSMALL
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+//Redefining game.con actors below to change values to match DNA
+actor SIXPAK
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifphealthl MAXPLAYERHEALTH
+              ifcanseetarget
+      {
+        addphealth 25
+        quote 62
+        ifspawnedby SIXPAK
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor ATOMICHEALTH
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifphealthl MAXPLAYERATOMICHEALTH
+              ifcanseetarget
+      {
+        addphealth 100
+        quote 19
+        ifspawnedby ATOMICHEALTH
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor SHIELD
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifpinventory GET_SHIELD SHIELD_AMOUNT
+              ifcanseetarget
+      {
+        ifspawnedby PIGCOP
+        {
+          ifrnd 128
+            addinventory GET_SHIELD PIG_SHIELD_AMOUNT1
+          else
+            addinventory GET_SHIELD PIG_SHIELD_AMOUNT2
+          quote 104
+          sound KICK_HIT
+          palfrom 24 0 32
+          killit
+        }
+        else
+          addinventory GET_SHIELD 50
+        quote 38
+        ifspawnedby SHIELD
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+// Redefining default shotgun and ammo sprites due for transfer ammo state
+// Also todo: change Pig cop pick up count to DNAs higher count    
+actor SHOTGUNSPRITE
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifcanseetarget
+      {
+        ifspawnedby PIGCOP
+        {
+          addweapon SHOTGUN_WEAPON 0
+          ifrnd 64
+            addammo SHOTGUN_WEAPON 4
+          else ifrnd 64
+            addammo SHOTGUN_WEAPON 3
+          else ifrnd 64
+            addammo SHOTGUN_WEAPON 2
+          else
+            addammo SHOTGUN_WEAPON 1
+          
+          quote 57
+          state transfer_lead_ammo
+        }
+        else
+        {
+          ifgotweaponce 0
+            break
+          addweapon SHOTGUN_WEAPON SHOTGUNAMMOAMOUNT
+          quote 57
+        }
+
+        ifspawnedby SHOTGUNSPRITE
+          state getweaponcode
+        else
+          state quikweaponget
+      }
+enda
+
+actor SHOTGUNAMMO
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifcanseetarget
+      {
+        addammo SHOTGUN_WEAPON SHOTGUNAMMOAMOUNT
+        quote 69
+        state transfer_lead_ammo
+        ifspawnedby SHOTGUNAMMO
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor AMMO
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifcanseetarget
+      {
+        addammo PISTOL_WEAPON PISTOLAMMOAMOUNT
+        quote 65
+        state transfer_pistol_ammo
+        ifspawnedby AMMO
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+//// --------- ALARM ACTOR ---------
+// Starts upon seeing the player. Compatible with RESPAWN
+// Hitag: Counts up from 0 to 10 and dies
+// Extra: If set to 1 then re-usable after ~10s, waits for line of sight. No RESPAWN.
+
+// TO BE DELETED
+
+//action A51ALARMON 0 0 1 1 1
+//action A51ALARMOFF 0 0 1 1 1
+//action A51ALARMREADY 0 0 1 1 1
+//
+//useractor notenemy A51ALARM 0 A51ALARMON
+//    ifcansee {
+//        set fx_int 90
+//    }
+//    ifg fx_int 0 {
+//        // First default action, fire the sound on sight
+//        ifaction A51ALARMON ifactioncount 35 {
+//            geta .hitag temp
+//            ife temp 10 {
+//                ife fx_extra -1 {
+//                    killit
+//                } else {
+//                    action A51ALARMOFF
+//                    resetactioncount
+//                }
+//            } else {
+//                add temp 1
+//                seta .hitag temp
+//                globalsound AAMB_A51SIRENLOOP
+//                resetactioncount
+//            }
+//        }
+//        // If extra was 1, then wait ~10s in a busyloop.
+//        ifaction A51ALARMOFF ifactioncount 300 {
+//            action A51ALARMREADY
+//        }
+//        // Re-armed, if the player is seen then restart the alarm!
+//        ifaction A51ALARMREADY {
+//            ifcansee {
+//                action A51ALARMON
+//                seta .hitag 0
+//            }
+//        }
+//        ifg fx_int 0 sub fx_int 1
+//    }
+//enda
+
+
+
+
+
+//// --------- KEYITEM ACTOR ---------
+// Generic pickup for key items
+// Hitag: Triggered when picked up
+defstate access_shared
+    fall
+    ifmove RESPAWN_ACTOR_FLAG {
+        state respawnit
+    } else {
+        ifp pshrunk {
+            nullop
+        } else {
+            ifp palive {
+                ifpdistl RETRIEVEDISTANCE {
+                    ifcount 6 {
+                        ifcanseetarget {
+                            getplayer[].got_access temp
+                            ifactor DNA_BLUEKEY { 
+                                or temp lock_bluekey
+                                redefinequote DNA_KEYQUOTE Blue key card
+                            }
+                            ifactor DNA_REDKEY {
+                                or temp lock_redkey
+                                redefinequote DNA_KEYQUOTE Red key card
+                            }
+                            ifactor DNA_YELLOWKEY {
+                                or temp lock_yellowkey
+                                redefinequote DNA_KEYQUOTE Yellow key card
+                            }
+                            ifactor DNA_SYSKEY {
+                                or temp lock_syskey
+                                redefinequote DNA_KEYQUOTE Accessed the computer
+                            }
+                            ifactor DNA_CDKEY {
+                                or temp lock_cdkey
+                                redefinequote DNA_KEYQUOTE Data Disc
+                            }
+                            ifactor DNA_CHIPKEY {
+                                or temp lock_chipkey
+                                redefinequote DNA_KEYQUOTE Schematics
+                            }
+                            setplayer[].got_access temp
+
+                            state enemy_fxload
+                            state enemy_deathtrigger
+                            ifn sprite.hitag 0 { operateactivators sprite.hitag -1 }
+                            quote DNA_KEYQUOTE
+                            state getcode
+                        }
+                    }
+                }
+            }
+        }
+    }
+ends
+
+useractor notenemy DNA_SYSKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_CDKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_CHIPKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_BLUEKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_REDKEY 0
+    state access_shared
+enda
+useractor notenemy DNA_YELLOWKEY 0
+    state access_shared
+enda
+
+
+
+
+//// --------- EXTRA REVIVE FUNCTION FOR GREY ---------
+// This hijacks into the common "checksquished" state from original GAME.CON
+// The enemy currently supports reviving trooper/pigcop/octa/newbeast.
+appendstate checksquished
+    
+    ifaction ATROOPDEAD {
+        findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+        ifn temp -1 {
+            addkills -1
+            spawn TRANSPORTERSTAR
+            cstat 257
+            strength TROOPSTRENGTH
+            ai AITROOPSEEKENEMY
+        }
+    }
+    ifaction ALIZLYINGDEAD {
+        findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+        ifn temp -1 {
+            addkills -1
+            spawn TRANSPORTERSTAR
+            cstat 257
+            strength LIZSTRENGTH
+            ai AILIZGETENEMY
+        }
+    }
+    ifaction AOCTADEAD {
+        findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+        ifn temp -1 {
+            addkills -1
+            spawn TRANSPORTERSTAR
+            cstat 257
+            strength OCTASTRENGTH
+            ai AIOCTAGETENEMY
+        }
+    }
+    ifaction APIGDEAD {
+        findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+        ifn temp -1 {
+            addkills -1
+            spawn TRANSPORTERSTAR
+            cstat 257
+            strength PIGCOPSTRENGTH
+            ai AIPIGSEEKENEMY
+        }
+    }
+    ifaction ANEWBEASTLYINGDEAD {
+        findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+        ifn temp -1 {
+            addkills -1
+            spawn TRANSPORTERSTAR
+            cstat 257
+            strength NEWBEASTSTRENGTH
+            ai AINEWBEASTGETENEMY
+        }
+    }
+ends
+
+// Knockback state added here to effect nearly all enemies
+prependstate checksquished
+    state enemyknockback
+ends
+
+// Liztroop gets special treatment
+prependstate troopcode
+  state enemyknockback
+ends
+
+//// --------- EXTRA SCREENFLASH FOR THE PLAYER ---------
+// Prepending this state to access hitstate for APLAYER and add custom enemy attack palfroms
+prependstate random_wall_jibs
+{
+    ifactor APLAYER 
+    {
+        ifhitweapon ifdead nullop 
+        else {
+        ifwasweapon GREYPROJECTILE
+          palfrom 16 0 32 32
+        ifwasweapon SLIMECRABPROJECTILE
+          palfrom 16 0 64
+        ifwasweapon ALIENLORDPROJECTILE
+          palfrom 48 32
+        }
+    }
+}
+ends
+
+eventloadactor MBMACHINE
+    seta .cstat 32768
+
+enda
+
+move SCVEL 700
+action MBMOVE 0 1 1 1 1
+
+ai MBMSCATTER MBMOVE SCVEL randomangle
+ai MBMSCATTER2 MBMOVE SCVEL fleeenemy
+ai MBMSCATTER3 MBMOVE SCVEL randomangle
+
+useractor notenemy MBMACHINE 0
+    ifaction 0 {
+        seta .xrepeat 32
+        seta .yrepeat 32
+        seta .cstat 32768
+        ai MBMSCATTER
+    }
+    ifai MBMSCATTER {
+        ifcount 1 ai MBMSCATTER2
+    }
+    ifai MBMSCATTER2 {
+        ifcount 5 {
+            ai MBMSCATTER3
+        }
+    }
+    ifai MBMSCATTER3 {
+        ifrnd 20 {
+            set temp 0
+            ife player[myconnectindex].dead_flag 0 {
+                ifpdistg 2048 set temp 1
+            } else {
+                set temp 1
+            }
+            ife temp 1 {
+                switch explosion_snd
+                    case 0
+                    case 3
+                    case 5
+                    case 7
+                        actorsound THISACTOR A_EXPLOSION
+                        break
+                endswitch
+                add explosion_snd 1
+                spawn EXPLOSION2
+                killit
+            } else killit
+        }
+    }
+enda
+
+
+// Expects output tag to be in sprite.lotag
+defstate activate_lotag
+    operateactivators fx_lotag 0
+    for u sprofstat STAT_EFFECTOR {
+        ife sprite[u].lotag 25 ife sprite[u].hitag fx_lotag {
+            geta [u].htg_t 4 temp
+            ife temp 1 seta [u].htg_t 4 0 else seta [u].htg_t 4 1
+        }
+    }
+ends
+
+// extra = -1 single use, Positive number is ticks to wait until re-trigger is allowed (+30t recommended)
+// owner = set positive to autoclose immediately after extra
+// fx_int = auto-forced toggle counter
+// fx_int2 = touch toggler allower
+// fx_int3 = Extra timer to check that the extra minimum has passed
+// temp = use has been requested for this tick
+// Linked switches can be done with:
+// xvel = Output this when activated once, if extra -1 then will get stuck as "active"
+// yvel = Read this, will return to "disabled state" and will be re-usable once more.
+
+
+defstate switchcode
+    switch fx_state
+        case disabled
+            // If player touches or presses space then approve change
+            set temp2 0
+            ifpdistg 1024 set fx_int2 0
+            ifpdistl 768 ifp pfacing ife fx_int2 0 ife fx_int3 0 set temp2 1
+            ifpdistl 1024 ifp pfacing ife fx_int3 0 ifhitspace set temp2 1
+            ifn fx_xvel 0 ifl fx_xvel 0 set temp2 0
+            ife temp2 1 set fx_state pre_enable
+            ifg fx_int3 0 sub fx_int3 1
+            ifg fx_yvel 0 ife fx_activate[fx_yvel] 1 set fx_int3 30
+            break
+        case pre_enable
+            ifhitspace {
+                nullop
+            } else {
+                // Visuals & Audio
+                sound fx_hitag
+                geta .picnum temp2
+                add temp2 1
+                seta .picnum temp2
+                // Activation
+                state activate_lotag
+                // Setup delays to wait for force-return or imposed wait
+                ife fx_extra -1 {
+                    set fx_state completed
+                } else {
+                    ifn fx_owner -1 set fx_int fx_extra else set fx_int 0
+                    set fx_int2 fx_extra
+                    set fx_int3 fx_extra
+                    set fx_state enabled
+                }
+                ifg fx_xvel 0 {
+                    setarray fx_preactivate[fx_xvel] 1
+                }
+            }
+            break
+        case enabled
+            // Have timers ran out?
+            set temp2 0
+            ifpdistg 1024 set fx_int2 0
+            ifpdistl 512 ifp pfacing ife fx_int2 0 ife fx_int3 0 set temp2 1
+            ifn fx_owner -1 {
+                ifg fx_int 0 sub fx_int 1
+                ife fx_int 0 set temp2 1
+            }
+            ifpdistl 1024 ifp pfacing ife fx_int 0 ife fx_int3 0 ifhitspace set temp2 1
+            ife temp2 1 set fx_state pre_disable
+            ifg fx_int3 0 sub fx_int3 1
+            break
+        case pre_disable
+            ifhitspace {
+                nullop
+            } else {
+                sound fx_hitag
+                set fx_state disabled
+                geta .picnum temp2
+                sub temp2 1
+                seta .picnum temp2
+                state activate_lotag
+                set fx_int2 30
+                set fx_int3 fx_extra
+                set fx_state disabled
+            }
+            break
+        case completed
+            // In case yvel gets triggered, re-enable it
+            ifg fx_yvel 0 {
+                ife fx_activate[fx_yvel] 1 {
+                    geta .picnum temp2
+                    sub temp2 1
+                    seta .picnum temp2
+                    set fx_state disabled
+                    set fx_int3 30
+                }
+            }
+            break
+    endswitch
+ends
+
+
+defstate switchload
+    geta .cstat temp
+    ifand temp 2 seta .cstat 32768
+    geta .owner fx_owner
+    geta .extra fx_extra
+    seta .owner -1
+    seta .extra -1
+    set fx_state disabled
+    set fx_int2 30
+    set fx_int fx_owner
+    geta .hitag temp
+    ife temp 0 {
+        set fx_hitag 431
+    } else {
+        set fx_hitag temp
+    }
+    seta .hitag 0
+    geta .lotag fx_lotag
+    seta .lotag 0
+    geta .xvel fx_xvel
+    seta .xvel 0
+    geta .yvel fx_yvel
+    seta .yvel 0
+ends
+
+action ACTION_SWOFF 1 1 1 1 1
+
+eventloadactor DNA_SWITCH1A state switchload enda
+eventloadactor DNA_SWITCH1B state switchload enda
+eventloadactor DNA_SWITCH2A state switchload enda
+eventloadactor DNA_SWITCH2B state switchload enda
+eventloadactor DNA_SWITCH3A state switchload enda
+eventloadactor DNA_SWITCH3B state switchload enda
+eventloadactor DNA_SWITCH4A state switchload enda
+eventloadactor DNA_SWITCH4B state switchload enda
+useractor notenemy DNA_SWITCH1A 0 state switchcode enda
+useractor notenemy DNA_SWITCH1B 0 state switchcode enda
+useractor notenemy DNA_SWITCH2A 0 state switchcode enda
+useractor notenemy DNA_SWITCH2B 0 state switchcode enda
+useractor notenemy DNA_SWITCH3A 0 state switchcode enda
+useractor notenemy DNA_SWITCH3B 0 state switchcode enda
+useractor notenemy DNA_SWITCH4A 0 state switchcode enda
+useractor notenemy DNA_SWITCH4B 0 state switchcode enda

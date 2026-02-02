@@ -1,0 +1,822 @@
+// Note: This file has been directly converted from the EDuke32
+// C source code to CON code, without any fixes or improvements.
+// Further changes to player.c may or may not be reflected here.
+// Original file sdk/samples/weapons.sample.con   -- Thanks to Hendricks266!
+// Butchered to support the LEAD CANNON which is a modification of the shotgun
+
+/*
+gamevar currentweapon 0 0 //  (system) (pointer)
+gamevar gs 0 0 //  (system) (pointer)
+gamevar looking_arc 0 0 //  (system) (pointer)
+gamevar gun_pos 0 0 //  (system) (pointer)
+gamevar weapon_xoffset 0 0 //  (system) (pointer)
+gamevar weaponcount 0 0 //  (system) (pointer)
+gamevar looking_angSR1 0 0 //  (system) (pointer)
+
+gamevar xdim 0 0 //  (system) (pointer) (read only)
+gamevar ydim 0 0 //  (system) (pointer) (read only)
+gamevar windowx1 0 0 //  (system) (pointer) (read only)
+gamevar windowx2 0 0 //  (system) (pointer) (read only)
+gamevar windowy1 0 0 //  (system) (pointer) (read only)
+gamevar windowy2 0 0 //  (system) (pointer) (read only)
+*/
+
+/* weapons.con */
+
+gamevar hud_tilenum 0 1
+gamevar hud_x 0 1
+gamevar hud_y 0 1
+gamevar hud_scale 65536 1
+gamevar hud_angle 0 1
+gamevar hud_shade 0 1
+gamevar hud_pal 0 1
+gamevar hud_orientation 0 1
+
+gamevar hud_fistsign 0 1
+gamevar hud_totaltime 0 1
+
+gamevar hud_shadef 0 1
+gamevar hud_palf 0 1
+
+// It is unfortunate that we need so many temporary gamevars.
+gamevar hud_temp 0 1
+gamevar hud_temp2 0 1
+gamevar hud_temp3 0 1
+gamevar hud_temp4 0 1
+
+// The following temporary gamevars are internal to the G_Draw subroutines.
+gamevar hud_int_temp 0 1
+gamevar hud_int_temp2 0 1
+gamevar hud_int_x 0 1
+gamevar hud_int_y 0 1
+gamevar hud_int_scale 0 1
+gamevar hud_int_angle 0 1
+gamevar hud_int_orientation 0 1
+
+gamevar weapon_pos 0 1
+gamevar weaponscale 0 1
+gamevar playerid 0 1
+
+gamevar arg1 -1 1
+
+
+gamevar muzx 0 1
+gamevar muzy 0 1
+
+// define ROTATESPRITE_MAX 2048
+
+// preliminary functions
+
+state G_DrawTilePal
+    set hud_int_angle hud_angle
+    set hud_int_orientation hud_orientation
+
+    ifand hud_orientation 4
+        add hud_int_angle 1024
+
+    or hud_int_orientation 2
+
+    rotatesprite hud_x hud_y hud_scale hud_int_angle hud_tilenum hud_shade hud_pal hud_int_orientation windowx1 windowy1 windowx2 windowy2
+ends
+
+state G_DrawTileScaled
+    set hud_int_x hud_x
+    set hud_int_y hud_y
+    set hud_int_angle hud_angle
+    set hud_int_orientation hud_orientation
+
+    shiftl hud_int_x 16
+    shiftl hud_int_y 16
+
+    set hud_int_temp 12582912 // 192<<16
+
+
+    ifand hud_orientation 262144
+    {
+        set hud_int_temp 10485760 // 160<<16
+        and hud_int_orientation -262145 // ~262144
+    }
+    
+    ifand hud_orientation 4
+        add hud_int_angle 1024
+
+    scalevar hud_int_x hud_int_x weaponscale 100
+    scalevar hud_int_temp2 hud_int_temp weaponscale 100
+    sub hud_int_temp hud_int_temp2
+    add hud_int_x hud_int_temp
+
+    scalevar hud_int_y hud_int_y weaponscale 100
+    set hud_int_temp 13107200 // 200<<16
+    scalevar hud_int_temp2 hud_int_temp weaponscale 100
+    sub hud_int_temp hud_int_temp2
+    add hud_int_y hud_int_temp
+
+    scalevar hud_int_scale hud_scale weaponscale 100
+
+    or hud_int_orientation 2050 // 2|2048
+
+    rotatesprite hud_int_x hud_int_y hud_int_scale hud_int_angle hud_tilenum hud_shade hud_pal hud_int_orientation windowx1 windowy1 windowx2 windowy2
+ends
+
+state G_DrawWeaponTile
+    // basic fading between player weapon shades
+    ifn hud_shade hud_shadef
+    {
+        set hud_int_temp 0
+        ife hud_pal 0 set hud_int_temp 1
+        ife hud_pal hud_palf set hud_int_temp 1
+        ife hud_int_temp 1
+        {
+            set hud_int_temp hud_shade
+            sub hud_int_temp hud_shadef
+            set hud_int_temp2 hud_int_temp
+            shiftr hud_int_temp 2
+            add hud_shadef hud_int_temp
+
+            ife hud_int_temp 0
+            {
+                shiftr hud_int_temp2 1
+                add hud_shadef hud_int_temp2
+                ife hud_int_temp2 0
+                    set hud_shadef hud_shade
+            }
+        }
+    }
+    else
+        set hud_shadef hud_shade
+
+    set hud_palf hud_pal
+    set hud_shade hud_shadef
+
+    state G_DrawTileScaled
+ends
+
+// helper states
+
+state reset_hud_weapon_x_coordinate
+    set hud_x weapon_xoffset
+    sub hud_x looking_angSR1
+ends
+state reset_hud_weapon_y_coordinate
+    set hud_y looking_arc
+    sub hud_y gun_pos
+ends
+state reset_hud_weapon_coordinates
+    state reset_hud_weapon_x_coordinate
+    state reset_hud_weapon_y_coordinate
+ends
+
+state determine_animation
+    getuserdef[].pause_on hud_temp
+    ifn hud_temp 0
+        set hud_temp 1
+
+    ifand player[].gm 1 // MODE_MENU
+        or hud_temp 1
+
+    getactor[playerid].pal hud_int_temp
+    ife hud_int_temp 1
+        or hud_temp 1
+ends
+
+// other EVENT_DISPLAYWEAPON code
+// weapon code
+
+state draw_quick_kick // Quick Kick
+    set hud_temp 14
+    sub hud_temp player[].quick_kick
+
+    set hud_temp2 0
+    ifn hud_temp 14 set hud_temp2 1
+    ifn player[].last_quick_kick 0 set hud_temp2 1
+    ife hud_temp2 1
+    {
+        getplayer[].hudpal hud_pal
+        ife hud_pal 0
+            getplayer[].palookup hud_pal
+
+        guniqhudid 100
+
+        // common calculations
+        state reset_hud_weapon_coordinates
+
+        set hud_tilenum KNEE
+
+        set hud_orientation 262148 // o|4|262144
+
+        set hud_temp3 0
+
+        ifg hud_temp 5
+            ifl hud_temp 13
+            {
+                add hud_x 144 // 160-16
+
+                add hud_y 214
+
+                add hud_tilenum 1
+
+                state G_DrawTileScaled
+
+                set hud_temp3 1
+            }
+
+        ife hud_temp3 0
+        {
+            add hud_x 80
+
+            add hud_y 250
+
+            state G_DrawTileScaled
+        }
+    }
+ends
+
+state draw_pistol // PISTOL_WEAPON:
+    // hud_temp4 = FIREDELAY
+    // hud_temp3 = RELOAD
+
+    state reset_hud_weapon_y_coordinate
+
+    switch currentweapon
+    case PISTOL_WEAPON {
+        set hud_tilenum FIRSTGUN
+        break
+    }
+    case TRIPBOMB_WEAPON {
+        set hud_tilenum GOLDENGUN
+        break
+    }
+    endswitch
+
+    add hud_totaltime 1
+    ifl weaponcount hud_totaltime
+    {
+        set hud_x 183 // 195-12
+        add hud_x weapon_xoffset
+        sub hud_x looking_angSR1
+
+        add hud_y 244
+
+        ife weaponcount hud_temp4
+            sub hud_x 3
+
+        ifl weaponcount 3
+            add hud_tilenum weaponcount
+
+        set hud_orientation 2
+
+        guniqhudid currentweapon
+
+        state G_DrawWeaponTile
+
+        guniqhudid 0
+    }
+    else
+    {
+        or hud_orientation 512
+
+        sub hud_temp3 weaponcount
+
+        //Pistol reload changes
+        ifg hud_temp3 17
+        {
+            set hud_x 150
+            sub hud_x looking_angSR1
+
+            add hud_y 264
+
+            guniqhudid currentweapon
+
+            state G_DrawWeaponTile
+        }
+        else ifg hud_temp3 15
+        {
+            set hud_x 150
+
+            add hud_y 284
+
+            guniqhudid currentweapon
+
+            state G_DrawWeaponTile
+        }
+        else ifg hud_temp3 13
+        {
+            set hud_x 150
+            //sub hud_x hud_temp
+            sub hud_x looking_angSR1
+            add hud_y 304
+
+            guniqhudid currentweapon
+
+            state G_DrawWeaponTile
+        }
+        else ifg hud_temp3 11
+        {
+            set hud_x 150
+            //add hud_x hud_temp
+            sub hud_x looking_angSR1
+            add hud_y 364
+
+            guniqhudid currentweapon
+
+            state G_DrawWeaponTile
+        }
+        else ifg hud_temp3 9
+        {
+            set hud_x 150
+            //add hud_x hud_temp
+            sub hud_x looking_angSR1
+            add hud_y 324
+
+            guniqhudid currentweapon
+
+            state G_DrawWeaponTile
+        }
+        else ifg hud_temp3 7
+        {
+            set hud_x 150
+            add hud_x hud_temp
+            sub hud_x looking_angSR1
+            add hud_y 304
+
+            guniqhudid currentweapon
+
+            state G_DrawWeaponTile
+        }
+        else ifg hud_temp3 4
+        {
+            set hud_x 150
+            sub hud_x looking_angSR1
+            add hud_y 284
+
+            guniqhudid currentweapon
+
+            state G_DrawWeaponTile
+        }
+        else ifg hud_temp3 2
+        {
+            set hud_x 150
+            sub hud_x looking_angSR1
+            add hud_y 264
+
+            guniqhudid currentweapon
+
+            state G_DrawWeaponTile
+        }
+        else ifg hud_temp3 0
+        {
+            set hud_x 150
+            sub hud_x looking_angSR1
+            add hud_y 244
+
+            guniqhudid currentweapon
+
+            state G_DrawWeaponTile
+        }
+    }
+ends
+
+defstate draw_lead // LEAD_WEAPON -- Very mom's spaghetti! -- All frames hardcoded and unrolled
+    state reset_hud_weapon_coordinates
+    sub hud_x 8
+switch weaponcount
+    case 0
+        guniqhudid currentweapon
+        add hud_x 146
+        add hud_y 202
+        set hud_tilenum LEAD_CANNON
+        state G_DrawWeaponTile
+        guniqhudid 0
+        break
+    case 1
+        //Gun
+        set hud_shade gs
+        guniqhudid currentweapon
+        add hud_x 146
+        add hud_y 202
+        set hud_tilenum LEAD_CANNON
+        state G_DrawWeaponTile
+        guniqhudid 0
+        //Muzzle2
+        set hud_temp4 currentweapon
+        shiftl hud_temp4 1
+        guniqhudid hud_temp4
+        add hud_x -42
+        add hud_y -4
+        set hud_shade -128
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 1
+        state G_DrawWeaponTile
+        break
+    case 2
+        //Muzzle1
+        set hud_temp4 currentweapon
+        shiftl hud_temp4 1
+        guniqhudid hud_temp4
+        add hud_x 88
+        add hud_y 98
+        set hud_shade -128
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 2
+        state G_DrawWeaponTile
+        sub hud_x 88
+        sub hud_y 98
+        //Gun
+        set hud_shade gs
+        guniqhudid currentweapon
+        add hud_x 146
+        add hud_y 202
+        set hud_tilenum LEAD_CANNON
+        state G_DrawWeaponTile
+        guniqhudid 0
+        //Muzzle2
+        set hud_temp4 currentweapon
+        shiftl hud_temp4 1
+        guniqhudid hud_temp4
+        add hud_x -42
+        add hud_y -4
+        set hud_shade -128
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 1
+        state G_DrawWeaponTile
+    
+        break
+    case 3
+    case 4
+        //Muzzle2
+        add hud_x 125
+        add hud_y 140
+        set hud_shade -128
+        set hud_tilenum weaponcount
+        sub hud_tilenum 1
+        shiftr hud_tilenum 1
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 2
+        state G_DrawWeaponTile
+        sub hud_x 125
+        sub hud_y 140
+        set hud_shade gs
+        //Gun
+        add hud_y 40
+        add hud_x 20
+        set hud_temp4 currentweapon
+        shiftl hud_temp4 1
+        guniqhudid hud_temp4
+        guniqhudid currentweapon
+        add hud_x 158
+        add hud_y 220
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 3
+        state G_DrawWeaponTile
+        guniqhudid 0
+        //Muzzle
+        add hud_x -55
+        add hud_y -126
+        set hud_shade -128
+        set hud_tilenum weaponcount
+        sub hud_tilenum 1
+        shiftr hud_tilenum 1
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 2
+        state G_DrawWeaponTile
+        add hud_x 55
+        add hud_y 126
+        set hud_shade gs
+        break
+    case 5
+        //Gun
+        add hud_x muzx
+        add hud_y muzy
+        set hud_temp4 currentweapon
+        shiftl hud_temp4 1
+        guniqhudid hud_temp4
+        guniqhudid currentweapon
+        add hud_x 158
+        add hud_y 220
+        //set hud_tilenum LEAD_CANNON
+        set hud_tilenum 5407
+        //add hud_tilenum 3
+        state G_DrawWeaponTile
+        guniqhudid 0
+    case 6
+        guniqhudid currentweapon
+        add hud_x 146
+        add hud_y 202
+        set hud_tilenum LEAD_CANNON
+        state G_DrawWeaponTile
+        guniqhudid 0
+        break
+    case 7
+        guniqhudid currentweapon
+        add hud_x 146
+        add hud_y 202
+        set hud_tilenum LEAD_CANNON
+        state G_DrawWeaponTile
+        guniqhudid 0
+        break
+    case 8
+        guniqhudid currentweapon
+        add hud_x 146
+        add hud_y 202
+        set hud_tilenum LEAD_CANNON
+        state G_DrawWeaponTile
+        guniqhudid 0
+        break
+    case 9
+    case 10
+    case 11
+    case 12
+        guniqhudid currentweapon
+        add hud_x 158
+        add hud_y 220
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 3
+        state G_DrawWeaponTile
+        guniqhudid 0
+        break
+    case 13
+    case 14
+    case 15
+        guniqhudid currentweapon
+        add hud_x 198 // 32 + 166
+        add hud_y 210
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 4
+        state G_DrawWeaponTile
+        guniqhudid 0
+        break
+    case 16
+    case 17
+    case 18
+    case 19
+        guniqhudid currentweapon
+        add hud_x 234 // 64 + 170
+        add hud_y 196
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 5
+        state G_DrawWeaponTile
+        break
+    case 20
+    case 21
+        guniqhudid currentweapon
+        add hud_x 240 // 64 + 176
+        add hud_y 196
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 6
+        state G_DrawWeaponTile
+        break
+    case 22
+    case 23
+        guniqhudid currentweapon
+        add hud_x 240 // 64 + 176
+        add hud_y 196
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 7
+        state G_DrawWeaponTile
+        break
+    case 24
+    case 25
+    case 26
+    case 27
+        guniqhudid currentweapon
+        add hud_x 234 // 64 + 170
+        add hud_y 196
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 5
+        state G_DrawWeaponTile
+        break
+    case 28
+    case 29
+    case 30
+        guniqhudid currentweapon
+        add hud_x 198 // 32 + 166
+        add hud_y 210
+        set hud_tilenum LEAD_CANNON
+        add hud_tilenum 4
+        state G_DrawWeaponTile
+        guniqhudid 0
+        break
+    endswitch
+ends
+
+onevent EVENT_DRAWWEAPON 
+    // We only care about LEAD WEAPON drawcode so this has been trimmed down considerably
+    ife currentweapon LEAD_WEAPON {
+        getplayer[].weapon_pos weapon_pos
+        getuserdef[].weaponscale weaponscale
+        getplayer[].i playerid
+        getuserdef[].drawweapon hud_temp
+        ife hud_temp 2 // weapon icons
+        {
+            set hud_tilenum -1
+            ife player[THISACTOR].curr_weapon LEAD_CANNON set hud_tilenum LEAD_CANNON
+            ifn hud_tilenum -1
+            {
+                set hud_x 160
+                set hud_y weapon_pos
+                mul hud_y weapon_pos
+                add hud_y 180
+                scalevar hud_scale 65536 userdef[].statusbarscale 100
+                rotatesprite hud_x hud_y hud_scale 0 hud_tilenum 0 0 2 windowx1 windowy1 windowx2 windowy2
+            }
+            set RETURN -1
+        }
+        ifn hud_temp 1 break // If we are not displaying the actual HUD weapons, stop processing.
+        // these gamevars can get changed in the states up above, so reset them now.
+        set hud_scale 65536
+        set hud_orientation 0
+        set hud_angle 0
+        set hud_shade gs
+        set hud_orientation 0
+        set hud_angle 0
+        guniqhudid 0
+        getplayer[].hudpal hud_pal
+        getactor[playerid].xrepeat hud_temp
+        state draw_lead
+        set hud_orientation 0
+        set hud_angle 0
+        guniqhudid 0
+        set RETURN -1
+    }
+endevent
+
+
+// Initial defines
+// Lead Cannon
+gamevar WEAPON7_CLIP 0 1
+gamevar WEAPON7_RELOAD 13 1
+gamevar WEAPON7_FIREDELAY 4 1
+gamevar WEAPON7_TOTALTIME LEAD_TOTALTIME 1
+gamevar WEAPON7_HOLDDELAY 0 1
+gamevar WEAPON7_FLAGS 5120 1
+gamevar WEAPON7_SHOOTS SHOTGUN 1
+gamevar WEAPON7_SPAWNTIME 18 1
+gamevar WEAPON7_SPAWN SHOTGUNSHELL 1
+gamevar WEAPON7_SELECTSOUND A_PICKWEAPON 1
+gamevar WEAPON7_SHOTSPERBURST 16 1
+gamevar WEAPON7_INITIALSOUND 0 1
+gamevar WEAPON7_FIRESOUND A_LEADFIRE 1
+gamevar WEAPON7_SOUND2TIME 15 1
+gamevar WEAPON7_SOUND2SOUND 169 1
+
+// Golden Gun
+gamevar WEAPON8_CLIP 12 1
+gamevar WEAPON8_RELOAD 28 1
+gamevar WEAPON8_FIREDELAY 2 1
+gamevar WEAPON8_TOTALTIME 8 1
+gamevar WEAPON8_HOLDDELAY 3 1
+gamevar WEAPON8_SHOOTS GOLDENGUN_PROJ 1
+gamevar WEAPON8_SPAWNTIME 18 1
+gamevar WEAPON8_SPAWN 2533 1
+gamevar WEAPON8_SELECTSOUND A_PICKWEAPON 1
+gamevar WEAPON8_INITIALSOUND 0 1
+gamevar WEAPON8_FIRESOUND A_PISTOL 1
+gamevar WEAPON8_FLAGS 512 1
+gamevar WEAPON8_SOUND2SOUND 169 1
+
+// Replace select sound for standard weapons 
+//gamevar WEAPON0_SELECTSOUND A_PICKWEAPON 1
+gamevar WEAPON1_SELECTSOUND A_PICKWEAPON 1
+gamevar WEAPON2_SELECTSOUND A_PICKWEAPON 1
+gamevar WEAPON3_SELECTSOUND A_PICKWEAPON 1
+gamevar WEAPON4_SELECTSOUND A_PICKWEAPON 1
+gamevar WEAPON5_SELECTSOUND A_PICKWEAPON 1
+gamevar WEAPON6_SELECTSOUND A_PICKWEAPON 1
+gamevar WEAPON9_SELECTSOUND A_PICKWEAPON 1
+gamevar WEAPON11_SELECTSOUND A_PICKWEAPON 1
+
+
+onevent EVENT_DISPLAYWEAPON // P_DisplayWeapon
+    getplayer[].weapon_pos weapon_pos
+    getuserdef[].weaponscale weaponscale
+    getplayer[].i playerid
+
+    getuserdef[].drawweapon hud_temp
+
+    switch currentweapon
+    case PISTOL_WEAPON {
+        set hud_temp3 WEAPON1_RELOAD
+        set hud_temp4 WEAPON1_FIREDELAY
+        set hud_totaltime WEAPON1_TOTALTIME
+        state draw_pistol
+        set RETURN -1
+        break
+    }
+    case TRIPBOMB_WEAPON {
+        set hud_temp3 WEAPON8_RELOAD
+        set hud_temp4 WEAPON8_FIREDELAY
+        set hud_totaltime WEAPON8_TOTALTIME
+        state draw_pistol
+        set RETURN -1
+        break
+    }
+    endswitch
+
+    ifn hud_temp 1 break // If we are not displaying the actual HUD weapons, stop processing.
+
+    // these gamevars can get changed in the states up above, so reset them now.
+    set hud_scale 65536
+    set hud_orientation 0
+    set hud_angle 0
+    set hud_shade gs
+
+    state draw_quick_kick
+
+    // cleanup
+    set hud_orientation 0
+    set hud_angle 0
+    guniqhudid 0
+endevent
+
+//LEAD CANNON SPECIFIC SHENANIGANS FROM HERE -oasiz
+
+// First hack is to ensure that:
+// Ammo from SHOTGUN is transferred to LEAD
+// CONDITION: LEAD was just fired OR another weapon is selected
+// In case LEAD was fired, wait some kickbackpicks to ensure that animation goes halfway
+// If under 4 ammo for next blast, "fakeswap" to zero (gets corrected on next tick)
+// This is a hack to force a weapon swap when below 4, as if it was emtpy.
+appendevent EVENT_GAME
+    ife player[THISACTOR].curr_weapon LEAD_WEAPON { 
+        // --- This hack is to handle the swapping when less than 4 ---
+        ife player[].kickback_pic 3 state transfer_lead_ammo
+        ifg player[].kickback_pic 20 {
+            getplayer[THISACTOR].ammo_amount LEAD_WEAPON temp
+            ifl temp 3 setplayer[THISACTOR].ammo_amount LEAD_WEAPON 0
+        }
+        ife player[].kickback_pic 0 {
+            getplayer[THISACTOR].ammo_amount LEAD_WEAPON temp
+            ifl temp 3 setplayer[THISACTOR].ammo_amount LEAD_WEAPON 0
+        }
+        // This is to handle shell spawning from the weapon.
+        // I don't do all four since it looks silly in combination with that ART baked shells
+        ifactor APLAYER {
+            ife player[].kickback_pic 20 {
+                spawn SHOTGUNSHELL
+                spawn SHOTGUNSHELL
+            }
+        }
+    } else {
+        // Keep transferring (updating) ammo all the time when you can from SHOTGUN
+        state transfer_lead_ammo
+    }
+endevent
+
+gamevar leadcannon_depleted 0 0
+
+// When LEAD is fired, check that we have 4 or more shells, otherwise cancel it. Wait 20 ticks.
+// If this is fired too soon then it will cancel before the animation gets even started.
+appendevent EVENT_FIRE
+    ife player[THISACTOR].curr_weapon LEAD_WEAPON {
+        getplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON temp
+        ifle temp 3 {
+            set RETURN -1
+        } else 
+            ife temp 4 {
+                set leadcannon_depleted 1
+                setplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON 1 // Allow last four shots to be fired by setting bullets to 1 rather than 0, then set it to 0 in DOFIRE
+            } 
+            else {
+                sub temp 4
+                setplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON temp
+            }
+        
+    }
+endevent
+
+appendevent EVENT_DOFIRE
+    ife player[THISACTOR].curr_weapon LEAD_WEAPON {
+        ife leadcannon_depleted 1 {
+            getplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON temp
+            ife temp 1 { // This check probably isnt necessary but Im paranoid 
+                ifg player[].kickback_pic 3 { setplayer[THISACTOR].ammo_amount SHOTGUN_WEAPON 0 set leadcannon_depleted 0 }
+            } 
+        }
+    }
+endevent
+
+//Overriding when tripbomb is fired to so that bullets can be shot without being at a wall  
+appendevent EVENT_PROCESSINPUT
+    getinput[].bits bits
+    ifvarand bits 4
+    {
+        ifp palive
+        ife player[].weapon_pos 0
+        ife player[].gotweapon TRIPBOMB_WEAPON YES
+        ifg player[].ammo_amount TRIPBOMB_WEAPON 0
+        ife player[].curr_weapon TRIPBOMB_WEAPON
+        {
+            ife player[].kickback_pic 0
+            {
+                setp[].kickback_pic 1
+            }
+                getplayer[THISACTOR].ammo_amount TRIPBOMB_WEAPON temp
+                setplayer[THISACTOR].ammo_amount PISTOL_WEAPON temp
+        }
+        else ife player[].curr_weapon PISTOL_WEAPON
+        {
+            getplayer[THISACTOR].ammo_amount PISTOL_WEAPON temp
+            setplayer[THISACTOR].ammo_amount TRIPBOMB_WEAPON temp
+        }
+    }
+endevent
