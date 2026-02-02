@@ -26,27 +26,27 @@ ai AISLIMEREGGSHRUNK             SLIMEREGGWAIT SLIMEREGGSTOPPED geth
 ai AISLIMEREGGGROW               SLIMEREGGGROW SLIMEREGGSTOPPED geth
 
 state slimeregghitstate
-        ifcount 9 ai AISLIMEREGGWAIT
+  ifcount 9 ai AISLIMEREGGWAIT
 ends
 
 state slimereggwaitstate
 	ifcansee ifpdistl 6144
-        ifrnd 2
-        {
-			// add sound here
-        }
-        ifcount 10
-        ifcansee ifpdistl 6144
-        ifp palive
-        {
-			    ifrnd 12 
-            { 
-                ai AISLIMEREGGATTACKPLAYER 
-                sound SLIMERATTACK
-            }
-        }
+  ifrnd 2
+  {
+    // add sound here
+  }
+  ifcount 10
+  ifcansee ifpdistl 6144
+  ifp palive
+  {
+    ifrnd 12 
+    { 
+      ai AISLIMEREGGATTACKPLAYER 
+      sound SLIMERATTACK
+    }
+  }
 
-        ifrnd 4 ifpdistg 6144 ai AISLIMEREGGWAIT    
+  ifrnd 4 ifpdistg 6144 ai AISLIMEREGGWAIT    
 ends
 
 state slimereggattackstate
@@ -58,12 +58,12 @@ state slimereggattackstate
   else
 	ifcount 11
   {
-      geta[THISACTOR].z slimereggprojpos
-      setvarvar slimereggcurrpos slimereggprojpos
-      subvar slimereggprojpos 3000
-      seta[THISACTOR].z slimereggprojpos      
-		  shoot SLIMECRABPROJECTILE
-      seta[THISACTOR].z slimereggcurrpos
+    geta[THISACTOR].z slimereggprojpos
+    setvarvar slimereggcurrpos slimereggprojpos
+    subvar slimereggprojpos 3000
+    seta[THISACTOR].z slimereggprojpos      
+    shoot SLIMECRABPROJECTILE
+    seta[THISACTOR].z slimereggcurrpos
   }
    else
 	 ifactioncount 2
@@ -71,8 +71,8 @@ state slimereggattackstate
 ends
 
 state slimeregggrowstate
-        state genericgrowcode
-        sizeto 255 192
+  state genericgrowcode
+  sizeto 255 192
 ends
 
 state slimereggshrunkstate
@@ -90,8 +90,7 @@ state slimereggshrunkstate
 ends
 
 state slimereggfrozenstate
-
-    ifcount THAWTIME
+  ifcount THAWTIME
 	{
 		ai AISLIMEREGGWAIT
 		getlastpal
@@ -143,74 +142,72 @@ useractor enemy SLIMEREGG SLIMEREGGSTRENGTH
 
   ifai AISLIMEREGGDYING
   {
-        strength 0
+    strength 0
 		ifwasweapon RPG
 		{
-				sound SQUISHED
-				spawn BLOODPOOL
-				state standard_jibs
-				killit
+      sound SQUISHED
+      spawn BLOODPOOL
+      state standard_jibs
+      killit
 		}
 		ifwasweapon RADIUSEXPLOSION
 		{
-				sound SQUISHED
-				spawn BLOODPOOL
-				state standard_jibs
-				killit
+      sound SQUISHED
+      spawn BLOODPOOL
+      state standard_jibs
+      killit
 		}
-        
-        ifaction SLIMEREGGDYING
-        {
-                ifactioncount 5
-                {
-						cstat 0
-						globalsound THUD
-                        action SLIMEREGGDEADBODY
-                        break
-                }
-        }    
-        ifaction SLIMEREGGDEADBODY
-          {
-            findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
-            ifn temp -1
-            {
-              addkills -1
-              spawn TRANSPORTERSTAR
-              cstat 257
-              strength SLIMEREGGSTRENGTH
-              ai AISLIMEREGGWAIT
-              // play sound here
-            }
-                ifhitweapon
-                {
-                        ifwasweapon RPG
-                        {
-                                sound SQUISHED
-                                spawn BLOODPOOL
-								state standard_jibs
-                                killit
-                        }
-                        ifwasweapon RADIUSEXPLOSION
-                        {
-                                sound SQUISHED
-                                spawn BLOODPOOL
-								state standard_jibs
-                                killit
-                        }
-                }
-                ifcount RESPAWNACTORTIME
-                ifrespawn
-                {
-                  addkills -1
-                  spawn TRANSPORTERSTAR
-                  cstat 257
-                  strength SLIMEREGGSTRENGTH
-                  ai AISLIMEREGGWAIT
-                  // play sound here
-                }
-        }
-        
+    ifaction SLIMEREGGDYING
+    {
+      ifactioncount 5
+      {
+        cstat 0
+        globalsound THUD
+        action SLIMEREGGDEADBODY
         break
+      }
+    }    
+    ifaction SLIMEREGGDEADBODY
+    {
+      findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+      ifn temp -1
+      {
+        addkills -1
+        spawn TRANSPORTERSTAR
+        cstat 257
+        strength SLIMEREGGSTRENGTH
+        ai AISLIMEREGGWAIT
+        // play sound here
+      }
+      ifhitweapon
+      {
+        ifwasweapon RPG
+        {
+          sound SQUISHED
+          spawn BLOODPOOL
+          state standard_jibs
+          killit
+          }
+          ifwasweapon RADIUSEXPLOSION
+          {
+            sound SQUISHED
+            spawn BLOODPOOL
+            state standard_jibs
+            killit
+          }
+      }
+      ifcount RESPAWNACTORTIME
+      ifrespawn
+      {
+        addkills -1
+        spawn TRANSPORTERSTAR
+        cstat 257
+        strength SLIMEREGGSTRENGTH
+        ai AISLIMEREGGWAIT
+        // play sound here
+      }
+  }
+    break
   }
 
 ifai AISLIMEREGGGROW { state slimeregggrowstate break }
@@ -222,74 +219,74 @@ ifai AISLIMEREGGATTACKPLAYER state slimereggattackstate
 
 ifhitweapon
 {
-    spawn BLOOD
-    ifwasweapon SHRINKSPARK
-        {
-                ifstrength 600
-                {
-                  sound ACTOR_SHRINKING
-                  ai AISLIMEREGGSHRUNK
-                  // set shrunken 1
-                  break
-                }
-                else addstrength -60
-        }
-        else
-        ifwasweapon GROWSPARK
-          sound EXPANDERHIT
-		//guts JIBS2 1
-        ifdead
-        {
-                ifwasweapon FREEZEBLAST
-                {
-                  sound SOMETHINGFROZE
-                  spritepal 1
-                  ai AISLIMEREGGFROZEN
-                  strength 0
-                  // state freezeme
-                  break
-                }
-                ifwasweapon GROWSPARK
-                {
-					cstat 0
-					sound ACTOR_GROWING
-					ai AISLIMEREGGGROW
-					break
-                }
-                addkills 1
-                sound SLIM_DYING
-                ai AISLIMEREGGDYING
-                //guts JIBS6 8
-                ifspritepal 0 break
-                ifwasweapon RPG
-                {
-                        sound SQUISHED
-                        spawn BLOODPOOL
-                        killit
-                }
-                ifwasweapon RADIUSEXPLOSION
-                {
-                        sound SQUISHED
-                        spawn BLOODPOOL
-                        killit
-                }
-                break
-        }
-		
-        state random_wall_jibs
-        // play pain sound here
-        ifrnd 2
-                spawn BLOODPOOL
-		ifai AISLIMEREGGHIT nullop else
-        ifai AISLIMEREGGSHRUNK nullop else
-        {
-			ifrnd 16 
-			ai AISLIMEREGGHIT        
-        }
+  spawn BLOOD
+  ifwasweapon SHRINKSPARK
+  {
+    ifstrength 600
+    {
+      sound ACTOR_SHRINKING
+      ai AISLIMEREGGSHRUNK
+      // set shrunken 1
+      break
+    }
+    else addstrength -60
+  }
+  else
+  ifwasweapon GROWSPARK
+    sound EXPANDERHIT
+  //guts JIBS2 1
+  ifdead
+  {
+    ifwasweapon FREEZEBLAST
+    {
+      sound SOMETHINGFROZE
+      spritepal 1
+      ai AISLIMEREGGFROZEN
+      strength 0
+      // state freezeme
+      break
+    }
+    ifwasweapon GROWSPARK
+    {
+      cstat 0
+      sound ACTOR_GROWING
+      ai AISLIMEREGGGROW
+      break
+    }
+    addkills 1
+    sound SLIM_DYING
+    ai AISLIMEREGGDYING
+    //guts JIBS6 8
+    ifspritepal 0 break
+    ifwasweapon RPG
+    {
+      sound SQUISHED
+      spawn BLOODPOOL
+      killit
+    }
+    ifwasweapon RADIUSEXPLOSION
+    {
+      sound SQUISHED
+      spawn BLOODPOOL
+      killit
+    }
+    break
+  }
+  
+  state random_wall_jibs
+  // play pain sound here
+  ifrnd 2
+    spawn BLOODPOOL
+  ifai AISLIMEREGGHIT nullop else
+  ifai AISLIMEREGGSHRUNK nullop else
+  {
+    ifrnd 16 
+      ai AISLIMEREGGHIT        
+  }
 
 }
 enda
 
 eventloadactor SLIMEREGG
-    sizeat 48 40
+  sizeat 48 40
 enda

@@ -21,7 +21,7 @@ ai AICONTROLLERBOSSSHRUNK             CONTROLLERBOSSWALKING CONTROLLERBOSSSHRUNK
 ai AICONTROLLERBOSSGROW               CONTROLLERBOSSGROW CONTROLLERBOSSSTOPPED geth
 
 state controllerbosshitstate
-        ifcount 9 ai AICONTROLLERBOSSWAIT
+  ifcount 9 ai AICONTROLLERBOSSWAIT
 ends
 
 state controllerbosswaitstate
@@ -29,27 +29,26 @@ state controllerbosswaitstate
 ends
 
 state controllerbossseekstate
-       ifcansee ifpdistl 6144
-        ifrnd 2
-        {
-			// add sound here
-        }
-        ifcount 10
-        ifcansee ifpdistl 6144
-        ifp palive
-        {
-			ifrnd 8 
-            { 
-                ai AICONTROLLERBOSSATTACKPLAYER 
-                // add sound here
-            }
-        }
+  ifcansee ifpdistl 6144
+  ifrnd 2
+  {
+    // add sound here
+  }
+  ifcount 10
+  ifcansee ifpdistl 6144
+  ifp palive
+  {
+    ifrnd 8 
+    { 
+      ai AICONTROLLERBOSSATTACKPLAYER 
+      // add sound here
+    }
+  }
 
-        ifrnd 4 ifpdistg 6144 ai AICONTROLLERBOSSWAIT    
+  ifrnd 4 ifpdistg 6144 ai AICONTROLLERBOSSWAIT
 ends
 
 state controllerbossattackstate
-  
     ifcount 72
     ai AICONTROLLERBOSSSEEK
   else
@@ -69,8 +68,8 @@ ends
 
 
 state controllerbossgrowstate
-        state genericgrowcode
-        sizeto 255 192
+  state genericgrowcode
+  sizeto 255 192
 ends
 
 state controllerbossshrunkstate
@@ -78,23 +77,22 @@ state controllerbossshrunkstate
     ai AICONTROLLERBOSSWAIT
   else
     ifcount SHRUNKCOUNT
-        {
-          ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
-          else
+    {
+      ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
+      else
       sizeto 48 40
-        }
+    }
   else
     state genericshrunkcode
 ends
 
 state controllerbossfrozenstate
-
-    ifcount THAWTIME
+  ifcount THAWTIME
 	{
 		ai AICONTROLLERBOSSWAIT
 		getlastpal
-    }
-    else
+  }
+  else
 		ifcount FROZENDRIPTIME
     {
       ifactioncount 26
@@ -107,11 +105,11 @@ state controllerbossfrozenstate
     {
       ifwasweapon FREEZEBLAST
       {
-		strength 0
+		    strength 0
         break
       }
       addkills 1 
-          // state enemy_death
+      // state enemy_death
 
       ifrnd 84
         spawn BLOODPOOL
@@ -123,7 +121,6 @@ state controllerbossfrozenstate
     ifp pfacing
       ifpdistl FROZENQUICKKICKDIST
         pkick
-  
 ends
 
 state controllerbosschecksquished
@@ -144,80 +141,78 @@ state controllerbosschecksquished
 ifai 0
 {
 	// play alert sound here
-    cstat 257
+  cstat 257
 	ai AICONTROLLERBOSSSEEK
 }
 
 ifai AICONTROLLERBOSSDYING
 {
-        strength 0
+    strength 0
 		ifwasweapon RPG
 		{
-				sound SQUISHED
-				spawn BLOODPOOL
-				state standard_jibs
-				killit
+      sound SQUISHED
+      spawn BLOODPOOL
+      state standard_jibs
+      killit
 		}
 		ifwasweapon RADIUSEXPLOSION
 		{
-				sound SQUISHED
-				spawn BLOODPOOL
-				state standard_jibs
-				killit
+      sound SQUISHED
+      spawn BLOODPOOL
+      state standard_jibs
+      killit
 		}
-        
-        ifaction CONTROLLERBOSSDYING
-        {
-                ifactioncount 5
-                {
-                  cstat 0
-                  globalsound THUD
-                  action CONTROLLERBOSSDEADBODY
-                  break
-                }
-        }    
-        ifaction CONTROLLERBOSSDEADBODY
-        {
-          findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
-            ifn temp -1
-            {
-                  addkills -1
-                  spawn TRANSPORTERSTAR
-                  cstat 257
-                  strength CONTROLLERBOSSSTRENGTH
-                  ai AICONTROLLERBOSSWAIT
-                  // play sound here
-            }
-                ifhitweapon
-                {
-                        ifwasweapon RPG
-                        {
-                                sound SQUISHED
-                                spawn BLOODPOOL
-								state standard_jibs
-                                killit
-                        }
-                        ifwasweapon RADIUSEXPLOSION
-                        {
-                                sound SQUISHED
-                                spawn BLOODPOOL
-								state standard_jibs
-                                killit
-                        }
-                }
-                ifcount RESPAWNACTORTIME
-                ifrespawn
-                {
-                  addkills -1
-                  spawn TRANSPORTERSTAR
-                  cstat 257
-                  strength CONTROLLERBOSSSTRENGTH
-                  ai AICONTROLLERBOSSWAIT
-                  // play sound here
-                }
-        }
-        
+    ifaction CONTROLLERBOSSDYING
+    {
+      ifactioncount 5
+      {
+        cstat 0
+        globalsound THUD
+        action CONTROLLERBOSSDEADBODY
         break
+      }
+    }    
+    ifaction CONTROLLERBOSSDEADBODY
+    {
+      findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+      ifn temp -1
+      {
+        addkills -1
+        spawn TRANSPORTERSTAR
+        cstat 257
+        strength CONTROLLERBOSSSTRENGTH
+        ai AICONTROLLERBOSSWAIT
+        // play sound here
+      }
+      ifhitweapon
+      {
+        ifwasweapon RPG
+        {
+          sound SQUISHED
+          spawn BLOODPOOL
+          state standard_jibs
+          killit
+        }
+        ifwasweapon RADIUSEXPLOSION
+        {
+          sound SQUISHED
+          spawn BLOODPOOL
+          state standard_jibs
+          killit
+        }
+      }
+      ifcount RESPAWNACTORTIME
+      ifrespawn
+      {
+        addkills -1
+        spawn TRANSPORTERSTAR
+        cstat 257
+        strength CONTROLLERBOSSSTRENGTH
+        ai AICONTROLLERBOSSWAIT
+        // play sound here
+      }
+  }
+  break
 }
 
 
@@ -230,5 +225,5 @@ ifai AICONTROLLERBOSSSEEK state controllerbossseekstate
 enda
 
 eventloadactor CONTROLLERBOSS
-    sizeat 48 48
+  sizeat 48 48
 enda

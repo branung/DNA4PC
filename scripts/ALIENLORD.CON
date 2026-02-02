@@ -70,7 +70,6 @@ state alienlordseekstate
       ifrnd 64
       {
         ai AIALIENLORDSEEK
-        
       }
       else
         ai AIALIENLORDTHROW
@@ -305,7 +304,7 @@ ifhitweapon
   ifai AIALIENLORDSHRUNK nullop else
   {
     ifrnd 4
-    ai AIALIENLORDHIT        
+      ai AIALIENLORDHIT        
   }
   
   debris SCRAP1 1
