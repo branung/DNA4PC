@@ -1,5 +1,5 @@
 // Setting up Locator waypoints for Spiderlord
-// On SpiderLord sprite: set hitag as unique Id, set xvel as anount of Locators
+// On SpiderLord sprite: set hitag as unique Id, set xvel as amount of Locators
 // On Locator nodes: set hitag as sequence # (first one he goes to is 0, next one he'll got to is 1 etc), xvel is the enemy unique id
 
 gamevar locatorFound -1 2
