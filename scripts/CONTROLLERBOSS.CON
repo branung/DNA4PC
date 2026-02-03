@@ -1,6 +1,7 @@
 action CONTROLLERBOSSWALKING          0   2  5  1  22
 action CONTROLLERBOSSSTANDING         0   1  5  1  10
-action CONTROLLERBOSSATTACKING        11  5  1  1  30
+action CONTROLLERBOSSSHOOTING         11  5  1  1  30
+action CONTROLLERBOSSCLAWING          18  5  1  1  30
 action CONTROLLERBOSSDYING            25  7  1  1  8
 action CONTROLLERBOSSDEADBODY         32  1  1  1  10
 action CONTROLLERBOSSFROZEN           0   1  5  1  10
@@ -13,7 +14,8 @@ move CONTROLLERBOSSSHRUNKVELS 32
 
 ai AICONTROLLERBOSSWAIT               CONTROLLERBOSSSTANDING CONTROLLERBOSSSTOPPED geth
 ai AICONTROLLERBOSSSEEK               CONTROLLERBOSSWALKING CONTROLLERBOSSWALKVEL seekplayer
-ai AICONTROLLERBOSSATTACKPLAYER       CONTROLLERBOSSATTACKING CONTROLLERBOSSSTOPPED faceplayer
+ai AICONTROLLERBOSSSHOOTPLAYER        CONTROLLERBOSSSHOOTING CONTROLLERBOSSSTOPPED faceplayer
+ai AICONTROLLERBOSSCLAWPLAYER         CONTROLLERBOSSCLAWING CONTROLLERBOSSSTOPPED faceplayer
 ai AICONTROLLERBOSSDYING	            CONTROLLERBOSSDYING CONTROLLERBOSSSTOPPED geth
 ai AICONTROLLERBOSSHIT                CONTROLLERBOSSFLINCH CONTROLLERBOSSSTOPPED faceplayer
 ai AICONTROLLERBOSSFROZEN             CONTROLLERBOSSFROZEN CONTROLLERBOSSSTOPPED geth
@@ -35,12 +37,17 @@ state controllerbossseekstate
     // add sound here
   }
   ifcount 10
-  ifcansee ifpdistl 6144
   ifp palive
   {
+    ifcansee ifpdistl 1596
+    {
+      ai AICONTROLLERBOSSCLAWPLAYER
+      break
+    }
+    else ifcansee ifpdistl 6144
     ifrnd 8 
     { 
-      ai AICONTROLLERBOSSATTACKPLAYER 
+      ai AICONTROLLERBOSSSHOOTPLAYER 
       // add sound here
     }
   }
@@ -50,20 +57,48 @@ ends
 
 state controllerbossattackstate
     ifcount 72
+      ai AICONTROLLERBOSSSEEK
+  else
+    ifaction CONTROLLERBOSSSHOOTING
+      ifactioncount 2
+      {
+        sound PISTOL_FIRE
+        shoot SHOTSPARK1
+        shoot SHOTSPARK1
+        shoot SHOTSPARK1
+        shoot SHOTSPARK1
+        shoot SHOTSPARK1
+        shoot SHOTSPARK1
+        resetactioncount
+      }
+ends
+
+state controllerbossclawstate
+  ifcount 72
     ai AICONTROLLERBOSSSEEK
   else
-    ifaction CONTROLLERBOSSATTACKING
-      ifactioncount 2
-  {
-    sound PISTOL_FIRE
-    shoot SHOTSPARK1
-    shoot SHOTSPARK1
-    shoot SHOTSPARK1
-    shoot SHOTSPARK1
-    shoot SHOTSPARK1
-    shoot SHOTSPARK1
-    resetactioncount
-  }
+    ifaction CONTROLLERBOSSCLAWING
+      ifactioncount 4
+      {
+        ifpdistg 1596
+          ai AICONTROLLERBOSSSEEK
+        else ifp palive ifcansee
+        {
+          palfrom 16 16
+          addphealth -18
+          sound DUKE_GRUNT
+          resetactioncount
+          resetcount
+        }
+      }
+      else
+        ifcount 8
+        {
+          ifpdistl 1596
+            soundonce CONTROLLERATTACK
+          else
+            nullop
+        }
 ends
 
 
@@ -218,7 +253,8 @@ ifai AICONTROLLERBOSSDYING
 
 ifai AICONTROLLERBOSSWAIT state controllerbosswaitstate else
 ifai AICONTROLLERBOSSHIT state controllerbosshitstate else
-ifai AICONTROLLERBOSSATTACKPLAYER state controllerbossattackstate else
+ifai AICONTROLLERBOSSSHOOTPLAYER state controllerbossattackstate else
+ifai AICONTROLLERBOSSCLAWPLAYER state controllerbossclawstate else
 ifai AICONTROLLERBOSSSEEK state controllerbossseekstate
 
 
