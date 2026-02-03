@@ -54,6 +54,7 @@ appendevent EVENT_ENTERLEVEL
         case 13
         case 16
         {
+            readgamevar dna_progression
             ifl dna_progression LEVEL
             set dna_progression LEVEL
             savegamevar dna_progression
