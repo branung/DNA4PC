@@ -24,3 +24,4 @@
 - [ ] Shrinker and Freezer share an ammo type and ammo count in the original
 - [ ] Shrinker has a wider attack field that can cause you to shrink yourself
 - [ ] Freezer works identical to the shrinker, one shot that simply freezes an enemy rather than shrinks, but without any wide attack field
+- [ ] Ability to toggle altered lotags on item pickups (ex: Lead Cannon and atomic health secret in map07 originally has them tagged with lotag 3. This was removed, but can possibly be toggled back on for purists)
