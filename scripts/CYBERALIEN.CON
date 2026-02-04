@@ -258,7 +258,7 @@ ifhitweapon
   guts JIBS2 1
   ifdead
   {
-    spawn DNA_BLUEKEY
+    state enemy_deathtrigger
       ifwasweapon FREEZEBLAST
       {
         sound SOMETHINGFROZE
@@ -313,4 +313,5 @@ enda
 
 eventloadactor CYBERALIEN
   sizeat 54 54
+  state enemy_fxload
 enda

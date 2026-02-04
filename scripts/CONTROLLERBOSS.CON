@@ -2,7 +2,7 @@ action CONTROLLERBOSSWALKING          0   2  5  1  22
 action CONTROLLERBOSSSTANDING         0   1  5  1  10
 action CONTROLLERBOSSSHOOTING         11  5  1  1  30
 action CONTROLLERBOSSCLAWING          18  5  1  1  30
-action CONTROLLERBOSSDYING            25  7  1  1  8
+action CONTROLLERBOSSDYING            25  7  1  1  24
 action CONTROLLERBOSSDEADBODY         32  1  1  1  10
 action CONTROLLERBOSSFROZEN           0   1  5  1  10
 action CONTROLLERBOSSFLINCH           25  1  1  1  10
@@ -161,11 +161,13 @@ ends
 state controllerbosschecksquished
   ifsquished
   {
-    addkills 1
-    sound SQUISHED
-    state standard_jibs
-    state random_ooz
-    killit
+    ifai AICONTROLLERBOSSDYING nullop
+    else strength 0
+    // Check if Squish! message is displayed to prevent it from showing
+    ife player[].ftq 10 
+    {
+      setp[].fta 0
+    }
   }
 ends
 
@@ -209,43 +211,43 @@ ifai AICONTROLLERBOSSDYING
     }    
     ifaction CONTROLLERBOSSDEADBODY
     {
-      findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
-      ifn temp -1
-      {
-        addkills -1
-        spawn TRANSPORTERSTAR
-        cstat 257
-        strength CONTROLLERBOSSSTRENGTH
-        ai AICONTROLLERBOSSWAIT
-        // play sound here
-      }
-      ifhitweapon
-      {
-        ifwasweapon RPG
-        {
-          sound SQUISHED
-          spawn BLOODPOOL
-          state standard_jibs
-          killit
-        }
-        ifwasweapon RADIUSEXPLOSION
-        {
-          sound SQUISHED
-          spawn BLOODPOOL
-          state standard_jibs
-          killit
-        }
-      }
-      ifcount RESPAWNACTORTIME
-      ifrespawn
-      {
-        addkills -1
-        spawn TRANSPORTERSTAR
-        cstat 257
-        strength CONTROLLERBOSSSTRENGTH
-        ai AICONTROLLERBOSSWAIT
-        // play sound here
-      }
+      // findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+      // ifn temp -1
+      // {
+      //   addkills -1
+      //   spawn TRANSPORTERSTAR
+      //   cstat 257
+      //   strength CONTROLLERBOSSSTRENGTH
+      //   ai AICONTROLLERBOSSWAIT
+      //   // play sound here
+      // }
+      // ifhitweapon
+      // {
+      //   ifwasweapon RPG
+      //   {
+      //     sound SQUISHED
+      //     spawn BLOODPOOL
+      //     state standard_jibs
+      //     killit
+      //   }
+      //   ifwasweapon RADIUSEXPLOSION
+      //   {
+      //     sound SQUISHED
+      //     spawn BLOODPOOL
+      //     state standard_jibs
+      //     killit
+      //   }
+      // }
+      // ifcount RESPAWNACTORTIME
+      // ifrespawn
+      // {
+      //   addkills -1
+      //   spawn TRANSPORTERSTAR
+      //   cstat 257
+      //   strength CONTROLLERBOSSSTRENGTH
+      //   ai AICONTROLLERBOSSWAIT
+      //   // play sound here
+      // }
   }
   break
 }
@@ -257,9 +259,24 @@ ifai AICONTROLLERBOSSSHOOTPLAYER state controllerbossattackstate else
 ifai AICONTROLLERBOSSCLAWPLAYER state controllerbossclawstate else
 ifai AICONTROLLERBOSSSEEK state controllerbossseekstate
 
+ifhitweapon {
+   ifn fx_hitag 0 { // trigger hint cutscene
+    setarray fx_preactivate[fx_hitag] 1
+    setvar fx_hitag 0
+    break
+  }
+}
+ifdead {
+  soundonce A_EXPLOSION 
+  soundonce ALIENLORDDEATH 
+  addkills 1
+  ai AICONTROLLERBOSSDYING
+  break
+}
 
 enda
 
 eventloadactor CONTROLLERBOSS
   sizeat 48 48
+  state enemy_fxload
 enda
