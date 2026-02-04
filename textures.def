@@ -481,6 +481,7 @@ texture 3983 { pal 0 { file "tiles/3983.png" } }
 texture 3984 { pal 0 { file "tiles/3984.png" } }
 texture 3985 { pal 0 { file "tiles/3985.png" } }
 texture 3986 { pal 0 { file "tiles/3986.png" } }
+texture 3987 { pal 0 { file "tiles/3987.png" } }
 
 texture 4001 { pal 0 { file "tiles/4001.png" } }
 texture 4002 { pal 0 { file "tiles/4002.png" } }

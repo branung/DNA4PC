@@ -2,8 +2,9 @@ spriteflags CYBERALIEN 4194304
 
 action CYBERALIENWALKING          0   3  5  1  22
 action CYBERALIENSTANDING         0   1  5  1  10
-action CYBERALIENSHOOTING        16  6  1  1  30
-action CYBERALIENLOBBING         35  4  1  1  25
+action CYBERALIENWIMPYSHOT        16  1  1  1  30 // This is his one frame shot from the original
+action CYBERALIENSHOOTING         16  6  1  1  30 // This is his full shooting animation that's seemingly never used
+action CYBERALIENLOBBING          35  4  1  1  25
 action CYBERALIENDYING            29  5  1  1  8
 action CYBERALIENDEADBODY         33  1  1  1  10
 action CYBERALIENFROZEN           0   1  5  1  10
@@ -16,6 +17,7 @@ move CYBERALIENSHRUNKVELS 32
 
 ai AICYBERALIENWAIT               CYBERALIENSTANDING CYBERALIENSTOPPED geth
 ai AICYBERALIENSEEK               CYBERALIENWALKING CYBERALIENWALKVEL seekplayer
+ai AICYBERALIENSHOOT              CYBERALIENWIMPYSHOT CYBERALIENSTOPPED faceplayer
 ai AICYBERALIENLOBSHOT            CYBERALIENLOBBING CYBERALIENSTOPPED faceplayer
 ai AICYBERALIENDYING	            CYBERALIENDYING CYBERALIENSTOPPED geth
 ai AICYBERALIENHIT                CYBERALIENFLINCH CYBERALIENSTOPPED faceplayer
@@ -24,7 +26,7 @@ ai AICYBERALIENSHRUNK             CYBERALIENWALKING CYBERALIENSHRUNKVELS fleeene
 ai AICYBERALIENGROW               CYBERALIENGROW CYBERALIENSTOPPED geth
 
 state cyberalienhitstate
-        ifcount 9 ai AICYBERALIENWAIT
+  ifcount 9 ai AICYBERALIENWAIT
 ends
 
 state cyberalienwaitstate
@@ -35,16 +37,19 @@ state cyberalienseekstate
   ifcansee ifpdistl 6144
   ifrnd 2
   {
-    soundonce SPIDERLORDROAM
+    soundonce CYBERALIENROAM
   }
   ifcount 10
   ifcansee ifpdistl 6144
   ifp palive
   {
     ifrnd 8 
-    { 
-      sound BOS1_ATTACK2
+    {
       ai AICYBERALIENLOBSHOT 
+    }
+    else ifrnd 2
+    {
+      ai AICYBERALIENSHOOT
     }
   }
 
@@ -58,7 +63,10 @@ ifcansee
     {
       resetactioncount
       sound BOS1_ATTACK2
-      shoot MORTER
+      eshoot CYBERALIENPBOMB
+      getactor[RETURN].zvel temp
+      subvar temp 4000 // Set this to change height of lob
+      setactor[RETURN].zvel temp
     }
     else
       ifcount 64
@@ -69,6 +77,17 @@ ifcansee
     ai AICYBERALIENSEEK 
 ends
 
+state cyberalienshootstate
+  ifaction CYBERALIENWIMPYSHOT
+    ifactioncount 1
+    {
+      sound A_PISTOL
+      shoot SHOTSPARK1
+      shoot SHOTSPARK1
+      resetactioncount
+      ai AICYBERALIENSEEK 
+    }
+ends
 
 state cyberaliengrowstate
   state genericgrowcode
@@ -215,6 +234,7 @@ ifai AICYBERALIENFROZEN { state cyberalienfrozenstate break }
 ifai AICYBERALIENSHRUNK state cyberalienshrunkstate else
 ifai AICYBERALIENWAIT state cyberalienwaitstate else
 ifai AICYBERALIENHIT state cyberalienhitstate else
+ifai AICYBERALIENSHOOT state cyberalienshootstate else
 ifai AICYBERALIENLOBSHOT state cyberalienlobstate else
 ifai AICYBERALIENSEEK state cyberalienseekstate
 
@@ -223,14 +243,14 @@ ifhitweapon
 {
   ifwasweapon SHRINKSPARK
   {
-          ifstrength 600
-          {
-            sound ACTOR_SHRINKING
-            ai AICYBERALIENSHRUNK
-            // set shrunken 1
-            break
-          }
-          else addstrength -60
+    ifstrength 600
+    {
+      sound ACTOR_SHRINKING
+      ai AICYBERALIENSHRUNK
+      // set shrunken 1
+      break
+    }
+    else addstrength -60
   }
   else
   ifwasweapon GROWSPARK
@@ -292,5 +312,5 @@ ifhitweapon
 enda
 
 eventloadactor CYBERALIEN
-  sizeat 64 64
+  sizeat 54 54
 enda

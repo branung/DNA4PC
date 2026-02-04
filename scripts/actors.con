@@ -784,6 +784,8 @@ prependstate random_wall_jibs
           palfrom 16 0 64
         ifwasweapon ALIENLORDPROJECTILE
           palfrom 48 32
+        ifwasweapon CYBERALIENPBOMB
+          palfrom 48 16
         }
     }
 }
