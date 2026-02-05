@@ -967,7 +967,21 @@ defstate switchload
     set fx_int fx_owner
     geta .hitag temp
     ife temp 0 {
-        set fx_hitag 431
+        switch sprite[].picnum
+        {
+          case DNA_SWITCH2A
+          case DNA_SWITCH2B
+            set fx_hitag A_SWITCH
+            break
+          case DNA_SWITCH4A
+          case DNA_SWITCH4B
+            set fx_hitag A_ALIENSWITCH
+            break
+          default
+            set fx_hitag A_ACTIVATE
+            break
+        }
+        endswitch
     } else {
         set fx_hitag temp
     }
