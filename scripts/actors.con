@@ -120,6 +120,15 @@ prependstate quikweaponget
   terminate
 ends
 
+// Remove Enforcer's chance to drop gun and only drop ammo
+prependstate drop_chaingun
+  ifrnd SPAWNAMMOODDS
+  {
+    spawn BATTERYAMMO
+  }
+  terminate
+ends
+
 // Have to copy this whole state just to remove the shield drop chance
 prependstate checkpighitstate
   spawn BLOOD
