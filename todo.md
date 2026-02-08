@@ -1,6 +1,8 @@
 # TODO
 
 ### Bugs:
+- [ ] If a Pig cop is frozen and allowed to thaw, they remain in their frozen palette and can't be frozen again. They also have a chance of dropping two shotguns on freeze when they shouldn't drop any.
+- [ ] Elevator for the lava pit in map04 always gets stuck the first time the player tries using it while in the pit.
 - [x] The elevator secret in level 2 is broken
 - [x] The Lead Cannon sometimes uses 1 or 5 bullets in a shot rather than 4
 	- Needs repro steps!
@@ -25,3 +27,6 @@
 - [ ] Shrinker has a wider attack field that can cause you to shrink yourself
 - [ ] Freezer works identical to the shrinker, one shot that simply freezes an enemy rather than shrinks, but without any wide attack field
 - [ ] Ability to toggle altered lotags on item pickups (ex: Lead Cannon and atomic health secret in map07 originally has them tagged with lotag 3. This was removed, but can possibly be toggled back on for purists)
+- [ ] Toggle to prevent enemy gibbing like the original
+- [ ] Prevent bullet and blood decals from showing in skyboxes and moving crushers
+- [ ] Add GBA weapon carousel
