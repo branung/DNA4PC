@@ -1,3 +1,5 @@
+spriteflags CONTROLLERBOSS 1048576
+
 action CONTROLLERBOSSWALKING          0   2  5  1  22
 action CONTROLLERBOSSSTANDING         0   1  5  1  10
 action CONTROLLERBOSSSHOOTING         11  5  1  1  30

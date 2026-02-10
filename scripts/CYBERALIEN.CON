@@ -1,4 +1,4 @@
-spriteflags CYBERALIEN 4194304
+spriteflags CYBERALIEN 5242880
 
 action CYBERALIENWALKING          0   3  5  1  22
 action CYBERALIENSTANDING         0   1  5  1  10

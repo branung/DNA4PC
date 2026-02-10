@@ -707,12 +707,15 @@ useractor notenemy DNA_CHIPKEY 0
     state access_shared
 enda
 useractor notenemy DNA_BLUEKEY 0
+    sizeat 52 44
     state access_shared
 enda
 useractor notenemy DNA_REDKEY 0
+    sizeat 52 44
     state access_shared
 enda
 useractor notenemy DNA_YELLOWKEY 0
+    sizeat 52 44
     state access_shared
 enda
 

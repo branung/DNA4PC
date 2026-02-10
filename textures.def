@@ -598,7 +598,8 @@ texture 5171 { pal 0 { file "tiles/5171.png" } }
 texture 5172 { pal 0 { file "tiles/5172.png" } }
 texture 5173 { pal 0 { file "tiles/5173.png" } }
 texture 5174 { pal 0 { file "tiles/5174.png" } }
-
+texture 5175 { pal 0 { file "tiles/5175.png" } }
+texture 5176 { pal 0 { file "tiles/5176.png" } }
 texture 5177 { pal 0 { file "tiles/5177.png" } }
 texture 5178 { pal 0 { file "tiles/5178.png" } }
 texture 5179 { pal 0 { file "tiles/5179.png" } }

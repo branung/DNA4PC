@@ -445,13 +445,45 @@ defineprojectile GOLDENGUN_PROJ PROJ_SPAWNS SMALLSMOKE
 defineprojectile GOLDENGUN_PROJ PROJ_XREPEAT 3
 defineprojectile GOLDENGUN_PROJ PROJ_YREPEAT 3
 
+define GREYPROJECTILESPAWN 5169 // Starting tile for animation when projectile hits a wall
+
+action  GREYREVPROJSPAWN         0   8  1  1  0
+
+ai PROJSPAWN GREYREVPROJSPAWN 0
+
+eventloadactor GREYPROJECTILESPAWN
+    seta .cstat 0
+enda
+
+useractor notenemy GREYPROJECTILESPAWN GREYPROJECTILESTRENGTH
+{
+    ifaction 0 {
+        seta .xrepeat 40
+        seta .yrepeat 40
+        geta .yoffset temp2        
+        sub temp2 10
+        seta .yoffset temp2
+        // geta .xoffset temp
+        // sub temp 6
+        // seta .xoffset temp
+        ai PROJSPAWN
+    }
+    ifai PROJSPAWN {
+        ifactioncount 8 {
+            killit
+        }
+    }
+}
+enda
+
 defineprojectile GREYPROJECTILE PROJ_WORKSLIKE 32770
+defineprojectile GREYPROJECTILE PROJ_SPAWNS GREYPROJECTILESPAWN
 defineprojectile GREYPROJECTILE PROJ_VEL 500
 defineprojectile GREYPROJECTILE PROJ_EXTRA GREYPROJECTILESTRENGTH
 //defineprojectile GREYPROJECTILE PROJ_ISOUND EXPANDERSHOOT
 defineprojectile GREYPROJECTILE PROJ_HITRADIUS 100
-defineprojectile GREYPROJECTILE PROJ_XREPEAT 26
-defineprojectile GREYPROJECTILE PROJ_YREPEAT 26
+defineprojectile GREYPROJECTILE PROJ_XREPEAT 40
+defineprojectile GREYPROJECTILE PROJ_YREPEAT 40
 defineprojectile GREYPROJECTILE PROJ_OFFSET -128
 
 // defineprojectile GREYREVIVEPROJECTILE PROJ_WORKSLIKE 32770
