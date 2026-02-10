@@ -3,7 +3,7 @@
 ### Bugs:
 - [ ] If a Pig cop is frozen and allowed to thaw, they remain in their frozen palette and can't be frozen again. They also have a chance of dropping two shotguns on freeze when they shouldn't drop any.
 	- The issue stems from the prependstate checkpighitstate in actors.con, but not sure why.
-- [ ] Elevator for the lava pit in map04 always gets stuck the first time the player tries using it while in the pit.
+- [x] Elevator for the lava pit in map04 always gets stuck the first time the player tries using it while in the pit.
 - [x] The elevator secret in level 2 is broken
 - [x] The Lead Cannon sometimes uses 1 or 5 bullets in a shot rather than 4
 	- Needs repro steps!

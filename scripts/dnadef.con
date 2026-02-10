@@ -460,6 +460,7 @@ useractor notenemy GREYPROJECTILESPAWN GREYPROJECTILESTRENGTH
     ifaction 0 {
         seta .xrepeat 40
         seta .yrepeat 40
+        // Offset is off when spawned from projectile, so this tries to correct it
         geta .yoffset temp2        
         sub temp2 10
         seta .yoffset temp2
