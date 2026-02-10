@@ -140,7 +140,7 @@ spriteflags GREY 4194304
 
 action GREYWALKING          0   3  5  1  22
 action GREYSTANDING         16  1  5  1  10
-action GREYATTACKING        23  4  1  1  16
+action GREYATTACKING        23  4  1  1  20
 action GREYREVIVING         28  5  1  1  16
 action GREYDYING            39  5  1  1  8
 action GREYDEADBODY         43  1  1  1  10
@@ -205,13 +205,13 @@ ends
 
 state greyattackstate
   
-  ifcount 16
+  ifcount 19
   {
-    ifcount 17
+    ifcount 20
       ai AIGREYSEEK
   }
   else
-	ifcount 15
+	ifcount 18
   {
     geta[THISACTOR].z greyprojpos
     setvarvar greycurrpos greyprojpos
@@ -228,16 +228,15 @@ ends
 
 state greyrevivestate
   
-  ifcount 16
+  ifcount 15
   {
-    ifcount 17
+    ifcount 16
       ai AIGREYSEEK
   }
   else
-	ifcount 15
+	ifcount 14
   {
     //findnearspritez GREYPROJECTILE 5120 20480 temp
-    //Need to find a way to look for multiple enemy fallen sprites and have grey face it 
     geta[THISACTOR].z greyprojpos
     setvarvar greycurrpos greyprojpos
     subvar greyprojpos 9000
