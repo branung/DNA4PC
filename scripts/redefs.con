@@ -4,9 +4,13 @@ define MAXCHAINGUNAMMO         300
 define MAXRPGAMMO               20
 define MAXHANDBOMBAMMO          20
 define MAXTRIPBOMBAMMO         200
+define MAXFREEZEAMMO            50
 
 //Ammo pickup size redefinitions
 define CHAINGUNAMMOAMOUNT 20
+
+// Prevent Freeze ricochet
+define NUMFREEZEBOUNCES 1
 
 //Ammo spawn odds redefinitions
 define SPAWNAMMOODDS           256

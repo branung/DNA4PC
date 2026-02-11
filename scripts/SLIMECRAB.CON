@@ -234,17 +234,16 @@ ifhitweapon
   ifwasweapon GROWSPARK
     sound EXPANDERHIT
 		//guts JIBS2 1
+  ifwasweapon FREEZEBLAST
+  {
+    sound SOMETHINGFROZE
+    spritepal 1
+    ai AICRABFROZEN
+    //strength 0
+    break
+  }
   ifdead
   {
-    ifwasweapon FREEZEBLAST
-    {
-      sound SOMETHINGFROZE
-      spritepal 1
-      ai AICRABFROZEN
-      strength 0
-      // state freezeme
-      break
-    }
     ifwasweapon GROWSPARK
     {
       cstat 0

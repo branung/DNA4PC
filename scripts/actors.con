@@ -129,7 +129,48 @@ prependstate drop_chaingun
   terminate
 ends
 
-// Have to copy this whole state just to remove the shield drop chance
+// ----------------------------------------------------
+// THE BIG STANDARD ENEMY HIT STATE CODE BLOCK
+// In order to change freeze logic, hit states must be prepended
+// ----------------------------------------------------
+
+prependstate checktroophit
+  ifwasweapon FREEZEBLAST
+  {
+    sound SOMETHINGFROZE
+    spritepal 1
+    move 0
+    action ATROOPFROZEN
+    // strength 0
+    terminate
+  }
+ends
+
+prependstate checklizhit
+  ifwasweapon FREEZEBLAST
+  {
+    sound SOMETHINGFROZE
+    spritepal 1
+    move 0
+    action ALIZFROZEN
+    //strength 0
+    terminate
+  }
+ends
+
+prependstate checkoctahitstate
+  ifwasweapon FREEZEBLAST
+  {
+    sound SOMETHINGFROZE
+    spritepal 1
+    move 0
+    action AOCTAFROZEN
+    // strength 0
+    terminate
+  }
+ends
+
+// Also have to copy this whole state just to remove the shield drop chance
 prependstate checkpighitstate
   spawn BLOOD
   ifdead
@@ -145,15 +186,6 @@ prependstate checkpighitstate
 
     addkills 1
 
-    ifwasweapon FREEZEBLAST
-    {
-      sound SOMETHINGFROZE
-      spritepal 1
-      move 0
-      action APIGFROZEN
-      strength 0
-      break
-    }
     ifwasweapon RADIUSEXPLOSION
     {
       sound SQUISHED
@@ -173,6 +205,16 @@ prependstate checkpighitstate
   }
   else
   {
+    ifwasweapon FREEZEBLAST
+    {
+      sound SOMETHINGFROZE
+      spritepal 1
+      move 0
+      action APIGFROZEN
+      //strength 0
+      terminate
+    }
+
     sound PIG_PAIN
     state random_wall_jibs
 

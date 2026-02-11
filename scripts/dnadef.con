@@ -447,7 +447,7 @@ defineprojectile GOLDENGUN_PROJ PROJ_YREPEAT 3
 
 define GREYPROJECTILESPAWN 5169 // Starting tile for animation when projectile hits a wall
 
-action  GREYREVPROJSPAWN         0   8  1  1  0
+action  GREYREVPROJSPAWN         0   8  1  1  4
 
 ai PROJSPAWN GREYREVPROJSPAWN 0
 

@@ -674,6 +674,10 @@ gamevar WEAPON8_FIRESOUND A_PISTOL 1
 gamevar WEAPON8_FLAGS 512 1
 gamevar WEAPON8_SOUND2SOUND 169 1
 
+// Freezethrower
+gamevar WEAPON9_TOTALTIME 18 1
+gamevar WEAPON9_FIREDELAY 17 1
+
 // Replace select sound for standard weapons 
 //gamevar WEAPON0_SELECTSOUND A_PICKWEAPON 1
 gamevar WEAPON1_SELECTSOUND A_PICKWEAPON 1
