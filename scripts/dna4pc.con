@@ -17,6 +17,12 @@ include scripts/weapons.con
 
 damageeventtile 1405
 
+// Display mod version in logs
+definequote 165 DNA4PC v0.99
+appendevent EVENT_INITCOMPLETE
+    userquote 165
+endevent
+
 onevent EVENT_NEWGAME
     readgamevar dna_localization
     readgamevar dna_cutscenes

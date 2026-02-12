@@ -12,7 +12,7 @@ spriteflags SPIDERLORD 4194304
 action SPIDERLORDWALKING          0   4  5  1  22
 action SPIDERLORDSTANDING         0   1  5  1  10
 action SPIDERLORDATTACKING        21  2  1  1  30
-action SPIDERLORDDYING            30  5  1  1  8
+action SPIDERLORDDYING            30  5  1  1  16
 action SPIDERLORDDEADBODY         34  1  1  1  10
 action SPIDERLORDFROZEN           0   1  5  1  10
 action SPIDERLORDFLINCH           24  1  5  1  10
@@ -351,7 +351,10 @@ ifhitweapon
     guts JIBS2 1
   ifdead
   {
-    spawn DNA_REDKEY
+    ifn fx_extra -1 {
+        espawnvar fx_extra
+        setvar fx_extra -1
+    }
     ifwasweapon FREEZEBLAST
     {
       sound SOMETHINGFROZE
@@ -405,7 +408,8 @@ enda
 
 eventloadactor SPIDERLORD
     sizeat 60 60
-
+    
+    // I should rewrite this to use enemy_fxload...
     ife enemyTag 0 {
     geta[THISACTOR].hitag temp
     ifn temp 0 {
@@ -420,6 +424,9 @@ eventloadactor SPIDERLORD
       seta .xvel 0
     }
   }
+
+  geta .extra fx_extra // defined seperately from enemy_fxload so it doesn't conflict with nonsense above
+  seta .extra -1
 
   setactorvar[THISACTOR].locatorID 0
 

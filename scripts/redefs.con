@@ -4,9 +4,13 @@ define MAXCHAINGUNAMMO         300
 define MAXRPGAMMO               20
 define MAXHANDBOMBAMMO          20
 define MAXTRIPBOMBAMMO         200
+define MAXFREEZEAMMO            50
 
 //Ammo pickup size redefinitions
 define CHAINGUNAMMOAMOUNT 20
+
+// Prevent Freeze ricochet
+define NUMFREEZEBOUNCES 1
 
 //Ammo spawn odds redefinitions
 define SPAWNAMMOODDS           256
@@ -122,6 +126,13 @@ define LIZMANFEEDING 6479
 define LIZMANJUMP 6484
 define LIZMANDEADSPRITE 6504
 define TANK 6741
+define NEWBEAST 6770
+define NEWBEASTSTAYPUT 6771
+define NEWBEASTJUMP 6850
+define NEWBEASTHANG 6830
+define NEWBEASTHANGDEAD 6831
+define COMMANDER 7050
+define COMMANDERSTAYPUT 7051
 define APLAYER 7165
 define PLAYERONWATER 7180
 define DUKELYINGDEAD 7278

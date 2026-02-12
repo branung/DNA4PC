@@ -1,6 +1,6 @@
 actor ALIENLORDPROJECTILE ALIENLORDPROJECTILESTRENGTH enda
 
-spriteflags ALIENLORD 4194304
+spriteflags ALIENLORD 5242880
 
 gamevar stayPutSect 0 2
 
@@ -260,7 +260,7 @@ ifhitweapon
     guts JIBS2 1
   ifdead
   {
-    spawn DNA_BLUEKEY
+    state enemy_deathtrigger
     ifwasweapon FREEZEBLAST
     {
       sound SOMETHINGFROZE
@@ -315,6 +315,7 @@ enda
 
 eventloadactor ALIENLORD
   sizeat 64 64
+  state enemy_fxload
   getactor[THISACTOR].sectnum stayPutSect
   seta[THISACTOR].htactorstayput stayPutSect
 enda

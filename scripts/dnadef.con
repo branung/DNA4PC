@@ -142,6 +142,7 @@ define CONTROLLERBOSS 5296
 define CONTROLLERBOSSSTRENGTH 2500
 define CYBERALIEN 3948
 define CYBERALIENSTRENGTH 3000
+define CYBERALIENPBOMB 3987
 //define A51ALARM 5600
 define MBMACHINE 5601
 define CUTCAM 5602
@@ -384,16 +385,21 @@ define ARMORSHARD 3919
 define PISTOLAMMOBOX 3945
 define SHOTGUNSHELLS 3946
 define HEALTHPACKSMALL 3918
+define ENERGYPACK 5697
 
 define ARMORSHARD_AMOUNT     5
 define PISTOLAMMOBOXAMOUNT   20
 define SHOTGUNSHELLSAMOUNT   4
+define ENERGYPACKAMOUNT      10
+define ENERGYCLIPAMOUNT      5
 
 definequote 126  +5 ARMOR
 definequote 127  +5 ARMOUR
 definequote 128  AMMO BOX
 definequote 129  4 SHELLS
 definequote 130  +5 HEALTH
+
+definequote 166  ENERGY PACK
 
 //gamevar for checking music before playing cutscene
 gamevar currmusic 0
@@ -444,13 +450,46 @@ defineprojectile GOLDENGUN_PROJ PROJ_SPAWNS SMALLSMOKE
 defineprojectile GOLDENGUN_PROJ PROJ_XREPEAT 3
 defineprojectile GOLDENGUN_PROJ PROJ_YREPEAT 3
 
+define GREYPROJECTILESPAWN 5169 // Starting tile for animation when projectile hits a wall
+
+action  GREYREVPROJSPAWN         0   8  1  1  4
+
+ai PROJSPAWN GREYREVPROJSPAWN 0
+
+eventloadactor GREYPROJECTILESPAWN
+    seta .cstat 0
+enda
+
+useractor notenemy GREYPROJECTILESPAWN GREYPROJECTILESTRENGTH
+{
+    ifaction 0 {
+        seta .xrepeat 40
+        seta .yrepeat 40
+        // Offset is off when spawned from projectile, so this tries to correct it
+        geta .yoffset temp2        
+        sub temp2 10
+        seta .yoffset temp2
+        // geta .xoffset temp
+        // sub temp 6
+        // seta .xoffset temp
+        ai PROJSPAWN
+    }
+    ifai PROJSPAWN {
+        ifactioncount 8 {
+            killit
+        }
+    }
+}
+enda
+
 defineprojectile GREYPROJECTILE PROJ_WORKSLIKE 32770
+defineprojectile GREYPROJECTILE PROJ_SPAWNS GREYPROJECTILESPAWN
 defineprojectile GREYPROJECTILE PROJ_VEL 500
 defineprojectile GREYPROJECTILE PROJ_EXTRA GREYPROJECTILESTRENGTH
 //defineprojectile GREYPROJECTILE PROJ_ISOUND EXPANDERSHOOT
 defineprojectile GREYPROJECTILE PROJ_HITRADIUS 100
-defineprojectile GREYPROJECTILE PROJ_XREPEAT 26
-defineprojectile GREYPROJECTILE PROJ_YREPEAT 26
+defineprojectile GREYPROJECTILE PROJ_XREPEAT 40
+defineprojectile GREYPROJECTILE PROJ_YREPEAT 40
 defineprojectile GREYPROJECTILE PROJ_OFFSET -128
 
 // defineprojectile GREYREVIVEPROJECTILE PROJ_WORKSLIKE 32770
@@ -482,6 +521,20 @@ defineprojectile ALIENLORDPROJECTILE PROJ_XREPEAT 32
 defineprojectile ALIENLORDPROJECTILE PROJ_YREPEAT 32
 defineprojectile ALIENLORDPROJECTILE PROJ_OFFSET -128
 
+defineprojectile CYBERALIENPBOMB PROJ_WORKSLIKE 104454
+defineprojectile CYBERALIENPBOMB PROJ_BOUNCES 3
+defineprojectile CYBERALIENPBOMB PROJ_SPAWNS EXPLOSION2
+defineprojectile CYBERALIENPBOMB PROJ_VEL 600
+defineprojectile CYBERALIENPBOMB PROJ_EXTRA 30
+defineprojectile CYBERALIENPBOMB PROJ_EXTRA_RAND 5
+defineprojectile CYBERALIENPBOMB PROJ_HITRADIUS 2250
+defineprojectile CYBERALIENPBOMB PROJ_DROP -250
+defineprojectile CYBERALIENPBOMB PROJ_RANGE 30
+defineprojectile CYBERALIENPBOMB PROJ_SXREPEAT 128
+defineprojectile CYBERALIENPBOMB PROJ_SYREPEAT 128
+defineprojectile CYBERALIENPBOMB PROJ_XREPEAT 24
+defineprojectile CYBERALIENPBOMB PROJ_YREPEAT 24
+defineprojectile CYBERALIENPBOMB PROJ_OFFSET 324
 
 // Each ripped sound is stored at 8000Hz but in actuality it's very close to 7500Hz.
 // To get the correct pitch use -80 as the base value
@@ -507,6 +560,7 @@ define A_OCTOATTACK 415
 define A_OCTOROAM 416
 define A_CRABDYING 418
 define EGGHATCH 419
+define CYBERALIENROAM 592
 define A_CRABATTACK SLIMERATTACK
 //          SOUND TOKEN                 SOUND FILE                        Pitch Low--High   Prio  Type  Distance
 definesound GREYATTACK                  sounds/enemy/greyattack.wav                  -80   -80    3     0     7680
@@ -518,8 +572,9 @@ definesound SPIDERLORDDEATH             sounds/enemy/spiderlord_dead.wav        
 definesound CONTROLLERATTACK            sounds/enemy/controller_attack.wav           -80   -80    3     0     0
 definesound ALIENLORDROAM               sounds/enemy/alienlord_roam.wav              -80   -80    3     0     0
 definesound ALIENLORDDEATH              sounds/enemy/alienlord_dead.wav              -80   -80    3     0     0
-definesound A_PIGDYING                  sounds/enemy/pigdying.wav              -80   -80    3     0     0
-definesound A_PIGROAM                   sounds/enemy/pigroam.wav              -80   -80    3     0     0
+definesound A_PIGDYING                  sounds/enemy/pigdying.wav                    -80   -80    3     0     0
+definesound A_PIGROAM                   sounds/enemy/pigroam.wav                     -80   -80    3     0     0
+definesound CYBERALIENROAM              sounds/enemy/cyberalien_roam.wav             -80   -80    3     0     0
 //DN:A Environment/interact
 define A_STEPSOUND 430
 define A_ACTIVATE 431
@@ -1085,7 +1140,7 @@ definequote 62        +25 HEALTH
 definequote 63        MP5 AMMO
 definequote 64        5 ROCKETS
 definequote 65        AMMO CLIP
-//definequote 66        AMMO FOR FREEZETHROWER! //Freeze and Shrink Rays share the same ENERGY CLIP ammo in orignal. Quotes can be updated to that or a seperate version of each
+definequote 66        ENERGY CLIP
 definequote 69        10 SHELLS
 //definequote 78        AMMO FOR SHRINKER
 

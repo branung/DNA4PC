@@ -1114,7 +1114,7 @@ else ifvare LEVEL 17 //AKA Level 18 - Alien Lord
     redefinequote CAM_QUOTE4
     //Mission objective
     redefinequote OBJECTIVE_QUOTE1 Alien Ship
-    redefinequote OBJECTIVE_QUOTE2 Shutdown the cooling unit.
+    redefinequote OBJECTIVE_QUOTE2 Shutdown the cooling
     redefinequote OBJECTIVE_QUOTE3 unit. Save the Girl. 
     redefinequote OBJECTIVE_QUOTE4 
 }

@@ -2,9 +2,9 @@ actor SLIMECRABPROJECTILE SLIMECRABPROJECTILESTRENGTH enda
 
 spriteflags SLIMECRAB 4194304
 
-action CRABWALKING          0   4  5  1  22
+action CRABWALKING          0   4  5  1  16
 action CRABSTANDING         0   1  5  1  10
-action CRABATTACKING        23  4  1  1  30
+action CRABATTACKING        23  4  1  1  20
 action CRABDYING            34  5  1  1  8
 action CRABDEADBODY         36  1  1  1  10
 action CRABFROZEN           0   1  5  1  10
@@ -12,7 +12,7 @@ action CRABFLINCH           28  1  5  1  10
 action CRABGROW             0   1  1  1  10
 
 move CRABSTOPPED
-move CRABWALKVEL 132
+move CRABWALKVEL 162
 move CRABSHRUNKVELS 32
 
 ai AICRABWAIT               CRABSTANDING CRABSTOPPED geth
@@ -44,8 +44,7 @@ state crabseekstate
   {
     ifrnd 8 
     { 
-      ai AICRABATTACKPLAYER 
-      sound SLIMERATTACK
+      ai AICRABATTACKPLAYER
     }
   }
 
@@ -53,14 +52,17 @@ state crabseekstate
 ends
 
 state crabattackstate
-  ifcount 25
+  ifcount 19
   {
-    ifcount 27
+    ifcount 20
       ai AICRABSEEK
   }
   else
-	ifcount 24
+	ifcount 18
+  {
+    sound SLIMERATTACK
 		shoot SLIMECRABPROJECTILE
+  }
   else
 	 ifactioncount 6
 	   resetactioncount
@@ -78,9 +80,7 @@ state crabshrunkstate
   else
     ifcount SHRUNKCOUNT
     {
-      ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
-      else
-      sizeto 48 40
+      sizeto 30 24
     }
   else
     state genericshrunkcode
@@ -213,6 +213,18 @@ ifai AICRABATTACKPLAYER state crabattackstate else
 ifai AICRABSEEK state crabseekstate
 
 
+
+
+ geta [].htpicnum temp
+ ife temp FREEZEBLAST {
+  seta [].htextra -1
+  sound SOMETHINGFROZE
+  spritepal 1
+  seta [].htpicnum SLIMECRAB
+  //resetcount
+  ai AICRABFROZEN
+ }
+
 ifhitweapon
 {
   //guts JIBS6 1
@@ -234,15 +246,15 @@ ifhitweapon
 		//guts JIBS2 1
   ifdead
   {
-    ifwasweapon FREEZEBLAST
-    {
-      sound SOMETHINGFROZE
-      spritepal 1
-      ai AICRABFROZEN
-      strength 0
-      // state freezeme
-      break
-    }
+    // ifwasweapon FREEZEBLAST
+    // {
+    //   sound SOMETHINGFROZE
+    //   spritepal 1
+    //   ai AICRABFROZEN
+    //   strength 0
+    //   // state freezeme
+    //   break
+    // }
     ifwasweapon GROWSPARK
     {
       cstat 0
@@ -282,5 +294,5 @@ ifhitweapon
 enda
 
 eventloadactor SLIMECRAB
-  sizeat 24 20
+  sizeat 30 24
 enda

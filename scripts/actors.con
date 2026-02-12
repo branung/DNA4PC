@@ -2,12 +2,19 @@ defstate enemy_fxload
     // For now just process HTIAG to fx_hitag for enemies!
     geta .hitag fx_hitag
     seta .hitag 0
+    geta .extra fx_extra
+    seta .extra -1
 ends
 
 defstate enemy_deathtrigger
     ifn fx_hitag 0 {
         setarray fx_preactivate[fx_hitag] 1
         setvar fx_hitag 0
+    }
+
+    ifn fx_extra -1 {
+        espawnvar fx_extra
+        setvar fx_extra -1
     }
 ends
 
@@ -113,7 +120,16 @@ prependstate quikweaponget
   terminate
 ends
 
-// Have to copy this whole state just to remove the shield drop chance
+// Remove Enforcer's chance to drop gun and only drop ammo
+prependstate drop_chaingun
+  ifrnd SPAWNAMMOODDS
+  {
+    spawn BATTERYAMMO
+  }
+  terminate
+ends
+
+// Also have to copy this whole state just to remove the shield drop chance
 prependstate checkpighitstate
   spawn BLOOD
   ifdead
@@ -129,15 +145,6 @@ prependstate checkpighitstate
 
     addkills 1
 
-    ifwasweapon FREEZEBLAST
-    {
-      sound SOMETHINGFROZE
-      spritepal 1
-      move 0
-      action APIGFROZEN
-      strength 0
-      break
-    }
     ifwasweapon RADIUSEXPLOSION
     {
       sound SQUISHED
@@ -157,6 +164,16 @@ prependstate checkpighitstate
   }
   else
   {
+    // ifwasweapon FREEZEBLAST
+    // {
+    //   sound SOMETHINGFROZE
+    //   spritepal 1
+    //   move 0
+    //   action APIGFROZEN
+    //   //strength 0
+    //   terminate
+    // }
+
     sound PIG_PAIN
     state random_wall_jibs
 
@@ -255,6 +272,19 @@ defstate transfer_pistol_ammo
     setplayer[].ammo_amount TRIPBOMB_WEAPON temp
     setplayer[].ammo_amount PISTOL_WEAPON temp
 ends
+
+defstate transfer_freeze_energy_ammo
+    getplayer[].ammo_amount FREEZE_WEAPON temp
+    setplayer[].ammo_amount SHRINKER_WEAPON temp
+    setplayer[].ammo_amount FREEZE_WEAPON temp
+ends
+
+defstate transfer_shrink_energy_ammo
+    getplayer[].ammo_amount SHRINKER_WEAPON temp
+    setplayer[].ammo_amount FREEZE_WEAPON temp
+    setplayer[].ammo_amount SHRINKER_WEAPON temp
+ends
+
 
 gamevar explosion_snd 0 1
 
@@ -355,6 +385,29 @@ actor SHOTGUNSHELLS
         quote 129
         state transfer_lead_ammo
         ifspawnedby SHOTGUNSHELLS
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor ENERGYPACK
+  fall
+  sizeat 48 46
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifcanseetarget
+      {
+        addammo FREEZE_WEAPON ENERGYPACKAMOUNT
+        quote 166
+        state transfer_freeze_energy_ammo
+        ifspawnedby ENERGYPACK
           state getcode
         else
           state quikget
@@ -574,6 +627,77 @@ actor AMMO
       }
 enda
 
+actor FREEZEAMMO
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifcount 6
+          ifpdistl RETRIEVEDISTANCE
+            ifcanseetarget
+      {
+        addammo FREEZE_WEAPON ENERGYCLIPAMOUNT
+        quote 66
+        state transfer_freeze_energy_ammo
+        ifspawnedby FREEZEAMMO
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor SHRINKERSPRITE
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifcanseetarget
+      {
+        ifgotweaponce 0
+          break
+        addweapon SHRINKER_WEAPON 20
+        quote 60
+        state transfer_shrink_energy_ammo
+        ifspawnedby SHRINKERSPRITE
+          state getweaponcode
+        else
+          state quikweaponget
+      }
+enda
+
+actor FREEZESPRITE
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifcanseetarget
+      {
+        ifgotweaponce 0
+          break
+
+        addweapon FREEZE_WEAPON 20
+        quote 59
+        state transfer_freeze_energy_ammo
+        ifspawnedby FREEZESPRITE
+          state getweaponcode
+        else
+          state quikweaponget
+      }
+enda
+
 //// --------- ALARM ACTOR ---------
 // Starts upon seeing the player. Compatible with RESPAWN
 // Hitag: Counts up from 0 to 10 and dies
@@ -691,23 +815,92 @@ useractor notenemy DNA_CHIPKEY 0
     state access_shared
 enda
 useractor notenemy DNA_BLUEKEY 0
+    sizeat 52 44
     state access_shared
 enda
 useractor notenemy DNA_REDKEY 0
+    sizeat 52 44
     state access_shared
 enda
 useractor notenemy DNA_YELLOWKEY 0
+    sizeat 52 44
     state access_shared
 enda
 
 
 
+
+//// --------- PREPENDS FOR FREEZING 3D ENEMIES ---------
+prependstate troopcode
+  geta [].htpicnum temp
+  ife temp FREEZEBLAST {
+    seta [].htextra -1
+    sound SOMETHINGFROZE
+    spritepal 1
+    seta [].htpicnum LIZTROOP
+    move 0
+    //resetcount
+    action ATROOPFROZEN
+  }
+ends
+
+prependstate checksquished
+  ifactor PIGCOP {
+    geta [].htpicnum temp
+    ife temp FREEZEBLAST {
+      seta [].htextra -1
+      sound SOMETHINGFROZE
+      spritepal 1
+      seta [].htpicnum PIGCOP
+      move 0
+      //resetcount
+      action APIGFROZEN
+    }
+  }
+  ifactor LIZMAN {
+    geta [].htpicnum temp
+    ife temp FREEZEBLAST {
+      seta [].htextra -1
+      sound SOMETHINGFROZE
+      spritepal 1
+      seta [].htpicnum LIZMAN
+      move 0
+      //resetcount
+      action ALIZFROZEN
+    }
+  }
+  ifactor OCTABRAIN {
+    geta [].htpicnum temp
+    ife temp FREEZEBLAST {
+      seta [].htextra -1
+      sound SOMETHINGFROZE
+      spritepal 1
+      seta [].htpicnum OCTABRAIN
+      move 0
+      //resetcount
+      action AOCTAFROZEN
+    }
+  }
+  // Needs to be tested.. also need to add commander
+  ifactor NEWBEASTHANG {
+    geta [].htpicnum temp
+    ife temp FREEZEBLAST {
+      seta [].htextra -1
+      sound SOMETHINGFROZE
+      spritepal 1
+      seta [].htpicnum NEWBEASTHANG
+      move 0
+      //resetcount
+      action ANEWBEASTFROZEN
+    }
+  }
+ends
 
 //// --------- EXTRA REVIVE FUNCTION FOR GREY ---------
 // This hijacks into the common "checksquished" state from original GAME.CON
 // The enemy currently supports reviving trooper/pigcop/octa/newbeast.
 appendstate checksquished
-    
+
     ifaction ATROOPDEAD {
         findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
         ifn temp -1 {
@@ -784,6 +977,8 @@ prependstate random_wall_jibs
           palfrom 16 0 64
         ifwasweapon ALIENLORDPROJECTILE
           palfrom 48 32
+        ifwasweapon CYBERALIENPBOMB
+          palfrom 48 16
         }
     }
 }
@@ -958,7 +1153,21 @@ defstate switchload
     set fx_int fx_owner
     geta .hitag temp
     ife temp 0 {
-        set fx_hitag 431
+        switch sprite[].picnum
+        {
+          case DNA_SWITCH2A
+          case DNA_SWITCH2B
+            set fx_hitag A_SWITCH
+            break
+          case DNA_SWITCH4A
+          case DNA_SWITCH4B
+            set fx_hitag A_ALIENSWITCH
+            break
+          default
+            set fx_hitag A_ACTIVATE
+            break
+        }
+        endswitch
     } else {
         set fx_hitag temp
     }

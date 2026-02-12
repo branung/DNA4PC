@@ -15,7 +15,7 @@ gamevar reviveZ 0 2
 //gamevar targetZ 0 2
 
 move REVPROJVEL 300
-action  GREYREVPROJSHOOT         0   3  3  1  22
+action  GREYREVPROJSHOOT         2   3  1  1  24
 
 ai PROJCHECK GREYREVPROJSHOOT 0
 ai PROJSHOOT GREYREVPROJSHOOT 0
@@ -70,8 +70,8 @@ enda
 
 useractor notenemy GREYREVIVEPROJECTILE GREYPROJECTILESTRENGTH 
   ifaction 0 {
-    seta .xrepeat 26
-    seta .yrepeat 26
+    seta .xrepeat 40
+    seta .yrepeat 40
     set targetLoop 0
     ifn reviveID -1 { set reviveFound reviveID } else killit
     set reviveID -1
@@ -140,8 +140,8 @@ spriteflags GREY 4194304
 
 action GREYWALKING          0   3  5  1  22
 action GREYSTANDING         16  1  5  1  10
-action GREYATTACKING        23  4  1  1  30
-action GREYREVIVING         28  5  1  1  20
+action GREYATTACKING        23  4  1  1  20
+action GREYREVIVING         28  5  1  1  16
 action GREYDYING            39  5  1  1  8
 action GREYDEADBODY         43  1  1  1  10
 action GREYFROZEN           0   1  5  1  10
@@ -186,7 +186,6 @@ state greyseekstate
   ifrnd 8 
     { 
       ai AIGREYATTACKPLAYER
-      sound GREYATTACK
     }
   else
     ifrnd 4
@@ -196,7 +195,6 @@ state greyseekstate
       ifn reviveFound -1
       {
         ai AIGREYREVIVING 
-        sound GREYATTACK
       }
     }
     else nullop
@@ -207,18 +205,19 @@ ends
 
 state greyattackstate
   
-  ifcount 23
+  ifcount 19
   {
-    ifcount 24
+    ifcount 20
       ai AIGREYSEEK
   }
   else
-	ifcount 22
+	ifcount 18
   {
     geta[THISACTOR].z greyprojpos
     setvarvar greycurrpos greyprojpos
     subvar greyprojpos 3000
     seta[THISACTOR].z greyprojpos
+    sound GREYATTACK
     shoot GREYPROJECTILE
     seta[THISACTOR].z greycurrpos
   }
@@ -229,21 +228,21 @@ ends
 
 state greyrevivestate
   
-  ifcount 25
+  ifcount 15
   {
-    ifcount 27
+    ifcount 16
       ai AIGREYSEEK
   }
   else
-	ifcount 24
+	ifcount 14
   {
     //findnearspritez GREYPROJECTILE 5120 20480 temp
-    //Need to find a way to look for multiple enemy fallen sprites and have grey face it 
     geta[THISACTOR].z greyprojpos
     setvarvar greycurrpos greyprojpos
     subvar greyprojpos 9000
     seta[THISACTOR].z greyprojpos
     set reviveID reviveFound
+    sound GREYATTACK
     spawn GREYREVIVEPROJECTILE
     seta[THISACTOR].z greycurrpos
     set reviveFound -1
@@ -397,6 +396,18 @@ ifai AIGREYATTACKPLAYER state greyattackstate else
 ifai AIGREYREVIVING state greyrevivestate else
 ifai AIGREYSEEK state greyseekstate
 
+
+ geta [].htpicnum temp
+ ife temp FREEZEBLAST {
+  state enemy_deathtrigger
+  seta [].htextra -1
+  sound SOMETHINGFROZE
+  spritepal 1
+  seta [].htpicnum GREY
+  //resetcount
+  ai AIGREYFROZEN
+ }
+
 ifhitweapon
 {
   //guts JIBS6 1
@@ -420,15 +431,16 @@ ifhitweapon
   ifdead
   {
     state enemy_deathtrigger
-    ifwasweapon FREEZEBLAST
-    {
-      sound SOMETHINGFROZE
-      spritepal 1
-      ai AIGREYFROZEN
-      strength 0
-      // state freezeme
-      break
-    }
+    // ifwasweapon FREEZEBLAST
+    // {
+    //   sound SOMETHINGFROZE
+    //   spritepal 1
+    //   ai AIGREYFROZEN
+    //   strength 0
+    //   // state freezeme
+    //   break
+    // }
+    
     ifwasweapon GROWSPARK
     {
       cstat 0

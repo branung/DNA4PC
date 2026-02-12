@@ -1,7 +1,10 @@
+spriteflags CONTROLLERBOSS 1048576
+
 action CONTROLLERBOSSWALKING          0   2  5  1  22
 action CONTROLLERBOSSSTANDING         0   1  5  1  10
-action CONTROLLERBOSSATTACKING        11  5  1  1  30
-action CONTROLLERBOSSDYING            25  7  1  1  8
+action CONTROLLERBOSSSHOOTING         11  5  1  1  30
+action CONTROLLERBOSSCLAWING          18  5  1  1  30
+action CONTROLLERBOSSDYING            25  7  1  1  24
 action CONTROLLERBOSSDEADBODY         32  1  1  1  10
 action CONTROLLERBOSSFROZEN           0   1  5  1  10
 action CONTROLLERBOSSFLINCH           25  1  1  1  10
@@ -13,7 +16,8 @@ move CONTROLLERBOSSSHRUNKVELS 32
 
 ai AICONTROLLERBOSSWAIT               CONTROLLERBOSSSTANDING CONTROLLERBOSSSTOPPED geth
 ai AICONTROLLERBOSSSEEK               CONTROLLERBOSSWALKING CONTROLLERBOSSWALKVEL seekplayer
-ai AICONTROLLERBOSSATTACKPLAYER       CONTROLLERBOSSATTACKING CONTROLLERBOSSSTOPPED faceplayer
+ai AICONTROLLERBOSSSHOOTPLAYER        CONTROLLERBOSSSHOOTING CONTROLLERBOSSSTOPPED faceplayer
+ai AICONTROLLERBOSSCLAWPLAYER         CONTROLLERBOSSCLAWING CONTROLLERBOSSSTOPPED faceplayer
 ai AICONTROLLERBOSSDYING	            CONTROLLERBOSSDYING CONTROLLERBOSSSTOPPED geth
 ai AICONTROLLERBOSSHIT                CONTROLLERBOSSFLINCH CONTROLLERBOSSSTOPPED faceplayer
 ai AICONTROLLERBOSSFROZEN             CONTROLLERBOSSFROZEN CONTROLLERBOSSSTOPPED geth
@@ -35,12 +39,17 @@ state controllerbossseekstate
     // add sound here
   }
   ifcount 10
-  ifcansee ifpdistl 6144
   ifp palive
   {
+    ifcansee ifpdistl 1596
+    {
+      ai AICONTROLLERBOSSCLAWPLAYER
+      break
+    }
+    else ifcansee ifpdistl 6144
     ifrnd 8 
     { 
-      ai AICONTROLLERBOSSATTACKPLAYER 
+      ai AICONTROLLERBOSSSHOOTPLAYER 
       // add sound here
     }
   }
@@ -50,20 +59,48 @@ ends
 
 state controllerbossattackstate
     ifcount 72
+      ai AICONTROLLERBOSSSEEK
+  else
+    ifaction CONTROLLERBOSSSHOOTING
+      ifactioncount 2
+      {
+        sound PISTOL_FIRE
+        shoot SHOTSPARK1
+        shoot SHOTSPARK1
+        shoot SHOTSPARK1
+        shoot SHOTSPARK1
+        shoot SHOTSPARK1
+        shoot SHOTSPARK1
+        resetactioncount
+      }
+ends
+
+state controllerbossclawstate
+  ifcount 72
     ai AICONTROLLERBOSSSEEK
   else
-    ifaction CONTROLLERBOSSATTACKING
-      ifactioncount 2
-  {
-    sound PISTOL_FIRE
-    shoot SHOTSPARK1
-    shoot SHOTSPARK1
-    shoot SHOTSPARK1
-    shoot SHOTSPARK1
-    shoot SHOTSPARK1
-    shoot SHOTSPARK1
-    resetactioncount
-  }
+    ifaction CONTROLLERBOSSCLAWING
+      ifactioncount 4
+      {
+        ifpdistg 1596
+          ai AICONTROLLERBOSSSEEK
+        else ifp palive ifcansee
+        {
+          palfrom 16 16
+          addphealth -18
+          sound DUKE_GRUNT
+          resetactioncount
+          resetcount
+        }
+      }
+      else
+        ifcount 8
+        {
+          ifpdistl 1596
+            soundonce CONTROLLERATTACK
+          else
+            nullop
+        }
 ends
 
 
@@ -126,11 +163,13 @@ ends
 state controllerbosschecksquished
   ifsquished
   {
-    addkills 1
-    sound SQUISHED
-    state standard_jibs
-    state random_ooz
-    killit
+    ifai AICONTROLLERBOSSDYING nullop
+    else strength 0
+    // Check if Squish! message is displayed to prevent it from showing
+    ife player[].ftq 10 
+    {
+      setp[].fta 0
+    }
   }
 ends
 
@@ -174,43 +213,43 @@ ifai AICONTROLLERBOSSDYING
     }    
     ifaction CONTROLLERBOSSDEADBODY
     {
-      findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
-      ifn temp -1
-      {
-        addkills -1
-        spawn TRANSPORTERSTAR
-        cstat 257
-        strength CONTROLLERBOSSSTRENGTH
-        ai AICONTROLLERBOSSWAIT
-        // play sound here
-      }
-      ifhitweapon
-      {
-        ifwasweapon RPG
-        {
-          sound SQUISHED
-          spawn BLOODPOOL
-          state standard_jibs
-          killit
-        }
-        ifwasweapon RADIUSEXPLOSION
-        {
-          sound SQUISHED
-          spawn BLOODPOOL
-          state standard_jibs
-          killit
-        }
-      }
-      ifcount RESPAWNACTORTIME
-      ifrespawn
-      {
-        addkills -1
-        spawn TRANSPORTERSTAR
-        cstat 257
-        strength CONTROLLERBOSSSTRENGTH
-        ai AICONTROLLERBOSSWAIT
-        // play sound here
-      }
+      // findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
+      // ifn temp -1
+      // {
+      //   addkills -1
+      //   spawn TRANSPORTERSTAR
+      //   cstat 257
+      //   strength CONTROLLERBOSSSTRENGTH
+      //   ai AICONTROLLERBOSSWAIT
+      //   // play sound here
+      // }
+      // ifhitweapon
+      // {
+      //   ifwasweapon RPG
+      //   {
+      //     sound SQUISHED
+      //     spawn BLOODPOOL
+      //     state standard_jibs
+      //     killit
+      //   }
+      //   ifwasweapon RADIUSEXPLOSION
+      //   {
+      //     sound SQUISHED
+      //     spawn BLOODPOOL
+      //     state standard_jibs
+      //     killit
+      //   }
+      // }
+      // ifcount RESPAWNACTORTIME
+      // ifrespawn
+      // {
+      //   addkills -1
+      //   spawn TRANSPORTERSTAR
+      //   cstat 257
+      //   strength CONTROLLERBOSSSTRENGTH
+      //   ai AICONTROLLERBOSSWAIT
+      //   // play sound here
+      // }
   }
   break
 }
@@ -218,12 +257,28 @@ ifai AICONTROLLERBOSSDYING
 
 ifai AICONTROLLERBOSSWAIT state controllerbosswaitstate else
 ifai AICONTROLLERBOSSHIT state controllerbosshitstate else
-ifai AICONTROLLERBOSSATTACKPLAYER state controllerbossattackstate else
+ifai AICONTROLLERBOSSSHOOTPLAYER state controllerbossattackstate else
+ifai AICONTROLLERBOSSCLAWPLAYER state controllerbossclawstate else
 ifai AICONTROLLERBOSSSEEK state controllerbossseekstate
 
+ifhitweapon {
+   ifn fx_hitag 0 { // trigger hint cutscene
+    setarray fx_preactivate[fx_hitag] 1
+    setvar fx_hitag 0
+    break
+  }
+}
+ifdead {
+  soundonce A_EXPLOSION 
+  soundonce ALIENLORDDEATH 
+  addkills 1
+  ai AICONTROLLERBOSSDYING
+  break
+}
 
 enda
 
 eventloadactor CONTROLLERBOSS
   sizeat 48 48
+  state enemy_fxload
 enda
