@@ -387,6 +387,7 @@ enda
 
 actor ENERGYPACK
   fall
+  sizeat 48 46
   ifmove RESPAWN_ACTOR_FLAG
     state respawnit
   else
