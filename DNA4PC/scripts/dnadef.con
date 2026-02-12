@@ -1,0 +1,1179 @@
+setdefname dna.def
+
+gamevar dna_localization 0 // 0 is the US script. run 'setvar dna_localization 1' in console while ingame for the EU localization
+gamevar dna_cutscenes 0 // 0 means level cutscenes will play, while 1 will disable them from triggering 
+gamevar dna_dukecutscenevoc 0 // 0 means no Duke voice lines play in cutscenes, 1 means 3D voice clips are played, 2 means Gianni voice lines are used
+gamevar dna_menu_tutorial 0 // 0 tells the game to show the prompt telling the player to open the mod menu. Once pressed it is set to 1 so it never shows up again
+gamevar dna_level_music 0 // 0 means the music specifically for the levels will play. Setting it to 1 disables level music, meaning only menus and cutscenes will have music like in the original 
+gamevar dna_crosshair 0 // 0 is the default crosshair in DNA. Set it anywhere from 0-8 for all variations
+gamevar dna_key_hud 0 // 0 has key items take up colored key slots in the hud when obtained. 1 displays their sprites below the key section of the hud.
+gamevar dna_lessalarm 0
+gamevar dna_progression -1 0
+
+
+array player_settings 1 GAMEARRAY_UINT16
+define pset_autoshade 1           // Toggle CON based wall/ceiling/visibility shading
+define pset_lessalarm 2           // Gaudy alarm sound heard in some maps gets toned down
+define pset_key_hud 4             // HUD display of completed mission objectives
+define pset_cutscenes 8           // Whether to show cutscenes or not
+define pset_voice_none 16         // Cutscenes: Use of no voice acting 
+define pset_voice_partial 32      // Cutscenes: "Enhanced", uses Duke voices where appropriate
+define pset_voice_gianni 48       // Cutscenes: Enables full voice acting by Gianni (opt-int)
+define pset_music 64              // DNA by default has no music, enabling this slots in some Duke tracks
+define pset_firstboot 128         // Gets toggled ON in case the settings have been applied at least once
+
+// Disable built in episode cutscene
+gamevar LOGO_FLAGS 104855777 0
+
+// Changes DNSTUFF cheat to DNLUAULASS, a phrase used to access the cheat menu in DNA
+definecheat 1 LUAULASS
+
+// Startup intro defines
+define GBA_INTRO 471
+definesound GBA_INTRO         sounds/intro/gba_intro.ogg     0     0     255   4     0
+
+gamevar in_startup 0 0
+gamevar title_ani 0 0
+
+var curr_logo 0
+define LOGO_3DR 5503
+define LOGO_TAKETWO 5504
+define LOGO_TORUS 5505
+define LOGO_DELAY_TIME 3000
+
+// Menu asset sizes
+define LOGO_SIZE 95535
+define CUTSCENE_SIZE 87035
+define OBJECTIVEPANEL_SIZE 87035
+define ENDSCREEN_SIZE 65536
+define ENDSCREEN_PANEL_SIZE 85636
+define MISSIONBRIEF_SIZE 90636
+define PLAY_BUTTON_SIZE 80636
+define CREDITS_PANEL_SIZE 87035
+
+define TITLE_BACKGROUND 5740
+define TITLE_DUKE 5754
+define TITLE_NUKEM 5755
+define TITLE_ADVANCE 5741
+
+define TITLE_DUKE_START_POSX -120
+define TITLE_NUKEM_START_POSX 455
+define TITLE_ADVANCE_START_POSY 300
+
+define TITLE_NUKEM_MID_POSX 210
+define TITLE_ADVANCE_MID_POSY 107
+
+define TITLE_DUKE_FINAL_POSX 78
+define TITLE_NUKEM_FINAL_POSX 224
+define TITLE_DUKENUKEM_FINAL_POSY 70
+define TITLE_ADVANCE_FINAL_POSY 127
+
+gamevar duke_title_slidein_time TITLE_DUKE_START_POSX 0
+gamevar nukem_title_slidein_time TITLE_NUKEM_START_POSX 0
+gamevar name_title_slideup_time TITLE_DUKENUKEM_FINAL_POSY 0
+gamevar advance_slideup_time TITLE_ADVANCE_START_POSY 0
+gamevar press_start_ani 0 0
+define PRESS_START_START 5555
+var curr_ps_sprite PRESS_START_START
+
+gamevar skull_skill_ani 0 0
+define SKULL_SKILL_START 7008
+define SKULL_SKILL_END 7015
+var curr_skull SKULL_SKILL_START
+
+// Logo quotes
+definequote 149 logo.ivf
+definequote 150 TAKE-TWO INTERACTIVE SOFTWARE,INC.
+definequote 151 AND THE TAKE-TWO LOGO
+definequote 152 ARE TRADEMARKS OF TAKE-TWO
+definequote 153 INTERACTIVE INC.
+definequote 154 DUKE NUKEM AND THE DUKE NUKEM
+definequote 155 LOGO ARE TRADEMARKS OF
+definequote 156 3D REALMS ENTERTAINMENT.
+definequote 157 3D REALMS ENTERTAINMENT AND THE
+definequote 158 3D REALMS LOGO ARE TRADEMARKS
+definequote 159 OF APOGEE SOFTWARE LTD.
+definequote 160 @2002 3D REALMS ENTERTAINMENT.
+definequote 161 ALL RIGHTS RESERVED.
+definequote 162 LICENSED BY NINTENDO.
+definequote 163 CREDITS
+definequote 164 COMPANY
+
+// Credit defines
+gamevar in_credits 0 0
+gamevar conclude_credits_scoll 0 0
+gamevar credits_ani 0 0
+gamevar credits_panel_ani 0 0
+
+define CREDITS_QUOTE 163
+define CREDITS_COMPANY 164
+define CREDITS_START_POSY 200
+define CREDITS_FINAL_POSY -20
+define CREDITS_3DR_TIME -650
+define CREDITS_T2_TIME -915
+
+define CREDITS_PANEL 5539
+define CREDITS_PANEL_CLOSED 5544
+var curr_panel CREDITS_PANEL
+
+define CREDITS_TITLENAME_GAP 10
+define CREDITS_INDIVIDUAL_GAP 20
+
+gamevar credits_slideup_time CREDITS_START_POSY
+
+// Actors and their projectiles
+define GREY 5119
+define GREYSTRENGTH 80
+define GREYPROJECTILE 5165
+define GREYREVIVEPROJECTILE 5167
+define GREYPROJECTILESTRENGTH 15
+define GREYPROJECTILEREVIVEXY 500
+define GREYPROJECTILEREVIVEZ 20000
+define SLIMECRAB 5188
+define SLIMECRABSTRENGTH 50
+define SLIMECRABPROJECTILE 5177
+define SLIMECRABPROJECTILESTRENGTH 7
+define SLIMEREGGPROJECTILESTRENGTH 7
+define SLIMEREGG 5228
+define SLIMEREGGSTRENGTH 50
+define SPIDERLORD 5255
+define SPIDERLORDSTRENGTH 1500
+define CONTROLLERBOSS 5296
+define CONTROLLERBOSSSTRENGTH 2500
+define CYBERALIEN 3948
+define CYBERALIENSTRENGTH 3000
+define CYBERALIENPBOMB 3987
+//define A51ALARM 5600
+define MBMACHINE 5601
+define CUTCAM 5602
+define ALIENLORD 4001
+define ALIENLORDSTRENGTH 3000
+define ALIENLORDPROJECTILE 5183
+define ALIENLORDPROJECTILESTRENGTH 20
+// Tile 5812 - the blank in the gap between gold gun sprites - is used for op projectile def
+define GOLDENGUN_PROJ 5812
+
+// Enemy knockback vars
+gamevar knockbackvel 0 2
+gamevar knockbackang 0 2
+gamevar knockbackforce 0 0
+gamevar xvel 0 0
+gamevar yvel 0 0
+
+// Used in Grey revival projectile code
+gamevar zvel 0 0
+
+//Cutscene sprites
+define DUKEHEADSPRITE 3923
+define SARGEHEADSPRITE 3924
+define BOSS1HEADSPRITE 3925
+define BOSS1HEADSPRITE2 3926 //I question why this even exists
+define GRAYHEADSPRITE 3927
+define BOSS2HEADSPRITE 3928
+define JENNYHEADSPRITE 3929
+define BOSS4HEADSPRITE 3930
+var textQuoteRow1 200
+var textQuoteRow2 200
+var textQuoteRow3 200
+var textQuoteRow4 200
+
+// Objective sprites
+define MISSIONBRIEF 5760
+define DNASMALLTEXT 6002
+define DNABIGTEXTBRIGHT 6915
+
+// Lead Cannon definitions if I somehow manage to get it working
+define LEAD_CANNON_SPRITE 5403
+define LEAD_CANNON 5404
+define LEAD_WEAPON 7
+define LEAD_TOTALTIME 31
+gamevar SHOT_SWITCH 0 0
+definequote 125       LEAD CANNON
+
+// Golden Gun definitions that I will manage to get working
+define GOLDENGUN_SPRITE 5632
+define GOLDENGUN 5809
+define GOLDENGUN_WEAPON 8
+define GOLDENGUN_TOTALTIME 31
+
+gamevar bits 0 1
+
+definequote 131       GOLDEN GUN
+
+// Overhead map sprite
+define DNAMAPDUKEHEAD 5564
+
+// Textures
+define HYBRIDCAPSULE 3648
+define HYBRIDCAPSULEBROKE 3649
+
+// Rotatesprite sizes
+define NORMALSIZE 65536
+define INV_X 19
+define INV_Y 58
+define INV_TEXT_X 24
+define INV_TEXT_Y 60
+
+gamevar INV_TEMP 0 2
+gamevar INV_NUM_TEMP 0 2
+
+gamevar SCREENSIZE -1 1
+
+// Moved from dna4pc.con
+//gamevar WEAPON1_CLIP 0 0 // Prevent pistol from reloading
+gamevar WEAPON1_TOTALTIME 9 // Increases delay time between each pistol shot
+gamevar temp 0 1
+gamevar temp2 0 1
+gamevar temp3 0 1
+gamevar temp4 0 1
+gamevar temp5 0 1
+gamevar player_health 0 1
+
+gamevar SCREENALPHA 255 0
+gamevar CUTSCENE_STEP 0 0
+gamevar CUTSCENE_SCREEN 0 0
+gamevar CUTSCENE_DIALOG 0 0
+gamevar CUTSCENE_DIALOG2 0 0
+gamevar CUTSCENE_DUKE 0 0
+define CUTSCENE_DIALOGBOX 3921
+define CUTSCENE_OUTLINE 3922 
+gamevar CUTSCENE_SPRITE 0 0
+gamevar x 0 0
+gamevar y 0 0
+gamevar xspace 0 0
+var cutscene_num 0 0
+var cutscene_i 0 0
+var cutscene_temp 0 0
+var in_cutscene 0 0
+// Moved from dna4pc.con
+
+define CAM_REC 5566 // Recording icon when in security camera
+define CAM_QUOTE1 391
+define CAM_QUOTE2 392
+define CAM_QUOTE3 393
+define CAM_QUOTE4 394
+var played_camquote 0 // Used to prevent Gianni security voice clip from playing repeatedly
+
+define OBJECTIVE_QUOTE1 395
+define OBJECTIVE_QUOTE2 396
+define OBJECTIVE_QUOTE3 397
+define OBJECTIVE_QUOTE4 398
+
+// Effect state
+var s_state 0 0
+define enabled 3
+define pre_enable 2
+define pre_disable 1
+define disabled 0
+define pre_complete 5
+define completed 4
+
+// End level screen stats
+definequote 132         LEVEL COMPLETE
+definequote 133         KILLS
+definequote 134         
+definequote 135         SECRETS
+definequote 136         TIME
+definequote 137         PAR
+definequote 138         BEST
+definequote 139         00:00.-3
+definequote 140         BLANK
+gamevar level_complete_ani 0 0
+define ENDSCREEN_TEXT_SIZE 75920
+define ENDSCREEN_TEXT_SPACE 1
+define LEVEL_COMPLETE_ANI_DELAY 20
+
+// Objective Screen text
+definequote 141 PLAY
+
+// Common iterators
+var i 0 0
+var u 0 0
+// Corresponds to sprite.ang
+define RIGHT 0
+define DOWN 512
+define LEFT 1024
+define UP 1536
+
+// KEYCARD AND DOOR LOCK RELATED DEFINES
+// Keycard flag bit
+var lockbits 0 1
+define lock_bluekey 1
+define lock_redkey 2
+define lock_yellowkey 4
+define lock_syskey 8
+define lock_cdkey 16
+define lock_chipkey 32
+// Non-pickup lockbits
+define lock_mission 64
+define lock_oneway 128
+define lock_switch 256
+define LOCKQUOTE 1
+// Keycard actors
+define DNA_SYSKEY 3901
+define DNA_CDKEY 3902
+define DNA_CHIPKEY 3903
+define DNA_BLUEKEY 3942
+define DNA_REDKEY 3943
+define DNA_YELLOWKEY 3944
+define DNA_KEYQUOTE 300
+definequote DNA_KEYQUOTE
+
+// Switch/Button actors
+define DNA_SWITCH1A 5671
+define DNA_SWITCH1B 5672
+define DNA_SWITCH2A 5673
+define DNA_SWITCH2B 5674
+define DNA_SWITCH3A 5675
+define DNA_SWITCH3B 5676
+define DNA_SWITCH4A 5677
+define DNA_SWITCH4B 5678
+
+// For cutscene cameras
+define STAT_CUTCAM 70
+
+// EFFECT USE ACTORVARS
+// Mapper placed
+var fx_hitag 0 2
+var fx_lotag 0 2
+var fx_owner 0 2
+var fx_extra 0 2
+var fx_xvel 0 2
+var fx_yvel 0 2
+var fx_zvel 0 2
+// Otherwise internal (Pretty much like htg_t but without the risks)
+// int int2 = Internal temps, state = which modal state
+array fx_activate 65536 GAMEARRAY_RESTORE GAMEARRAY_BOOLEAN
+array fx_preactivate 65536 GAMEARRAY_RESTORE GAMEARRAY_BOOLEAN
+var fx_int 0 2
+var fx_int2 0 2
+var fx_int3 0 2
+var fx_int4 0 2
+var fx_state 0 2
+
+
+// For displayrooms stuff & Quake
+var undisplayrooms 0 1
+var kcsunshinemode 0 1
+var renderman_get -1 1
+var renderman_sprite -1 1
+var r_x 0 1
+var r_y 0 1
+var r_z 0 1
+var r_sect 0 1
+var r_horiz 0 1
+var r_ang 0 1
+
+// Eggtimer
+define DNA_EGGQUOTE_ON 301
+definequote DNA_EGGQUOTE_ON Timer on!
+define DNA_EGGQUOTE_FAIL 302
+definequote DNA_EGGQUOTE_FAIL You're dead!
+var eggtimer -1 1
+
+// SE74 - Actorcounter
+define DNA_COUNTQUOTE 303
+definequote DNA_COUNTQUOTE Enemies left:
+var mission_count -1 1
+
+// SE75 - Switch counter
+var triggercounter
+
+
+//Item Pickups
+define ARMORSHARD 3919
+define PISTOLAMMOBOX 3945
+define SHOTGUNSHELLS 3946
+define HEALTHPACKSMALL 3918
+define ENERGYPACK 5697
+
+define ARMORSHARD_AMOUNT     5
+define PISTOLAMMOBOXAMOUNT   20
+define SHOTGUNSHELLSAMOUNT   4
+define ENERGYPACKAMOUNT      10
+define ENERGYCLIPAMOUNT      5
+
+definequote 126  +5 ARMOR
+definequote 127  +5 ARMOUR
+definequote 128  AMMO BOX
+definequote 129  4 SHELLS
+definequote 130  +5 HEALTH
+
+definequote 166  ENERGY PACK
+
+//gamevar for checking music before playing cutscene
+gamevar currmusic 0
+gamevar currmusiclv 0
+// Ambience randomizer
+var ambsndtimer 0 0
+// Player bobcounter
+var bobsndtimer 1024 0
+var bobsndinverse 1 0
+// Default 1024, set to -1 to disable bobsounds
+var bobfrequency 1024 0
+
+//Delay vars
+var delayTime 0
+var bonusDelayTime 0
+
+gamevar prevtick -1 0
+gamevar curtick   0 0
+gamevar ticktmp   0 0 
+gamevar ticktmp2  0 0
+
+// Additional pretick for quotes to prevent conflict with cutscene timer
+gamevar quote_prevtick -1 0
+
+// Pretick for end level screen to not conflict with fade out timer
+gamevar bonus_screen_prevtick -1 0
+
+// Pretick for credits to not conflict with fade out timer
+gamevar credits_screen_prevtick -1 0
+
+// Additional ticks for world screen fade timer - dont want any conflicts with these
+gamevar SCREENALPHAWORLD 255 0
+gamevar worldprevtick -1 0
+gamevar worldcurtick   0 0
+gamevar worldticktmp   0 0 
+
+define END_SCREEN_INPUT_DELAY 1000
+gamevar in_endlevel_screen 0 0
+
+gamevar in_objective_screen 0 0
+
+gamevar in_opening_cutscene 1 0
+gamevar in_ending_cutscene 0 0
+
+defineprojectile GOLDENGUN_PROJ PROJ_WORKSLIKE 1
+defineprojectile GOLDENGUN_PROJ PROJ_EXTRA 100
+defineprojectile GOLDENGUN_PROJ PROJ_SPAWNS SMALLSMOKE
+defineprojectile GOLDENGUN_PROJ PROJ_XREPEAT 3
+defineprojectile GOLDENGUN_PROJ PROJ_YREPEAT 3
+
+define GREYPROJECTILESPAWN 5169 // Starting tile for animation when projectile hits a wall
+
+action  GREYREVPROJSPAWN         0   8  1  1  4
+
+ai PROJSPAWN GREYREVPROJSPAWN 0
+
+eventloadactor GREYPROJECTILESPAWN
+    seta .cstat 0
+enda
+
+useractor notenemy GREYPROJECTILESPAWN GREYPROJECTILESTRENGTH
+{
+    ifaction 0 {
+        seta .xrepeat 40
+        seta .yrepeat 40
+        // Offset is off when spawned from projectile, so this tries to correct it
+        geta .yoffset temp2        
+        sub temp2 10
+        seta .yoffset temp2
+        // geta .xoffset temp
+        // sub temp 6
+        // seta .xoffset temp
+        ai PROJSPAWN
+    }
+    ifai PROJSPAWN {
+        ifactioncount 8 {
+            killit
+        }
+    }
+}
+enda
+
+defineprojectile GREYPROJECTILE PROJ_WORKSLIKE 32770
+defineprojectile GREYPROJECTILE PROJ_SPAWNS GREYPROJECTILESPAWN
+defineprojectile GREYPROJECTILE PROJ_VEL 500
+defineprojectile GREYPROJECTILE PROJ_EXTRA GREYPROJECTILESTRENGTH
+//defineprojectile GREYPROJECTILE PROJ_ISOUND EXPANDERSHOOT
+defineprojectile GREYPROJECTILE PROJ_HITRADIUS 100
+defineprojectile GREYPROJECTILE PROJ_XREPEAT 40
+defineprojectile GREYPROJECTILE PROJ_YREPEAT 40
+defineprojectile GREYPROJECTILE PROJ_OFFSET -128
+
+// defineprojectile GREYREVIVEPROJECTILE PROJ_WORKSLIKE 32770
+// defineprojectile GREYREVIVEPROJECTILE PROJ_VEL 500
+// defineprojectile GREYREVIVEPROJECTILE PROJ_EXTRA GREYPROJECTILESTRENGTH
+// defineprojectile GREYREVIVEPROJECTILE PROJ_ISOUND EXPANDERSHOOT
+// defineprojectile GREYREVIVEPROJECTILE PROJ_HITRADIUS 100
+// defineprojectile GREYREVIVEPROJECTILE PROJ_XREPEAT 26
+// defineprojectile GREYREVIVEPROJECTILE PROJ_YREPEAT 26
+// defineprojectile GREYREVIVEPROJECTILE PROJ_OFFSET -128
+
+defineprojectile SLIMECRABPROJECTILE PROJ_WORKSLIKE 32770
+defineprojectile SLIMECRABPROJECTILE PROJ_VEL 400
+defineprojectile SLIMECRABPROJECTILE PROJ_EXTRA SLIMECRABPROJECTILESTRENGTH
+//defineprojectile SLIMECRABPROJECTILE PROJ_ISOUND SHRINKER_FIRE
+defineprojectile SLIMECRABPROJECTILE PROJ_HITRADIUS 100
+defineprojectile SLIMECRABPROJECTILE PROJ_SXREPEAT 128
+defineprojectile SLIMECRABPROJECTILE PROJ_SYREPEAT 128
+defineprojectile SLIMECRABPROJECTILE PROJ_XREPEAT 32
+defineprojectile SLIMECRABPROJECTILE PROJ_YREPEAT 32
+defineprojectile SLIMECRABPROJECTILE PROJ_OFFSET -128
+
+defineprojectile ALIENLORDPROJECTILE PROJ_WORKSLIKE 32770
+defineprojectile ALIENLORDPROJECTILE PROJ_VEL 450
+defineprojectile ALIENLORDPROJECTILE PROJ_EXTRA ALIENLORDPROJECTILESTRENGTH
+//defineprojectile ALIENLORDPROJECTILE PROJ_ISOUND SHRINKER_FIRE
+defineprojectile ALIENLORDPROJECTILE PROJ_HITRADIUS 100
+defineprojectile ALIENLORDPROJECTILE PROJ_XREPEAT 32
+defineprojectile ALIENLORDPROJECTILE PROJ_YREPEAT 32
+defineprojectile ALIENLORDPROJECTILE PROJ_OFFSET -128
+
+defineprojectile CYBERALIENPBOMB PROJ_WORKSLIKE 104454
+defineprojectile CYBERALIENPBOMB PROJ_BOUNCES 3
+defineprojectile CYBERALIENPBOMB PROJ_SPAWNS EXPLOSION2
+defineprojectile CYBERALIENPBOMB PROJ_VEL 600
+defineprojectile CYBERALIENPBOMB PROJ_EXTRA 30
+defineprojectile CYBERALIENPBOMB PROJ_EXTRA_RAND 5
+defineprojectile CYBERALIENPBOMB PROJ_HITRADIUS 2250
+defineprojectile CYBERALIENPBOMB PROJ_DROP -250
+defineprojectile CYBERALIENPBOMB PROJ_RANGE 30
+defineprojectile CYBERALIENPBOMB PROJ_SXREPEAT 128
+defineprojectile CYBERALIENPBOMB PROJ_SYREPEAT 128
+defineprojectile CYBERALIENPBOMB PROJ_XREPEAT 24
+defineprojectile CYBERALIENPBOMB PROJ_YREPEAT 24
+defineprojectile CYBERALIENPBOMB PROJ_OFFSET 324
+
+// Each ripped sound is stored at 8000Hz but in actuality it's very close to 7500Hz.
+// To get the correct pitch use -80 as the base value
+
+//DN:A Enemies
+define GREYATTACK 400
+define GREYDEATH 401
+define SLIMERATTACK 402
+define S_SLIMEREGG 403
+define SPIDERLORDROAM 404
+define SPIDERLORDDEATH 405
+define CONTROLLERATTACK 406
+define ALIENLORDROAM 407
+define ALIENLORDDEATH 408
+define A_PIGDYING 409
+define A_PIGROAM 410
+define A_TROOPDYING 411
+define A_TROOPROAM 412
+define A_LIZDYING 413
+define A_LIZROAM A_TROOPROAM
+define A_OCTODYING GREYDEATH
+define A_OCTOATTACK 415
+define A_OCTOROAM 416
+define A_CRABDYING 418
+define EGGHATCH 419
+define CYBERALIENROAM 592
+define A_CRABATTACK SLIMERATTACK
+//          SOUND TOKEN                 SOUND FILE                        Pitch Low--High   Prio  Type  Distance
+definesound GREYATTACK                  sounds/enemy/greyattack.wav                  -80   -80    3     0     7680
+definesound GREYDEATH                   sounds/enemy/greydying.wav                   -180   20    3     0     7680
+definesound SLIMERATTACK                sounds/enemy/slimer_attack.wav               -180   20    3     0     7680
+definesound EGGHATCH                    sounds/enemy/slimeregg_hatch.wav             -180   20    3     0     7680
+definesound SPIDERLORDROAM              sounds/enemy/spiderlord_roam.wav             -80   -80    3     0     0
+definesound SPIDERLORDDEATH             sounds/enemy/spiderlord_dead.wav             -80   -80    3     0     0
+definesound CONTROLLERATTACK            sounds/enemy/controller_attack.wav           -80   -80    3     0     0
+definesound ALIENLORDROAM               sounds/enemy/alienlord_roam.wav              -80   -80    3     0     0
+definesound ALIENLORDDEATH              sounds/enemy/alienlord_dead.wav              -80   -80    3     0     0
+definesound A_PIGDYING                  sounds/enemy/pigdying.wav                    -80   -80    3     0     0
+definesound A_PIGROAM                   sounds/enemy/pigroam.wav                     -80   -80    3     0     0
+definesound CYBERALIENROAM              sounds/enemy/cyberalien_roam.wav             -80   -80    3     0     0
+//DN:A Environment/interact
+define A_STEPSOUND 430
+define A_ACTIVATE 431
+define A_TELEPORT 432
+define A_CRUSHER 433
+define A_DOOR 434
+define A_DOOR2A 435
+define A_DOOR2B 436
+define A_DOOR3 437
+define A_HEARTBEAT 438
+define A_PRESSURESTOPHI 439
+define A_PRESSURESTOPLO 440
+define A_SLAM 441
+//define A_SMACK 442
+define A_ALIENSWITCH 443
+define A_SWITCH 444
+define A_VENTBUST 445
+define A_VENTWALK 446
+definesound A_STEPSOUND              sounds/env/footstep.wav              -80   -80    3     0     0
+definesound A_ACTIVATE               sounds/env/activate.wav              -80   -80    3     0     0
+definesound A_TELEPORT               sounds/env/teleport.wav              -80   -80    3     0     0
+definesound A_CRUSHER                sounds/env/crusher.wav               -80   -80    3     0     0
+definesound A_DOOR                   sounds/env/door.wav                  -80   -80    3     0     0
+definesound A_DOOR2A                 sounds/env/door2a.wav                -80   -80    3     0     0
+definesound A_DOOR2B                 sounds/env/door2b.wav                -80   -80    3     0     0
+definesound A_DOOR3                  sounds/env/door3.wav                 -80   -80    3     0     0
+definesound A_HEARTBEAT              sounds/env/heartbeat.wav             -80   -80    3     0     0
+definesound A_PRESSURESTOPHI         sounds/env/pressurestophi.wav        -80   -80    3     0     0
+definesound A_PRESSURESTOPLO         sounds/env/pressurestoplo.wav        -80   -80    3     0     0
+definesound A_SLAM                   sounds/env/slam.wav                  -80   -80    3     0     0
+//definesound A_SMACK                  sounds/env/smack.wav                 -80   -80    3     0     0
+definesound A_ALIENSWITCH            sounds/env/alienswitch.wav            -80   -80    3     0     0
+definesound A_SWITCH                 sounds/env/switch.wav                -80   -80    3     0     0
+definesound A_VENTBUST               sounds/env/ventbust.wav              -80   -80    3     0     0
+definesound A_VENTWALK               sounds/env/ventwalk.wav              -80   -80    3     0     0
+//DN:A Weapons/action
+define A_BOUNCE 450
+define A_EXPLOSION 451
+define A_FREEZE 452
+define A_KICKHIT 453
+define A_MP5FIRE 454
+define A_PICKARMOR 455
+define A_PICKWEAPON 456
+define A_PISTOL 457
+define A_RICOCHET 458
+define A_RPGFIRE 459
+define A_SHATTER 460
+define A_SHOTGUNCOCK 461
+define A_SHOTGUNFIRE 462
+define A_SHRINK 463
+define A_SHRINKER 464
+define A_SQUISH 465
+define A_LEADFIRE 466
+definesound A_BOUNCE                 sounds/weapon/bounce.wav             -80   -80    3     0     0
+definesound A_EXPLOSION              sounds/weapon/explosion.wav          -80   -80    3     0     0
+definesound A_FREEZE                 sounds/weapon/freeze.wav             -80   -80    3     0     0
+definesound A_KICKHIT                sounds/weapon/kickhit.wav            -80   -80    3     0     0
+definesound A_MP5FIRE                sounds/weapon/mp5fire.wav            -80   -80    3     0     0
+definesound A_PICKARMOR              sounds/weapon/pickarmor.wav          -80   -80    3     0     0
+definesound A_PICKWEAPON             sounds/weapon/pickweapon.wav         -80   -80    3     0     0
+definesound A_PISTOL                 sounds/weapon/pistol.wav             -80   -80    3     0     0
+definesound A_RICOCHET               sounds/weapon/ricochet.wav           -80   -80    3     0     0
+definesound A_RPGFIRE                sounds/weapon/rpgfire.wav            -80   -80    3     0     0
+definesound A_SHATTER                sounds/weapon/shatter.wav            -80   -80    3     0     0
+definesound A_SHOTGUNCOCK            sounds/weapon/shotguncock.wav        -80   -80    3     0     0
+definesound A_SHOTGUNFIRE            sounds/weapon/shotgunfire.wav        -80   -80    3     0     0
+definesound A_SHRINK                 sounds/weapon/shrink.wav             -80   -80    3     0     0
+definesound A_SHRINKER               sounds/weapon/shrinker.wav           -80   -80    3     0     0
+definesound A_SQUISH                 sounds/weapon/squish.wav             -80   -80    3     0     0
+definesound A_LEADFIRE            sounds/weapon/shotgunfire.wav        -240   -240    3     0     0
+
+
+
+
+
+//Ambience
+define AAMB_COMPUTER 560
+define AAMB_FRY 561
+define AAMB_LAVA 562
+define AAMB_MACHINERY 563
+define AAMB_RUMBLE 564
+define AAMB_STINGER 565
+define AAMB_TRAIN 566
+define AAMB_WARAMB 567
+define AAMB_WIND 568
+define AAMB_A51SIRENLOOP 569
+define AAMB_ALIENMACHINERY 570
+define AAMB_HISS 571
+define A51SIRENLOOP_CUTSCENE 591 // Alternate definition for Area51 siren to have it easily play on repeat during a cutscene panel
+definesound AAMB_COMPUTER               sounds/amb/comloop.wav                 -80   -80    0     3     0
+definesound AAMB_FRY                    sounds/amb/fryloop.wav                 -80   -80    0     3     0
+definesound AAMB_LAVA                   sounds/amb/lava06.wav                  -80   -80    0     3     0
+definesound AAMB_MACHINERY              sounds/amb/machinery.wav               -80   -80    0     3     0
+definesound AAMB_RUMBLE                 sounds/amb/rumble.wav                  -80   -80    0     3     0
+definesound AAMB_STINGER                sounds/amb/stinger.wav                 -80   -80    0    16     0
+definesound AAMB_TRAIN                  sounds/amb/trainloop.wav               -80   -80    0     3     0
+definesound AAMB_WARAMB                 sounds/amb/waramb.wav                  -80   -80    0    16     0
+definesound AAMB_WIND                   sounds/amb/wind.wav                    -80   -80    0     3     0
+definesound AAMB_A51SIRENLOOP           sounds/amb/area51_siren.wav            -80   -80    0    16     0
+definesound AAMB_ALIENMACHINERY         sounds/amb/alienmachine.wav            -80   -80    0     3     0
+definesound AAMB_HISS                   sounds/amb/hiss.wav                    -80   -80    0    16     0
+definesound A51SIRENLOOP_CUTSCENE       sounds/amb/area51_siren.wav            -80   -80    0     3     0
+
+
+//Uttered by Duke Nukem
+define ADUKE_PAIN 573
+define ADUKE_USEMEDKIT 574
+define ADUKE_USEMEDKIT2 575
+define ADUKE_JIBBED1 576
+define ADUKE_JIBBED2 577
+define ADUKE_JIBBED3 578
+define ADUKE_JIBBED5 579
+define ADUKE_JIBBED6 580
+define ADUKE_JIBBED7 581
+define ADUKE_GETWEAPON1 582
+define ADUKE_GETWEAPON2 583
+define ADUKE_GETWEAPON4 584
+define ADUKE_GETWEAPON6 585
+define ADUKE_KILLED1 586
+define ADUKE_BONUS1 587
+define ADUKE_CRACK 588
+define ADUKE_SEARCH 589
+define ADUKE_ENDSEQVOL2SND7 590
+//          SOUND TOKEN               SOUND FILE                        Pitch Low--High   Prio  Type  Distance
+definesound ADUKE_PAIN           sounds/duke/owwh.wav                        -80   -80    255   4     0
+definesound ADUKE_USEMEDKIT      sounds/duke/ahh.wav                         -80   -80    255   4     0
+definesound ADUKE_USEMEDKIT2     sounds/duke/ahh2.wav                        -80   -80    255   4     0
+definesound ADUKE_JIBBED1        sounds/duke/amess.wav                       -80   -80    255   4     0
+definesound ADUKE_JIBBED2        sounds/duke/bitchin.wav                     -80   -80    255   4     0
+definesound ADUKE_JIBBED3        sounds/duke/holycw.wav                      -80   -80    255   4     0
+definesound ADUKE_JIBBED5        sounds/duke/imgood.wav                      -80   -80    255   4     0
+definesound ADUKE_JIBBED6        sounds/duke/piece.wav                       -80   -80    255   4     0
+definesound ADUKE_JIBBED7        sounds/duke/gothrt.wav                      -80   -80    255   4     0
+definesound ADUKE_GETWEAPON1     sounds/duke/cool.wav                        -80   -80    255   4     0
+definesound ADUKE_GETWEAPON2     sounds/duke/getsom.wav                      -80   -80    255   4     0
+definesound ADUKE_GETWEAPON4     sounds/duke/wansom.wav                      -80   -80    255   4     0
+definesound ADUKE_GETWEAPON6     sounds/duke/hail.wav                        -80   -80    255   4     0
+definesound ADUKE_KILLED1        sounds/duke/damn.wav                        -80   -80    255   4     0
+definesound ADUKE_BONUS1         sounds/duke/letsrock.wav                    -80   -80    255   4     0
+definesound ADUKE_CRACK          sounds/duke/waitin.wav                      -80   -80    255   4     0
+definesound ADUKE_SEARCH         sounds/duke/wallhump.wav                    -80   -80    255   4     0
+definesound ADUKE_ENDSEQVOL2SND7 sounds/duke/whistle.wav                     -80   -80    255   4     0
+
+//Gianni Matragrano lines
+define GM_THATSGOTTAHURT 600
+define GM_BACONBITS 601
+define GM_TIMEMORE 602
+define GM_LETSROCK 603
+define GM_NEWHARDWARE 604
+define GM_LETSROCK2 605
+define GM_PLENTYTOKICK 606
+define GM_DUKEOUT 607
+define GM_ALGAEEATERS 608
+define GM_WRONGPLANET 609
+define GM_CLOSEENCOUNTER 610
+define GM_BUBBLEGUM 611
+define GM_PIECEOFCAKE 612
+define GM_COMEGETSOME 613
+define GM_EGYPTIAN 614
+define GM_ROCKIN 615
+define GM_SWITCHFLIPPER 616
+define GM_SCORPIONKING 617
+define GM_CASEOFCRABS 618
+define GM_DAMNIMGOOD 619
+define GM_TWOWONDERS 620
+define GM_ALIENTELE 621
+define GM_HENDRIX 622
+define GM_JAMSSIGNAL 623
+define GM_MOTHERLODE 624
+define GM_EGGCRACKINTIME 625
+define GM_HURRYUP 626
+define GM_SHAKEITBABY 627
+define GM_ENGAGEMENTS 628
+define GM_HAILTOKING 629
+define GM_COOL 630
+define GM_WHOWANTSSOME 631
+define GM_HOTBABE 632
+define GM_DONTWORRY 633
+define GM_HOTFOOT 634
+define GM_ASSGOBLIN 635
+define GM_URANUS 636
+define GM_BETONDUKE 637
+define GM_GONNAPAY 638
+define GM_SIGNCHECKS 639
+define GM_ONMYWAY 640
+define GM_FAIRFIGHT 641
+define GM_STACKEDODDS 642
+define GM_RESURRECTOVERTIME 643
+define GM_DERAILED 644
+define GM_BULLETSTOKILL 645
+define GM_SHOOTMYWAY 646
+define GM_TUXEDO 647
+define GM_LAYFINGERS 648
+define GM_IMDUKE 649
+define GM_OVERHEATALIENS 650
+define GM_KICKINGBUTT 651
+define GM_SCRATCHBUTT 652
+define GM_FINDMYOWNWAY 653
+define GM_ACTIVATEDWEAPON 654
+define GM_ALIENANDSCHOOLGIRL 655
+define GM_ALIENAUTOPSY 656
+define GM_ALIENAUTOPSYEU 657
+define GM_ALIENSANDCAPTIVES 658
+define GM_ALMOSTTOOEASY 659
+define GM_ALOTTATALK 660
+define GM_BEFOREHEDIED 661
+define GM_BEFOREHEDIEDEU 662
+define GM_BETTERGETATEAM 663
+define GM_BETTERGETATEAMEU 664
+define GM_BIGBOSS 665
+define GM_BLOWISTHISSHIP 666
+define GM_BRAINSANDBRAWN 667
+define GM_BREEDINGSTOCK 668
+define GM_CANYOUREADME 669
+define GM_CANYOUREADMEEU 670
+define GM_CHARGINGUP 671
+define GM_CLAMBAKE 672
+define GM_CLOAKINGDEVICE 673
+define GM_CLOAKINGDEVICEEU 674
+define GM_CLONEBAKE 675
+define GM_CONTAINSDETAILS 676
+define GM_CRABCAKES 677
+define GM_CRUSTACEANCRETIN 678
+define GM_CRYINGTOMUMMY 679
+define GM_DAMNTELEMALFUNC 680
+define GM_DATADISK 681
+define GM_DATADISKEU 682
+define GM_DEBRIEFING 683
+define GM_DEJAVU 684
+define GM_DERAILPLANS 685
+define GM_DISTRESSCALL 686
+define GM_DISTRESSCALLEU 687
+define GM_DONTTELLME 688
+define GM_DOYOUREADME 689
+define GM_ENTIREARMYEU 690
+define GM_ENTIREARMY 691
+define GM_EVERYSECPRECIOUS 692
+define GM_FOLLOWTHEIRTRAIL 693
+define GM_FOUNDSCHEMATICS 694
+define GM_FOUNDSCHEMATICSEU 695
+define GM_GOINGTOSTOPTHEM 696
+define GM_GONNAGETOUTTAHERE 697
+define GM_GOTMYHANDSFULL 698
+define GM_GUTSTOMPINTIME 699
+define GM_HAVEABLAST 700
+define GM_HEARDTHATBEFORE 701
+define GM_HELLOFAPARTY 702
+define GM_HELLOFAPARTYEU 703
+define GM_HESINCONTROL 704
+define GM_HOOKEDINTOSYSTEMS 705
+define GM_ILLCONTACTYOU 706
+define GM_ILLFINDSOMEANSWERS 707
+define GM_IMCOMINGFORYOU 708
+define GM_IMIN 709
+define GM_IMINEU 710
+define GM_IMONIT 711
+define GM_INBREDALIENS 712
+define GM_ISEETHEIRPLAN 713
+define GM_ISEETHEIRPLANS2 714
+define GM_ISHUTITDOWN 715
+define GM_JENNY2STANDBY 716
+define GM_JENNY4 717
+define GM_JENNY5ENERGIZE 718
+define GM_KEEPANEYEOUT 719
+define GM_KNOWIMHERE 720
+define GM_LIFEEXPECTANCY 721
+define GM_LIKETHEIDEA 722
+define GM_LOTTASECURITY 723
+define GM_MOSTIMPRESSIVE 724
+define GM_MUSTBETHEWEAPON 725
+define GM_MUTANTMAGGOT 726
+define GM_MYPLACE 727
+define GM_NEVERLEARN 728
+define GM_NICKOFTIME 729
+define GM_NICKOFTIMEEU 730
+define GM_NOPROBLEMO 731
+define GM_NOTGONNABEEASY 732
+define GM_NOTHINGLIKECHALLENGE 733
+define GM_ONEBABEREADY 734
+define GM_OPERAHOUSE 735
+define GM_OPERAHOUSEEU 736
+define GM_OVERANDOUT 737
+define GM_PERMANENTHIBERNATION 738
+define GM_READYTODEFROST 739
+define GM_RESTOFTHEPARTY 740
+define GM_RODGERTHAT 741
+define GM_SATLINK 742
+define GM_SATLINKEU 743
+define GM_SEEWHEREITLEADS 744
+define GM_SELFDESTRUCT 745
+define GM_SHIPORBITINGEARTH 746
+define GM_SHIPORBITINGEARTHEU 747
+define GM_SHOWEREARTHWITHDUKE 748
+define GM_SIGNALJAMMED 749
+define GM_SIZE15BOOT 750
+define GM_SLIPPERYSNAKE 751
+define GM_SOURCEOFINFESTATION 752
+define GM_STARTDOWNLOADING 753
+define GM_STARTDOWNLOADINGEU 754
+define GM_STARTINGTOHEATUP 755
+define GM_STARTINGTOHEATUPEU 756
+define GM_SUBWAYSYSTEM 757
+define GM_SUBWAYSYSTEMEU 758
+define GM_TAKEHERAWAY 759
+define GM_TALKONOTHERSIDE 760
+define GM_TELEBROKE 761
+define GM_TICKTOCK 762
+define GM_TIPOFICEBERG 763
+define GM_TIPOFICEBERGEU 764
+define GM_TOOBUSYDYIN 765
+define GM_TOOLATE 766
+define GM_UNDEROURNOSES 767
+define GM_UNDEROURNOSESEU 768
+define GM_WATCHTHEFIREWORKS 769
+define GM_WHATPARTISBAD 770
+define GM_WHATYOUASKEDFOR 771
+define GM_WHEREHIDING 772
+define GM_WORKOVERTIME 773
+define GM_YOUANDWHATARMY 774
+define GM_YOULOOKFAMILIAR 775
+define GM_YOULOOKFAMILIAREU 776
+define GM_COMMUNICADO 777
+define GM_COMMUNICADOEU 778
+define GM_ILLFINDTHEM 779
+//          SOUND TOKEN               SOUND FILE                        Pitch Low--High   Prio  Type  Distance
+definesound GM_THATSGOTTAHURT         sounds/gianni/GM_ThatsGottaHurt.ogg     0     0     255   4     0
+definesound GM_BACONBITS              sounds/gianni/GM_BaconBits.ogg          0     0     255   4     0
+definesound GM_TIMEMORE               sounds/gianni/GM_TimeMore.ogg           0     0     255   4     0
+definesound GM_LETSROCK               sounds/gianni/GM_LetsRock.ogg           0     0     255   4     0
+definesound GM_NEWHARDWARE            sounds/gianni/GM_NewHardware.ogg        0     0     255   4     0
+definesound GM_LETSROCK2              sounds/gianni/GM_LetsRock2.ogg          0     0     255   4     0
+definesound GM_PLENTYTOKICK           sounds/gianni/GM_PlentyToKick.ogg       0     0     255   4     0
+definesound GM_DUKEOUT                sounds/gianni/GM_DukeOut.ogg            0     0     255   4     0
+definesound GM_ALGAEEATERS            sounds/gianni/GM_AlgaeEaters.ogg        0     0     255   4     0
+definesound GM_WRONGPLANET            sounds/gianni/GM_WrongPlanet.ogg        0     0     255   4     0
+definesound GM_CLOSEENCOUNTER         sounds/gianni/GM_CloseEncounter.ogg     0     0     255   4     0
+definesound GM_BUBBLEGUM              sounds/gianni/GM_BubbleGum.ogg          0     0     255   4     0
+definesound GM_PIECEOFCAKE            sounds/gianni/GM_PieceOfCake.ogg        0     0     255   4     0
+definesound GM_COMEGETSOME            sounds/gianni/GM_ComeGetSome.ogg        0     0     255   4     0
+definesound GM_EGYPTIAN               sounds/gianni/GM_Egyptian.ogg           0     0     255   4     0
+definesound GM_ROCKIN                 sounds/gianni/GM_Rockin.ogg             0     0     255   4     0
+definesound GM_SWITCHFLIPPER          sounds/gianni/GM_SwitchFlipper.ogg      0     0     255   4     0
+definesound GM_SCORPIONKING           sounds/gianni/GM_ScorpionKing.ogg       0     0     255   4     0
+definesound GM_CASEOFCRABS            sounds/gianni/GM_CaseOfCrabs.ogg        0     0     255   4     0
+definesound GM_DAMNIMGOOD             sounds/gianni/GM_DamnImGood.ogg         0     0     255   4     0
+definesound GM_TWOWONDERS             sounds/gianni/GM_TwoWonders.ogg         0     0     255   4     0
+definesound GM_ALIENTELE              sounds/gianni/GM_AlienTele.ogg          0     0     255   4     0
+definesound GM_HENDRIX                sounds/gianni/GM_Hendrix.ogg            0     0     255   4     0
+definesound GM_JAMSSIGNAL             sounds/gianni/GM_JamsSignal.ogg         0     0     255   4     0
+definesound GM_MOTHERLODE             sounds/gianni/GM_MotherLode.ogg         0     0     255   4     0
+definesound GM_EGGCRACKINTIME         sounds/gianni/GM_EggCrackinTime.ogg     0     0     255   4     0
+definesound GM_HURRYUP                sounds/gianni/GM_HurryUp.ogg            0     0     255   4     0
+definesound GM_SHAKEITBABY            sounds/gianni/GM_ShakeItBaby.ogg        0     0     255   4     0
+definesound GM_ENGAGEMENTS            sounds/gianni/GM_Engagements.ogg        0     0     255   4     0
+definesound GM_HAILTOKING             sounds/gianni/GM_HailToKing.ogg         0     0     255   4     0
+definesound GM_COOL                   sounds/gianni/GM_Cool.ogg               0     0     255   4     0
+definesound GM_WHOWANTSSOME           sounds/gianni/GM_WhoWantsSome.ogg       0     0     255   4     0
+definesound GM_HOTBABE                sounds/gianni/GM_HotBabe.ogg            0     0     255   4     0
+definesound GM_DONTWORRY              sounds/gianni/GM_DontWorry.ogg          0     0     255   4     0
+definesound GM_HOTFOOT                sounds/gianni/GM_HotFoot.ogg            0     0     255   4     0
+definesound GM_ASSGOBLIN              sounds/gianni/GM_AssGoblin.ogg          0     0     255   4     0
+definesound GM_URANUS                 sounds/gianni/GM_Uranus.ogg             0     0     255   4     0
+definesound GM_BETONDUKE              sounds/gianni/GM_BetOnDuke.ogg          0     0     255   4     0
+definesound GM_GONNAPAY               sounds/gianni/GM_GonnaPay.ogg           0     0     255   4     0
+definesound GM_SIGNCHECKS             sounds/gianni/GM_SignChecks.ogg         0     0     255   4     0
+definesound GM_ONMYWAY                sounds/gianni/GM_OnMyWay.ogg            0     0     255   4     0
+definesound GM_FAIRFIGHT              sounds/gianni/GM_FairFight.ogg          0     0     255   4     0
+definesound GM_STACKEDODDS            sounds/gianni/GM_StackedOdds.ogg        0     0     255   4     0
+definesound GM_RESURRECTOVERTIME      sounds/gianni/GM_ResurrectOvertime.ogg  0     0     255   4     0
+definesound GM_DERAILED               sounds/gianni/GM_Derailed.ogg           0     0     255   4     0
+definesound GM_BULLETSTOKILL          sounds/gianni/GM_BulletsToKill.ogg      0     0     255   4     0
+definesound GM_SHOOTMYWAY             sounds/gianni/GM_ShootMyWay.ogg         0     0     255   4     0
+definesound GM_TUXEDO                 sounds/gianni/GM_Tuxedo1.ogg            0     0     255   4     0
+definesound GM_LAYFINGERS             sounds/gianni/GM_LayFingers.ogg         0     0     255   4     0
+definesound GM_IMDUKE                 sounds/gianni/GM_ImDuke.ogg             0     0     255   4     0
+definesound GM_OVERHEATALIENS         sounds/gianni/GM_OverheatAliens.ogg     0     0     255   4     0
+definesound GM_KICKINGBUTT            sounds/gianni/GM_KickingButt.ogg        0     0     255   4     0
+definesound GM_SCRATCHBUTT            sounds/gianni/GM_ScratchButt.ogg        0     0     255   4     0
+definesound GM_FINDMYOWNWAY           sounds/gianni/GM_FindMyOwnWay.ogg       0     0     255   4     0
+definesound GM_ACTIVATEDWEAPON        sounds/gianni/GM_ActivatedWeapon.ogg    0     0     255   4     0
+definesound GM_ALIENANDSCHOOLGIRL     sounds/gianni/GM_AlienAndSchoolGirl.ogg 0     0     255   4     0
+definesound GM_ALIENAUTOPSY           sounds/gianni/GM_AlienAutopsy.ogg       0     0     255   4     0
+definesound GM_ALIENAUTOPSYEU         sounds/gianni/GM_AlienAutopsyEU.ogg     0     0     255   4     0
+definesound GM_ALIENSANDCAPTIVES      sounds/gianni/GM_AliensAndCaptives.ogg  0     0     255   4     0
+definesound GM_ALMOSTTOOEASY          sounds/gianni/GM_AlmostTooEasy.ogg      0     0     255   4     0
+definesound GM_ALOTTATALK             sounds/gianni/GM_AlottaTalk.ogg         0     0     255   4     0
+definesound GM_BEFOREHEDIED           sounds/gianni/GM_BeforeHeDied.ogg       0     0     255   4     0
+definesound GM_BEFOREHEDIEDEU         sounds/gianni/GM_BeforeHeDiedEU.ogg     0     0     255   4     0
+definesound GM_BETTERGETATEAM         sounds/gianni/GM_BetterGetATeam.ogg     0     0     255   4     0
+definesound GM_BETTERGETATEAMEU       sounds/gianni/GM_BetterGetATeamEU.ogg   0     0     255   4     0
+definesound GM_BIGBOSS                sounds/gianni/GM_BigBoss.ogg            0     0     255   4     0
+definesound GM_BLOWISTHISSHIP         sounds/gianni/GM_BlowIsThisShip.ogg     0     0     255   4     0
+definesound GM_BRAINSANDBRAWN         sounds/gianni/GM_BrainsAndBrawn.ogg     0     0     255   4     0
+definesound GM_BREEDINGSTOCK          sounds/gianni/GM_BreedingStock.ogg      0     0     255   4     0
+definesound GM_CANYOUREADME           sounds/gianni/GM_CanYouReadMe.ogg       0     0     255   4     0
+definesound GM_CANYOUREADMEEU         sounds/gianni/GM_CanYouReadMeEU.ogg     0     0     255   4     0
+definesound GM_CHARGINGUP             sounds/gianni/GM_ChargingUp.ogg         0     0     255   4     0
+definesound GM_CLAMBAKE               sounds/gianni/GM_ClamBake.ogg           0     0     255   4     0
+definesound GM_CLOAKINGDEVICE         sounds/gianni/GM_CloakingDevice.ogg     0     0     255   4     0
+definesound GM_CLOAKINGDEVICEEU       sounds/gianni/GM_CloakingDeviceEU.ogg   0     0     255   4     0
+definesound GM_CLONEBAKE              sounds/gianni/GM_CloneBake.ogg          0     0     255   4     0
+definesound GM_CONTAINSDETAILS        sounds/gianni/GM_ContainsDetails.ogg    0     0     255   4     0
+definesound GM_CRABCAKES              sounds/gianni/GM_CrabCakes.ogg          0     0     255   4     0
+definesound GM_CRUSTACEANCRETIN       sounds/gianni/GM_CrustaceanCretin.ogg   0     0     255   4     0
+definesound GM_CRYINGTOMUMMY          sounds/gianni/GM_CryingToMummy.ogg      0     0     255   4     0
+definesound GM_DAMNTELEMALFUNC        sounds/gianni/GM_DamnTeleMalfunc.ogg    0     0     255   4     0
+definesound GM_DATADISK               sounds/gianni/GM_DataDisk.ogg           0     0     255   4     0
+definesound GM_DATADISKEU             sounds/gianni/GM_DataDiskEU.ogg         0     0     255   4     0
+definesound GM_DEBRIEFING             sounds/gianni/GM_Debriefing.ogg         0     0     255   4     0
+definesound GM_DEJAVU                 sounds/gianni/GM_DejaVu.ogg             0     0     255   4     0
+definesound GM_DERAILPLANS            sounds/gianni/GM_DerailPlans.ogg        0     0     255   4     0
+definesound GM_DISTRESSCALL           sounds/gianni/GM_DistressCall.ogg       0     0     255   4     0
+definesound GM_DISTRESSCALLEU         sounds/gianni/GM_DistressCallEU.ogg     0     0     255   4     0
+definesound GM_DONTTELLME             sounds/gianni/GM_DontTellMe.ogg         0     0     255   4     0
+definesound GM_DOYOUREADME            sounds/gianni/GM_DoYouReadMe.ogg        0     0     255   4     0
+definesound GM_ENTIREARMYEU           sounds/gianni/GM_EntireArmyEU.ogg       0     0     255   4     0
+definesound GM_ENTIREARMY             sounds/gianni/GM_EntireArmy.ogg         0     0     255   4     0
+definesound GM_EVERYSECPRECIOUS       sounds/gianni/GM_EverySecPrecious.ogg   0     0     255   4     0
+definesound GM_FOLLOWTHEIRTRAIL       sounds/gianni/GM_FollowTheirTrail.ogg   0     0     255   4     0
+definesound GM_FOUNDSCHEMATICS        sounds/gianni/GM_FoundSchematics.ogg    0     0     255   4     0
+definesound GM_FOUNDSCHEMATICSEU      sounds/gianni/GM_FoundSchematicsEU.ogg  0     0     255   4     0
+definesound GM_GOINGTOSTOPTHEM        sounds/gianni/GM_GoingToStopThem.ogg    0     0     255   4     0
+definesound GM_GONNAGETOUTTAHERE      sounds/gianni/GM_GonnaGetOuttaHere.ogg  0     0     255   4     0
+definesound GM_GOTMYHANDSFULL         sounds/gianni/GM_GotMyHandsFull.ogg     0     0     255   4     0
+definesound GM_GUTSTOMPINTIME         sounds/gianni/GM_GutStompinTime.ogg     0     0     255   4     0
+definesound GM_HAVEABLAST             sounds/gianni/GM_HaveABlast.ogg         0     0     255   4     0
+definesound GM_HEARDTHATBEFORE        sounds/gianni/GM_HeardThatBefore.ogg    0     0     255   4     0
+definesound GM_HELLOFAPARTY           sounds/gianni/GM_HellOfAParty.ogg       0     0     255   4     0
+definesound GM_HELLOFAPARTYEU         sounds/gianni/GM_HellOfAPartyEU.ogg     0     0     255   4     0
+definesound GM_HESINCONTROL           sounds/gianni/GM_HesInControl.ogg       0     0     255   4     0
+definesound GM_HOOKEDINTOSYSTEMS      sounds/gianni/GM_HookedIntoSystems.ogg  0     0     255   4     0
+definesound GM_ILLCONTACTYOU          sounds/gianni/GM_IllContactYou.ogg      0     0     255   4     0
+definesound GM_ILLFINDSOMEANSWERS     sounds/gianni/GM_IllFindSomeAnswers.ogg 0     0     255   4     0
+definesound GM_IMCOMINGFORYOU         sounds/gianni/GM_ImComingForYou.ogg     0     0     255   4     0
+definesound GM_IMIN                   sounds/gianni/GM_ImIn.ogg               0     0     255   4     0
+definesound GM_IMINEU                 sounds/gianni/GM_ImInEU.ogg             0     0     255   4     0
+definesound GM_IMONIT                 sounds/gianni/GM_ImOnIt.ogg             0     0     255   4     0
+definesound GM_INBREDALIENS           sounds/gianni/GM_InbredAliens.ogg       0     0     255   4     0
+definesound GM_ISEETHEIRPLAN          sounds/gianni/GM_ISeeTheirPlan.ogg      0     0     255   4     0
+definesound GM_ISEETHEIRPLANS2        sounds/gianni/GM_ISeeTheirPlans2.ogg    0     0     255   4     0
+definesound GM_ISHUTITDOWN            sounds/gianni/GM_IShutItDown.ogg        0     0     255   4     0
+definesound GM_JENNY2STANDBY          sounds/gianni/GM_Jenny2StandBy.ogg      0     0     255   4     0
+definesound GM_JENNY4                 sounds/gianni/GM_Jenny4.ogg             0     0     255   4     0
+definesound GM_JENNY5ENERGIZE         sounds/gianni/GM_Jenny5Energize.ogg     0     0     255   4     0
+definesound GM_KEEPANEYEOUT           sounds/gianni/GM_KeepAnEyeOut.ogg       0     0     255   4     0
+definesound GM_KNOWIMHERE             sounds/gianni/GM_KnowImHere.ogg         0     0     255   4     0
+definesound GM_LIFEEXPECTANCY         sounds/gianni/GM_LifeExpectancy.ogg     0     0     255   4     0
+definesound GM_LIKETHEIDEA            sounds/gianni/GM_LikeTheIdea.ogg        0     0     255   4     0
+definesound GM_LOTTASECURITY          sounds/gianni/GM_LottaSecurity.ogg      0     0     255   4     0
+definesound GM_MOSTIMPRESSIVE         sounds/gianni/GM_MostImpressive.ogg     0     0     255   4     0
+definesound GM_MUSTBETHEWEAPON        sounds/gianni/GM_MustBeTheWeapon.ogg    0     0     255   4     0
+definesound GM_MUTANTMAGGOT           sounds/gianni/GM_MutantMaggot.ogg       0     0     255   4     0
+definesound GM_MYPLACE                sounds/gianni/GM_MyPlace.ogg            0     0     255   4     0
+definesound GM_NEVERLEARN             sounds/gianni/GM_NeverLearn.ogg         0     0     255   4     0
+definesound GM_NICKOFTIME             sounds/gianni/GM_NickOfTime.ogg         0     0     255   4     0
+definesound GM_NICKOFTIMEEU           sounds/gianni/GM_NickOfTimeEU.ogg       0     0     255   4     0
+definesound GM_NOPROBLEMO             sounds/gianni/GM_NoProblemo.ogg         0     0     255   4     0
+definesound GM_NOTGONNABEEASY         sounds/gianni/GM_NotGonnaBeEasy.ogg     0     0     255   4     0
+definesound GM_NOTHINGLIKECHALLENGE   sounds/gianni/GM_NothingLikeChallenge.ogg  0     0     255   4     0
+definesound GM_ONEBABEREADY           sounds/gianni/GM_OneBabeReady.ogg       0     0     255   4     0
+definesound GM_OPERAHOUSE             sounds/gianni/GM_OperaHouse.ogg         0     0     255   4     0
+definesound GM_OPERAHOUSEEU           sounds/gianni/GM_OperaHouseEU.ogg       0     0     255   4     0
+definesound GM_OVERANDOUT             sounds/gianni/GM_OverAndOut.ogg         0     0     255   4     0
+definesound GM_PERMANENTHIBERNATION   sounds/gianni/GM_PermanentHibernation.ogg    0     0     255   4     0
+definesound GM_READYTODEFROST         sounds/gianni/GM_ReadyToDefrost.ogg     0     0     255   4     0
+definesound GM_RESTOFTHEPARTY         sounds/gianni/GM_RestOfTheParty.ogg     0     0     255   4     0
+definesound GM_RODGERTHAT             sounds/gianni/GM_RodgerThat.ogg         0     0     255   4     0
+definesound GM_SATLINK                sounds/gianni/GM_Satlink.ogg            0     0     255   4     0
+definesound GM_SATLINKEU              sounds/gianni/GM_SatlinkEU.ogg          0     0     255   4     0
+definesound GM_SEEWHEREITLEADS        sounds/gianni/GM_SeeWhereItLeads.ogg    0     0     255   4     0
+definesound GM_SELFDESTRUCT           sounds/gianni/GM_SelfDestruct.ogg       0     0     255   4     0
+definesound GM_SHIPORBITINGEARTH      sounds/gianni/GM_ShipOrbitingEarth.ogg  0     0     255   4     0
+definesound GM_SHIPORBITINGEARTHEU    sounds/gianni/GM_ShipOrbitingEarthEU.ogg  0     0     255   4     0
+definesound GM_SHOWEREARTHWITHDUKE    sounds/gianni/GM_ShowerEarthWithDuke.ogg  0     0     255   4     0
+definesound GM_SIGNALJAMMED           sounds/gianni/GM_SignalJammed.ogg       0     0     255   4     0
+definesound GM_SIZE15BOOT             sounds/gianni/GM_Size15Boot.ogg         0     0     255   4     0
+definesound GM_SLIPPERYSNAKE          sounds/gianni/GM_SlipperySnake.ogg      0     0     255   4     0
+definesound GM_SOURCEOFINFESTATION    sounds/gianni/GM_SourceOfInfestation.ogg  0     0     255   4     0
+definesound GM_STARTDOWNLOADING       sounds/gianni/GM_StartDownloading.ogg   0     0     255   4     0
+definesound GM_STARTDOWNLOADINGEU     sounds/gianni/GM_StartDownloadingEU.ogg 0     0     255   4     0
+definesound GM_STARTINGTOHEATUP       sounds/gianni/GM_StartingToHeatUp.ogg   0     0     255   4     0
+definesound GM_STARTINGTOHEATUPEU     sounds/gianni/GM_StartingToHeatUpEU.ogg 0     0     255   4     0
+definesound GM_SUBWAYSYSTEM           sounds/gianni/GM_SubwaySystem.ogg       0     0     255   4     0
+definesound GM_SUBWAYSYSTEMEU         sounds/gianni/GM_SubwaySystemEU.ogg     0     0     255   4     0
+definesound GM_TAKEHERAWAY            sounds/gianni/GM_TakeHerAway.ogg        0     0     255   4     0
+definesound GM_TALKONOTHERSIDE        sounds/gianni/GM_TalkOnOtherSide.ogg    0     0     255   4     0
+definesound GM_TELEBROKE              sounds/gianni/GM_TeleBroke.ogg          0     0     255   4     0
+definesound GM_TICKTOCK               sounds/gianni/GM_TickTock.ogg           0     0     255   4     0
+definesound GM_TIPOFICEBERG           sounds/gianni/GM_TipOfIceberg.ogg       0     0     255   4     0
+definesound GM_TIPOFICEBERGEU         sounds/gianni/GM_TipOfIcebergEU.ogg     0     0     255   4     0
+definesound GM_TOOBUSYDYIN            sounds/gianni/GM_TooBusyDyin.ogg        0     0     255   4     0
+definesound GM_TOOLATE                sounds/gianni/GM_TooLate.ogg            0     0     255   4     0
+definesound GM_UNDEROURNOSES          sounds/gianni/GM_UnderOurNoses.ogg      0     0     255   4     0
+definesound GM_UNDEROURNOSESEU        sounds/gianni/GM_UnderOurNosesEU.ogg    0     0     255   4     0
+definesound GM_WATCHTHEFIREWORKS      sounds/gianni/GM_WatchTheFireworks.ogg  0     0     255   4     0
+definesound GM_WHATPARTISBAD          sounds/gianni/GM_WhatPartIsBad.ogg      0     0     255   4     0
+definesound GM_WHATYOUASKEDFOR        sounds/gianni/GM_WhatYouAskedFor.ogg    0     0     255   4     0
+definesound GM_WHEREHIDING            sounds/gianni/GM_WhereHiding.ogg        0     0     255   4     0
+definesound GM_WORKOVERTIME           sounds/gianni/GM_WorkOvertime.ogg       0     0     255   4     0
+definesound GM_YOUANDWHATARMY         sounds/gianni/GM_YouAndWhatArmy.ogg     0     0     255   4     0
+definesound GM_YOULOOKFAMILIAR        sounds/gianni/GM_YouLookFamiliar.ogg    0     0     255   4     0
+definesound GM_YOULOOKFAMILIAREU      sounds/gianni/GM_YouLookFamiliarEU.ogg  0     0     255   4     0
+definesound GM_COMMUNICADO            sounds/gianni/GM_Communicado.ogg        0     0     255   4     0
+definesound GM_COMMUNICADOEU          sounds/gianni/GM_CommunicadoEU.ogg      0     0     255   4     0
+definesound GM_ILLFINDTHEM            sounds/gianni/GM_IllFindThem.ogg      0     0     255   4     0
+
+
+// Episodes
+definevolumename 0 Duke Advance
+undefinevolume 1
+undefinevolume 2
+undefinevolume 3
+undefinevolume 4
+
+//Skills
+defineskillname 0 PIECE OF CAKE
+defineskillname 1 LET'S ROCK
+defineskillname 2 COME GET SOME
+defineskillname 3 DAMN I'M GOOD
+// defineskillname 4 ADVANCED
+// defineskillname 5 PLAY IT LOUD
+
+// Levels - par times are currently set to the GBA's pars 
+definelevelname 0 0 maps/MAP01.map 01:03 00:00 1A
+definelevelname 0 1 maps/MAP02.map 02:21 00:00 1B
+definelevelname 0 2 maps/MAP03.map 03:18 00:00 1C
+definelevelname 0 3 maps/MAP04.map 04:30 00:00 2A
+definelevelname 0 4 maps/MAP05.map 05:31 00:00 2B
+definelevelname 0 5 maps/MAP06.map 06:30 00:00 2C
+definelevelname 0 6 maps/MAP07.map 01:05 00:00 2D
+definelevelname 0 7 maps/MAP08.map 04:30 00:00 3A
+definelevelname 0 8 maps/MAP09.map 04:15 00:00 3B
+definelevelname 0 9 maps/MAP10.map 05:02 00:00 3C
+definelevelname 0 10 maps/MAP11.map 02:30 00:00 3D
+definelevelname 0 11 maps/MAP12.map 03:54 00:00 4A
+definelevelname 0 12 maps/MAP13.map 06:01 00:00 4B
+definelevelname 0 13 maps/MAP14.map 03:23 00:00 4C
+definelevelname 0 14 maps/MAP15.map 06:18 00:00 4D
+definelevelname 0 15 maps/MAP16.map 06:16 00:00 4E
+definelevelname 0 16 maps/MAP17.map 14:34 00:00 4F
+definelevelname 0 17 maps/MAP18.map 07:45 00:00 4G
+definelevelname 0 18 maps/MAP19.map 01:24 00:00 4H
+
+// Music
+music 1
+//Level 1    Level 2     Level 3    Level 4    Level 5     Level 6    Level 7    Level 8   Level 9      Level 10     Level 11 Level 12  Level 13     Level 14    Level 15   Level 16   Level 17     Level 18     Level 19
+restrict.mid xplasma.mid alienz.mid music/DesertMaze.ogg thecall.mid gloomy.mid ahgeez.mid prepd.mid inhiding.mid watrwld1.mid pob.mid  storm.mid warehaus.mid intents.mid stalag.mid spook.mid  robocrep.mid gutwrnch.mid depart.mid
+
+// Override for end level screen music
+definesound BONUSMUSIC          music/grabbag.ogg         0 0 255 1 0
+
+// Overwrites for the main game definitions
+definequote 9         YOU HAVE DISCOVERED A SECRET!
+definequote 19        +100 HEALTH
+definequote 38        +50 ARMOR
+definequote 54        MP5
+definequote 55        PIPE BOMB
+definequote 56        RPG
+definequote 59        FREEZE GUN
+definequote 60        SHRINK RAY
+definequote 61        +10 HEALTH
+definequote 62        +25 HEALTH
+definequote 63        MP5 AMMO
+definequote 64        5 ROCKETS
+definequote 65        AMMO CLIP
+definequote 66        ENERGY CLIP
+definequote 69        10 SHELLS
+//definequote 78        AMMO FOR SHRINKER
+
+definesound CAPT_ATTACK                 sounds/weapon/mp5fire.wav            -80   -80    3     0     0
+definesound PISTOL_FIRE                 sounds/weapon/pistol.wav             -80   -80    3     0     0
+definesound SQUISHED                    sounds/weapon/squish.wav             -80   -80    3     0     0
+definesound SHRINKER_FIRE               sounds/weapon/shrink.wav             -80   -80    3     0     0
+definesound ACTOR_SHRINKING             sounds/weapon/shrinker.wav           -80   -80    3     0     0
+definesound PIPEBOMB_BOUNCE             sounds/weapon/bounce.wav             -80   -80    3     0     0
+definesound TELEPORTER                  sounds/env/teleport.wav              -80   -80    3     0     0
+definesound PISTOL_RICOCHET             sounds/weapon/ricochet.wav           -80   -80    3     0     0
+definesound CHAINGUN_FIRE               sounds/weapon/mp5fire.wav            -80   -80    3     0     0
+definesound SHOTGUN_COCK                sounds/weapon/shotguncock.wav        -80   -80    3     0     0
+definesound EJECT_CLIP                  sounds/weapon/shotguncock.wav          0     0    0     0     0     0  
+definesound INSERT_CLIP                 sounds/weapon/shotguncock.wav        -80   -80    3     0     0
+definesound SHOTGUN_FIRE                sounds/weapon/shotgunfire.wav        -80   -80    3     0     0
+definesound SELECT_WEAPON               sounds/weapon/shotguncock.wav        -80   -80    3     0     0
+definesound VENT_BUST                   sounds/env/ventbust.wav              -80   -80    3     0     0
+definesound DUKE_DEAD                   sounds/duke/owwh.wav                 -80   -80    255   4     0
+definesound DUKE_USEMEDKIT              sounds/duke/ahh.wav                  -80   -80    255   4     0
+definesound JIBBED_ACTOR1               sounds/duke/amess.wav                -80   -80    255   4     0
+definesound JIBBED_ACTOR2               sounds/duke/bitchin.wav              -80   -80    255   4     0
+definesound JIBBED_ACTOR3               sounds/duke/holycw.wav               -80   -80    255   4     0
+definesound JIBBED_ACTOR5               sounds/duke/imgood.wav               -80   -80    255   4     0
+definesound JIBBED_ACTOR6               sounds/duke/piece.wav                -80   -80    255   4     0
+definesound JIBBED_ACTOR7               sounds/duke/gothrt.wav               -80   -80    255   4     0
+definesound DUKE_GETWEAPON1             sounds/duke/cool.wav                 -80   -80    255   4     0
+definesound DUKE_GETWEAPON2             sounds/duke/getsom.wav               -80   -80    255   4     0
+definesound DUKE_GETWEAPON4             sounds/duke/wansom.wav               -80   -80    255   4     0
+definesound DUKE_GETWEAPON6             sounds/duke/hail.wav                 -80   -80    255   4     0
+definesound DUKE_KILLED1                sounds/duke/damn.wav                 -80   -80    255   4     0
+definesound BONUS_SPEECH1               sounds/duke/letsrock.wav             -80   -80    255   4     0
+definesound DUKE_CRACK                  sounds/duke/waitin.wav               -80   -80    255   4     0
+definesound DUKE_SEARCH                 sounds/duke/wallhump.wav             -80   -80    255   4     0
+definesound ENDSEQVOL2SND7              sounds/duke/whistle.wav              -80   -80    255   4     0
+definesound RPG_EXPLODE                 sounds/weapon/explosion.wav          -80   -80    3     0     0

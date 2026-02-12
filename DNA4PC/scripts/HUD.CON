@@ -1,0 +1,1030 @@
+	// Special thanks to Jblade35's mod Nuclear Showdown, whose DNA Hud variant was referenced in learning Hud coding
+
+	definegamefuncname 36 MOD_MENU
+
+	definequote 1020 Press %s to open Mod Menu
+	definequote 1021
+	definequote 1022
+	
+	gamevar dna_menu 0 1
+	gamevar dna_menu_selected 0 1
+	gamevar dna_menu_page 0 1
+
+	gamevar shade 0 1
+
+	define MENU_DELAY_TIME 200
+
+	gamevar tempm 0
+	gamevar tempm_last 0 
+
+	defstate dna_menu_select_change
+	{
+		setvar delayTime MENU_DELAY_TIME
+		screensound A_PICKARMOR
+	}
+	ends
+
+	defstate draw_hud_text
+	{
+		ifvarn dna_menu_tutorial 0 nullop
+		else
+		{
+			screentext STARTALPHANUM 60 48 49152 0 0 1020 0 0 16 0 5 0 0 0 0 0 0 xdim ydim
+		}
+
+		ifvarg mission_count 0 
+		{
+			screentext STARTALPHANUM 4 48 32768 0 0 DNA_COUNTQUOTE 0 0 256 0 5 0 0 0 0 0 0 xdim ydim
+		}
+	}
+	ends
+
+	defstate draw_dna_hud
+	{
+		
+		state draw_hud_text
+		rotatesprite 39 20 NORMALSIZE 0 5369 0 0 256 0 0 xdim ydim
+		getactor[THISACTOR].extra INV_TEMP
+		digitalnumber 5386 24 10 INV_TEMP 0 32 256 0 0 xdim ydim
+		getplayer[THISACTOR].shield_amount INV_TEMP
+		
+		ifvarg INV_TEMP 99 { rotatesprite 38 32 NORMALSIZE 0 5375 0 0 256 0 0 xdim ydim }
+		ifvarg INV_TEMP 89 { rotatesprite 38 32 NORMALSIZE 0 5376 0 0 256 0 0 xdim ydim }
+		ifvarg INV_TEMP 79 { rotatesprite 38 32 NORMALSIZE 0 5377 0 0 256 0 0 xdim ydim }
+		ifvarg INV_TEMP 69 { rotatesprite 38 32 NORMALSIZE 0 5378 0 0 256 0 0 xdim ydim }
+		ifvarg INV_TEMP 59 { rotatesprite 38 32 NORMALSIZE 0 5379 0 0 256 0 0 xdim ydim }
+		ifvarg INV_TEMP 49 { rotatesprite 38 32 NORMALSIZE 0 5380 0 0 256 0 0 xdim ydim }
+		ifvarg INV_TEMP 39 { rotatesprite 38 32 NORMALSIZE 0 5381 0 0 256 0 0 xdim ydim }
+		ifvarg INV_TEMP 29 { rotatesprite 38 32 NORMALSIZE 0 5382 0 0 256 0 0 xdim ydim }
+		ifvarg INV_TEMP 19 { rotatesprite 38 32 NORMALSIZE 0 5383 0 0 256 0 0 xdim ydim }
+		ifvarg INV_TEMP 9 { rotatesprite 38 32 NORMALSIZE 0 5384 0 0 256 0 0 xdim ydim }
+
+		rotatesprite 286 29 NORMALSIZE 0 5370 0 0 512 0 0 xdim ydim
+		
+		getp[].curr_weapon temp
+        switch temp
+            case 10
+                getplayer[THISACTOR].ammo_amount 5 INV_TEMP
+                break
+            case 7
+                getplayer[THISACTOR].ammo_amount 2 INV_TEMP
+                break
+            default
+                getplayer[THISACTOR].ammo_amount temp INV_TEMP
+                break
+        endswitch
+        
+			digitalnumber 5386 302 10 INV_TEMP 0 32 512 0 0 xdim ydim
+
+			ifvarand player[THISACTOR].got_access lock_bluekey   { rotatesprite 294 31 NORMALSIZE 0 5372 0 0 512 0 0 xdim ydim }
+			ifvarand player[THISACTOR].got_access lock_redkey    { rotatesprite 278 31 NORMALSIZE 0 5371 0 0 512 0 0 xdim ydim }
+			ifvarand player[THISACTOR].got_access lock_yellowkey { rotatesprite 310 31 NORMALSIZE 0 5373 0 0 512 0 0 xdim ydim }
+
+			ifvare dna_key_hud 0
+			{
+				// Method below has the mission objective keys fill the blue red yellow key slots respectively, which is how the hud behaves in DNA 
+				ifvarand player[THISACTOR].got_access lock_cdkey     { rotatesprite 294 31 NORMALSIZE 0 5372 0 0 512 0 0 xdim ydim }
+				ifvarand player[THISACTOR].got_access lock_syskey    { rotatesprite 278 31 NORMALSIZE 0 5371 0 0 512 0 0 xdim ydim }
+				ifvarand player[THISACTOR].got_access lock_chipkey   { rotatesprite 310 31 NORMALSIZE 0 5373 0 0 512 0 0 xdim ydim }
+			}
+			else 
+			{
+				// Method below puts mission objective sprite below key hud as a seperate indicator
+				ifvarand player[THISACTOR].got_access lock_cdkey     { rotatesprite 294 46 18432 0 3902 0 0 512 0 0 xdim ydim }
+				ifvarand player[THISACTOR].got_access lock_syskey    { rotatesprite 278 46 18432 0 3901 0 0 512 0 0 xdim ydim }
+				ifvarand player[THISACTOR].got_access lock_chipkey   { rotatesprite 310 46 18432 0 3903 0 0 512 0 0 xdim ydim }
+			}
+			
+
+			getplayer[THISACTOR].inven_icon INV_TEMP
+		ifvarn INV_TEMP 0
+		{
+			ifvare INV_TEMP 1 // Medkit
+				{
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2460 0 0 256 0 0 xdim ydim
+					getplayer[THISACTOR].firstaid_amount INV_NUM_TEMP
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
+				}
+
+			ifvare INV_TEMP 2 // Steroids
+				{
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2469 0 0 256 0 0 xdim ydim
+					getplayer[THISACTOR].steroids_amount INV_NUM_TEMP
+					divvar INV_NUM_TEMP 4
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
+				}
+			ifvare INV_TEMP 3 // Holoduke
+				{
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2470 0 0 256 0 0 xdim ydim
+					getplayer[THISACTOR].holoduke_amount INV_NUM_TEMP
+					divvar INV_NUM_TEMP 24
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
+				}
+			ifvare INV_TEMP 4 // Jetpack
+				{
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2467 0 0 256 0 0 xdim ydim
+					getplayer[THISACTOR].jetpack_amount INV_NUM_TEMP
+					divvar INV_NUM_TEMP 16
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
+				}
+			ifvare INV_TEMP 5 // Night Vision
+				{
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2461 0 0 256 0 0 xdim ydim
+					getplayer[THISACTOR].heat_amount INV_NUM_TEMP
+					divvar INV_NUM_TEMP 12
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
+				}
+			ifvare INV_TEMP 6 // Scuba Gear
+				{
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2468 0 0 256 0 0 xdim ydim
+					getplayer[THISACTOR].scuba_amount INV_NUM_TEMP
+					divvar INV_NUM_TEMP 64
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE 
+				}
+			ifvare INV_TEMP 7 // Boots
+				{
+					rotatesprite INV_X INV_Y NORMALSIZE 0 2463 0 0 256 0 0 xdim ydim
+					getplayer[THISACTOR].boot_amount INV_NUM_TEMP
+					divvar INV_NUM_TEMP 2
+					digitalnumberz 5902 INV_TEXT_X INV_TEXT_Y INV_NUM_TEMP 0 12 256 0 0 xdim ydim NORMALSIZE
+				}
+		}
+	}
+	ends
+
+	defstate draw_dna_timer
+	{
+		ifvarg eggtimer 0
+		{
+			rotatesprite 139 0 NORMALSIZE 0 5374 0 0 16 0 0 xdim ydim
+			set temp eggtimer
+			div temp 30
+			mod temp 3600
+			set temp2 temp
+			mod temp2 60
+			div temp 60
+			digitalnumber 5386 150 6 temp 0 32 16 0 0 xdim ydim
+			digitalnumber 5386 166 6 temp2 0 32 16 0 0 xdim ydim
+		}
+	}
+	ends
+
+	// Thanks to Mblackwell for this text override suggestion
+	// leave a blank quote
+	definequote 400 
+	// have "display quotes" for seprate screentexts
+	definequote 401  
+	definequote 402
+	gamevar quote_y 0 0
+	gamevar mid_quote_timer 0 0
+	appendevent EVENT_DISPLAYSTART // before anything shows up on screen
+		ife player.dead_flag 0 {
+			ifge player.fta 99 // if the player had the quote timer bumped
+			{
+				ifn player.ftq 400 
+				{
+					// quotes pertaining to secrets or locks are checked
+					// if one of these quotes are found the seperate quote display is triggered
+					switch player.ftq
+					case 9 {
+						ifrnd 128
+							soundonce DUKE_GETWEAPON1
+						else 
+							soundonce JIBBED_ACTOR2
+						qstrcpy 402 player.ftq
+						// setting timer here will display the midscreen quote display
+						setvar mid_quote_timer 3000
+						break
+					}
+					case LOCKQUOTE {
+						qstrcpy 402 player.ftq
+						setvar mid_quote_timer 3000
+						break
+					}
+					default {
+						qstrcpy 401 player.ftq
+						break
+					}
+					endswitch
+
+					// set the quote the game will try and display to our blank one
+					setp[].ftq 400
+				}			
+			}
+		}
+		else {
+			qstrcpy 402 400
+			qstrcpy 401 400
+			setp[].fta 0
+		}
+	endevent
+
+	defstate draw_dna_quotes
+	ifn userdef.fta_on 0 // if messages are not disabled
+	{
+		ifg player.fta 0 // if the message timer is still going
+		{
+			// some screentext to draw the quote message 401 (also you can emulate the fade-in/out based on the value of player.fta)
+			ifvarg eggtimer 0 { setvar quote_y 30 }
+			else setvar quote_y 1
+			
+			screentext STARTALPHANUM 160 quote_y 65536 0 0 401 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+		}
+		else
+		{
+			ifn 401 400
+			{
+				qstrcpy 401 400
+			}
+		}
+
+		ifg mid_quote_timer 0 // if the mid-screen message timer is still going
+		{
+			
+			screentext STARTALPHANUM 160 70 65536 0 0 402 0 0 16 0 8 0 0 0 2 0 0 xdim ydim
+
+			// timer added to keep track of seperate message display
+			getticks curtick
+			ifvare quote_prevtick -1 setvar ticktmp 0 else
+			{
+				setvarvar ticktmp curtick
+				subvarvar ticktmp quote_prevtick
+			}
+
+			subvarvar mid_quote_timer ticktmp
+						
+			setvarvar quote_prevtick curtick
+		}
+		else 
+		{
+			ifn 402 400
+			{
+				qstrcpy 402 400
+				setvar quote_prevtick -1
+			}	
+		}
+
+		ifn player.dead_flag 0 {
+			state setsqraspect
+			screentext DNASMALLTEXT 160 100 65536 0 0 13 0 0 16 0 8 0 0 0 8202 0 0 xdim ydim // Death quote
+			state setdosaspect
+		}
+	}
+	ends
+
+defstate dna_camera_hud
+	state setsqraspect
+	rotatesprite 285 5 65536 0 CAM_REC 0 0 8 0 0 xdim ydim
+	set CUTSCENE_SPRITE DUKEHEADSPRITE 
+	set textQuoteRow1 CAM_QUOTE1
+	state display_cutscene_dialogue
+	state setdosaspect
+ends
+
+onevent EVENT_TURNAROUND
+setvar RETURN -1
+	ifvare dna_menu 0 
+	{
+		setvar delayTime 600
+		screensound A_ALIENSWITCH
+		ifvarn dna_menu_tutorial 0 nullop
+		else
+		{
+			setvar dna_menu_tutorial 1
+			savegamevar dna_menu_tutorial
+		}
+		setvar dna_menu 1
+		setvar dna_menu_page 0
+		setplayer[THISACTOR].movement_lock 31
+	} 
+	// else ifvare dna_menu 1
+	// {
+	// 	ifvarg delayTime 0 nullop 
+	// 	else
+	// 	{
+	// 		setvar dna_menu 0
+	// 		setvar dna_menu_selected 0
+	// 		setplayer[THISACTOR].movement_lock 0
+	// 	}
+	// }
+	// addlogvar dna_menu
+
+endevent
+
+definequote 1001 Localization
+definequote 1002 Level Music
+definequote 1003 Level Cutscenes
+definequote 1004 Cutscene Duke Voice
+definequote 1005 Crosshair Type
+definequote 1006 0
+definequote 1007 0
+definequote 1008 0
+definequote 1009 0
+definequote 1010 Use Movement keys to navigate 
+definequote 1011 the strafe keys will change your selection
+definequote 1012 US
+definequote 1013 Exit
+definequote 1014 Change Page
+
+defstate dna_menu_refresh_page_options
+	ifvare dna_menu_page 0
+		{
+			redefinequote 1001 Localization
+			redefinequote 1002 Level Music
+			redefinequote 1003 Level Cutscenes
+			redefinequote 1004 Cutscene Duke Voice
+			redefinequote 1005 Crosshair Type
+			redefinequote 1014 Change Page (1/2) 
+		}
+	else ifvare dna_menu_page 1
+		{
+			redefinequote 1001 Autoshade
+			redefinequote 1002 Proximity Trigger
+			redefinequote 1003 Key Hud Display
+			redefinequote 1004 Footsteps Sounds
+			redefinequote 1005 Alarm Sound
+			redefinequote 1014 Change Page (2/2)
+		}
+	else ifvare dna_menu_page 2
+		{
+			redefinequote 1001 Whistling Frequency
+			redefinequote 1002 
+			redefinequote 1003 
+			redefinequote 1004 
+			redefinequote 1005 
+			redefinequote 1014 Change Page (2/3)
+		}
+ends
+
+defstate dna_menu_refresh_descriptions
+	ifvare dna_menu_page 0 
+	{
+		ifvare dna_menu_selected 0
+		{
+			redefinequote 1006 Localization - Choose between 
+			redefinequote 1007 the US and European versions 
+			redefinequote 1008 of the cutscenes' script.
+			redefinequote 1009 
+		}
+		else ifvare dna_menu_selected 1
+		{
+			redefinequote 1006 Level Music
+			redefinequote 1007 Choose between having no level 
+			redefinequote 1008 music like the original 
+			redefinequote 1009 or having Duke 3D music.
+		}
+		else ifvare dna_menu_selected 2
+		{
+			redefinequote 1006 Level Cutscenes
+			redefinequote 1007 Choose between having level
+			redefinequote 1008 cutscenes during gameplay
+			redefinequote 1009 or disabling them.
+		}
+		else ifvare dna_menu_selected 3
+		{
+			ifvare dna_dukecutscenevoc 1
+			{
+				redefinequote 1006 Cutscene Duke Voice - 3D
+				redefinequote 1007 Duke's voice clips from
+				redefinequote 1008 3D will play in cutscenes 
+				redefinequote 1009 when appropriate.
+			}
+			else ifvare dna_dukecutscenevoc 2
+			{
+				redefinequote 1006 Cutscene Duke Voice - Gianni
+				redefinequote 1007 More Duke voice clips provided
+				redefinequote 1008 by Gianni Matragrano will play 
+				redefinequote 1009 exclusively in cutscenes.
+			}
+			else
+			{
+				redefinequote 1006 Cutscene Duke Voice - OFF 
+				redefinequote 1007 No voice clips will play
+				redefinequote 1008 during cutscenes.
+				redefinequote 1009 
+			}
+			
+		}
+		else ifvare dna_menu_selected 4
+		{
+			redefinequote 1006 Crosshair Type
+			redefinequote 1007 
+			redefinequote 1008 
+			redefinequote 1009 
+		}
+	}
+	else ifvare dna_menu_page 1
+	{
+		ifvare dna_menu_selected 0
+		{
+			redefinequote 1006 Autoshade
+			redefinequote 1007 
+			redefinequote 1008 
+			redefinequote 1009 
+		}
+		else ifvare dna_menu_selected 1
+		{
+			redefinequote 1006 Proximity Trigger
+			redefinequote 1007 
+			redefinequote 1008 
+			redefinequote 1009 
+		}
+		else ifvare dna_menu_selected 2
+		{
+			ifvare dna_key_hud 0
+			{
+				redefinequote 1006 Key Hud Display - OG
+				redefinequote 1007 Mission Objective items will fill
+				redefinequote 1008 specific color key card slots on
+				redefinequote 1009 the HUD when obtained.
+			}
+			else ifvare dna_key_hud 1
+			{
+				redefinequote 1006 Key Hud Display - Alt
+				redefinequote 1007 Mission Objective items will be
+				redefinequote 1008 displayed below the color key card 
+				redefinequote 1009 section of the HUD.
+			}
+		}
+		else ifvare dna_menu_selected 3
+		{
+			redefinequote 1006 Footsteps Sounds
+			redefinequote 1007 
+			redefinequote 1008 
+			redefinequote 1009 
+		}
+		else ifvare dna_menu_selected 4
+		{
+			redefinequote 1006 Alarm Sound
+			redefinequote 1007 
+			redefinequote 1008 
+			redefinequote 1009 
+		}
+	}
+
+	// Last two are same between pages so kept outside the page loop
+	ifvare dna_menu_selected 5
+	{
+		redefinequote 1006 Use the left and right movement
+		redefinequote 1007 keys to switch between menu pages.
+		redefinequote 1008
+		redefinequote 1009 
+	}
+	else ifvare dna_menu_selected 6
+	{
+		redefinequote 1006 Press %s to exit the menu.
+		getkeyname 1022 6 2
+		qsprintf 1006 1006 1022
+		redefinequote 1007 
+		redefinequote 1008 
+		redefinequote 1009 
+	}
+ends
+
+onevent EVENT_DISPLAYREST
+{	
+
+	ifvarn dna_menu_tutorial 0 nullop
+	else
+	{
+		getkeyname 1021 36 2
+		qsprintf 1020 1020 1021
+	}	
+	ifvarn dna_menu 0
+	{
+		state waste_time
+		setvar shade 0
+
+		ifvare dna_menu 1 // main menu
+		{
+			state dna_menu_refresh_page_options
+
+			setvar y 48
+			rotatespritea 160 95 91920 0 3933 0 0 2 80 0 0 xdim ydim // Menu graphic
+			rotatesprite 160 11 32768 0 5741 0 0 2 0 0 xdim ydim // Advance graphic
+			rotatesprite 160 30 65536 0 3934 0 0 2 0 0 xdim ydim // Options graphic
+
+			//Control hint graphic
+			rotatespritea 160 200 65536 0 CUTSCENE_DIALOGBOX 0 0 2 80 0 0 xdim ydim
+			screentext STARTALPHANUM 65 177 49152 0 0 1010 shade 0 16 0 5 0 0 0 0 0 0 xdim ydim
+			screentext STARTALPHANUM 20 187 49152 0 0 1011 shade 0 16 0 5 0 0 0 0 0 0 xdim ydim
+
+			ifvare dna_menu_selected 0 setvar shade 15 else setvar shade 0 // Localization
+			screentext STARTALPHANUM 65 y 49152 0 0 1001 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			
+			addvar y 8
+			ifvare dna_menu_selected 1 setvar shade 15 else setvar shade 0 // Level Music
+			screentext STARTALPHANUM 65 y 49152 0 0 1002 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+			addvar y 8
+			ifvare dna_menu_selected 2 setvar shade 15 else setvar shade 0 // Cutscenes
+			screentext STARTALPHANUM 65 y 49152 0 0 1003 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+			addvar y 8
+			ifvare dna_menu_selected 3 setvar shade 15 else setvar shade 0 // Cutscene Duke Voice
+			screentext STARTALPHANUM 65 y 49152 0 0 1004 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+			addvar y 8
+			ifvare dna_menu_selected 4 setvar shade 15 else setvar shade 0 // Crosshair Type
+			screentext STARTALPHANUM 65 y 49152 0 0 1005 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			
+			addvar y 8
+			ifvare dna_menu_selected 5 setvar shade 15 else setvar shade 0 // Change Page
+			screentext STARTALPHANUM 65 y 49152 0 0 1014 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+			addvar y 8
+			ifvare dna_menu_selected 6 setvar shade 15 else setvar shade 0 // Exit
+			screentext STARTALPHANUM 65 y 49152 0 0 1013 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+			setvar y 48
+			ifvare dna_menu_page 0 // Selections
+			{
+				ifvare dna_localization 0 redefinequote 1012 US 
+				else redefinequote 1012 EU
+				ifvare dna_menu_selected 0 setvar shade 15 else setvar shade 0 // Localization Selection
+				screentext STARTALPHANUM 230 y 49152 0 0 1012 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+				addvar y 8
+
+				ifvare dna_level_music 0 redefinequote 1006 ON 
+				else redefinequote 1006 OFF
+				ifvare dna_menu_selected 1 setvar shade 15 else setvar shade 0 // Level Music Selection
+				screentext STARTALPHANUM 230 y 49152 0 0 1006 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+				addvar y 8
+
+				ifvare dna_cutscenes 0 redefinequote 1007 ON 
+				else redefinequote 1007 OFF
+				ifvare dna_menu_selected 2 setvar shade 15 else setvar shade 0 // Cutscenes Selection
+				screentext STARTALPHANUM 230 y 49152 0 0 1007 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+				
+				addvar y 8
+
+				ifvare dna_dukecutscenevoc 0 redefinequote 1008 OFF 
+				else ifvare dna_dukecutscenevoc 1 redefinequote 1008 3D
+				else redefinequote 1008 GIANNI
+				ifvare dna_menu_selected 3 setvar shade 15 else setvar shade 0 // Cutscene Duke Voice Selection
+				screentext STARTALPHANUM 230 y 49152 0 0 1008 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+				addvar y 8
+
+				redefinequote 1009 Type %d
+				setvarvar temp dna_crosshair
+				addvar temp 1
+				qsprintf 1009 1009 temp
+				ifvare dna_menu_selected 4 setvar shade 15 else setvar shade 0 // Crosshair Type Selection
+				screentext STARTALPHANUM 230 y 49152 0 0 1009 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+			}
+			else ifvare dna_menu_page 1 // Selections
+			{
+				
+
+				addvar y 8
+
+				
+
+				addvar y 8
+
+				ifvare dna_key_hud 0 redefinequote 1007 OG 
+				else redefinequote 1007 ALT
+				ifvare dna_menu_selected 2 setvar shade 15 else setvar shade 0 // Key Hud Selection
+				screentext STARTALPHANUM 230 y 49152 0 0 1007 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+				
+				addvar y 8
+
+				
+				addvar y 8
+
+			
+			}
+
+			state dna_menu_refresh_descriptions
+
+			setvar shade 0 
+			screentext STARTALPHANUM 50 112 49152 0 0 1006 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 1
+			screentext STARTALPHANUM 50 120 49152 0 0 1007 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 2
+			screentext STARTALPHANUM 50 128 49152 0 0 1008 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 3
+			screentext STARTALPHANUM 50 136 49152 0 0 1009 shade 0 16 0 6 0 0 0 0 0 0 xdim ydim // Setting Info 4
+
+			getinput[THISACTOR].extbits tempm
+
+			ifvarvare tempm_last tempm 
+			setvar tempm 0
+
+			ifvarand tempm 1 // MOVEFORWARD
+			{
+				ifvarg delayTime 0 nullop 
+				else
+				{
+				ifvarg dna_menu_selected 0
+				{
+					setvar delayTime MENU_DELAY_TIME
+					screensound A_KICKHIT
+					subvar dna_menu_selected 1	
+				}
+				else
+				{
+					setvar delayTime MENU_DELAY_TIME
+					screensound A_KICKHIT
+					setvar dna_menu_selected 6
+				}
+					
+				}
+			}
+
+			else ifvarand tempm 2 // MOVEBACKWARD
+			{
+				ifvarg delayTime 0 nullop 
+				else
+				{
+				ifvarl dna_menu_selected 6
+				{
+					setvar delayTime MENU_DELAY_TIME
+					screensound A_KICKHIT
+					addvar dna_menu_selected 1
+				}
+				else
+				{
+					setvar delayTime MENU_DELAY_TIME
+					screensound A_KICKHIT
+					setvar dna_menu_selected 0
+				}
+					
+				}
+			}
+			
+			else ifvarand tempm 4 // STRAFELEFT
+			{
+				ifvarg delayTime 0 nullop 
+				else
+				{
+					ifvare dna_menu_page 0
+					{
+						ifvare dna_menu_selected 0
+						{
+							ifvare dna_localization 0
+							{
+								state dna_menu_select_change
+								setvar dna_localization 1
+							}
+							else {
+								state dna_menu_select_change
+								setvar dna_localization 0
+							}
+							savegamevar dna_localization
+						}
+						else ifvare dna_menu_selected 1
+						{
+							ifvare dna_level_music 0
+							{
+								state dna_menu_select_change
+								setvar dna_level_music 1
+								savegamevar dna_level_music
+								stopallmusic   
+								starttrackslot 5 20
+							}
+							else {
+								state dna_menu_select_change
+								setvar dna_level_music 0
+								savegamevar dna_level_music
+								getuserdef[].music_episode currmusic
+								getuserdef[].music_level currmusiclv
+								starttrackslot currmusic currmusiclv
+							}
+							//savegamevar dna_level_music
+						}
+						else ifvare dna_menu_selected 2
+						{
+							ifvare dna_cutscenes 0
+							{
+								state dna_menu_select_change
+								setvar dna_cutscenes 1
+							}
+							else {
+								state dna_menu_select_change
+								setvar dna_cutscenes 0
+							}
+							savegamevar dna_cutscenes
+						}
+						else ifvare dna_menu_selected 3
+						{
+							ifvare dna_dukecutscenevoc 2
+							{
+								state dna_menu_select_change
+								setvar dna_dukecutscenevoc 1
+							}
+							else ifvare dna_dukecutscenevoc 1
+							{
+								state dna_menu_select_change
+								setvar dna_dukecutscenevoc 0
+							}
+							else {
+								state dna_menu_select_change
+								setvar dna_dukecutscenevoc 2
+							}
+							savegamevar dna_dukecutscenevoc
+						}
+						else ifvare dna_menu_selected 4
+						{
+							ifvarg dna_crosshair 0
+								{
+									state dna_menu_select_change
+									subvar dna_crosshair 1
+								}
+								else
+								{
+									state dna_menu_select_change
+									setvar dna_crosshair 8
+								}
+							savegamevar dna_crosshair
+						}
+					}
+					else ifvare dna_menu_page 1
+					{
+						ifvare dna_menu_selected 0
+						{
+							nullop	
+						}
+						// else ifvare dna_menu_selected 1
+						// {
+							
+						// }
+						else ifvare dna_menu_selected 2
+						{
+							ifvare dna_key_hud 0
+							{
+								state dna_menu_select_change
+								setvar dna_key_hud 1
+							}
+							else {
+								state dna_menu_select_change
+								setvar dna_key_hud 0
+							}
+							savegamevar dna_key_hud
+						}
+						// else ifvare dna_menu_selected 3
+						// {
+							
+						// }
+						// else ifvare dna_menu_selected 4
+						// {
+							
+						// }
+					}
+
+					// Change page
+					ifvare dna_menu_selected 5
+					{
+						ifvarg dna_menu_page 0
+						{
+							setvar delayTime MENU_DELAY_TIME
+							screensound A_SWITCH
+							subvar dna_menu_page 1
+						}
+						else
+						{
+							setvar delayTime MENU_DELAY_TIME
+							screensound A_SWITCH
+							setvar dna_menu_page 0
+						}
+					}
+					
+				}
+			}
+
+			else ifvarand tempm 8 // STRAFERIGHT
+			{
+				ifvarg delayTime 0 nullop 
+				else
+				{
+					ifvare dna_menu_page 0
+					{
+						ifvare dna_menu_selected 0
+						{
+							ifvare dna_localization 0
+							{
+								state dna_menu_select_change
+								setvar dna_localization 1
+							}
+							else {
+								state dna_menu_select_change
+								setvar dna_localization 0
+							}
+							savegamevar dna_localization
+						}
+						else ifvare dna_menu_selected 1
+						{
+							ifvare dna_level_music 0
+							{
+								state dna_menu_select_change
+								setvar dna_level_music 1
+								savegamevar dna_level_music
+								stopallmusic   
+								starttrackslot 5 20
+							}
+							else {
+								state dna_menu_select_change
+								setvar dna_level_music 0
+								savegamevar dna_level_music
+								getuserdef[].music_episode currmusic
+								getuserdef[].music_level currmusiclv
+								starttrackslot currmusic currmusiclv
+							}
+							//savegamevar dna_level_music
+						}
+						else ifvare dna_menu_selected 2
+						{
+							ifvare dna_cutscenes 0
+							{
+								state dna_menu_select_change
+								setvar dna_cutscenes 1
+							}
+							else {
+								state dna_menu_select_change
+								setvar dna_cutscenes 0
+							}
+							savegamevar dna_cutscenes
+						}
+						else ifvare dna_menu_selected 3
+						{
+							ifvare dna_dukecutscenevoc 0
+							{
+								state dna_menu_select_change
+								setvar dna_dukecutscenevoc 1
+							}
+							else ifvare dna_dukecutscenevoc 1
+							{
+								state dna_menu_select_change
+								setvar dna_dukecutscenevoc 2
+							}
+							else {
+								state dna_menu_select_change
+								setvar dna_dukecutscenevoc 0
+							}
+							savegamevar dna_dukecutscenevoc
+						}
+						else ifvare dna_menu_selected 4
+						{
+							ifvarl dna_crosshair 8
+								{
+									state dna_menu_select_change
+									addvar dna_crosshair 1
+								}
+								else
+								{
+									state dna_menu_select_change
+									setvar dna_crosshair 0
+								}
+							savegamevar dna_crosshair
+						}
+					}
+					else ifvare dna_menu_page 1
+					{
+						ifvare dna_menu_selected 0
+						{
+							nullop	
+						}
+						// else ifvare dna_menu_selected 1
+						// {
+							
+						// }
+						else ifvare dna_menu_selected 2
+						{
+							ifvare dna_key_hud 1
+							{
+								state dna_menu_select_change
+								setvar dna_key_hud 0
+							}
+							else {
+								state dna_menu_select_change
+								setvar dna_key_hud 1
+							}
+							savegamevar dna_key_hud
+						}
+						// else ifvare dna_menu_selected 3
+						// {
+							
+						// }
+						// else ifvare dna_menu_selected 4
+						// {
+							
+						// }
+					}
+					// Change page
+					ifvare dna_menu_selected 5
+					{
+						ifvarl dna_menu_page 1
+						{
+							setvar delayTime MENU_DELAY_TIME
+							screensound A_SWITCH
+							addvar dna_menu_page 1
+						}
+						else
+						{
+							setvar delayTime MENU_DELAY_TIME
+							screensound A_SWITCH
+							setvar dna_menu_page 1
+						}
+					}
+				}
+			}
+
+			setvarvar tempm_last tempm
+		}
+	}
+	else
+	{
+		getuserdef[THISACTOR].screen_size SCREENSIZE
+		ifvarg SCREENSIZE 0
+		{
+			getplayer[].newowner temp
+			ife temp -1 // Hide hud when in camera view
+			{
+				state draw_dna_hud
+				state draw_dna_timer	
+			}
+		}
+		state draw_dna_quotes
+	}
+}
+endevent
+
+defstate close_dna_menu
+	ifvarn dna_menu 0
+		{
+			setvar delayTime MENU_DELAY_TIME
+			setvar dna_menu_selected 0
+			setplayer[THISACTOR].movement_lock 0
+			setvar dna_menu 0
+		}
+ends
+
+appendevent EVENT_DISPLAYMENU
+{
+	ifvare RETURN 50 // Open pause menu
+	{
+		state close_dna_menu
+	}
+
+	ifvare RETURN 350 // Open save menu
+	{
+		state close_dna_menu
+	}
+}
+endevent
+
+appendevent EVENT_USE
+{
+	ifvare dna_menu 1
+	{
+		ifvarg delayTime 0 nullop 
+		else
+		{
+			ifvare dna_menu_selected 6
+			{
+				setvar delayTime 300
+				screensound A_PISTOL
+				setvar dna_menu_selected 0
+				setplayer[THISACTOR].movement_lock 0
+				setvar dna_menu 0
+			}
+		}
+	}
+}
+endevent
+
+onevent EVENT_DISPLAYSBAR
+{
+	setvar RETURN -1
+}
+endevent
+
+// If Gianni lines are enabled, this plays the corresponding camera quote voice line once per level  
+defstate get_cam_quote {
+	ife dna_dukecutscenevoc 2 {
+		ifn played_camquote 1
+		{
+			ife VOLUME 0 {
+				switch LEVEL
+				case 0 globalsound GM_LOTTASECURITY break
+				// case 2 globalsound  wait I forgot to include this line in the script I sent..
+				case 5 ife dna_localization 0 globalsound GM_CRYINGTOMUMMY else globalsound GM_HESINCONTROL break
+				case 10 ife dna_localization 0 globalsound GM_MOSTIMPRESSIVE else globalsound GM_MUSTBETHEWEAPON break
+				case 16 globalsound GM_NOTHINGLIKECHALLENGE break
+				case 17 ife dna_localization 0 globalsound GM_IMCOMINGFORYOU else globalsound GM_BRAINSANDBRAWN break
+				endswitch
+			}
+			set played_camquote 1
+		}
+	}
+}
+ends
+
+onevent EVENT_DISPLAYCAMERAOSD
+{
+	state get_script
+	state dna_camera_hud
+	state get_cam_quote
+	set RETURN 1
+}
+endevent

@@ -1,0 +1,1580 @@
+// Special thanks to Hendricks266's World Tour stopgap code. 
+// This script utilizes the implementation of the audio commentary feature and reworks it to function as cutscene triggers
+// Also big thanks to the Cutting Room Floor for having a full page showing both scripts to this game 
+
+
+var cutscene_myvar 0 2
+
+
+
+move SPACEPRESSED
+
+define CUTSCENEINDICATOR 5397
+define CUTSCENEINDICATOR_ACTIVE 5398
+define CUTSCENEINDICATOR_OFF 5399
+
+define OPCUTSCENE1 5507
+define OPCUTSCENE2 5508
+define OPCUTSCENE3 5509
+define OPCUTSCENE4 5510
+define OPCUTSCENE5 5511
+define OPCUTSCENE6 5512
+define OPCUTSCENE7 5513
+define OPCUTSCENE8 5514
+define OPCUTSCENE9 5515
+define OPCUTSCENE10 5516
+define OPCUTSCENE11 5517
+define OPCUTSCENE12 5518
+define OPCUTSCENEDUKESPRITE 5519
+define OPCUTSCENEDIALOG1 5520
+define OPCUTSCENEDIALOG2 5521
+
+// Defines for cutscene slide animation times so they can be adjusted from here
+define OPSLIDEINTIME 520
+define OP12SLIDEINTIME 420
+define OPDUKESLIDEINTIME 520
+// gamevars for current slide animation times
+gamevar OPCUTSCENESLIDEINTIME OPSLIDEINTIME
+gamevar OPCUTSCENE12SLIDEINTIME OP12SLIDEINTIME
+gamevar OP12DUKESLIDEINTIME OPDUKESLIDEINTIME
+
+var curr_cutscene -1 // Tracks current panel
+var skip_this_panel 0 // Forcefully skips the panel it's on. Only needed for localization differences
+var dont_stop_sounds 0 // Set to 1 to prevent stopallsounds from being called, useful for letting the sound of a pickup play into the cutscene it triggers
+
+gamevar cutscene_length 0 0
+var cutscene_killswitch_start 0
+define cutscene_quote_check 190
+definequote cutscene_quote_check TEST
+gamevar kill_cutscene 0 0
+define KILLSWITCH_LINE 191
+definequote KILLSWITCH_LINE /!&
+define newTextQuote 192
+definequote newTextQuote TEMP QUOTE STORAGE
+var curr_quote 0
+
+var OPCUTSCENEPOS 160
+define OPCUTSCENE12POS 95
+define OPCUTSCENE12DUKEPOS 40
+
+define ENDCUTSCENE1 5523
+define ENDCUTSCENE2 5524
+define ENDCUTSCENE3 5525
+define ENDCUTSCENE4 5526
+define ENDCUTSCENE5 5527
+define ENDCUTSCENE6 5528
+define ENDCUTSCENE7 5529
+define ENDCUTSCENE8 5530
+define ENDCUTSCENE9 5531
+define ENDCUTSCENEDIA1 5532
+define ENDCUTSCENEDIA2 5533
+define ENDCUTSCENEDIA3 5534
+define ENDCUTSCENEDIA4 5535
+define ENDCUTSCENEDIA5 5536
+gamevar ENDDIA1SLIDEINTIME 300
+gamevar ENDDIA2SLIDEINTIME 300
+gamevar ENDDIA3SLIDEINTIME 220
+var ENDCUTSCENEDIAPOSX1 140
+var ENDCUTSCENEDIAPOSX2 240
+var ENDCUTSCENEDIAPOSY1 180
+var ENDCUTSCENEDIAPOSY2 20
+
+define OP_CUTSCENE_DELAY_TIME 3000
+define CUTSCENE_DELAY_TIME 300
+
+
+defstate waste_time
+{
+  ifvarg delayTime 0
+  {
+        setvar RETURN 0
+        getticks curtick
+        ifvare prevtick -1 setvar ticktmp 0 else
+        {
+        setvarvar ticktmp curtick
+        subvarvar ticktmp prevtick
+        }
+
+        subvarvar delayTime ticktmp
+        //addlogvar delayTime
+        
+        setvarvar prevtick curtick
+  }
+  else {
+    setvar prevtick -1
+  }
+}
+ends
+
+defstate cutscene_cleanup
+        ifvarn SCREENALPHA 255
+                setvar SCREENALPHA 255
+        ifvarn CUTSCENE_STEP 0
+                setvar CUTSCENE_STEP 0
+        ifvarn prevtick -1
+                setvar prevtick -1
+        ifn curr_cutscene -1
+                set curr_cutscene -1
+        ifn kill_cutscene 0
+                set kill_cutscene 0
+        ifn textQuoteRow1 201
+                set textQuoteRow1 201 // default to line 201 for new dialog
+ends
+
+defstate op_cutscene_cleanup
+        ifvarn OPCUTSCENESLIDEINTIME OPSLIDEINTIME
+                setvar OPCUTSCENESLIDEINTIME OPSLIDEINTIME
+        ifvarn OPCUTSCENE12SLIDEINTIME OP12SLIDEINTIME
+                setvar OPCUTSCENE12SLIDEINTIME OP12SLIDEINTIME
+        ifvarn OP12DUKESLIDEINTIME OPDUKESLIDEINTIME
+                setvar OP12DUKESLIDEINTIME OPDUKESLIDEINTIME
+        ifvarn in_opening_cutscene 1
+                setvar in_opening_cutscene 1
+ends
+
+defstate cutscene_getscene
+    ifvare cutscene_myvar 0
+    {
+        getactor[].lotag cutscene_myvar
+        setactor[].lotag 0
+    }
+    geta .hitag fx_hitag
+    seta .hitag 0
+ends
+
+useractor notenemy CUTSCENEINDICATOR 0
+
+    geta .cstat temp
+    ifand temp 32768 {
+        ife fx_activate[fx_hitag] 1 {
+            set cutscene_num cutscene_myvar
+            set in_cutscene 1
+        }
+    } else {
+
+        ifpdistl 1266
+        ifp pfacing
+        {
+            ifhitspace
+                move SPACEPRESSED
+            else ifmove SPACEPRESSED
+            {
+                move 0
+                for cutscene_i allsprites
+                {
+                    cactor CUTSCENEINDICATOR_ACTIVE
+                    
+                    ifvare sprite[cutscene_i].picnum CUTSCENEINDICATOR_ACTIVE
+                    {
+                            getactorvar[cutscene_i].cutscene_myvar cutscene_num
+                        
+                    }
+                }
+                
+                setvar in_cutscene 1
+                break
+            }
+        }
+        else
+            move 0
+    }
+enda
+eventloadactor CUTSCENEINDICATOR
+    state cutscene_getscene
+    geta .cstat temp
+    ifand temp 2 seta .cstat 32768
+    
+enda
+
+useractor notenemy CUTSCENEINDICATOR_OFF 0
+
+    ifpdistl 1266
+    ifp pfacing
+    {
+        ifhitspace
+            move SPACEPRESSED
+        else ifmove SPACEPRESSED
+        {
+            move 0
+            for cutscene_i allsprites
+            {
+                cactor CUTSCENEINDICATOR_ACTIVE
+                
+                ifvare sprite[cutscene_i].picnum CUTSCENEINDICATOR_ACTIVE
+                {
+                        getactorvar[cutscene_i].cutscene_myvar cutscene_num
+                }
+            }
+            
+            set in_cutscene 1
+            break
+        }
+    }
+    else
+        move 0
+enda
+eventloadactor CUTSCENEINDICATOR_OFF
+    state cutscene_getscene
+enda
+
+
+useractor notenemy CUTSCENEINDICATOR_ACTIVE 0
+
+for cutscene_i allsprites
+{
+        ifvare sprite[cutscene_i].picnum CUTSCENEINDICATOR_ACTIVE
+        {
+                setactor[cutscene_i].picnum CUTSCENEINDICATOR_OFF
+        }  
+}  
+enda
+
+eventloadactor CUTSCENEINDICATOR_ACTIVE
+enda
+
+defstate end_cutscene
+    screenpal 0 0 0 0
+    set in_cutscene 0
+ends
+
+onevent EVENT_PRELEVEL
+        state cutscene_cleanup
+        getuserdef[].music_episode currmusic
+        ifvarn currmusic 7
+        {
+                stopallmusic
+                starttrackslot 7 0 
+        }
+        ifvare VOLUME 0
+        {
+                ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
+                {
+                        state op_cutscene_cleanup
+                        stopallsounds
+                        screensound SHOTGUN_COCK
+                        startscreen
+                        setvar in_opening_cutscene 0
+                }
+
+                // Objective Screen
+                setvar in_objective_screen 1
+                startscreen
+                screensound A_PISTOL
+                startscreen
+        }
+endevent
+
+appendevent EVENT_ENDLEVELSCREEN
+        state cutscene_cleanup
+        stopallmusic
+        starttrackslot 7 0
+        setvar delayTime END_SCREEN_INPUT_DELAY // This controls how long it takes until the player can skip the end level screen
+        setvar in_endlevel_screen 1
+        stopallsounds
+        startscreen
+        startscreen
+        //setvar in_endlevel_screen 0
+        ifvare VOLUME 0
+        {
+                ifvare LEVEL 19 
+                {
+                        state cutscene_cleanup
+                        stopallsounds
+                        setvar in_ending_cutscene 1
+                        startscreen
+                        stopallsounds
+                        setvar in_ending_cutscene 0
+                        setvar SCREENALPHA 255
+                        set delayTime 1000
+                        setvar in_credits 1
+                        startscreen
+                        startscreen
+                }
+        }
+        setvar RETURN -1
+endevent
+
+defstate get_cutscene_details
+{
+        ife VOLUME 0
+        {
+                switch LEVEL
+                case 0 // AKA Level 1 - Gathering Intel
+                {
+                        //LEVEL 1 OPENING SCENE
+                        ife cutscene_num 1001
+                        {       
+                                switch CUTSCENE_STEP
+                                case 0 { set CUTSCENE_SPRITE SARGEHEADSPRITE break } 
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE
+                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_IMONIT }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_TELEBROKE } break }
+                                case 4 { ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_DAMNTELEMALFUNC }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_GONNAPAY } break }
+                                case 5 { ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_SIGNCHECKS }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_NEWHARDWARE } break }
+                                case 6 { ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_WHOWANTSSOME
+                                        else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON4 } //Who wants some! 
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_LETSROCK2
+                                        else ife dna_dukecutscenevoc 1 screensound BONUS_SPEECH1 } break } //Let's rock
+                                                
+                                endswitch
+                        }
+
+                        //LEVEL 1 MID LEVEL SCENE
+                        ife cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1
+                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_DATADISK  } else { ife dna_dukecutscenevoc 2 screensound GM_DATADISKEU } break }
+                                case 1 { ife dna_localization 0 set skip_this_panel 1
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_CONTAINSDETAILS } break }
+                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_ONMYWAY } else { ife dna_dukecutscenevoc 2 screensound GM_PLENTYTOKICK } break }
+                                case 4 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_DUKEOUT } break }
+                                endswitch
+                        }
+                        break
+                }
+                case 1 //AKA Level 2 - Close Encounter
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { ifvare dna_localization 1 set skip_this_panel 1 break }
+                                endswitch
+                        }                      
+                        //LEVEL 2 MID LEVEL SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 209 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_SATLINK else screensound GM_SATLINKEU } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_ALGAEEATERS else screensound GM_FAIRFIGHT } break }
+                                case 4 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_WRONGPLANET else screensound GM_STACKEDODDS } } break
+                                endswitch
+                        }
+                        //LEVEL 2 GRAY SCENE
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1 
+                                        ife dna_dukecutscenevoc 2 screensound GM_CLOSEENCOUNTER break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
+                                case 2 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_WORKOVERTIME else screensound GM_RESURRECTOVERTIME } break }
+                                endswitch
+                        }
+                        break
+                }
+                case 2 //AKA Level 3 - Hybrid Army
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set CUTSCENE_SPRITE DUKEHEADSPRITE
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SUBWAYSYSTEM } else { screensound GM_SUBWAYSYSTEMEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 2 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_UNDEROURNOSES } else { screensound GM_UNDEROURNOSESEU } } break }
+                                case 4 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 5 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 6 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 7 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DERAILPLANS } else { screensound GM_DERAILED } } break }
+                                case 8 { ife dna_localization 1 set skip_this_panel 1 
+                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_BUBBLEGUM } else ife dna_dukecutscenevoc 1 { screensound WAR_AMBIENCE10 } break }
+                                endswitch
+                        }
+                        //LEVEL 3 Destroyed Hybrid Army
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 237 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_ALMOSTTOOEASY } else ifvare dna_localization 1 { screensound GM_PIECEOFCAKE } }
+                                        else ifvare dna_dukecutscenevoc 1 screensound JIBBED_ACTOR6 } break
+                                endswitch
+                        }
+                        //LEVEL 3 Spiderlord Encounter
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 249 set CUTSCENE_SPRITE BOSS1HEADSPRITE break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ALOTTATALK } else ifvare dna_localization 1 { screensound GM_YOUANDWHATARMY } } break }
+                                case 3 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE BOSS1HEADSPRITE break }
+                                case 7 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_ALIENAUTOPSYEU }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_ALIENAUTOPSY else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON2 } break }
+                                case 8 { ife dna_localization 0 set skip_this_panel 1 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_COMEGETSOME else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON2 } break }
+                                endswitch
+                        }
+                        //LEVEL 3 End Level Scene
+                        ifvare cutscene_num 1004
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 285 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_TIPOFICEBERG } else ifvare dna_localization 1 { screensound GM_TIPOFICEBERGEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_TOOBUSYDYIN } else ifvare dna_localization 1 { screensound GM_EVERYSECPRECIOUS } } break }
+                                case 3 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SEEWHEREITLEADS } else ifvare dna_localization 1 { screensound GM_FOLLOWTHEIRTRAIL } } break }
+                                case 4 { ife dna_localization 1 {       
+                                                ife dna_dukecutscenevoc 2 screensound GM_HAILTOKING
+                                                else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON6 }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_TALKONOTHERSIDE } break }
+                                endswitch
+                        }
+                        break
+                }
+                case 3 //AKA Level 4 - Temple of Amun
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 2 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_EGYPTIAN } break }
+                                endswitch
+                        }
+                        //LEVEL 4 MID LEVEL SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_WHEREHIDING } else ife dna_localization 1 { screensound GM_READYTODEFROST } } break }
+                                endswitch
+                        }
+                        break
+                }
+                case 4 //AKA Level 5 - Inner Sanctum
+                {
+                        
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ENTIREARMY } else ifvare dna_localization 1 { screensound GM_ENTIREARMYEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_PERMANENTHIBERNATION } else ifvare dna_localization 1 { screensound GM_ILLFINDSOMEANSWERS } } break }
+                                endswitch
+                        }
+
+                        //LEVEL 5 MID LEVEL SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 217 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1  
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_FOUNDSCHEMATICS } else ife dna_localization 1 { screensound GM_FOUNDSCHEMATICSEU } } break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 4 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_ONMYWAY }
+                                        else {
+                                                ife dna_dukecutscenevoc 2 screensound GM_ROCKIN
+                                                else ife dna_dukecutscenevoc 1 screensound BONUS_SPEECH4 } break }
+                                endswitch
+                        }
+                        break
+                }
+                case 5 //AKA Level 6 - The Controller
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 3 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_SWITCHFLIPPER } break } 
+                                endswitch
+                        }
+                        //LEVEL 6 Controller Encounter
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 221 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_SCORPIONKING else screensound GM_BIGBOSS } break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_CASEOFCRABS } break }
+                                case 2 set CUTSCENE_SPRITE BOSS2HEADSPRITE break
+                                case 4 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_HEARDTHATBEFORE } } break }
+                                endswitch
+                        }
+                        //LEVEL 6 Boss Hint
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 241 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CRUSTACEANCRETIN } else ife dna_localization 1 { screensound GM_MUTANTMAGGOT } } break }
+                                endswitch
+                        }
+                        //LEVEL 6
+                        ifvare cutscene_num 1004
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 253 ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE set dont_stop_sounds 1 break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 0 {
+                                                ife dna_dukecutscenevoc 2 screensound GM_DAMNIMGOOD
+                                                else ife dna_dukecutscenevoc 1 screensound JIBBED_ACTOR5
+                                        } break }
+                                endswitch
+                        }
+                        break
+                }
+                case 6 //AKA Level 7 - Temple Run
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CRABCAKES } else ife dna_localization 1 { screensound GM_SELFDESTRUCT } } break }
+                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_TWOWONDERS } else ife dna_localization 1 { screensound GM_BULLETSTOKILL } } break }
+                                case 4 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ALIENTELE } else ife dna_localization 1 { screensound GM_SHOOTMYWAY } } break }        
+                                endswitch
+                        }
+                        break
+                }
+                case 7 //AKA Level 8 - Down Under
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BEFOREHEDIED } else ife dna_localization 1 { screensound GM_BEFOREHEDIEDEU } } break }
+                                case 3 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_COOL else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON1 }
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_ILLCONTACTYOU } break }
+                                endswitch
+                        }
+                        //LEVEL 8 JENNY SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 225 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DISTRESSCALL } else ife dna_localization 1 { screensound GM_DISTRESSCALLEU } } break }
+                                case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HELLOFAPARTY } else ife dna_localization 1 { screensound GM_HELLOFAPARTYEU } } break }
+                                case 4 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_OPERAHOUSE } else ife dna_localization 1 { screensound GM_OPERAHOUSEEU } } break }
+                                case 6 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                endswitch
+                        }
+                        break
+                }
+                case 8 //AKA Level 9 - Eating Out
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                        //LEVEL 9 Secret Cheat.. don't know what Ill do with this
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                        //LEVEL 9 Killed Sentry
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 221 set CUTSCENE_SPRITE SARGEHEADSPRITE set dont_stop_sounds 1 break }
+                                endswitch
+                        }
+                        //LEVEL 9 Outro
+                        ifvare cutscene_num 1004
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HENDRIX } else ife dna_localization 1 { screensound GM_TUXEDO } } break }
+                                endswitch
+                        }
+                        break
+                }
+                case 9 //AKA Level 10 - Day at the Opera
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_IMIN } else ifvare dna_localization 1 { screensound GM_IMINEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 0 {       
+                                                ife dna_dukecutscenevoc 2 screensound GM_RODGERTHAT
+                                                else ife dna_dukecutscenevoc 1 screensound JIBBED_ACTOR6 } 
+                                        else { ife dna_dukecutscenevoc 2 screensound GM_NOPROBLEMO } break }
+                                endswitch
+                        }
+                        //LEVEL 10 MID LEVEL SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_STARTDOWNLOADING } else ife dna_localization 1 { screensound GM_STARTDOWNLOADINGEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                endswitch
+                        }
+                        break
+                }
+                case 10 //AKA Level 11 - Doomsday Weapon
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { ife dna_localization 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 screensound GM_ISEETHEIRPLAN } else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 3 { ife dna_localization 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 screensound GM_ISEETHEIRPLANS2 } else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                        //LEVEL 11 Weapon activated
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 225 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ACTIVATEDWEAPON } else ife dna_localization 1 { screensound GM_TOOLATE } } break }
+                                case 2 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CHARGINGUP } } break }
+                                case 3 { set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 5 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 6 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_TICKTOCK } } break }
+                                case 7 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                        //LEVEL 11 Weapon deactivated
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 257 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_NICKOFTIME } else ife dna_localization 1 { screensound GM_NICKOFTIMEEU } } break }
+                                endswitch
+                        }
+                        //LEVEL 11 End Scene
+                        ifvare cutscene_num 1004
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 261 set CUTSCENE_SPRITE DUKEHEADSPRITE
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BETTERGETATEAM } else ife dna_localization 1 { screensound GM_BETTERGETATEAMEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SIZE15BOOT } else ife dna_localization 1 { screensound GM_SOURCEOFINFESTATION } } break }
+                                case 3 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_GUTSTOMPINTIME } else ife dna_localization 1 { screensound GM_GOINGTOSTOPTHEM } } break
+                                endswitch
+                        }
+                        break
+                }
+                case 11 //AKA Level 12 - Alien Ship
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CANYOUREADME } else ife dna_localization 1 { screensound GM_CANYOUREADMEEU } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JAMSSIGNAL } else ife dna_localization 1 { screensound GM_SIGNALJAMMED } } break } 
+                                endswitch
+                        }
+                        //LEVEL 12 MID LEVEL SCENE
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_MOTHERLODE } else ife dna_localization 1 { screensound GM_INBREDALIENS } } break }
+                                endswitch
+                        }
+                        break
+                }
+                case 12 //AKA Level 13 - Cloaking Device
+                {
+                        //LEVEL 13 Looking out the window
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SHIPORBITINGEARTH } else ife dna_localization 1 { screensound GM_SHIPORBITINGEARTHEU } } break }
+                                case 1 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CLOAKINGDEVICE } else ife dna_localization 1 { screensound GM_CLOAKINGDEVICEEU } } break 
+                                case 2 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_COMMUNICADO } else ife dna_localization 1 { screensound GM_COMMUNICADOEU } } break
+                                endswitch
+                        }
+                        //LEVEL 13 Cloaking Device Disabled
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DOYOUREADME } else ife dna_localization 1 { screensound GM_DOYOUREADME } } break }
+                                case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ISHUTITDOWN } else ife dna_localization 1 { screensound GM_ISHUTITDOWN } } break }
+                                case 3 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                endswitch
+                        }
+                        break
+                }
+                case 13 //AKA Level 14 - Mazeframe
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                        //LEVEL 14 Found mainframe
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 209 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HOOKEDINTOSYSTEMS } else ife dna_localization 1 { screensound GM_WHATYOUASKEDFOR } } break }
+                                case 1 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_GOTMYHANDSFULL } else ife dna_localization 1 { screensound GM_GONNAGETOUTTAHERE } } break
+                                endswitch
+                        }
+                        break
+                }
+                case 14 //AKA Level 15 - Jenny 2
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_KEEPANEYEOUT } else ife dna_localization 1 { screensound GM_WHATPARTISBAD } } break }
+                                case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 3 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HURRYUP } else ife dna_localization 1 { screensound GM_LAYFINGERS } } break }
+                                endswitch
+                        }
+                        //LEVEL 15 Met Jenny 2
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
+                                case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_YOULOOKFAMILIAREU }
+                                        else {
+                                                ife dna_dukecutscenevoc 2 screensound GM_YOULOOKFAMILIAR
+                                                else ife dna_dukecutscenevoc 1 screensound DUKE_TIP2 } break }
+                                case 2 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
+                                case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ILLFINDTHEM } else ife dna_localization 1 { screensound GM_CLAMBAKE } } break }
+                                case 6 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JENNY2STANDBY } else ife dna_localization 1 { screensound GM_CLONEBAKE } } break
+                                endswitch
+                        }
+                        break
+                }
+                case 15 //AKA Level 16 - Jenny 3
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 1 { screensound GM_LIKETHEIDEA } } break }
+                                case 3 set CUTSCENE_SPRITE BOSS4HEADSPRITE break
+                                case 4 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BREEDINGSTOCK } } break }
+                                case 5 set CUTSCENE_SPRITE SARGEHEADSPRITE break
+                                case 6 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 screensound GM_ENGAGEMENTS break }
+                                endswitch
+                        }
+                        //LEVEL 16 Blue Key
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_NOTGONNABEEASY } else ife dna_localization 1 { screensound GM_NOTGONNABEEASY } } break }
+                                endswitch
+                        }
+                        //LEVEL 3 Met Jenny 3
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 233 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HAILTOKING } else ife dna_localization 1 { screensound GM_DONTTELLME } }
+                                        else ife dna_dukecutscenevoc 1 { ife dna_localization 0 { screensound DUKE_GETWEAPON6 } } break }
+                                case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ALIENANDSCHOOLGIRL } else ife dna_localization 1 { screensound GM_ALIENSANDCAPTIVES } } break }
+                                case 4 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ONEBABEREADY } else ife dna_localization 1 { screensound GM_RESTOFTHEPARTY } } break
+                                endswitch
+                        }
+                        break
+                }
+                case 16 //AKA Level 17 - Jenny 4
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 screensound GM_HOTBABE break }
+                                endswitch
+                        }
+                        //LEVEL 17 Met Jenny 4
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JENNY4 } else ife dna_localization 1 { screensound GM_DEJAVU } } break }
+                                case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
+                                case 2 { ife dna_localization 0 set skip_this_panel 1 else set CUTSCENE_SPRITE JENNYHEADSPRITE break }
+                                case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SLIPPERYSNAKE } else ife dna_localization 1 { screensound GM_IMDUKE } } break }
+                                case 4 { ife dna_localization 1 set CUTSCENE_SPRITE SARGEHEADSPRITE else { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { screensound GM_TAKEHERAWAY } } break }
+                                case 5 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                endswitch
+                        }
+                        break
+                }
+                case 17 //AKA Level 18 - Alien Lord
+                {
+                        ifvare cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 3 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 4 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DONTWORRY } else ife dna_localization 1 { screensound GM_OVERHEATALIENS } } break }
+                                case 5 { ife dna_localization 1 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { screensound GM_HOTFOOT } break }
+                                endswitch
+                        }
+                        //LEVEL 18 Cooling Units Shut Down
+                        ifvare cutscene_num 1002
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_STARTINGTOHEATUP } else ife dna_localization 1 { screensound GM_STARTINGTOHEATUPEU } } break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 set CUTSCENE_SPRITE BOSS4HEADSPRITE break
+                                case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ASSGOBLIN } else ife dna_localization 1 { screensound GM_KICKINGBUTT } } break }
+                                case 6 { ife dna_localization 1 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { screensound GM_URANUS } break }
+                                endswitch
+                        }
+                        //LEVEL 18 Met Jenny 5
+                        ifvare cutscene_num 1003
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 { set textQuoteRow1 257 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
+                                case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BLOWISTHISSHIP } else ife dna_localization 1 { screensound GM_SHOWEREARTHWITHDUKE } } break }
+                                case 2 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JENNY5ENERGIZE } else ife dna_localization 1 { screensound GM_MYPLACE } } break }
+                                endswitch
+                        }
+                        break
+                }
+                case 18 //AKA Level 19 - Run Your Ass Off!
+                {
+                        ife cutscene_num 1001
+                        {
+                                switch CUTSCENE_STEP
+                                case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 1 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_WATCHTHEFIREWORKS } else ife dna_localization 1 { screensound GM_SCRATCHBUTT } } break }
+                                case 3 { ife dna_localization 0 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { screensound GM_FINDMYOWNWAY } break }
+                                case 4 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 5 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 6 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 7 { ife dna_localization 1 set skip_this_panel 1 break }
+                                case 8 { ife dna_localization 1 set skip_this_panel 1 else { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { screensound GM_BETONDUKE } } break }
+                                endswitch
+                        }
+                        break
+                }
+                endswitch
+        }
+}
+ends
+
+// This checks each printed line of dialog for the string /!& at the end
+// If this is found in any line, it tells the game that this is the last panel of the cutscene,
+// and will break out of the while loop cutscene_loop on next input press
+defstate cutscene_killswitch_check
+{
+        for i range 4 {
+                set curr_quote textQuoteRow1
+                add curr_quote i
+                qstrlen cutscene_length curr_quote
+                ifge cutscene_length 3 {
+                        set cutscene_killswitch_start cutscene_length
+                        sub cutscene_killswitch_start 3
+                        qsubstr cutscene_quote_check curr_quote cutscene_killswitch_start 3
+                        qstrcmp cutscene_quote_check KILLSWITCH_LINE temp
+                        ife temp 0 {
+                                set kill_cutscene 1 
+                                ife cutscene_killswitch_start 0 {
+                                        redefinequote newTextQuote 
+                                } else {
+                                        qsubstr newTextQuote curr_quote 0 cutscene_killswitch_start
+                                }
+                        qstrcpy curr_quote newTextQuote
+                        }
+                        
+                }
+                add i 1
+        }
+        
+}
+ends
+
+defstate cutscene_loop 
+{
+        whilen kill_cutscene 1
+        {
+                state get_cutscene_details
+                ife dont_stop_sounds 1 set dont_stop_sounds 0
+                else stopallsounds
+                startscreen
+        }
+}
+ends
+
+appendevent EVENT_GAME
+    ifvarn in_cutscene 0
+    {
+        ifvarn cutscene_num 0
+        {
+        state get_script // Gets the correct localization of the dialog in DIALOGDEF.CON
+        state cutscene_cleanup
+        ifvare dna_cutscenes 1 { state end_cutscene } // If level cutscenes are disabled, immediately stop cutscene from processing
+        else ifvare dna_cutscenes 0 
+        {
+                setvar delayTime 500 // Inital delay on cutscene start
+                state cutscene_loop                                  
+                state end_cutscene
+        }
+        }
+    }
+endevent
+
+defstate setup_cutscene_panel {
+        ife skip_this_panel 0 { state waste_time } // If panel isn't skipped, dont allow input immediately
+        ife CUTSCENE_STEP 0 {
+                set curr_cutscene CUTSCENE_STEP
+                set textQuoteRow2 textQuoteRow1
+                set textQuoteRow3 textQuoteRow1
+                set textQuoteRow4 textQuoteRow1
+                add textQuoteRow2 1
+                add textQuoteRow3 2
+                add textQuoteRow4 3
+                
+        }
+        else {
+                ifl curr_cutscene CUTSCENE_STEP
+                {
+                        add textQuoteRow1 4
+                        add textQuoteRow2 4
+                        add textQuoteRow3 4
+                        add textQuoteRow4 4
+                        set curr_cutscene CUTSCENE_STEP
+                }
+        }
+        ifn kill_cutscene 1 { state cutscene_killswitch_check }
+        ife skip_this_panel 1 { 
+                set RETURN 1 set skip_this_panel 0 } // If panel is skipped - due to localization - set return after text quote has been calulated so its accurate next panel
+        ife RETURN 1     // IF THE PLAYER USES ANY KEY TO SKIP THE SCENE
+        {
+                setvar delayTime CUTSCENE_DELAY_TIME  // DELAY TIME BEFORE USER INPUT WILL BE REGISTERED
+                add CUTSCENE_STEP 1     // CHANGE TO THE NEXT SCREEN
+        }
+}
+ends
+
+defstate display_cutscene_dialogue
+{
+        setvar y 176
+        set x 55
+        rotatesprite 160 201 65536 0 CUTSCENE_DIALOGBOX 0 0 8 0 0 xdim ydim
+        rotatesprite 31 196 65536 0 CUTSCENE_SPRITE 0 0 8 0 0 xdim ydim
+        rotatesprite 160 201 65536 0 CUTSCENE_OUTLINE 0 0 8 0 0 xdim ydim
+        for i range 4 
+        {
+                set curr_quote textQuoteRow1
+                add curr_quote i
+                screentext STARTALPHANUM x y 65536 0 0 curr_quote 0 0 16 0 8 0 0 0 0 0 0 xdim ydim
+                ifl y 216 { add y 10 } else set y 176
+                add i 1
+        }
+}
+ends
+
+defstate process_introoutro_panels {
+        ifg SCREENALPHA 0
+                state screen_fadeout
+        else
+        ifvarg delayTime 0
+        {
+                state cutscene_timer
+        }
+        else
+        {
+                set SCREENALPHA 255
+                ifn temp 0 screensound temp // Next panel is about to be shown, so play its accompanying sound
+                ife dna_dukecutscenevoc 2 { ife CUTSCENE_SCREEN ENDCUTSCENE3 { set delayTime 3100 screensound GM_HAVEABLAST } else set delayTime OP_CUTSCENE_DELAY_TIME }
+                else set delayTime OP_CUTSCENE_DELAY_TIME
+                add CUTSCENE_STEP 1
+        }
+}
+ends
+
+defstate show_intro_cutscene {
+        ife in_opening_cutscene 1
+        {
+        switch CUTSCENE_STEP 
+        case 0    // FIRST SCREEN
+        {
+                set OPCUTSCENEPOS 160
+                ifvarg OPCUTSCENESLIDEINTIME 160  
+                {
+                                setvar delayTime OP_CUTSCENE_DELAY_TIME
+                                setvar CUTSCENE_SCREEN 5400
+                                setvar CUTSCENE_DIALOG 5400
+                                setvar CUTSCENE_DUKE 5400
+                                setvar RETURN 0
+                                getticks curtick
+                                ifvare prevtick -1 setvar ticktmp 0 else
+                                {
+                                setvarvar ticktmp curtick
+                                subvarvar ticktmp prevtick
+                                }
+
+                                divvar ticktmp 2
+                                subvarvar OPCUTSCENESLIDEINTIME ticktmp
+                                
+                                rotatesprite OPCUTSCENESLIDEINTIME 100 CUTSCENE_SIZE 0 OPCUTSCENE1 0 0 8 0 0 xdim ydim
+                                setvarvar prevtick curtick
+                }
+                else
+                setvar CUTSCENE_SCREEN OPCUTSCENE1
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar SCREENALPHA 255
+                        ife dna_dukecutscenevoc 2 screensound GM_WHOWANTSSOME
+                        else screensound DUKE_GETWEAPON4 // WHO WANTS SOME
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar CUTSCENE_STEP 1     // CHANGE TO THE NEXT SCREEN
+                }
+                break
+        }
+        case 1   // SECOND SCREEN
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE2
+                set temp A_SHRINK // SHRINKER FIRE
+                state process_introoutro_panels
+                break
+        }
+        case 2  // THIRD SCREEN
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE3
+                set temp PIG_DYING // PIG SQUEAL
+                state process_introoutro_panels
+                break
+        }
+        case 3
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE4
+                ife dna_dukecutscenevoc 2 set temp GM_COOL
+                else set temp DUKE_GETWEAPON1 // COOL
+                state process_introoutro_panels
+                break
+        }
+        case 4
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE5
+                set temp 0 // Play no audio
+                state process_introoutro_panels
+                break
+        }
+        case 5
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE6
+                ife dna_dukecutscenevoc 2 set temp GM_HAILTOKING
+                else set temp DUKE_GETWEAPON6 // HAIL TO THE KING
+                state process_introoutro_panels
+                break
+        }
+        case 6
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE7
+                set temp PIG_DYING // PIG SQUEAL
+                state process_introoutro_panels
+                break
+        }
+        case 7
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE8
+                set temp SQUISHED // ...SQUISH
+                state process_introoutro_panels
+                break
+        }
+        case 8
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE9
+                ife dna_dukecutscenevoc 2 set temp GM_THATSGOTTAHURT
+                else set temp JIBBED_ACTOR7 // THAT'S GOTTA HURT
+                state process_introoutro_panels
+                break
+        }
+        case 9
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE10
+                ife dna_dukecutscenevoc 2 set temp GM_BACONBITS else set temp 0
+                state process_introoutro_panels
+                break
+                
+        }
+        case 10
+        {
+                set CUTSCENE_SCREEN OPCUTSCENE11
+                set CUTSCENE_DIALOG OPCUTSCENEDIALOG1
+                ife dna_dukecutscenevoc 2 set temp GM_TIMEMORE else set temp 0
+                state process_introoutro_panels
+                break
+        }
+        case 11
+        {
+                ifvarg SCREENALPHA 0
+                        state screen_fadeout
+                setvar CUTSCENE_SCREEN OPCUTSCENE12
+                setvar CUTSCENE_DIALOG OPCUTSCENEDIALOG2
+                setvar CUTSCENE_DUKE OPCUTSCENEDUKESPRITE
+                ifvarg OP12DUKESLIDEINTIME OPCUTSCENE12DUKEPOS  
+                {
+                                setvar delayTime OP_CUTSCENE_DELAY_TIME
+                                setvar CUTSCENE_SCREEN 5400
+                                setvar CUTSCENE_DIALOG 5400
+                                setvar CUTSCENE_DUKE 5400 // CUTSCENE_DUKE will be displayed at the final location, so keep it blank until animation finishes
+                                setvar OPCUTSCENEPOS OPCUTSCENE12POS
+                                getticks curtick
+                                ifvare prevtick -1 setvar ticktmp 0 else
+                                {
+                                setvarvar ticktmp curtick
+                                subvarvar ticktmp prevtick
+                                }
+                                setvarvar ticktmp2 ticktmp
+                                divvar ticktmp 4
+                                subvarvar OPCUTSCENE12SLIDEINTIME ticktmp
+                                ifvarg OPCUTSCENE12SLIDEINTIME 255 nullop else
+                                {
+                                        divvar ticktmp2 2
+                                        subvarvar OP12DUKESLIDEINTIME ticktmp2
+                                }
+                                
+                                ifvarg OPCUTSCENE12SLIDEINTIME OPCUTSCENE12POS
+                                rotatesprite OPCUTSCENE12SLIDEINTIME 100 CUTSCENE_SIZE 0 OPCUTSCENE12 0 0 8 0 0 xdim ydim
+                                else
+                                rotatesprite OPCUTSCENE12POS 100 CUTSCENE_SIZE 0 OPCUTSCENE12 0 0 8 0 0 xdim ydim
+                                rotatesprite OP12DUKESLIDEINTIME 120 CUTSCENE_SIZE 0 OPCUTSCENEDUKESPRITE 0 0 8 0 0 xdim ydim
+                                rotatesprite 130 180 81920 0 OPCUTSCENEDIALOG2 0 0 8 0 0 xdim ydim
+                                setvarvar prevtick curtick
+                }
+                else   
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        ifvare dna_dukecutscenevoc 2 screensound GM_LETSROCK
+                        else screensound BONUS_SPEECH1 // LET'S ROCK
+                        setvar SCREENALPHA 255
+                        setvar RETURN 1
+                }
+                break
+        }
+        endswitch
+        rotatesprite OPCUTSCENEPOS 100 CUTSCENE_SIZE 0 CUTSCENE_SCREEN 0 0 8 0 0 xdim ydim
+        rotatesprite OPCUTSCENE12DUKEPOS 120 CUTSCENE_SIZE 0 CUTSCENE_DUKE 0 0 8 0 0 xdim ydim
+        rotatesprite 130 180 81920 0 CUTSCENE_DIALOG 0 0 8 0 0 xdim ydim
+        }
+}
+ends
+
+defstate show_outro_cutscene {
+        ife in_ending_cutscene 1 { 
+        switch CUTSCENE_STEP
+        case 0    // FIRST SCREEN
+        {
+                setvar CUTSCENE_DIALOG 5400
+                setvar CUTSCENE_DIALOG2 5400
+                setvar CUTSCENE_SCREEN ENDCUTSCENE1
+                ifvarg SCREENALPHA 0
+                {
+                        state screen_fadeout
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                }
+                else
+                ifvarg delayTime 0
+                {
+                        setvar RETURN 0
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar SCREENALPHA 255
+                        screensound A51SIRENLOOP_CUTSCENE 
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar CUTSCENE_STEP 1
+                }
+                break
+        }
+        case 1   // SECOND SCREEN
+        {
+                setvar CUTSCENE_SCREEN ENDCUTSCENE2
+                set temp 0
+                state process_introoutro_panels
+                break
+        }
+        case 2  // THIRD SCREEN
+        {
+                setvar CUTSCENE_SCREEN ENDCUTSCENE3
+                set temp TELEPORTER
+                state process_introoutro_panels
+                break
+        }
+        case 3
+        {
+                setvar CUTSCENE_DIALOG ENDCUTSCENEDIA1
+                setvar CUTSCENE_SCREEN ENDCUTSCENE4
+                ifvarg SCREENALPHA 0
+                        state screen_fadeout
+                else
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar SCREENALPHA 255
+                        stopallsounds
+                        screensound PIPEBOMB_EXPLODE
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar CUTSCENE_STEP 4  
+                }
+                break
+        }
+        case 4
+        {
+                setvar CUTSCENE_DIALOG 5400
+                setvar CUTSCENE_SCREEN ENDCUTSCENE5
+                set temp 0
+                state process_introoutro_panels
+                break
+        }
+        case 5
+        {
+                setvar CUTSCENE_SCREEN ENDCUTSCENE6
+                set temp 0
+                state process_introoutro_panels
+                break
+        }
+        case 6
+        {
+                setvar CUTSCENE_DIALOG2 ENDCUTSCENEDIA2
+                setvar CUTSCENE_SCREEN ENDCUTSCENE7
+                ifvarg SCREENALPHA 0
+                        state screen_fadeout
+                else
+                ifvarg ENDDIA1SLIDEINTIME 180
+                {
+                        setvar CUTSCENE_SCREEN 5400
+                        setvar CUTSCENE_DIALOG 5400
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar RETURN 0
+                        getticks curtick
+                        ifvare prevtick -1 setvar ticktmp 0 else
+                        {
+                                setvarvar ticktmp curtick
+                                subvarvar ticktmp prevtick
+                        }
+
+                        divvar ticktmp 4
+                        subvarvar ENDDIA1SLIDEINTIME ticktmp
+
+                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE7 0 0 8 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA1SLIDEINTIME 81920 0 ENDCUTSCENEDIA3 0 0 8 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 8 0 0 xdim ydim
+
+                        setvarvar prevtick curtick
+                }
+                else
+                {
+                        setvar CUTSCENE_SCREEN ENDCUTSCENE7
+                        setvar CUTSCENE_DIALOG ENDCUTSCENEDIA3
+                }
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar SCREENALPHA 255
+                        setvar CUTSCENE_DIALOG 5400
+                        ifvare dna_dukecutscenevoc 2 screensound GM_DEBRIEFING
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar CUTSCENE_STEP 7
+                }
+                break
+        }
+        case 7
+        {
+                
+                setvar CUTSCENE_DIALOG2 5400
+                setvar CUTSCENE_SCREEN ENDCUTSCENE8
+                ifvarg SCREENALPHA 0
+                        state screen_fadeout
+                else
+                ifvarg ENDDIA2SLIDEINTIME 180
+                {
+                        setvar CUTSCENE_SCREEN 5400
+                        setvar CUTSCENE_DIALOG 5400
+                        ifvare dna_dukecutscenevoc 2 { setvar delayTime 5000 } else { setvar delayTime OP_CUTSCENE_DELAY_TIME }
+                        setvar RETURN 0
+                        getticks curtick
+                        ifvare prevtick -1 setvar ticktmp 0 else
+                        {
+                                setvarvar ticktmp curtick
+                                subvarvar ticktmp prevtick
+                        }
+
+                        divvar ticktmp 4
+                        subvarvar ENDDIA2SLIDEINTIME ticktmp
+
+                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE8 0 0 8 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA2SLIDEINTIME 81920 0 ENDCUTSCENEDIA4 0 0 8 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
+
+                        setvarvar prevtick curtick
+                }
+                else
+                {
+                        setvar CUTSCENE_SCREEN ENDCUTSCENE8
+                        setvar CUTSCENE_DIALOG ENDCUTSCENEDIA4
+                }
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar SCREENALPHA 255
+                        setvar CUTSCENE_DIALOG 5400
+                        ifvare dna_dukecutscenevoc 2 screensound GM_HAILTOKING
+                        else screensound DUKE_GETWEAPON6 // HAIL TO THE KING
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar CUTSCENE_STEP 8
+                }
+                break
+        }
+        case 8
+        {
+                setvar CUTSCENE_SCREEN ENDCUTSCENE9
+                ifvarg SCREENALPHA 0
+                        state screen_fadeout
+                else
+                ifvarg ENDDIA3SLIDEINTIME 180
+                {
+                        setvar CUTSCENE_SCREEN 5400
+                        setvar CUTSCENE_DIALOG 5400
+                        setvar delayTime OP_CUTSCENE_DELAY_TIME
+                        setvar RETURN 0
+                        getticks curtick
+                        ifvare prevtick -1 setvar ticktmp 0 else
+                        {
+                                setvarvar ticktmp curtick
+                                subvarvar ticktmp prevtick
+                        }
+
+                        divvar ticktmp 4
+                        subvarvar ENDDIA3SLIDEINTIME ticktmp
+
+                        rotatesprite 160 100 CUTSCENE_SIZE 0 ENDCUTSCENE9 0 0 72 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX1 ENDDIA3SLIDEINTIME 81920 0 ENDCUTSCENEDIA5 0 0 72 0 0 xdim ydim
+                        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
+
+                        setvarvar prevtick curtick
+                }
+                else
+                {
+                        setvar CUTSCENE_SCREEN ENDCUTSCENE9
+                        setvar CUTSCENE_DIALOG ENDCUTSCENEDIA5
+                }
+                ifvarg delayTime 0
+                {
+                        state cutscene_timer
+                }
+                else
+                {
+                        setvar RETURN 1
+                }
+                break
+        }
+        endswitch
+
+        rotatesprite 160 100 CUTSCENE_SIZE 0 CUTSCENE_SCREEN 0 0 72 0 0 xdim ydim
+        rotatesprite ENDCUTSCENEDIAPOSX1 ENDCUTSCENEDIAPOSY1 81920 0 CUTSCENE_DIALOG 0 0 2 0 0 xdim ydim
+        rotatesprite ENDCUTSCENEDIAPOSX2 ENDCUTSCENEDIAPOSY2 81920 0 CUTSCENE_DIALOG2 0 0 2 0 0 xdim ydim
+        }
+}
+ends
+
+appendevent EVENT_SCREEN
+        state setsqraspect
+    ifvarn in_cutscene 0
+    {
+        ifvarn cutscene_num 0
+        {
+                ifvarg SCREENALPHA 0 { state screen_fadeout }
+
+        ifvare VOLUME 0
+        {
+                setvar SCREENALPHAWORLD 255
+                setvar worldprevtick -1 // Keep resetting world fade values while in cutscene so the fade returns once exiting
+        }
+                state setup_cutscene_panel // Set up text, check them for killswitch string
+                state cutcam_render // Set up the cutscene's visual
+                state display_cutscene_dialogue // And now display everything
+        }
+    }
+    else
+    {
+        ife in_endlevel_screen 0 { // As name says: checks if we're not in end level screen
+        ifvare VOLUME 0
+        {
+                ifvare LEVEL 0 // AKA Level 1 - Gathering Intel
+                {
+                       state show_intro_cutscene 
+                }
+                ifvare LEVEL 19
+                {
+                        state show_outro_cutscene
+                
+                ife in_credits 1 { // Credits screens
+                        state show_credits
+                        ifvarg SCREENALPHA 0
+                        {
+                                state screen_fadeout
+                        }
+                        ifvare RETURN 1
+                        {
+                                setvar prevtick -1
+                                setvar SCREENALPHA 0
+                                setvar in_credits 2
+                        }  
+                        }
+                        else ife in_credits 2
+                        {
+                        state show_credits
+                        ifvarl SCREENALPHA 255
+                        {
+                                state screen_fadein
+                        }
+                        else {
+                                setvar prevtick -1
+                                setvar SCREENALPHA 255
+                                setvar in_credits 0
+                                setvar RETURN 1
+                        }
+                }
+                
+                        
+                }
+
+        ife in_objective_screen 1 { // Objective level screens
+                state display_objective_screen
+                ifvarg SCREENALPHA 0
+                {
+                        state screen_fadeout
+                }
+                ifvare RETURN 1
+                {
+                        setvar prevtick -1
+                        setvar SCREENALPHA 0
+                        setvar in_objective_screen 2
+                }  
+        }
+        else ife in_objective_screen 2
+        {
+                state display_objective_screen
+                ifvarl SCREENALPHA 255
+                {
+                        state screen_fadein
+                }
+                else {
+                        setvar prevtick -1
+                        setvar SCREENALPHA 255
+                        setvar in_objective_screen 0
+                        setvar RETURN 1
+                }
+        }
+
+        }
+        }
+        else ife in_endlevel_screen 1 { // End level screens
+                state display_end_screen
+                ifvarg SCREENALPHA 0
+                {
+                        state screen_fadeout
+                }
+                ifvare RETURN 1
+                {
+                        setvar prevtick -1
+                        globalsound A_PISTOL
+                        setvar SCREENALPHA 0
+                        setvar in_endlevel_screen 2
+                }  
+        }
+        else ife in_endlevel_screen 2
+        {
+                state display_end_screen
+                ifvarl SCREENALPHA 255
+                {
+                        state screen_fadein
+                }
+                else {
+                        setvar prevtick -1
+                        setvar SCREENALPHA 255
+                        setvar in_endlevel_screen 0
+                        setvar RETURN 1
+                }
+        }
+        
+    }
+    state setdosaspect
+endevent
