@@ -385,16 +385,21 @@ define ARMORSHARD 3919
 define PISTOLAMMOBOX 3945
 define SHOTGUNSHELLS 3946
 define HEALTHPACKSMALL 3918
+define ENERGYPACK 5697
 
 define ARMORSHARD_AMOUNT     5
 define PISTOLAMMOBOXAMOUNT   20
 define SHOTGUNSHELLSAMOUNT   4
+define ENERGYPACKAMOUNT      10
+define ENERGYCLIPAMOUNT      5
 
 definequote 126  +5 ARMOR
 definequote 127  +5 ARMOUR
 definequote 128  AMMO BOX
 definequote 129  4 SHELLS
 definequote 130  +5 HEALTH
+
+definequote 166  ENERGY PACK
 
 //gamevar for checking music before playing cutscene
 gamevar currmusic 0
@@ -1135,7 +1140,7 @@ definequote 62        +25 HEALTH
 definequote 63        MP5 AMMO
 definequote 64        5 ROCKETS
 definequote 65        AMMO CLIP
-//definequote 66        AMMO FOR FREEZETHROWER! //Freeze and Shrink Rays share the same ENERGY CLIP ammo in orignal. Quotes can be updated to that or a seperate version of each
+definequote 66        ENERGY CLIP
 definequote 69        10 SHELLS
 //definequote 78        AMMO FOR SHRINKER
 

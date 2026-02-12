@@ -80,9 +80,7 @@ state crabshrunkstate
   else
     ifcount SHRUNKCOUNT
     {
-      ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
-      else
-      sizeto 48 40
+      sizeto 30 24
     }
   else
     state genericshrunkcode

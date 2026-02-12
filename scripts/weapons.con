@@ -741,7 +741,7 @@ endevent
 // If under 4 ammo for next blast, "fakeswap" to zero (gets corrected on next tick)
 // This is a hack to force a weapon swap when below 4, as if it was emtpy.
 appendevent EVENT_GAME
-    ife player[THISACTOR].curr_weapon LEAD_WEAPON { 
+    ife player[THISACTOR].curr_weapon LEAD_WEAPON {
         // --- This hack is to handle the swapping when less than 4 ---
         ife player[].kickback_pic 3 state transfer_lead_ammo
         ifg player[].kickback_pic 20 {
@@ -763,6 +763,25 @@ appendevent EVENT_GAME
     } else {
         // Keep transferring (updating) ammo all the time when you can from SHOTGUN
         state transfer_lead_ammo
+    }
+
+    ife player[].curr_weapon FREEZE_WEAPON
+    {
+        ifg player[].kickback_pic 16
+        {
+        getplayer[THISACTOR].ammo_amount FREEZE_WEAPON temp
+        setplayer[THISACTOR].ammo_amount SHRINKER_WEAPON temp
+        }
+    }
+    else ife player[].curr_weapon SHRINKER_WEAPON
+    {
+        getplayer[THISACTOR].kickback_pic temp
+        addlogvar temp
+        ifg player[].kickback_pic 9
+        {
+        getplayer[THISACTOR].ammo_amount SHRINKER_WEAPON temp
+        setplayer[THISACTOR].ammo_amount FREEZE_WEAPON temp
+        }
     }
 endevent
 

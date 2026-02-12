@@ -80,11 +80,9 @@ state slimereggshrunkstate
     ai AISLIMEREGGWAIT
   else
     ifcount SHRUNKCOUNT
-        {
-          ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
-          else
+    {
       sizeto 48 40
-        }
+    }
   else
     state genericshrunkcode
 ends
