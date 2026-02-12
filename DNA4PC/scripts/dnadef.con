@@ -1081,6 +1081,8 @@ definesound GM_COMMUNICADO            sounds/gianni/GM_Communicado.ogg        0 
 definesound GM_COMMUNICADOEU          sounds/gianni/GM_CommunicadoEU.ogg      0     0     255   4     0
 definesound GM_ILLFINDTHEM            sounds/gianni/GM_IllFindThem.ogg      0     0     255   4     0
 
+// Game title for active eduke window
+setgamename Duke Nukem Advance
 
 // Episodes
 definevolumename 0 Duke Advance
