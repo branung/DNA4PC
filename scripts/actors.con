@@ -129,47 +129,6 @@ prependstate drop_chaingun
   terminate
 ends
 
-// ----------------------------------------------------
-// THE BIG STANDARD ENEMY HIT STATE CODE BLOCK
-// In order to change freeze logic, hit states must be prepended
-// ----------------------------------------------------
-
-prependstate checktroophit
-  ifwasweapon FREEZEBLAST
-  {
-    sound SOMETHINGFROZE
-    spritepal 1
-    move 0
-    action ATROOPFROZEN
-    // strength 0
-    terminate
-  }
-ends
-
-prependstate checklizhit
-  ifwasweapon FREEZEBLAST
-  {
-    sound SOMETHINGFROZE
-    spritepal 1
-    move 0
-    action ALIZFROZEN
-    //strength 0
-    terminate
-  }
-ends
-
-prependstate checkoctahitstate
-  ifwasweapon FREEZEBLAST
-  {
-    sound SOMETHINGFROZE
-    spritepal 1
-    move 0
-    action AOCTAFROZEN
-    // strength 0
-    terminate
-  }
-ends
-
 // Also have to copy this whole state just to remove the shield drop chance
 prependstate checkpighitstate
   spawn BLOOD
@@ -205,15 +164,15 @@ prependstate checkpighitstate
   }
   else
   {
-    ifwasweapon FREEZEBLAST
-    {
-      sound SOMETHINGFROZE
-      spritepal 1
-      move 0
-      action APIGFROZEN
-      //strength 0
-      terminate
-    }
+    // ifwasweapon FREEZEBLAST
+    // {
+    //   sound SOMETHINGFROZE
+    //   spritepal 1
+    //   move 0
+    //   action APIGFROZEN
+    //   //strength 0
+    //   terminate
+    // }
 
     sound PIG_PAIN
     state random_wall_jibs
@@ -764,11 +723,77 @@ enda
 
 
 
+//// --------- PREPENDS FOR FREEZING 3D ENEMIES ---------
+prependstate troopcode
+  geta [].htpicnum temp
+  ife temp FREEZEBLAST {
+    seta [].htextra -1
+    sound SOMETHINGFROZE
+    spritepal 1
+    seta [].htpicnum LIZTROOP
+    move 0
+    //resetcount
+    action ATROOPFROZEN
+  }
+ends
+
+prependstate checksquished
+  ifactor PIGCOP {
+    geta [].htpicnum temp
+    ife temp FREEZEBLAST {
+      seta [].htextra -1
+      sound SOMETHINGFROZE
+      spritepal 1
+      seta [].htpicnum PIGCOP
+      move 0
+      //resetcount
+      action APIGFROZEN
+    }
+  }
+  ifactor LIZMAN {
+    geta [].htpicnum temp
+    ife temp FREEZEBLAST {
+      seta [].htextra -1
+      sound SOMETHINGFROZE
+      spritepal 1
+      seta [].htpicnum LIZMAN
+      move 0
+      //resetcount
+      action ALIZFROZEN
+    }
+  }
+  ifactor OCTABRAIN {
+    geta [].htpicnum temp
+    ife temp FREEZEBLAST {
+      seta [].htextra -1
+      sound SOMETHINGFROZE
+      spritepal 1
+      seta [].htpicnum OCTABRAIN
+      move 0
+      //resetcount
+      action AOCTAFROZEN
+    }
+  }
+  // Needs to be tested.. also need to add commander
+  ifactor NEWBEASTHANG {
+    geta [].htpicnum temp
+    ife temp FREEZEBLAST {
+      seta [].htextra -1
+      sound SOMETHINGFROZE
+      spritepal 1
+      seta [].htpicnum NEWBEASTHANG
+      move 0
+      //resetcount
+      action ANEWBEASTFROZEN
+    }
+  }
+ends
+
 //// --------- EXTRA REVIVE FUNCTION FOR GREY ---------
 // This hijacks into the common "checksquished" state from original GAME.CON
 // The enemy currently supports reviving trooper/pigcop/octa/newbeast.
 appendstate checksquished
-    
+
     ifaction ATROOPDEAD {
         findnearspritez GREYREVIVEPROJECTILE GREYPROJECTILEREVIVEXY GREYPROJECTILEREVIVEZ temp
         ifn temp -1 {

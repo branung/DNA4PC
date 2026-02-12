@@ -217,6 +217,17 @@ ifai AISLIMEREGGWAIT state slimereggwaitstate else
 ifai AISLIMEREGGHIT state slimeregghitstate else
 ifai AISLIMEREGGATTACKPLAYER state slimereggattackstate
 
+
+ geta [].htpicnum temp
+ ife temp FREEZEBLAST {
+  seta [].htextra -1
+  sound SOMETHINGFROZE
+  spritepal 1
+  seta [].htpicnum SLIMEREGG
+  //resetcount
+  ai AISLIMEREGGFROZEN
+ }
+
 ifhitweapon
 {
   spawn BLOOD
@@ -235,16 +246,17 @@ ifhitweapon
   ifwasweapon GROWSPARK
     sound EXPANDERHIT
   //guts JIBS2 1
-  ifwasweapon FREEZEBLAST
-  {
-    sound SOMETHINGFROZE
-    spritepal 1
-    ai AISLIMEREGGFROZEN
-    //strength 0
-    break
-  }
   ifdead
   {
+    // ifwasweapon FREEZEBLAST
+    // {
+    //   sound SOMETHINGFROZE
+    //   spritepal 1
+    //   ai AISLIMEREGGFROZEN
+    //   strength 0
+    //   // state freezeme
+    //   break
+    // }
     ifwasweapon GROWSPARK
     {
       cstat 0

@@ -396,6 +396,18 @@ ifai AIGREYATTACKPLAYER state greyattackstate else
 ifai AIGREYREVIVING state greyrevivestate else
 ifai AIGREYSEEK state greyseekstate
 
+
+ geta [].htpicnum temp
+ ife temp FREEZEBLAST {
+  state enemy_deathtrigger
+  seta [].htextra -1
+  sound SOMETHINGFROZE
+  spritepal 1
+  seta [].htpicnum GREY
+  //resetcount
+  ai AIGREYFROZEN
+ }
+
 ifhitweapon
 {
   //guts JIBS6 1
@@ -416,18 +428,18 @@ ifhitweapon
   ifwasweapon GROWSPARK
     sound EXPANDERHIT
     //guts JIBS2 1
-  ifwasweapon FREEZEBLAST
-  {
-    sound SOMETHINGFROZE
-    spritepal 1
-    ai AIGREYFROZEN
-    //strength 0
-    // state freezeme
-    break
-  }
   ifdead
   {
     state enemy_deathtrigger
+    // ifwasweapon FREEZEBLAST
+    // {
+    //   sound SOMETHINGFROZE
+    //   spritepal 1
+    //   ai AIGREYFROZEN
+    //   strength 0
+    //   // state freezeme
+    //   break
+    // }
     
     ifwasweapon GROWSPARK
     {

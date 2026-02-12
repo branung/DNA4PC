@@ -215,6 +215,18 @@ ifai AICRABATTACKPLAYER state crabattackstate else
 ifai AICRABSEEK state crabseekstate
 
 
+
+
+ geta [].htpicnum temp
+ ife temp FREEZEBLAST {
+  seta [].htextra -1
+  sound SOMETHINGFROZE
+  spritepal 1
+  seta [].htpicnum SLIMECRAB
+  //resetcount
+  ai AICRABFROZEN
+ }
+
 ifhitweapon
 {
   //guts JIBS6 1
@@ -234,16 +246,17 @@ ifhitweapon
   ifwasweapon GROWSPARK
     sound EXPANDERHIT
 		//guts JIBS2 1
-  ifwasweapon FREEZEBLAST
-  {
-    sound SOMETHINGFROZE
-    spritepal 1
-    ai AICRABFROZEN
-    //strength 0
-    break
-  }
   ifdead
   {
+    // ifwasweapon FREEZEBLAST
+    // {
+    //   sound SOMETHINGFROZE
+    //   spritepal 1
+    //   ai AICRABFROZEN
+    //   strength 0
+    //   // state freezeme
+    //   break
+    // }
     ifwasweapon GROWSPARK
     {
       cstat 0
