@@ -273,10 +273,16 @@ defstate transfer_pistol_ammo
     setplayer[].ammo_amount PISTOL_WEAPON temp
 ends
 
-defstate transfer_energy_ammo
+defstate transfer_freeze_energy_ammo
     getplayer[].ammo_amount FREEZE_WEAPON temp
     setplayer[].ammo_amount SHRINKER_WEAPON temp
     setplayer[].ammo_amount FREEZE_WEAPON temp
+ends
+
+defstate transfer_shrink_energy_ammo
+    getplayer[].ammo_amount SHRINKER_WEAPON temp
+    setplayer[].ammo_amount FREEZE_WEAPON temp
+    setplayer[].ammo_amount SHRINKER_WEAPON temp
 ends
 
 
@@ -400,7 +406,7 @@ actor ENERGYPACK
       {
         addammo FREEZE_WEAPON ENERGYPACKAMOUNT
         quote 166
-        state transfer_energy_ammo
+        state transfer_freeze_energy_ammo
         ifspawnedby ENERGYPACK
           state getcode
         else
@@ -635,7 +641,7 @@ actor FREEZEAMMO
       {
         addammo FREEZE_WEAPON ENERGYCLIPAMOUNT
         quote 66
-        state transfer_energy_ammo
+        state transfer_freeze_energy_ammo
         ifspawnedby FREEZEAMMO
           state getcode
         else
@@ -659,7 +665,7 @@ actor SHRINKERSPRITE
           break
         addweapon SHRINKER_WEAPON 20
         quote 60
-        state transfer_energy_ammo
+        state transfer_shrink_energy_ammo
         ifspawnedby SHRINKERSPRITE
           state getweaponcode
         else
@@ -684,7 +690,7 @@ actor FREEZESPRITE
 
         addweapon FREEZE_WEAPON 20
         quote 59
-        state transfer_energy_ammo
+        state transfer_freeze_energy_ammo
         ifspawnedby FREEZESPRITE
           state getweaponcode
         else

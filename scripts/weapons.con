@@ -775,8 +775,6 @@ appendevent EVENT_GAME
     }
     else ife player[].curr_weapon SHRINKER_WEAPON
     {
-        getplayer[THISACTOR].kickback_pic temp
-        addlogvar temp
         ifg player[].kickback_pic 9
         {
         getplayer[THISACTOR].ammo_amount SHRINKER_WEAPON temp
