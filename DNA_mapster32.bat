@@ -1,1 +1,1 @@
-mapster32.exe -x scripts/dna4pc.con -usecwd
+mapster32.exe -x DNA4PC/scripts/dna4pc.con -usecwd
