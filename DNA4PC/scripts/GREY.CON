@@ -415,6 +415,7 @@ ifhitweapon
 
   ifwasweapon SHRINKSPARK
   {
+    state enemy_deathtrigger
     ifstrength 600
     {
       sound ACTOR_SHRINKING
