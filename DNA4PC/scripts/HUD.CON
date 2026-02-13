@@ -264,7 +264,8 @@
 			}	
 		}
 
-		ifn player.dead_flag 0 {
+		getav[THISACTOR].playerIsFrozen temp
+		ifn player.dead_flag 0 ifn temp 1 {
 			state setsqraspect
 			screentext DNASMALLTEXT 160 100 65536 0 0 13 0 0 16 0 8 0 0 0 8202 0 0 xdim ydim // Death quote
 			state setdosaspect

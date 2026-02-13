@@ -1202,6 +1202,7 @@ define SELF_DAMAGE_DIST 650
 
 gamevar playerShrunk 0 2
 gamevar playerFroze 0 2
+gamevar playerIsFrozen 0 2
 
 // SHRINKER AND FREEZER PROJ SPAWN ACTORS
 // Sprites for when projectile hits something
@@ -1224,19 +1225,19 @@ enda
 actor TRANSPORTERSTAR 0 TRANSFOWARD
   ifaction TRANSFOWARD
   {
-    // ifactioncount 0 {
-    // getav[THISACTOR].playerFroze temp
-    // ifn temp 1 { // projectile hasn't frozen player yet
-    // ifpdistl SELF_DAMAGE_DIST {
-    //   geta [].pal temp 
-    //   ife temp 1 { // if frozen pal
-    //   getplayer[THISACTOR].i temp
-    //   setav[temp].playerFroze 1
-    //   setav[THISACTOR].playerFroze 1
-    //   }
-    // }
-    // }
-    // }
+    ifactioncount 0 {
+    getav[THISACTOR].playerFroze temp
+    ifn temp 1 { // projectile hasn't frozen player yet
+    ifpdistl SELF_DAMAGE_DIST {
+      geta [].pal temp 
+      ife temp 1 { // if frozen pal
+      getplayer[THISACTOR].i temp
+      setav[temp].playerFroze 1
+      setav[THISACTOR].playerFroze 1
+      }
+    }
+    }
+    }
     ifactioncount 6
       action TRANSBACK
   }
@@ -1245,14 +1246,33 @@ actor TRANSPORTERSTAR 0 TRANSFOWARD
       killit
 enda
 
+appendevent EVENT_PRESSEDFIRE
+  ifn player[].dead_flag 0 {
+    set RETURN 1
+  }
+endevent
+
+appendevent EVENT_JUMP
+  ifn player[].dead_flag 0 {
+    set RETURN 1
+  }
+endevent
+
 // THE ENTIRE APLAYER ACTOR CODE
 // I CANT HIJACK ANY STATES IM SORRY OASIZ
 actor APLAYER MAXPLAYERHEALTH PSTAND 0 0
   
+  getuserdef[].god temp
+  ife temp 1 { 
+    sizeto 42 36
+    setav[THISACTOR].playerShrunk 0
+    setav[THISACTOR].playerFroze 0
+    setav[THISACTOR].playerIsFrozen 0
+    }
+
   getav[THISACTOR].playerShrunk temp
   ife temp 1 {
-  getuserdef[].god temp2 ifn temp2 1 {
-    ifaction PSHRINKING nullop
+    ifaction PSHRINKING setav[THISACTOR].playerShrunk 0
     else {
       setav[THISACTOR].playerShrunk 0
       palfrom 48 0 48
@@ -1263,13 +1283,10 @@ actor APLAYER MAXPLAYERHEALTH PSTAND 0 0
       action PSHRINKING
       break
     }
-  } else setav[THISACTOR].playerShrunk 0
   }
 
   getav[THISACTOR].playerFroze temp
-  getuserdef[].god temp2
   ife temp 1 {
-    getuserdef[].god temp2 ifn temp2 1 {
     ifaction PFROZEN setav[THISACTOR].playerFroze 0
     else {
       setav[THISACTOR].playerFroze 0
@@ -1281,10 +1298,14 @@ actor APLAYER MAXPLAYERHEALTH PSTAND 0 0
       geta [].extra temp
       ifl temp 10 { strength 0 }
       else { addphealth -10 }
+      setplayer[].posxv 0
+      setplayer[].posyv 0
+      fall
+      setav[THISACTOR].playerIsFrozen 1
+      setplayer[].dead_flag 1
       action PFROZEN
       break
     }
-  } else setav[THISACTOR].playerFroze 0
   }
 
   ifaction 0
@@ -1304,6 +1325,7 @@ actor APLAYER MAXPLAYERHEALTH PSTAND 0 0
       {
         ifdead
         {
+          setav[THISACTOR].playerIsFrozen 0
           lotsofglass 60
           ifrnd 84
             spawn BLOODPOOL
@@ -1333,6 +1355,8 @@ actor APLAYER MAXPLAYERHEALTH PSTAND 0 0
     ifactioncount THAWTIME
     {
       getlastpal
+      setplayer[].dead_flag 0
+      setav[THISACTOR].playerIsFrozen 0
       move 0
       action PSTAND
     }
