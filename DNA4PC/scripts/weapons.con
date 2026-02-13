@@ -659,6 +659,14 @@ gamevar WEAPON7_FIRESOUND A_LEADFIRE 1
 gamevar WEAPON7_SOUND2TIME 15 1
 gamevar WEAPON7_SOUND2SOUND 169 1
 
+//Shrinker
+// In order to give this weapon DNA's wider hit radius, the standard projectile is overridden and then passed back to the weapon
+defineprojectile SHRINKSPARK PROJ_WORKSLIKE 65538
+defineprojectile SHRINKSPARK PROJ_SPAWNS SHRINKEREXPLOSION
+defineprojectile SHRINKSPARK PROJ_EXTRA SHRINKER_WEAPON_STRENGTH
+defineprojectile SHRINKSPARK PROJ_HITRADIUS 1000
+gamevar WEAPON6_SHOOTS SHRINKSPARK
+
 // Golden Gun
 gamevar WEAPON8_CLIP 12 1
 gamevar WEAPON8_RELOAD 28 1
