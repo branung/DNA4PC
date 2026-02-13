@@ -12,6 +12,9 @@ define CHAINGUNAMMOAMOUNT 20
 // Prevent Freeze ricochet
 define NUMFREEZEBOUNCES 1
 
+// Prevent Freeze ricochet
+define SHRINKERBLASTRADIUS 1000
+
 //Ammo spawn odds redefinitions
 define SPAWNAMMOODDS           256
 
