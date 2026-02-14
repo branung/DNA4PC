@@ -827,69 +827,47 @@ useractor notenemy DNA_YELLOWKEY 0
     state access_shared
 enda
 
-//// --------- PREPENDS FOR FREEZING 3D ENEMIES ---------
-prependstate troopcode
+// Handles freezing enemies, negates freezer damage which avoids old freezing logic
+state newEnemyFreeze
   geta [].htpicnum temp
   ife temp FREEZEBLAST {
     seta [].htextra -1
-    sound SOMETHINGFROZE
-    spritepal 1
-    seta [].htpicnum LIZTROOP
-    move 0
-    //resetcount
-    action ATROOPFROZEN
+    ifg sprite[THISACTOR].extra 0
+    {
+      sound SOMETHINGFROZE
+      spritepal 1
+      move 0
+      //resetcount
+      seta [].htpicnum sprite[THISACTOR].picnum
+      switch sprite[THISACTOR].picnum
+        case LIZTROOP action ATROOPFROZEN break
+        case PIGCOP action APIGFROZEN break
+        case LIZMAN action ALIZFROZEN break
+        case OCTABRAIN action AOCTAFROZEN break
+        case GREY ai AIGREYFROZEN break
+        case SLIMECRAB ai AICRABFROZEN break
+        case SLIMEREGG ai AISLIMEREGGFROZEN break
+        case NEWBEASTHANG action NEWBEASTHANG break
+      endswitch
+    }
   }
 ends
 
+//// --------- PREPENDS FOR FREEZING ENEMIES ---------
+prependstate troopcode
+    state newEnemyFreeze
+ends
+
 prependstate checksquished
-  ifactor PIGCOP {
-    geta [].htpicnum temp
-    ife temp FREEZEBLAST {
-      seta [].htextra -1
-      sound SOMETHINGFROZE
-      spritepal 1
-      seta [].htpicnum PIGCOP
-      move 0
-      //resetcount
-      action APIGFROZEN
-    }
-  }
-  ifactor LIZMAN {
-    geta [].htpicnum temp
-    ife temp FREEZEBLAST {
-      seta [].htextra -1
-      sound SOMETHINGFROZE
-      spritepal 1
-      seta [].htpicnum LIZMAN
-      move 0
-      //resetcount
-      action ALIZFROZEN
-    }
-  }
-  ifactor OCTABRAIN {
-    geta [].htpicnum temp
-    ife temp FREEZEBLAST {
-      seta [].htextra -1
-      sound SOMETHINGFROZE
-      spritepal 1
-      seta [].htpicnum OCTABRAIN
-      move 0
-      //resetcount
-      action AOCTAFROZEN
-    }
-  }
+  ifactor PIGCOP { state newEnemyFreeze }
+  ifactor LIZMAN { state newEnemyFreeze }
+  ifactor OCTABRAIN { state newEnemyFreeze }
+  ifactor GREY { state newEnemyFreeze }
+  ifactor SLIMECRAB { state newEnemyFreeze }
+  ifactor SLIMEREGG { state newEnemyFreeze }
   // Needs to be tested.. also need to add commander
   ifactor NEWBEASTHANG {
-    geta [].htpicnum temp
-    ife temp FREEZEBLAST {
-      seta [].htextra -1
-      sound SOMETHINGFROZE
-      spritepal 1
-      seta [].htpicnum NEWBEASTHANG
-      move 0
-      //resetcount
-      action ANEWBEASTFROZEN
-    }
+    state newEnemyFreeze
   }
 ends
 

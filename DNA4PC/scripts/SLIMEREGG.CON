@@ -216,16 +216,6 @@ ifai AISLIMEREGGHIT state slimeregghitstate else
 ifai AISLIMEREGGATTACKPLAYER state slimereggattackstate
 
 
- geta [].htpicnum temp
- ife temp FREEZEBLAST {
-  seta [].htextra -1
-  sound SOMETHINGFROZE
-  spritepal 1
-  seta [].htpicnum SLIMEREGG
-  //resetcount
-  ai AISLIMEREGGFROZEN
- }
-
 ifhitweapon
 {
   spawn BLOOD

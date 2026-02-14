@@ -33,6 +33,11 @@ onevent EVENT_NEWGAME
     readgamevar dna_key_hud
 endevent
 
+// Start the player with 20 bullets on new game
+appendevent EVENT_RESETPLAYER
+  ife LEVEL 0 setplayer[].ammo_amount PISTOL_WEAPON 20
+endevent
+
 //Remove D3D loading screen
 onevent EVENT_GETLOADTILE
     setvar RETURN -1
