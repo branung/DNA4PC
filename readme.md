@@ -6,17 +6,29 @@ DN:A itself runs on the proprietary Southpaw Engine developed by Torus games whi
 The GBA adaptation of Duke in many ways can be thought of as a mod for this engine, making DN:A mechanically and technically quite reminiscent of Doom's gameplay and limitations.
 
 This conversion utilizes original assets such as sounds, graphics and levels with any necessary conversion and fixes to present them inside Build engine.
-Much of the DNA4PC gameplay is a hybrid of original Duke3D (Which DN:A imitates in the first place) and re-inrtroduction of some "Doom'isms"
+Much of the DNA4PC gameplay is a hybrid of original Duke3D (Which DN:A imitates in the first place) and the re-inrtroduction of some "Doom'isms"
 This approach will not result in an exact replication but as much of the relevant DN:A specific experience as possible has been ported over and adapted.
 You can expect to see all of the major special Enemies, sounds and other gameplay behavior that forms the "DN:A experience".
-
 
 TL;DR -- Experience "Duke Nukem : Advance" with all the bells & whistles of today.
 
 # Running
 
-git clone this repo and run as `eduke32.exe -x scripts/dna4pc.con`, or use the provided dna4pc.bat file.
-You must include a valid Duke3D 1.5 data file (duke3d.grp) in the installation path!
+- Git clone this repo or download
+- Extract to a path
+- Provide valid Duke3D 1.5 GRP file in the same path (~43 megs)
+- Run the provided eduke32.exe (or supply own) -- Pick 'DNA4PC' as custom content -> Start
+
+NOTE: We haven't tested with GNU/Linux yet, case sensitivity might not work.
+
+# Known issues
+
+- Customization is still WIP and not very bullet proof, 2nd page is not functional yet.. more on next section
+- Later maps use maskwalls for vines instead of sprites, changing this is on the agenda
+- Player is slightly shorter than the GBA original
+- Automatic viewscreen thing is a bit iffy as the player can immediately move away
+- Bullet trails in parallax sky (Also an issue in d3d)
+- Freezer works differently due to code stupidities we didn't want to figure out just yet
 
 # Additional shenanigans
 
@@ -28,7 +40,7 @@ GBA ORIGINAL: Foregoes all of the above enhancements/"improvements" where applic
 
 If you're still not satisfied then you can further customize your experience from the in-game "customize" menues.
 1. Alarm sound: Lessen the gaudy loud alarm you hear in some maps as the GBA original is rather obnoxious, sounding roughly 10 times and retriggering after a while.
-2. Step sound: Disables the step sounds which are new to the GBA version
+2. (NOTIMPLEMENTED) Step sound: Disables the step sounds which are new to the GBA version
 3. Cutscenes: Requires manual toggling of cutscenes via in-game triggers. GBA has these automatic
 4. Autoshade: Applies some much needed auto-generated basic 3D shading for walls and ceilings to make them pop more as the GBA original lacks any.
 5. Voicing: Apply fitting duke3d oneliners for cutscenes or have the whole game voiced by Gianni Matragrano! GBA original is completely silent aside from gameplay.
