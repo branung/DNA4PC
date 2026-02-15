@@ -415,6 +415,7 @@ var bobfrequency 1024 0
 //Delay vars
 var delayTime 0
 var bonusDelayTime 0
+var tutorialDelayTime 0
 
 gamevar prevtick -1 0
 gamevar curtick   0 0
@@ -429,6 +430,9 @@ gamevar bonus_screen_prevtick -1 0
 
 // Pretick for credits to not conflict with fade out timer
 gamevar credits_screen_prevtick -1 0
+
+// Pretick for mod menu screen prompt to not conflict with cutscene timer
+gamevar modmenu_tutorial_prevtick -1 0
 
 // Additional ticks for world screen fade timer - dont want any conflicts with these
 gamevar SCREENALPHAWORLD 255 0

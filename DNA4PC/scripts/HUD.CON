@@ -24,12 +24,36 @@
 	}
 	ends
 
+	defstate tutorial_hud_timer {
+    	getticks curtick
+		ife modmenu_tutorial_prevtick -1 setvar ticktmp 0 else
+		{
+			setvarvar ticktmp curtick
+			subvarvar ticktmp modmenu_tutorial_prevtick
+		}
+
+		divvar ticktmp 4
+		
+		subvarvar tutorialDelayTime ticktmp
+			
+		setvarvar modmenu_tutorial_prevtick curtick
+	}
+	ends
+
+	appendevent EVENT_PRELEVEL
+		ife dna_menu_tutorial 0 { set tutorialDelayTime 800 set modmenu_tutorial_prevtick -1 }
+	endevent
+
 	defstate draw_hud_text
 	{
 		ifvarn dna_menu_tutorial 0 nullop
 		else
 		{
-			screentext STARTALPHANUM 60 48 49152 0 0 1020 0 0 16 0 5 0 0 0 0 0 0 xdim ydim
+			ifg tutorialDelayTime 0
+			{
+				screentext STARTALPHANUM 60 48 49152 0 0 1020 0 0 16 0 5 0 0 0 0 0 0 xdim ydim
+				state tutorial_hud_timer
+			}
 		}
 
 		ifvarg mission_count 0 
