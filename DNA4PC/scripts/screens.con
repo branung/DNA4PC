@@ -390,9 +390,9 @@ ends
 defstate show_logos {
     switch in_startup
     case 1 {
-        sound GBA_INTRO
-        startcutscene 149 // logo.ivf
-        stopallmusic
+        // sound GBA_INTRO
+        // startcutscene 149 // logo.ivf
+        // stopallmusic
         starttrackslot 7 0 
         addvar in_startup 1
         break
