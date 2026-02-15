@@ -1175,31 +1175,25 @@ useractor notenemy DNA_SWITCH4A 0 state switchcode enda
 useractor notenemy DNA_SWITCH4B 0 state switchcode enda
 
 
-// For weapon self damage for shrinker and freezer
+// Sets Shrink proj owner to -1 so that player can be effected by their own shot 
+appendevent EVENT_EGS
+{
+  ifactor SHRINKSPARK
+  {
+    seta [].owner -1
+  }
+}
+endevent
+
+// For weapon self damage for freezer
 define SELF_DAMAGE_DIST 650
 
-gamevar playerShrunk 0 2
 gamevar playerFroze 0 2
 gamevar playerIsFrozen 0 2
 
-// SHRINKER AND FREEZER PROJ SPAWN ACTORS
-// Sprites for when projectile hits something
-// Redefining these actors to add a check for player distance for self damage 
-actor SHRINKEREXPLOSION 0 SHRINKERFRAMES
-  ifactioncount 0 {
-  getav[THISACTOR].playerShrunk temp
-  ifn temp 1 { // projectile hasn't shrunk player yet
-  ifpdistl SELF_DAMAGE_DIST {
-    getplayer[THISACTOR].i temp
-    setav[temp].playerShrunk 1
-    setav[THISACTOR].playerShrunk 1
-    }
-    }
-  }
-  ifactioncount 4
-    killit
-enda
-
+// FREEZER PROJ SPAWN ACTOR
+// Actor for when projectile hits something
+// Redefining to add a check for player distance for self damage 
 actor TRANSPORTERSTAR 0 TRANSFOWARD
   ifaction TRANSFOWARD
   {
@@ -1243,25 +1237,9 @@ actor APLAYER MAXPLAYERHEALTH PSTAND 0 0
   getuserdef[].god temp
   ife temp 1 { 
     sizeto 42 36
-    setav[THISACTOR].playerShrunk 0
     setav[THISACTOR].playerFroze 0
     setav[THISACTOR].playerIsFrozen 0
     }
-
-  getav[THISACTOR].playerShrunk temp
-  ife temp 1 {
-    ifaction PSHRINKING setav[THISACTOR].playerShrunk 0
-    else {
-      setav[THISACTOR].playerShrunk 0
-      palfrom 48 0 48
-      move PSHRINKING
-      sound ACTOR_SHRINKING
-      cstat 0
-      addphealth -5
-      action PSHRINKING
-      break
-    }
-  }
 
   getav[THISACTOR].playerFroze temp
   ife temp 1 {
