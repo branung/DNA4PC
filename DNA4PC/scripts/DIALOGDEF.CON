@@ -683,7 +683,7 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 233 It's charging up to fire. 
     redefinequote 234 
     redefinequote 235 
-    redefinequote 236 /!&
+    redefinequote 236 
     redefinequote 237 Those alien bastards must 
     redefinequote 238 have anticipated you 
     redefinequote 239 getting the weapon data and 
@@ -1886,7 +1886,7 @@ else ifvare LEVEL 10 //AKA Level 11 - Doomsday Weapon
     redefinequote 229 Ummm... Too late. 
     redefinequote 230 They've already 
     redefinequote 231 started the weapon. 
-    redefinequote 232 /!&
+    redefinequote 232
     redefinequote 233 
     redefinequote 234 
     redefinequote 235 
