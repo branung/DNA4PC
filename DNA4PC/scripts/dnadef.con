@@ -241,6 +241,7 @@ gamevar CUTSCENE_SPRITE 0 0
 gamevar x 0 0
 gamevar y 0 0
 gamevar xspace 0 0
+gamevar curr_cuts_voc 0 1
 var cutscene_num 0 0
 var cutscene_i 0 0
 var cutscene_temp 0 0
