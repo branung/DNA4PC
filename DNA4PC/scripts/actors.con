@@ -844,7 +844,7 @@ state newEnemyFreeze
         case PIGCOP action APIGFROZEN break
         case LIZMAN action ALIZFROZEN break
         case OCTABRAIN action AOCTAFROZEN break
-        case GREY ai AIGREYFROZEN break
+        case GREY { state enemy_deathtrigger ai AIGREYFROZEN break }
         case SLIMECRAB ai AICRABFROZEN break
         case SLIMEREGG ai AISLIMEREGGFROZEN break
         case NEWBEASTHANG action NEWBEASTHANG break

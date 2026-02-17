@@ -18,7 +18,7 @@ include scripts/weapons.con
 damageeventtile 1405
 
 // Display mod version in logs
-definequote 165 DNA4PC v0.991
+definequote 165 DNA4PC v0.9911
 appendevent EVENT_INITCOMPLETE
     userquote 165
 endevent
