@@ -805,10 +805,10 @@ defstate get_cutscene_details
                                 case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 1 { set curr_cuts_voc GM_LIKETHEIDEA } } break }
+                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_BREEDINGSTOCK } else ife dna_localization 1 { set curr_cuts_voc GM_LIKETHEIDEA } } break }
                                 case 3 set CUTSCENE_SPRITE BOSS4HEADSPRITE break
                                 case 4 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_BREEDINGSTOCK } } break }
+                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_NEVERLEARN } else ife dna_localization 1 { set curr_cuts_voc GM_KNOWIMHERE } } break }
                                 case 5 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 6 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_ENGAGEMENTS break }
                                 endswitch
