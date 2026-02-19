@@ -904,6 +904,7 @@ define GM_YOULOOKFAMILIAREU 776
 define GM_COMMUNICADO 777
 define GM_COMMUNICADOEU 778
 define GM_ILLFINDTHEM 779
+define GM_PIPEBOMBPARTY 780
 //          SOUND TOKEN               SOUND FILE                        Pitch Low--High   Prio  Type  Distance
 definesound GM_THATSGOTTAHURT         sounds/gianni/GM_ThatsGottaHurt.ogg     0     0     255   4     0
 definesound GM_BACONBITS              sounds/gianni/GM_BaconBits.ogg          0     0     255   4     0
@@ -1084,7 +1085,8 @@ definesound GM_YOULOOKFAMILIAR        sounds/gianni/GM_YouLookFamiliar.ogg    0 
 definesound GM_YOULOOKFAMILIAREU      sounds/gianni/GM_YouLookFamiliarEU.ogg  0     0     255   4     0
 definesound GM_COMMUNICADO            sounds/gianni/GM_Communicado.ogg        0     0     255   4     0
 definesound GM_COMMUNICADOEU          sounds/gianni/GM_CommunicadoEU.ogg      0     0     255   4     0
-definesound GM_ILLFINDTHEM            sounds/gianni/GM_IllFindThem.ogg      0     0     255   4     0
+definesound GM_ILLFINDTHEM            sounds/gianni/GM_IllFindThem.ogg        0     0     255   4     0
+definesound GM_PIPEBOMBPARTY          sounds/gianni/GM_PipeBombParty.ogg      0     0     255   4     0
 
 // Game title for active eduke window
 setgamename Duke Nukem Advance

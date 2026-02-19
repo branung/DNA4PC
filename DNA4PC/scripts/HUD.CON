@@ -1031,7 +1031,7 @@ defstate get_cam_quote {
 			ife VOLUME 0 {
 				switch LEVEL
 				case 0 globalsound GM_LOTTASECURITY break
-				// case 2 globalsound  wait I forgot to include this line in the script I sent..
+				case 2 globalsound GM_PIPEBOMBPARTY break
 				case 5 ife dna_localization 0 globalsound GM_CRYINGTOMUMMY else globalsound GM_HESINCONTROL break
 				case 10 ife dna_localization 0 globalsound GM_MOSTIMPRESSIVE else globalsound GM_MUSTBETHEWEAPON break
 				case 16 globalsound GM_NOTHINGLIKECHALLENGE break
