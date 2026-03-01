@@ -31,6 +31,7 @@ onevent EVENT_NEWGAME
     readgamevar dna_level_music
     readgamevar dna_crosshair
     readgamevar dna_key_hud
+    readgamevar dna_lessalarm
 endevent
 
 // Start the player with 20 bullets on new game

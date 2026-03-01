@@ -1154,12 +1154,14 @@ appendevent EVENT_NEWGAMECUSTOM
                 // USER SELECTED PC ENHANCED
                 set dna_lessalarm 1
                 set s_state 2
+                savegamevar dna_lessalarm
                 set m_return 1
             }
             ife userdef.return 2 1 {
                 // USER SELECTED GBA
                 set dna_lessalarm 0
                 set s_state 1
+                savegamevar dna_lessalarm
                 set m_return 1
             }
         }
@@ -1168,11 +1170,13 @@ appendevent EVENT_NEWGAMECUSTOM
             ife userdef.return 2 0 {
                 // USA SELECTED
                 set dna_localization 0
+                savegamevar dna_localization
                 set m_return 1
             }
             ife userdef.return 2 1 {
                 // EU SELECTED
                 set dna_localization 1
+                savegamevar dna_localization
                 set m_return 1
             }
         }
@@ -1181,24 +1185,27 @@ appendevent EVENT_NEWGAMECUSTOM
             ife userdef.return 2 0 {
                 // NONE SELECTED
                 set dna_dukecutscenevoc 0
+                savegamevar dna_dukecutscenevoc
                 set m_return 1
             }
             ife userdef.return 2 1 {
                 // 3D SELECTED
                 set dna_dukecutscenevoc 1
+                savegamevar dna_dukecutscenevoc
                 set m_return 1
             }
             ife userdef.return 2 2 {
                 // GIANNI SELECTED
                 set dna_dukecutscenevoc 2
+                savegamevar dna_dukecutscenevoc
                 set m_return 1
             }
         }
         ife userdef.return 1 3 {
             set m_atscreen 3
-            ife userdef.return 2 0 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair }
-            ife userdef.return 2 1 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair }
-            ife userdef.return 2 2 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair }
+            ife userdef.return 2 0 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair savegamevar dna_crosshair }
+            ife userdef.return 2 1 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair savegamevar dna_crosshair }
+            ife userdef.return 2 2 { set m_return 2 set dna_crosshair m_tmp_dnacrosshair savegamevar dna_crosshair }
             ife userdef.return 2 -1 { set m_tmp_dnacrosshair dna_crosshair set m_lastentry -1 }
         }
     }
