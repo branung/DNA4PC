@@ -544,6 +544,14 @@ texture 4058 { pal 0 { file "tiles/4058.png" } }
 texture 4060 { pal 0 { file "tiles/4060.png" } }
 texture 4061 { pal 0 { file "tiles/4061.png" } }
 
+// Reusing monitor tiles for offset blinking animation
+texture 4063 { pal 0 { file "tiles/3628.png" } }
+texture 4064 { pal 0 { file "tiles/3629.png" } }
+texture 4065 { pal 0 { file "tiles/3627.png" } }
+texture 4066 { pal 0 { file "tiles/3632.png" } }
+texture 4067 { pal 0 { file "tiles/3633.png" } }
+texture 4068 { pal 0 { file "tiles/3631.png" } }
+
 texture 5119 { pal 0 { file "tiles/5119.png" } }
 texture 5120 { pal 0 { file "tiles/5120.png" } }
 texture 5121 { pal 0 { file "tiles/5121.png" } }
