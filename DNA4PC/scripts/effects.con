@@ -418,10 +418,10 @@ ends
 // Extra: Channel to force deactivation of this
 defstate do_se10
     ifn fx_extra -1 ife fx_activate[fx_extra] 1 {
-        killit
+        seta[i].lotag 99
     }
     ifn fx_owner -1 ife fx_activate[fx_owner] 1 {
-        seta[].hitag 30
+        seta[i].hitag 30
     }
 ends
 
