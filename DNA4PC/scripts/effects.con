@@ -249,7 +249,7 @@ defstate checklock
             ife sprite.ang RIGHT ifg player.posx sprite.x set temp 1
             ifn temp 1 redefinequote LOCKQUOTE THIS DOOR IS ONE WAY
         }
-        ifand sector[fx_int].lotag 16384 {
+        ifand sector[sprite.sectnum].lotag 16384 {
             redefinequote LOCKQUOTE A SWITCH IS NEEDED
         } else {
             ifand fx_extra lock_switch set temp 1
@@ -412,6 +412,17 @@ ends
 ///   STATES: SECTOREFFECTORS
 /// =============================================================================================
 
+
+//// -- SE10: Door close delay additions --
+// Hitag: Delay in ticks
+// Extra: Channel to force deactivation of this
+defstate do_se10
+    ifn fx_extra -1 ife fx_activate[fx_extra] 1 {
+        killit
+    }
+ends
+
+
 //// -- SE70: Sink/bridge effect for floor (single use) --
 // Hitag: Monitor this activator
 // Extra: Change to this picnum once motion is complete
@@ -460,12 +471,26 @@ ends
 defstate do_se71
     switch fx_state
         case disabled
-            set fx_state enabled
+            ife fx_owner -1 {
+                set fx_state enabled
+            } else {
+                ife fx_activate[fx_owner] 1 {
+                    set fx_state enabled
+                    gets[sprite.sectnum].lotag temp
+                    or temp 16384
+                    sets[sprite.sectnum].lotag temp
+                    redefinequote DNA_EGGQUOTE_ON LOCK SNIFFER ENGAGED
+                    quote DNA_EGGQUOTE_ON
+                }
+            }
+            
+            ifn fx_yvel 0 ife fx_activate[fx_yvel] 1 state killme
+            
             break
         case enabled
             // Check SE proximity to player with `dist`
             dist temp THISACTOR player[].i
-            ifl temp 1536 { 
+            ifl temp 1536 {
                 // Free to do a more expensive sector precision check with `neartag`
                 neartag player.posx player.posy player.posz player.cursectnum player.ang fx_int temp temp temp 256 1
                 ife fx_int sprite[].sectnum {
@@ -495,8 +520,24 @@ defstate do_se71
             } else {
                 ife fx_int2 0 set fx_int2 1
             }
+            
+            
+            ifn fx_owner -1 {
+                ife fx_activate[fx_owner] 1 {
+                    set fx_state disabled
+                    gets[sprite.sectnum].lotag temp
+                    or temp 16384
+                    xor temp 16384
+                    sets[sprite.sectnum].lotag temp
+                    redefinequote DNA_EGGQUOTE_ON SE71 DISENGAGED
+                    quote DNA_EGGQUOTE_ON
+                }
+            }
+            ifn fx_yvel 0 ife fx_activate[fx_yvel] 1 state killme
+            
             break
         case completed
+            ifn fx_yvel 0 ife fx_activate[fx_yvel] 1 state killme
             break
     endswitch
 ends
@@ -1284,6 +1325,7 @@ appendevent EVENT_WORLD
     for i sprofstat STAT_EFFECTOR {
         setu[].vm_sprite i
         ife sprite.picnum SECTOREFFECTOR {
+            ife sprite[i].lotag 10 state do_se10
             ife sprite[i].lotag 70 state do_se70
             ife sprite[i].lotag 71 state do_se71
             ife sprite[i].lotag 72 state do_se72
