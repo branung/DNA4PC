@@ -479,8 +479,6 @@ defstate do_se71
                     gets[sprite.sectnum].lotag temp
                     or temp 16384
                     sets[sprite.sectnum].lotag temp
-                    redefinequote DNA_EGGQUOTE_ON LOCK SNIFFER ENGAGED
-                    quote DNA_EGGQUOTE_ON
                 }
             }
             
@@ -529,8 +527,6 @@ defstate do_se71
                     or temp 16384
                     xor temp 16384
                     sets[sprite.sectnum].lotag temp
-                    redefinequote DNA_EGGQUOTE_ON SE71 DISENGAGED
-                    quote DNA_EGGQUOTE_ON
                 }
             }
             ifn fx_yvel 0 ife fx_activate[fx_yvel] 1 state killme
@@ -1382,7 +1378,7 @@ appendevent EVENT_OPERATEACTIVATORS
             setav[RETURN].fx_state disabled
             geta[].hitag temp
             seta[RETURN].hitag temp
-            seta[].lotag temp
+            seta[].lotag 
             seta[].hitag 1
             seta[].pal 0
             set fx_int 1
