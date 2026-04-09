@@ -420,6 +420,9 @@ defstate do_se10
     ifn fx_extra -1 ife fx_activate[fx_extra] 1 {
         killit
     }
+    ifn fx_owner -1 ife fx_activate[fx_owner] 1 {
+        seta[].hitag 30
+    }
 ends
 
 
@@ -1378,7 +1381,7 @@ appendevent EVENT_OPERATEACTIVATORS
             setav[RETURN].fx_state disabled
             geta[].hitag temp
             seta[RETURN].hitag temp
-            seta[].lotag 
+            seta[].lotag temp
             seta[].hitag 1
             seta[].pal 0
             set fx_int 1
