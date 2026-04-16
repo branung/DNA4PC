@@ -177,6 +177,7 @@ useractor enemy CONTROLLERBOSS CONTROLLERBOSSSTRENGTH
 
 fall
 state controllerbosschecksquished
+ife fx_hitag 0 { seta[] .htextra -1 }
 ifai 0
 {
 	// play alert sound here
@@ -262,9 +263,10 @@ ifai AICONTROLLERBOSSCLAWPLAYER state controllerbossclawstate else
 ifai AICONTROLLERBOSSSEEK state controllerbossseekstate
 
 ifhitweapon {
-   ifn fx_hitag 0 { // trigger hint cutscene
+  ifn fx_hitag 0 { // trigger hint cutscene
     setarray fx_preactivate[fx_hitag] 1
     setvar fx_hitag 0
+    ife dna_cutscenes 1 { quote 170 } // Show boss hint quote if cutscenes are disabled
     break
   }
 }

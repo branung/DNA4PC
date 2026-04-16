@@ -400,9 +400,9 @@ defstate dna_menu_refresh_descriptions
 		else ifvare dna_menu_selected 2
 		{
 			redefinequote 1006 Level Cutscenes
-			redefinequote 1007 Choose between having level
-			redefinequote 1008 cutscenes during gameplay
-			redefinequote 1009 or disabling them.
+			redefinequote 1007 Determines if cutscenes will play
+			redefinequote 1008 during gameplay (Not recommeneded
+			redefinequote 1009 for your first playthrough).
 		}
 		else ifvare dna_menu_selected 3
 		{

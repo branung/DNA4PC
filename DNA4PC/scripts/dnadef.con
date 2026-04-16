@@ -153,6 +153,9 @@ define ALIENLORDPROJECTILESTRENGTH 20
 // Tile 5812 - the blank in the gap between gold gun sprites - is used for op projectile def
 define GOLDENGUN_PROJ 5812
 
+//Controller Boss hint quote
+definequote 170 He may be protected by shields...
+
 // Enemy knockback vars
 gamevar knockbackvel 0 2
 gamevar knockbackang 0 2
