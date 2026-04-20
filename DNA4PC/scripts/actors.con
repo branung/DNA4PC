@@ -556,14 +556,7 @@ actor SHOTGUNSPRITE
         ifspawnedby PIGCOP
         {
           addweapon SHOTGUN_WEAPON 0
-          ifrnd 64
-            addammo SHOTGUN_WEAPON 4
-          else ifrnd 64
-            addammo SHOTGUN_WEAPON 3
-          else ifrnd 64
-            addammo SHOTGUN_WEAPON 2
-          else
-            addammo SHOTGUN_WEAPON 1
+          addammo SHOTGUN_WEAPON 8
           
           quote 57
           state transfer_lead_ammo
