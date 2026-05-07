@@ -25,6 +25,7 @@ defstate dna_getcode
   geta[THISACTOR].picnum temp
   switch temp
   case BEEFBURGER
+  case RAMENBOWL
     break
   case ATOMICHEALTH
     globalsound GETATOMICHEALTH
@@ -478,6 +479,27 @@ actor BEEFBURGER
         addphealth 5
         quote 171
         ifspawnedby BEEFBURGER
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor RAMENBOWL
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifphealthl MAXPLAYERHEALTH
+              ifcanseetarget
+      {
+        addphealth 1
+        ifspawnedby RAMENBOWL
           state getcode
         else
           state quikget
