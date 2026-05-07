@@ -146,6 +146,7 @@ define CYBERALIENPBOMB 3987
 //define A51ALARM 5600
 define MBMACHINE 5601
 define CUTCAM 5602
+define BEEFBURGER 5694
 define ALIENLORD 4001
 define ALIENLORDSTRENGTH 3000
 define ALIENLORDPROJECTILE 5183
@@ -155,6 +156,9 @@ define GOLDENGUN_PROJ 5812
 
 //Controller Boss hint quote
 definequote 170 He may be protected by shields...
+
+//Burger pickup... did you know this was in the game?
+definequote 171 MMMM..BEEF
 
 // Enemy knockback vars
 gamevar knockbackvel 0 2

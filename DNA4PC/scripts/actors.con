@@ -24,6 +24,8 @@ ends
 defstate dna_getcode
   geta[THISACTOR].picnum temp
   switch temp
+  case BEEFBURGER
+    break
   case ATOMICHEALTH
     globalsound GETATOMICHEALTH
     break
@@ -454,6 +456,28 @@ actor HEALTHPACKSMALL
         setplayer[THISACTOR].max_player_health MAXPLAYERHEALTH
         quote 130
         ifspawnedby HEALTHPACKSMALL
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor BEEFBURGER
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifphealthl MAXPLAYERHEALTH
+              ifcanseetarget
+      {
+        addphealth 5
+        quote 171
+        ifspawnedby BEEFBURGER
           state getcode
         else
           state quikget
