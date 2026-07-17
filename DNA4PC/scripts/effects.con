@@ -83,7 +83,7 @@ ends
 
 //// --------- SAFE SPRITE KILLER ---------
 // Workaround for scary SE
-defstate killme
+defstate killsprite
     seta .xrepeat 0
     seta .yrepeat 0
     changespritestat i STAT_MISC
@@ -485,7 +485,7 @@ defstate do_se71
                 }
             }
             
-            ifn fx_yvel 0 ife fx_activate[fx_yvel] 1 state killme
+            ifn fx_yvel 0 ife fx_activate[fx_yvel] 1 state killsprite
             
             break
         case enabled
@@ -532,11 +532,11 @@ defstate do_se71
                     sets[sprite.sectnum].lotag temp
                 }
             }
-            ifn fx_yvel 0 ife fx_activate[fx_yvel] 1 state killme
+            ifn fx_yvel 0 ife fx_activate[fx_yvel] 1 state killsprite
             
             break
         case completed
-            ifn fx_yvel 0 ife fx_activate[fx_yvel] 1 state killme
+            ifn fx_yvel 0 ife fx_activate[fx_yvel] 1 state killsprite
             break
     endswitch
 ends
@@ -742,7 +742,7 @@ defstate do_se75
             break
         case completed
             // For some reason killit breaks these??
-            state killme
+            state killsprite
             break
     endswitch
 ends
@@ -904,7 +904,7 @@ defstate do_se79
         case enabled
             geta .hitag temp
             operateactivators temp 0
-            state killme
+            state killsprite
             set fx_state completed
             break
     endswitch
@@ -1103,7 +1103,7 @@ defstate do_se32767
             setp[].secret_rooms temp
             set fx_state completed
             quote 9
-            state killme
+            state killsprite
             break
         case completed
             break
@@ -1366,7 +1366,7 @@ endevent
 appendevent EVENT_OPERATEACTIVATORS
     ife fx_int 2 {
         set RETURN -1
-        state killme
+        state killsprite
     } else {
         ife sprite[].pal 6 {
             ifl fx_extra 1 set fx_extra 1
