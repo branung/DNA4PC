@@ -12,7 +12,7 @@ define CHAINGUNAMMOAMOUNT 20
 // Prevent Freeze ricochet
 define NUMFREEZEBOUNCES 1
 
-// Prevent Freeze ricochet
+// Shrink radius - modified so player can shrink self like in GBA
 define SHRINKERBLASTRADIUS 1000
 
 //Ammo spawn odds redefinitions

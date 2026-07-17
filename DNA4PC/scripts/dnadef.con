@@ -317,6 +317,7 @@ define lock_chipkey 32
 define lock_mission 64
 define lock_oneway 128
 define lock_switch 256
+define lock_sequence 512
 define LOCKQUOTE 1
 // Keycard actors
 define DNA_SYSKEY 3901

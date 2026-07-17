@@ -470,7 +470,7 @@ ends
 //// -- SE71: Door controller --
 // Controls automatic door opening and has some conditions
 // Extra: Use following lockbits, each comes with a hardcoded message
-// lock_bluekey | lock_redkey | lock_yellowkey | lock_mission | lock_oneway | lock_switch
+// lock_bluekey | lock_redkey | lock_yellowkey | lock_mission | lock_oneway | lock_switch | lock_sequence
 defstate do_se71
     switch fx_state
         case disabled
@@ -733,7 +733,7 @@ defstate do_se75
                      }
                 }
                 getplayer[].got_access lockbits
-                or lockbits lock_mission
+                or lockbits lock_sequence
                 setplayer[].got_access lockbits
                 redefinequote DNA_COUNTQUOTE Sequence completed!
                 quote DNA_COUNTQUOTE
