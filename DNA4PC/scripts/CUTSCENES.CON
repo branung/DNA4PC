@@ -233,6 +233,7 @@ eventloadactor CUTSCENEINDICATOR_ACTIVE
 enda
 
 defstate end_cutscene
+    ife cutscene_num 1001 { ife dna_menu_tutorial 0 { set tutorialDelayTime 800 set modmenu_tutorial_prevtick -1 } }
     screenpal 0 0 0 0
     set in_cutscene 0
 ends
