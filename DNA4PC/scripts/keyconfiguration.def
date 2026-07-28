@@ -30,6 +30,14 @@ keyconfig
     gamefunc_Third_Person_View
     gamefunc_Quick_Save
     gamefunc_Quick_Load
+    gamefunc_Inventory
+    gamefunc_Inventory_Left
+    gamefunc_Inventory_Right
+    gamefunc_MedKit
+    gamefunc_Jetpack
+    gamefunc_Steroids
+    gamefunc_NightVision
+    gamefunc_Holo_Duke
     gamefunc_Holster_Weapon
     gamefunc_Alt_Weapon
     gamefunc_Alt_Fire
@@ -54,12 +62,4 @@ keyconfig
 	gamefunc_Show_Opponents_Weapon 	
 	gamefunc_See_Coop_View
     gamefunc_Show_Console
-    gamefunc_Inventory
-    gamefunc_Inventory_Left
-    gamefunc_Inventory_Right
-    gamefunc_MedKit
-    gamefunc_Jetpack
-    gamefunc_Steroids
-    gamefunc_NightVision
-    gamefunc_Holo_Duke
 }
