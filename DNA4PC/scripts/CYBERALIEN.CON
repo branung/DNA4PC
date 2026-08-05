@@ -245,6 +245,9 @@ ifhitweapon
   {
     ifstrength 600
     {
+      ifspritepal 0 break
+      else
+      state enemy_deathtrigger
       sound ACTOR_SHRINKING
       ai AICYBERALIENSHRUNK
       // set shrunken 1

@@ -18,7 +18,7 @@ include scripts/weapons.con
 damageeventtile 1405
 
 // Display mod version in logs
-definequote 165 DNA4PC v0.99
+definequote 165 DNA4PC v1.0
 appendevent EVENT_INITCOMPLETE
     userquote 165
 endevent
@@ -31,6 +31,12 @@ onevent EVENT_NEWGAME
     readgamevar dna_level_music
     readgamevar dna_crosshair
     readgamevar dna_key_hud
+    readgamevar dna_lessalarm
+endevent
+
+// Start the player with 20 bullets on new game
+appendevent EVENT_RESETPLAYER
+  ife LEVEL 0 setplayer[].ammo_amount PISTOL_WEAPON 20
 endevent
 
 //Remove D3D loading screen

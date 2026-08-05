@@ -233,6 +233,7 @@ eventloadactor CUTSCENEINDICATOR_ACTIVE
 enda
 
 defstate end_cutscene
+    ife cutscene_num 1001 { ife dna_menu_tutorial 0 { set tutorialDelayTime 800 set modmenu_tutorial_prevtick -1 } }
     screenpal 0 0 0 0
     set in_cutscene 0
 ends
@@ -308,16 +309,16 @@ defstate get_cutscene_details
                                 case 0 { set CUTSCENE_SPRITE SARGEHEADSPRITE break } 
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE
-                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_IMONIT }
-                                        else { ife dna_dukecutscenevoc 2 screensound GM_TELEBROKE } break }
-                                case 4 { ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_DAMNTELEMALFUNC }
-                                        else { ife dna_dukecutscenevoc 2 screensound GM_GONNAPAY } break }
-                                case 5 { ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_SIGNCHECKS }
-                                        else { ife dna_dukecutscenevoc 2 screensound GM_NEWHARDWARE } break }
-                                case 6 { ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_WHOWANTSSOME
-                                        else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON4 } //Who wants some! 
-                                        else { ife dna_dukecutscenevoc 2 screensound GM_LETSROCK2
-                                        else ife dna_dukecutscenevoc 1 screensound BONUS_SPEECH1 } break } //Let's rock
+                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_IMONIT }
+                                        else { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_TELEBROKE } break }
+                                case 4 { ife dna_localization 0 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_DAMNTELEMALFUNC }
+                                        else { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_GONNAPAY } break }
+                                case 5 { ife dna_localization 1 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_SIGNCHECKS }
+                                        else { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_NEWHARDWARE } break }
+                                case 6 { ife dna_localization 1 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_WHOWANTSSOME
+                                        else ife dna_dukecutscenevoc 1 set curr_cuts_voc DUKE_GETWEAPON4 } //Who wants some! 
+                                        else { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_LETSROCK2
+                                        else ife dna_dukecutscenevoc 1 set curr_cuts_voc BONUS_SPEECH1 } break } //Let's rock
                                                 
                                 endswitch
                         }
@@ -327,14 +328,14 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1
-                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_DATADISK  } else { ife dna_dukecutscenevoc 2 screensound GM_DATADISKEU } break }
+                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_DATADISK  } else { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_DATADISKEU } break }
                                 case 1 { ife dna_localization 0 set skip_this_panel 1
-                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_CONTAINSDETAILS } break }
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_CONTAINSDETAILS } break }
                                 case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_ONMYWAY } else { ife dna_dukecutscenevoc 2 screensound GM_PLENTYTOKICK } break }
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_ONMYWAY } else { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_PLENTYTOKICK } break }
                                 case 4 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_DUKEOUT } break }
+                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_DUKEOUT } break }
                                 endswitch
                         }
                         break
@@ -353,11 +354,11 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 209 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_SATLINK else screensound GM_SATLINKEU } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 set curr_cuts_voc GM_SATLINK else set curr_cuts_voc GM_SATLINKEU } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_ALGAEEATERS else screensound GM_FAIRFIGHT } break }
-                                case 4 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_WRONGPLANET else screensound GM_STACKEDODDS } } break
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 set curr_cuts_voc GM_ALGAEEATERS else set curr_cuts_voc GM_FAIRFIGHT } break }
+                                case 4 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 set curr_cuts_voc GM_WRONGPLANET else set curr_cuts_voc GM_STACKEDODDS } break }
                                 endswitch
                         }
                         //LEVEL 2 GRAY SCENE
@@ -365,11 +366,11 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1 
-                                        ife dna_dukecutscenevoc 2 screensound GM_CLOSEENCOUNTER break }
+                                        ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_CLOSEENCOUNTER break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
                                 case 2 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_WORKOVERTIME else screensound GM_RESURRECTOVERTIME } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 set curr_cuts_voc GM_WORKOVERTIME else set curr_cuts_voc GM_RESURRECTOVERTIME } break }
                                 endswitch
                         }
                         break
@@ -380,28 +381,33 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set CUTSCENE_SPRITE DUKEHEADSPRITE
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SUBWAYSYSTEM } else { screensound GM_SUBWAYSYSTEMEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_SUBWAYSYSTEM } else { set curr_cuts_voc GM_SUBWAYSYSTEMEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 2 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_UNDEROURNOSES } else { screensound GM_UNDEROURNOSESEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_UNDEROURNOSES } else { set curr_cuts_voc GM_UNDEROURNOSESEU } } break }
                                 case 4 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 5 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 6 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 7 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DERAILPLANS } else { screensound GM_DERAILED } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_DERAILPLANS } else { set curr_cuts_voc GM_DERAILED } } break }
                                 case 8 { ife dna_localization 1 set skip_this_panel 1 
-                                        ife dna_localization 0 { ife dna_dukecutscenevoc 2 screensound GM_BUBBLEGUM } else ife dna_dukecutscenevoc 1 { screensound WAR_AMBIENCE10 } break }
+                                        ife dna_localization 0 { 
+                                                ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_BUBBLEGUM  
+                                                else { ife dna_dukecutscenevoc 1 set curr_cuts_voc WAR_AMBIENCE10 }
+                                        }
+                                        break 
+                                        }
                                 endswitch
                         }
                         //LEVEL 3 Destroyed Hybrid Army
                         ifvare cutscene_num 1002
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 237 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 0 { set textQuoteRow1 237 set CUTSCENE_SPRITE SARGEHEADSPRITE set dont_stop_sounds 1 break }
                                 case 2 { setvar CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_ALMOSTTOOEASY } else ifvare dna_localization 1 { screensound GM_PIECEOFCAKE } }
-                                        else ifvare dna_dukecutscenevoc 1 screensound JIBBED_ACTOR6 } break
+                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { set curr_cuts_voc GM_ALMOSTTOOEASY } else ifvare dna_localization 1 { set curr_cuts_voc GM_PIECEOFCAKE } }
+                                        else ifvare dna_dukecutscenevoc 1 set curr_cuts_voc JIBBED_ACTOR6 break } 
                                 endswitch
                         }
                         //LEVEL 3 Spiderlord Encounter
@@ -411,13 +417,13 @@ defstate get_cutscene_details
                                 case 0 { set textQuoteRow1 249 set CUTSCENE_SPRITE BOSS1HEADSPRITE break }
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ALOTTATALK } else ifvare dna_localization 1 { screensound GM_YOUANDWHATARMY } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_ALOTTATALK } else ifvare dna_localization 1 { set curr_cuts_voc GM_YOUANDWHATARMY } } break }
                                 case 3 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE BOSS1HEADSPRITE break }
                                 case 7 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_ALIENAUTOPSYEU }
-                                        else { ife dna_dukecutscenevoc 2 screensound GM_ALIENAUTOPSY else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON2 } break }
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_ALIENAUTOPSYEU }
+                                        else { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_ALIENAUTOPSY else ife dna_dukecutscenevoc 1 set curr_cuts_voc DUKE_GETWEAPON2 } break }
                                 case 8 { ife dna_localization 0 set skip_this_panel 1 
-                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_COMEGETSOME else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON2 } break }
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_COMEGETSOME else ife dna_dukecutscenevoc 1 set curr_cuts_voc DUKE_GETWEAPON2 } break }
                                 endswitch
                         }
                         //LEVEL 3 End Level Scene
@@ -425,15 +431,15 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 285 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_TIPOFICEBERG } else ifvare dna_localization 1 { screensound GM_TIPOFICEBERGEU } } break }
+                                        ifvare dna_dukecutscenevoc 2 { ifvare dna_localization 0 { set curr_cuts_voc GM_TIPOFICEBERG } else ifvare dna_localization 1 { set curr_cuts_voc GM_TIPOFICEBERGEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_TOOBUSYDYIN } else ifvare dna_localization 1 { screensound GM_EVERYSECPRECIOUS } } break }
-                                case 3 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SEEWHEREITLEADS } else ifvare dna_localization 1 { screensound GM_FOLLOWTHEIRTRAIL } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_TOOBUSYDYIN } else ifvare dna_localization 1 { set curr_cuts_voc GM_EVERYSECPRECIOUS } } break }
+                                case 3 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_SEEWHEREITLEADS } else ifvare dna_localization 1 { set curr_cuts_voc GM_FOLLOWTHEIRTRAIL } } break }
                                 case 4 { ife dna_localization 1 {       
-                                                ife dna_dukecutscenevoc 2 screensound GM_HAILTOKING
-                                                else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON6 }
-                                        else { ife dna_dukecutscenevoc 2 screensound GM_TALKONOTHERSIDE } break }
+                                                ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_HAILTOKING
+                                                else ife dna_dukecutscenevoc 1 set curr_cuts_voc DUKE_GETWEAPON6 }
+                                        else { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_TALKONOTHERSIDE } break }
                                 endswitch
                         }
                         break
@@ -446,7 +452,7 @@ defstate get_cutscene_details
                                 case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 2 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_EGYPTIAN } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 set curr_cuts_voc GM_EGYPTIAN } break }
                                 endswitch
                         }
                         //LEVEL 4 MID LEVEL SCENE
@@ -454,7 +460,7 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_WHEREHIDING } else ife dna_localization 1 { screensound GM_READYTODEFROST } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_WHEREHIDING } else ife dna_localization 1 { set curr_cuts_voc GM_READYTODEFROST } } break }
                                 endswitch
                         }
                         break
@@ -466,10 +472,10 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ENTIREARMY } else ifvare dna_localization 1 { screensound GM_ENTIREARMYEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_ENTIREARMY } else ifvare dna_localization 1 { set curr_cuts_voc GM_ENTIREARMYEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_PERMANENTHIBERNATION } else ifvare dna_localization 1 { screensound GM_ILLFINDSOMEANSWERS } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_PERMANENTHIBERNATION } else ifvare dna_localization 1 { set curr_cuts_voc GM_ILLFINDSOMEANSWERS } } break }
                                 endswitch
                         }
 
@@ -478,14 +484,14 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 217 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1  
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_FOUNDSCHEMATICS } else ife dna_localization 1 { screensound GM_FOUNDSCHEMATICSEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_FOUNDSCHEMATICS } else ife dna_localization 1 { set curr_cuts_voc GM_FOUNDSCHEMATICSEU } } break }
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 4 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_ONMYWAY }
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_ONMYWAY }
                                         else {
-                                                ife dna_dukecutscenevoc 2 screensound GM_ROCKIN
-                                                else ife dna_dukecutscenevoc 1 screensound BONUS_SPEECH4 } break }
+                                                ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_ROCKIN
+                                                else ife dna_dukecutscenevoc 1 set curr_cuts_voc BONUS_SPEECH4 } break }
                                 endswitch
                         }
                         break
@@ -497,7 +503,7 @@ defstate get_cutscene_details
                                 switch CUTSCENE_STEP
                                 case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 3 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_SWITCHFLIPPER } break } 
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 set curr_cuts_voc GM_SWITCHFLIPPER } break } 
                                 endswitch
                         }
                         //LEVEL 6 Controller Encounter
@@ -505,12 +511,12 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 221 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_SCORPIONKING else screensound GM_BIGBOSS } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 set curr_cuts_voc GM_SCORPIONKING else set curr_cuts_voc GM_BIGBOSS } break }
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 screensound GM_CASEOFCRABS } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 set curr_cuts_voc GM_CASEOFCRABS } break }
                                 case 2 set CUTSCENE_SPRITE BOSS2HEADSPRITE break
                                 case 4 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ifvare dna_localization 0 { screensound GM_HEARDTHATBEFORE } } break }
+                                        ife dna_dukecutscenevoc 2 { ifvare dna_localization 0 { set curr_cuts_voc GM_HEARDTHATBEFORE } } break }
                                 endswitch
                         }
                         //LEVEL 6 Boss Hint
@@ -519,7 +525,7 @@ defstate get_cutscene_details
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 241 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CRUSTACEANCRETIN } else ife dna_localization 1 { screensound GM_MUTANTMAGGOT } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_CRUSTACEANCRETIN } else ife dna_localization 1 { set curr_cuts_voc GM_MUTANTMAGGOT } } break }
                                 endswitch
                         }
                         //LEVEL 6
@@ -530,8 +536,8 @@ defstate get_cutscene_details
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_localization 0 {
-                                                ife dna_dukecutscenevoc 2 screensound GM_DAMNIMGOOD
-                                                else ife dna_dukecutscenevoc 1 screensound JIBBED_ACTOR5
+                                                ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_DAMNIMGOOD
+                                                else ife dna_dukecutscenevoc 1 set curr_cuts_voc JIBBED_ACTOR5
                                         } break }
                                 endswitch
                         }
@@ -544,11 +550,11 @@ defstate get_cutscene_details
                                 switch CUTSCENE_STEP
                                 case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CRABCAKES } else ife dna_localization 1 { screensound GM_SELFDESTRUCT } } break }
+                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_CRABCAKES } else ife dna_localization 1 { set curr_cuts_voc GM_SELFDESTRUCT } } break }
                                 case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_TWOWONDERS } else ife dna_localization 1 { screensound GM_BULLETSTOKILL } } break }
-                                case 4 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ALIENTELE } else ife dna_localization 1 { screensound GM_SHOOTMYWAY } } break }        
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_TWOWONDERS } else ife dna_localization 1 { set curr_cuts_voc GM_BULLETSTOKILL } } break }
+                                case 4 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_ALIENTELE } else ife dna_localization 1 { set curr_cuts_voc GM_SHOOTMYWAY } } break }        
                                 endswitch
                         }
                         break
@@ -561,11 +567,11 @@ defstate get_cutscene_details
                                 case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BEFOREHEDIED } else ife dna_localization 1 { screensound GM_BEFOREHEDIEDEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_BEFOREHEDIED } else ife dna_localization 1 { set curr_cuts_voc GM_BEFOREHEDIEDEU } } break }
                                 case 3 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_COOL else ife dna_dukecutscenevoc 1 screensound DUKE_GETWEAPON1 }
-                                        else { ife dna_dukecutscenevoc 2 screensound GM_ILLCONTACTYOU } break }
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_COOL else ife dna_dukecutscenevoc 1 set curr_cuts_voc DUKE_GETWEAPON1 }
+                                        else { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_ILLCONTACTYOU } break }
                                 endswitch
                         }
                         //LEVEL 8 JENNY SCENE
@@ -573,13 +579,13 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 225 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DISTRESSCALL } else ife dna_localization 1 { screensound GM_DISTRESSCALLEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_DISTRESSCALL } else ife dna_localization 1 { set curr_cuts_voc GM_DISTRESSCALLEU } } break }
                                 case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HELLOFAPARTY } else ife dna_localization 1 { screensound GM_HELLOFAPARTYEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_HELLOFAPARTY } else ife dna_localization 1 { set curr_cuts_voc GM_HELLOFAPARTYEU } } break }
                                 case 4 set CUTSCENE_SPRITE JENNYHEADSPRITE break
                                 case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_OPERAHOUSE } else ife dna_localization 1 { screensound GM_OPERAHOUSEEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_OPERAHOUSE } else ife dna_localization 1 { set curr_cuts_voc GM_OPERAHOUSEEU } } break }
                                 case 6 set CUTSCENE_SPRITE JENNYHEADSPRITE break
                                 endswitch
                         }
@@ -612,7 +618,7 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HENDRIX } else ife dna_localization 1 { screensound GM_TUXEDO } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_HENDRIX } else ife dna_localization 1 { set curr_cuts_voc GM_TUXEDO } } break }
                                 endswitch
                         }
                         break
@@ -623,13 +629,13 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_IMIN } else ifvare dna_localization 1 { screensound GM_IMINEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_IMIN } else ifvare dna_localization 1 { set curr_cuts_voc GM_IMINEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
                                         ife dna_localization 0 {       
-                                                ife dna_dukecutscenevoc 2 screensound GM_RODGERTHAT
-                                                else ife dna_dukecutscenevoc 1 screensound JIBBED_ACTOR6 } 
-                                        else { ife dna_dukecutscenevoc 2 screensound GM_NOPROBLEMO } break }
+                                                ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_RODGERTHAT
+                                                else ife dna_dukecutscenevoc 1 set curr_cuts_voc JIBBED_ACTOR6 } 
+                                        else { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_NOPROBLEMO } break }
                                 endswitch
                         }
                         //LEVEL 10 MID LEVEL SCENE
@@ -637,7 +643,7 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_STARTDOWNLOADING } else ife dna_localization 1 { screensound GM_STARTDOWNLOADINGEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_STARTDOWNLOADING } else ife dna_localization 1 { set curr_cuts_voc GM_STARTDOWNLOADINGEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 endswitch
                         }
@@ -649,8 +655,8 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 2 { ife dna_localization 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 screensound GM_ISEETHEIRPLAN } else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
-                                case 3 { ife dna_localization 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 screensound GM_ISEETHEIRPLANS2 } else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 2 { ife dna_localization 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_ISEETHEIRPLAN } else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
+                                case 3 { ife dna_localization 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_ISEETHEIRPLANS2 } else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 endswitch
                         }
@@ -660,13 +666,13 @@ defstate get_cutscene_details
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 225 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ACTIVATEDWEAPON } else ife dna_localization 1 { screensound GM_TOOLATE } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_ACTIVATEDWEAPON } else ife dna_localization 1 { set curr_cuts_voc GM_TOOLATE } } break }
                                 case 2 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CHARGINGUP } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_CHARGINGUP } } break }
                                 case 3 { set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 5 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 6 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_TICKTOCK } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_TICKTOCK } } break }
                                 case 7 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 endswitch
                         }
@@ -675,7 +681,7 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 257 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_NICKOFTIME } else ife dna_localization 1 { screensound GM_NICKOFTIMEEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_NICKOFTIME } else ife dna_localization 1 { set curr_cuts_voc GM_NICKOFTIMEEU } } break }
                                 endswitch
                         }
                         //LEVEL 11 End Scene
@@ -683,10 +689,10 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 261 set CUTSCENE_SPRITE DUKEHEADSPRITE
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BETTERGETATEAM } else ife dna_localization 1 { screensound GM_BETTERGETATEAMEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_BETTERGETATEAM } else ife dna_localization 1 { set curr_cuts_voc GM_BETTERGETATEAMEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
-                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SIZE15BOOT } else ife dna_localization 1 { screensound GM_SOURCEOFINFESTATION } } break }
-                                case 3 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_GUTSTOMPINTIME } else ife dna_localization 1 { screensound GM_GOINGTOSTOPTHEM } } break
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_SIZE15BOOT } else ife dna_localization 1 { set curr_cuts_voc GM_SOURCEOFINFESTATION } } break }
+                                case 3 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_GUTSTOMPINTIME } else ife dna_localization 1 { set curr_cuts_voc GM_GOINGTOSTOPTHEM } } break
                                 endswitch
                         }
                         break
@@ -697,9 +703,9 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CANYOUREADME } else ife dna_localization 1 { screensound GM_CANYOUREADMEEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_CANYOUREADME } else ife dna_localization 1 { set curr_cuts_voc GM_CANYOUREADMEEU } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break 
-                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JAMSSIGNAL } else ife dna_localization 1 { screensound GM_SIGNALJAMMED } } break } 
+                                case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_JAMSSIGNAL } else ife dna_localization 1 { set curr_cuts_voc GM_SIGNALJAMMED } } break } 
                                 endswitch
                         }
                         //LEVEL 12 MID LEVEL SCENE
@@ -707,7 +713,8 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_MOTHERLODE } else ife dna_localization 1 { screensound GM_INBREDALIENS } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_MOTHERLODE } else ife dna_localization 1 { set curr_cuts_voc GM_INBREDALIENS } } break }
+                                case 1 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_EGGCRACKINTIME } else ife dna_localization 1 { set curr_cuts_voc GM_LIFEEXPECTANCY } } break }
                                 endswitch
                         }
                         break
@@ -719,9 +726,9 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 {   set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SHIPORBITINGEARTH } else ife dna_localization 1 { screensound GM_SHIPORBITINGEARTHEU } } break }
-                                case 1 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_CLOAKINGDEVICE } else ife dna_localization 1 { screensound GM_CLOAKINGDEVICEEU } } break 
-                                case 2 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_COMMUNICADO } else ife dna_localization 1 { screensound GM_COMMUNICADOEU } } break
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_SHIPORBITINGEARTH } else ife dna_localization 1 { set curr_cuts_voc GM_SHIPORBITINGEARTHEU } } break }
+                                case 1 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_CLOAKINGDEVICE } else ife dna_localization 1 { set curr_cuts_voc GM_CLOAKINGDEVICEEU } } break 
+                                case 2 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_COMMUNICADO } else ife dna_localization 1 { set curr_cuts_voc GM_COMMUNICADOEU } } break
                                 endswitch
                         }
                         //LEVEL 13 Cloaking Device Disabled
@@ -729,10 +736,10 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DOYOUREADME } else ife dna_localization 1 { screensound GM_DOYOUREADME } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_DOYOUREADME } else ife dna_localization 1 { set curr_cuts_voc GM_DOYOUREADME } } break }
                                 case 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ISHUTITDOWN } else ife dna_localization 1 { screensound GM_ISHUTITDOWN } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_ISHUTITDOWN } else ife dna_localization 1 { set curr_cuts_voc GM_ISHUTITDOWN } } break }
                                 case 3 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 endswitch
                         }
@@ -750,9 +757,9 @@ defstate get_cutscene_details
                         ifvare cutscene_num 1002
                         {
                                 switch CUTSCENE_STEP
-                                case 0 { set textQuoteRow1 209 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HOOKEDINTOSYSTEMS } else ife dna_localization 1 { screensound GM_WHATYOUASKEDFOR } } break }
-                                case 1 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_GOTMYHANDSFULL } else ife dna_localization 1 { screensound GM_GONNAGETOUTTAHERE } } break
+                                case 0 { set textQuoteRow1 209 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_HOOKEDINTOSYSTEMS } else ife dna_localization 1 { set curr_cuts_voc GM_WHATYOUASKEDFOR } } break }
+                                case 1 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_GOTMYHANDSFULL } else ife dna_localization 1 { set curr_cuts_voc GM_GONNAGETOUTTAHERE } } break
                                 endswitch
                         }
                         break
@@ -764,12 +771,12 @@ defstate get_cutscene_details
                                 switch CUTSCENE_STEP
                                 case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_KEEPANEYEOUT } else ife dna_localization 1 { screensound GM_WHATPARTISBAD } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_KEEPANEYEOUT } else ife dna_localization 1 { set curr_cuts_voc GM_WHATPARTISBAD } } break }
                                 case 2 set CUTSCENE_SPRITE SARGEHEADSPRITE break
                                 case 3 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HURRYUP } else ife dna_localization 1 { screensound GM_LAYFINGERS } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_HURRYUP } else ife dna_localization 1 { set curr_cuts_voc GM_LAYFINGERS } } break }
                                 endswitch
                         }
                         //LEVEL 15 Met Jenny 2
@@ -778,15 +785,15 @@ defstate get_cutscene_details
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 229 ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
                                 case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 screensound GM_YOULOOKFAMILIAREU }
+                                        ife dna_localization 1 { ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_YOULOOKFAMILIAREU }
                                         else {
-                                                ife dna_dukecutscenevoc 2 screensound GM_YOULOOKFAMILIAR
-                                                else ife dna_dukecutscenevoc 1 screensound DUKE_TIP2 } break }
+                                                ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_YOULOOKFAMILIAR
+                                                else ife dna_dukecutscenevoc 1 set curr_cuts_voc DUKE_TIP2 } break }
                                 case 2 set CUTSCENE_SPRITE JENNYHEADSPRITE break
                                 case 4 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
                                 case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ILLFINDTHEM } else ife dna_localization 1 { screensound GM_CLAMBAKE } } break }
-                                case 6 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JENNY2STANDBY } else ife dna_localization 1 { screensound GM_CLONEBAKE } } break
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_ILLFINDTHEM } else ife dna_localization 1 { set curr_cuts_voc GM_CLAMBAKE } } break }
+                                case 6 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_JENNY2STANDBY } else ife dna_localization 1 { set curr_cuts_voc GM_CLONEBAKE } } break
                                 endswitch
                         }
                         break
@@ -799,12 +806,12 @@ defstate get_cutscene_details
                                 case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 1 { screensound GM_LIKETHEIDEA } } break }
+                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_BREEDINGSTOCK } else ife dna_localization 1 { set curr_cuts_voc GM_LIKETHEIDEA } } break }
                                 case 3 set CUTSCENE_SPRITE BOSS4HEADSPRITE break
                                 case 4 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BREEDINGSTOCK } } break }
+                                        ifvare dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_NEVERLEARN } else ife dna_localization 1 { set curr_cuts_voc GM_KNOWIMHERE } } break }
                                 case 5 set CUTSCENE_SPRITE SARGEHEADSPRITE break
-                                case 6 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 screensound GM_ENGAGEMENTS break }
+                                case 6 { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_ENGAGEMENTS break }
                                 endswitch
                         }
                         //LEVEL 16 Blue Key
@@ -812,7 +819,7 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE set dont_stop_sounds 1
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_NOTGONNABEEASY } else ife dna_localization 1 { screensound GM_NOTGONNABEEASY } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_NOTGONNABEEASY } else ife dna_localization 1 { set curr_cuts_voc GM_NOTGONNABEEASY } } break }
                                 endswitch
                         }
                         //LEVEL 3 Met Jenny 3
@@ -820,12 +827,12 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 233 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_HAILTOKING } else ife dna_localization 1 { screensound GM_DONTTELLME } }
-                                        else ife dna_dukecutscenevoc 1 { ife dna_localization 0 { screensound DUKE_GETWEAPON6 } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_HAILTOKING } else ife dna_localization 1 { set curr_cuts_voc GM_DONTTELLME } }
+                                        else ife dna_dukecutscenevoc 1 { ife dna_localization 0 { set curr_cuts_voc DUKE_GETWEAPON6 } } break }
                                 case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ALIENANDSCHOOLGIRL } else ife dna_localization 1 { screensound GM_ALIENSANDCAPTIVES } } break }
-                                case 4 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ONEBABEREADY } else ife dna_localization 1 { screensound GM_RESTOFTHEPARTY } } break
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_ALIENANDSCHOOLGIRL } else ife dna_localization 1 { set curr_cuts_voc GM_ALIENSANDCAPTIVES } } break }
+                                case 4 ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_ONEBABEREADY } else ife dna_localization 1 { set curr_cuts_voc GM_RESTOFTHEPARTY } } break
                                 endswitch
                         }
                         break
@@ -837,7 +844,7 @@ defstate get_cutscene_details
                                 switch CUTSCENE_STEP
                                 case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 screensound GM_HOTBABE break }
+                                        ife dna_dukecutscenevoc 2 set curr_cuts_voc GM_HOTBABE break }
                                 endswitch
                         }
                         //LEVEL 17 Met Jenny 4
@@ -845,12 +852,12 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 213 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JENNY4 } else ife dna_localization 1 { screensound GM_DEJAVU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_JENNY4 } else ife dna_localization 1 { set curr_cuts_voc GM_DEJAVU } } break }
                                 case 1 set CUTSCENE_SPRITE JENNYHEADSPRITE break
                                 case 2 { ife dna_localization 0 set skip_this_panel 1 else set CUTSCENE_SPRITE JENNYHEADSPRITE break }
                                 case 3 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_SLIPPERYSNAKE } else ife dna_localization 1 { screensound GM_IMDUKE } } break }
-                                case 4 { ife dna_localization 1 set CUTSCENE_SPRITE SARGEHEADSPRITE else { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { screensound GM_TAKEHERAWAY } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_SLIPPERYSNAKE } else ife dna_localization 1 { set curr_cuts_voc GM_IMDUKE } } break }
+                                case 4 { ife dna_localization 1 set CUTSCENE_SPRITE SARGEHEADSPRITE else { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { set curr_cuts_voc GM_TAKEHERAWAY } } break }
                                 case 5 { ife dna_localization 0 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 endswitch
                         }
@@ -865,8 +872,8 @@ defstate get_cutscene_details
                                 case 2 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 3 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 4 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_DONTWORRY } else ife dna_localization 1 { screensound GM_OVERHEATALIENS } } break }
-                                case 5 { ife dna_localization 1 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { screensound GM_HOTFOOT } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_DONTWORRY } else ife dna_localization 1 { set curr_cuts_voc GM_OVERHEATALIENS } } break }
+                                case 5 { ife dna_localization 1 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { set curr_cuts_voc GM_HOTFOOT } break }
                                 endswitch
                         }
                         //LEVEL 18 Cooling Units Shut Down
@@ -874,12 +881,12 @@ defstate get_cutscene_details
                         {
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 229 set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_STARTINGTOHEATUP } else ife dna_localization 1 { screensound GM_STARTINGTOHEATUPEU } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_STARTINGTOHEATUP } else ife dna_localization 1 { set curr_cuts_voc GM_STARTINGTOHEATUPEU } } break }
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 2 set CUTSCENE_SPRITE BOSS4HEADSPRITE break
                                 case 5 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_ASSGOBLIN } else ife dna_localization 1 { screensound GM_KICKINGBUTT } } break }
-                                case 6 { ife dna_localization 1 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { screensound GM_URANUS } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_ASSGOBLIN } else ife dna_localization 1 { set curr_cuts_voc GM_KICKINGBUTT } } break }
+                                case 6 { ife dna_localization 1 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { set curr_cuts_voc GM_URANUS } break }
                                 endswitch
                         }
                         //LEVEL 18 Met Jenny 5
@@ -888,8 +895,8 @@ defstate get_cutscene_details
                                 switch CUTSCENE_STEP
                                 case 0 { set textQuoteRow1 257 set CUTSCENE_SPRITE JENNYHEADSPRITE break }
                                 case 1 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_BLOWISTHISSHIP } else ife dna_localization 1 { screensound GM_SHOWEREARTHWITHDUKE } } break }
-                                case 2 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_JENNY5ENERGIZE } else ife dna_localization 1 { screensound GM_MYPLACE } } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_BLOWISTHISSHIP } else ife dna_localization 1 { set curr_cuts_voc GM_SHOWEREARTHWITHDUKE } } break }
+                                case 2 { ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_JENNY5ENERGIZE } else ife dna_localization 1 { set curr_cuts_voc GM_MYPLACE } } break }
                                 endswitch
                         }
                         break
@@ -902,13 +909,13 @@ defstate get_cutscene_details
                                 case 0 {   set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 1 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 2 { set CUTSCENE_SPRITE DUKEHEADSPRITE 
-                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { screensound GM_WATCHTHEFIREWORKS } else ife dna_localization 1 { screensound GM_SCRATCHBUTT } } break }
-                                case 3 { ife dna_localization 0 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { screensound GM_FINDMYOWNWAY } break }
+                                        ife dna_dukecutscenevoc 2 { ife dna_localization 0 { set curr_cuts_voc GM_WATCHTHEFIREWORKS } else ife dna_localization 1 { set curr_cuts_voc GM_SCRATCHBUTT } } break }
+                                case 3 { ife dna_localization 0 set skip_this_panel 1 else ife dna_dukecutscenevoc 2 { set curr_cuts_voc GM_FINDMYOWNWAY } break }
                                 case 4 { ife dna_localization 1 set skip_this_panel 1 else set CUTSCENE_SPRITE SARGEHEADSPRITE break }
                                 case 5 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 6 { ife dna_localization 1 set skip_this_panel 1 break }
                                 case 7 { ife dna_localization 1 set skip_this_panel 1 break }
-                                case 8 { ife dna_localization 1 set skip_this_panel 1 else { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { screensound GM_BETONDUKE } } break }
+                                case 8 { ife dna_localization 1 set skip_this_panel 1 else { set CUTSCENE_SPRITE DUKEHEADSPRITE ife dna_dukecutscenevoc 2 { set curr_cuts_voc GM_BETONDUKE } } break }
                                 endswitch
                         }
                         break
@@ -956,6 +963,8 @@ defstate cutscene_loop
                 state get_cutscene_details
                 ife dont_stop_sounds 1 set dont_stop_sounds 0
                 else stopallsounds
+                ifn curr_cuts_voc 0 screensound curr_cuts_voc
+                set curr_cuts_voc 0
                 startscreen
         }
 }

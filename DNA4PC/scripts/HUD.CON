@@ -24,12 +24,36 @@
 	}
 	ends
 
+	defstate tutorial_hud_timer {
+    	getticks curtick
+		ife modmenu_tutorial_prevtick -1 setvar ticktmp 0 else
+		{
+			setvarvar ticktmp curtick
+			subvarvar ticktmp modmenu_tutorial_prevtick
+		}
+
+		divvar ticktmp 4
+		
+		subvarvar tutorialDelayTime ticktmp
+			
+		setvarvar modmenu_tutorial_prevtick curtick
+	}
+	ends
+
+	appendevent EVENT_PRELEVEL
+		ife dna_menu_tutorial 0 { set tutorialDelayTime 800 set modmenu_tutorial_prevtick -1 }
+	endevent
+
 	defstate draw_hud_text
 	{
 		ifvarn dna_menu_tutorial 0 nullop
 		else
 		{
-			screentext STARTALPHANUM 60 48 49152 0 0 1020 0 0 16 0 5 0 0 0 0 0 0 xdim ydim
+			ifg tutorialDelayTime 0
+			{
+				screentext STARTALPHANUM 60 48 49152 0 0 1020 0 0 16 0 5 0 0 0 0 0 0 xdim ydim
+				state tutorial_hud_timer
+			}
 		}
 
 		ifvarg mission_count 0 
@@ -338,11 +362,11 @@ defstate dna_menu_refresh_page_options
 		}
 	else ifvare dna_menu_page 1
 		{
-			redefinequote 1001 Autoshade
-			redefinequote 1002 Proximity Trigger
-			redefinequote 1003 Key Hud Display
-			redefinequote 1004 Footsteps Sounds
-			redefinequote 1005 Alarm Sound
+			redefinequote 1001 Key Hud Display
+			redefinequote 1002 Alarm Frequency
+			redefinequote 1003 
+			redefinequote 1004 
+			redefinequote 1005
 			redefinequote 1014 Change Page (2/2)
 		}
 	else ifvare dna_menu_page 2
@@ -376,9 +400,9 @@ defstate dna_menu_refresh_descriptions
 		else ifvare dna_menu_selected 2
 		{
 			redefinequote 1006 Level Cutscenes
-			redefinequote 1007 Choose between having level
-			redefinequote 1008 cutscenes during gameplay
-			redefinequote 1009 or disabling them.
+			redefinequote 1007 Determines if cutscenes will play
+			redefinequote 1008 during gameplay (Not recommeneded
+			redefinequote 1009 for your first playthrough).
 		}
 		else ifvare dna_menu_selected 3
 		{
@@ -417,20 +441,6 @@ defstate dna_menu_refresh_descriptions
 	{
 		ifvare dna_menu_selected 0
 		{
-			redefinequote 1006 Autoshade
-			redefinequote 1007 
-			redefinequote 1008 
-			redefinequote 1009 
-		}
-		else ifvare dna_menu_selected 1
-		{
-			redefinequote 1006 Proximity Trigger
-			redefinequote 1007 
-			redefinequote 1008 
-			redefinequote 1009 
-		}
-		else ifvare dna_menu_selected 2
-		{
 			ifvare dna_key_hud 0
 			{
 				redefinequote 1006 Key Hud Display - OG
@@ -446,16 +456,40 @@ defstate dna_menu_refresh_descriptions
 				redefinequote 1009 section of the HUD.
 			}
 		}
+		else ifvare dna_menu_selected 1
+		{
+			ifvare dna_lessalarm 0
+			{
+				redefinequote 1006 Alarm Frequency - OG
+				redefinequote 1007 Alert alarm in some levels
+				redefinequote 1008 will play at the same frequency
+				redefinequote 1009 as it did on the GBA.
+			}
+			else ifvare dna_lessalarm 1
+			{
+				redefinequote 1006 Alarm Frequency - Alt
+				redefinequote 1007 Alert alarm in some levels
+				redefinequote 1008 will play for a shorter
+				redefinequote 1009 period of time.
+			}
+		}
+		else ifvare dna_menu_selected 2
+		{
+			redefinequote 1006 
+			redefinequote 1007 
+			redefinequote 1008 
+			redefinequote 1009 
+		}
 		else ifvare dna_menu_selected 3
 		{
-			redefinequote 1006 Footsteps Sounds
+			redefinequote 1006 
 			redefinequote 1007 
 			redefinequote 1008 
 			redefinequote 1009 
 		}
 		else ifvare dna_menu_selected 4
 		{
-			redefinequote 1006 Alarm Sound
+			redefinequote 1006 
 			redefinequote 1007 
 			redefinequote 1008 
 			redefinequote 1009 
@@ -578,17 +612,21 @@ onevent EVENT_DISPLAYREST
 			else ifvare dna_menu_page 1 // Selections
 			{
 				
+				ifvare dna_key_hud 0 redefinequote 1012 OG 
+				else redefinequote 1012 ALT
+				ifvare dna_menu_selected 0 setvar shade 15 else setvar shade 0 // Key Hud Selection
+				screentext STARTALPHANUM 230 y 49152 0 0 1012 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
+
+				addvar y 8
+
+				ifvare dna_lessalarm 0 redefinequote 1006 OG 
+				else redefinequote 1006 ALT
+				ifvare dna_menu_selected 1 setvar shade 15 else setvar shade 0 // Alarm Selection
+				screentext STARTALPHANUM 230 y 49152 0 0 1006 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 
 				addvar y 8
 
 				
-
-				addvar y 8
-
-				ifvare dna_key_hud 0 redefinequote 1007 OG 
-				else redefinequote 1007 ALT
-				ifvare dna_menu_selected 2 setvar shade 15 else setvar shade 0 // Key Hud Selection
-				screentext STARTALPHANUM 230 y 49152 0 0 1007 shade 0 16 0 4 0 0 0 0 0 0 xdim ydim
 				
 				addvar y 8
 
@@ -616,19 +654,48 @@ onevent EVENT_DISPLAYREST
 				ifvarg delayTime 0 nullop 
 				else
 				{
-				ifvarg dna_menu_selected 0
+				ife dna_menu_page 0
 				{
-					setvar delayTime MENU_DELAY_TIME
-					screensound A_KICKHIT
-					subvar dna_menu_selected 1	
+					ifvarg dna_menu_selected 0
+					{
+						setvar delayTime MENU_DELAY_TIME
+						screensound A_KICKHIT
+						subvar dna_menu_selected 1	
+					}
+					else
+					{
+						setvar delayTime MENU_DELAY_TIME
+						screensound A_KICKHIT
+						setvar dna_menu_selected 6
+					}
 				}
-				else
+				else ife dna_menu_page 1 // Work around for option list not being full
 				{
-					setvar delayTime MENU_DELAY_TIME
-					screensound A_KICKHIT
-					setvar dna_menu_selected 6
+					ife dna_menu_selected 0
+					{
+						setvar delayTime MENU_DELAY_TIME
+						screensound A_KICKHIT
+						set dna_menu_selected 6
+					}
+					else ife dna_menu_selected 1
+					{
+						setvar delayTime MENU_DELAY_TIME
+						screensound A_KICKHIT
+						set dna_menu_selected 0
+					}
+					else ife dna_menu_selected 5
+					{
+						setvar delayTime MENU_DELAY_TIME
+						screensound A_KICKHIT
+						set dna_menu_selected 1
+					}
+					else ife dna_menu_selected 6
+					{
+						setvar delayTime MENU_DELAY_TIME
+						screensound A_KICKHIT
+						set dna_menu_selected 5
+					}
 				}
-					
 				}
 			}
 
@@ -637,19 +704,48 @@ onevent EVENT_DISPLAYREST
 				ifvarg delayTime 0 nullop 
 				else
 				{
-				ifvarl dna_menu_selected 6
-				{
-					setvar delayTime MENU_DELAY_TIME
-					screensound A_KICKHIT
-					addvar dna_menu_selected 1
-				}
-				else
-				{
-					setvar delayTime MENU_DELAY_TIME
-					screensound A_KICKHIT
-					setvar dna_menu_selected 0
-				}
-					
+					ife dna_menu_page 0
+					{
+						ifvarl dna_menu_selected 6
+						{
+							setvar delayTime MENU_DELAY_TIME
+							screensound A_KICKHIT
+							addvar dna_menu_selected 1
+						}
+						else
+						{
+							setvar delayTime MENU_DELAY_TIME
+							screensound A_KICKHIT
+							setvar dna_menu_selected 0
+						}
+					}
+					else ife dna_menu_page 1 // Work around for option list not being full
+					{
+						ife dna_menu_selected 0
+						{
+							setvar delayTime MENU_DELAY_TIME
+							screensound A_KICKHIT
+							set dna_menu_selected 1
+						}
+						else ife dna_menu_selected 1
+						{
+							setvar delayTime MENU_DELAY_TIME
+							screensound A_KICKHIT
+							set dna_menu_selected 5
+						}
+						else ife dna_menu_selected 5
+						{
+							setvar delayTime MENU_DELAY_TIME
+							screensound A_KICKHIT
+							set dna_menu_selected 6
+						}
+						else ife dna_menu_selected 6
+						{
+							setvar delayTime MENU_DELAY_TIME
+							screensound A_KICKHIT
+							set dna_menu_selected 0
+						}
+					}
 				}
 			}
 			
@@ -743,14 +839,6 @@ onevent EVENT_DISPLAYREST
 					{
 						ifvare dna_menu_selected 0
 						{
-							nullop	
-						}
-						// else ifvare dna_menu_selected 1
-						// {
-							
-						// }
-						else ifvare dna_menu_selected 2
-						{
 							ifvare dna_key_hud 0
 							{
 								state dna_menu_select_change
@@ -760,8 +848,23 @@ onevent EVENT_DISPLAYREST
 								state dna_menu_select_change
 								setvar dna_key_hud 0
 							}
-							savegamevar dna_key_hud
+							savegamevar dna_key_hud	
 						}
+						else ifvare dna_menu_selected 1
+						{
+							ife dna_lessalarm 0
+							{
+								state dna_menu_select_change
+								set dna_lessalarm 1
+							}
+							else {
+								state dna_menu_select_change
+								set dna_lessalarm 0
+							}
+							savegamevar dna_lessalarm
+						}
+						// else 
+						// }
 						// else ifvare dna_menu_selected 3
 						// {
 							
@@ -882,14 +985,6 @@ onevent EVENT_DISPLAYREST
 					{
 						ifvare dna_menu_selected 0
 						{
-							nullop	
-						}
-						// else ifvare dna_menu_selected 1
-						// {
-							
-						// }
-						else ifvare dna_menu_selected 2
-						{
 							ifvare dna_key_hud 1
 							{
 								state dna_menu_select_change
@@ -899,8 +994,25 @@ onevent EVENT_DISPLAYREST
 								state dna_menu_select_change
 								setvar dna_key_hud 1
 							}
-							savegamevar dna_key_hud
+							savegamevar dna_key_hud	
 						}
+						else ife dna_menu_selected 1
+						{
+							ife dna_lessalarm 1
+							{
+								state dna_menu_select_change
+								set dna_lessalarm 0
+							}
+							else {
+								state dna_menu_select_change
+								set dna_lessalarm 1
+							}
+							savegamevar dna_lessalarm	
+						}
+						// else ifvare dna_menu_selected 2
+						// {
+							
+						// }
 						// else ifvare dna_menu_selected 3
 						// {
 							
@@ -1007,7 +1119,7 @@ defstate get_cam_quote {
 			ife VOLUME 0 {
 				switch LEVEL
 				case 0 globalsound GM_LOTTASECURITY break
-				// case 2 globalsound  wait I forgot to include this line in the script I sent..
+				case 2 globalsound GM_PIPEBOMBPARTY break
 				case 5 ife dna_localization 0 globalsound GM_CRYINGTOMUMMY else globalsound GM_HESINCONTROL break
 				case 10 ife dna_localization 0 globalsound GM_MOSTIMPRESSIVE else globalsound GM_MUSTBETHEWEAPON break
 				case 16 globalsound GM_NOTHINGLIKECHALLENGE break

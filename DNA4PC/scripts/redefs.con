@@ -12,6 +12,9 @@ define CHAINGUNAMMOAMOUNT 20
 // Prevent Freeze ricochet
 define NUMFREEZEBOUNCES 1
 
+// Shrink radius - modified so player can shrink self like in GBA
+define SHRINKERBLASTRADIUS 1000
+
 //Ammo spawn odds redefinitions
 define SPAWNAMMOODDS           256
 
@@ -49,8 +52,6 @@ define BOTTLE13 5690
 define BOTTLE14 5691
 define BOTTLE15 5692
 define BOTTLE16 5693
-define FOODOBJECT11 5694
-define FOODOBJECT19 5695
 define SMALLSMOKE 5719
 define SMALLSMOKEMAKER 5720
 define BLOOD 5724

@@ -146,12 +146,20 @@ define CYBERALIENPBOMB 3987
 //define A51ALARM 5600
 define MBMACHINE 5601
 define CUTCAM 5602
+define BEEFBURGER 5694
+define RAMENBOWL 5695
 define ALIENLORD 4001
 define ALIENLORDSTRENGTH 3000
 define ALIENLORDPROJECTILE 5183
 define ALIENLORDPROJECTILESTRENGTH 20
 // Tile 5812 - the blank in the gap between gold gun sprites - is used for op projectile def
 define GOLDENGUN_PROJ 5812
+
+//Controller Boss hint quote
+definequote 170 He may be protected by shields...
+
+//Burger pickup... did you know this was in the game?
+definequote 171 MMMM..BEEF
 
 // Enemy knockback vars
 gamevar knockbackvel 0 2
@@ -241,6 +249,7 @@ gamevar CUTSCENE_SPRITE 0 0
 gamevar x 0 0
 gamevar y 0 0
 gamevar xspace 0 0
+gamevar curr_cuts_voc 0 1
 var cutscene_num 0 0
 var cutscene_i 0 0
 var cutscene_temp 0 0
@@ -308,6 +317,7 @@ define lock_chipkey 32
 define lock_mission 64
 define lock_oneway 128
 define lock_switch 256
+define lock_sequence 512
 define LOCKQUOTE 1
 // Keycard actors
 define DNA_SYSKEY 3901
@@ -415,6 +425,7 @@ var bobfrequency 1024 0
 //Delay vars
 var delayTime 0
 var bonusDelayTime 0
+var tutorialDelayTime 0
 
 gamevar prevtick -1 0
 gamevar curtick   0 0
@@ -429,6 +440,9 @@ gamevar bonus_screen_prevtick -1 0
 
 // Pretick for credits to not conflict with fade out timer
 gamevar credits_screen_prevtick -1 0
+
+// Pretick for mod menu screen prompt to not conflict with cutscene timer
+gamevar modmenu_tutorial_prevtick -1 0
 
 // Additional ticks for world screen fade timer - dont want any conflicts with these
 gamevar SCREENALPHAWORLD 255 0
@@ -899,6 +913,7 @@ define GM_YOULOOKFAMILIAREU 776
 define GM_COMMUNICADO 777
 define GM_COMMUNICADOEU 778
 define GM_ILLFINDTHEM 779
+define GM_PIPEBOMBPARTY 780
 //          SOUND TOKEN               SOUND FILE                        Pitch Low--High   Prio  Type  Distance
 definesound GM_THATSGOTTAHURT         sounds/gianni/GM_ThatsGottaHurt.ogg     0     0     255   4     0
 definesound GM_BACONBITS              sounds/gianni/GM_BaconBits.ogg          0     0     255   4     0
@@ -1079,7 +1094,8 @@ definesound GM_YOULOOKFAMILIAR        sounds/gianni/GM_YouLookFamiliar.ogg    0 
 definesound GM_YOULOOKFAMILIAREU      sounds/gianni/GM_YouLookFamiliarEU.ogg  0     0     255   4     0
 definesound GM_COMMUNICADO            sounds/gianni/GM_Communicado.ogg        0     0     255   4     0
 definesound GM_COMMUNICADOEU          sounds/gianni/GM_CommunicadoEU.ogg      0     0     255   4     0
-definesound GM_ILLFINDTHEM            sounds/gianni/GM_IllFindThem.ogg      0     0     255   4     0
+definesound GM_ILLFINDTHEM            sounds/gianni/GM_IllFindThem.ogg        0     0     255   4     0
+definesound GM_PIPEBOMBPARTY          sounds/gianni/GM_PipeBombParty.ogg      0     0     255   4     0
 
 // Game title for active eduke window
 setgamename Duke Nukem Advance

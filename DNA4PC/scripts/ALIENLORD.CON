@@ -119,7 +119,7 @@ state alienlordshrunkstate
         {
           ifspritepal 0 { sizeto 72 64 sizeto 72 64 }
           else
-      sizeto 48 40
+          sizeto 48 40
         }
   else
     state genericshrunkcode
@@ -247,6 +247,9 @@ ifhitweapon
   {
     ifstrength 600
     {
+      ifspritepal 0 break
+      else
+      state enemy_deathtrigger
       sound ACTOR_SHRINKING
       ai AIALIENLORDSHRUNK
       // set shrunken 1

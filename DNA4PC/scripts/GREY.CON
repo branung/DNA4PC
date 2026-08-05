@@ -397,16 +397,6 @@ ifai AIGREYREVIVING state greyrevivestate else
 ifai AIGREYSEEK state greyseekstate
 
 
- geta [].htpicnum temp
- ife temp FREEZEBLAST {
-  state enemy_deathtrigger
-  seta [].htextra -1
-  sound SOMETHINGFROZE
-  spritepal 1
-  seta [].htpicnum GREY
-  //resetcount
-  ai AIGREYFROZEN
- }
 
 ifhitweapon
 {
@@ -415,6 +405,7 @@ ifhitweapon
 
   ifwasweapon SHRINKSPARK
   {
+    state enemy_deathtrigger
     ifstrength 600
     {
       sound ACTOR_SHRINKING

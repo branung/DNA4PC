@@ -8,6 +8,7 @@ artfile { file "dna_3dr.art" }
 
 include textures.def
 include scripts/mainmenu.def
+include scripts/keyconfiguration.def
 
 // Shade6, "tan", lavaroom map4
 fogpal 140 32 16 4

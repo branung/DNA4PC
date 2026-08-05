@@ -24,6 +24,9 @@ ends
 defstate dna_getcode
   geta[THISACTOR].picnum temp
   switch temp
+  case BEEFBURGER
+  case RAMENBOWL
+    break
   case ATOMICHEALTH
     globalsound GETATOMICHEALTH
     break
@@ -460,6 +463,49 @@ actor HEALTHPACKSMALL
       }
 enda
 
+actor BEEFBURGER
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifphealthl MAXPLAYERHEALTH
+              ifcanseetarget
+      {
+        addphealth 5
+        quote 171
+        ifspawnedby BEEFBURGER
+          state getcode
+        else
+          state quikget
+      }
+enda
+
+actor RAMENBOWL
+  fall
+  ifmove RESPAWN_ACTOR_FLAG
+    state respawnit
+  else
+    ifp pshrunk nullop
+    else
+      ifp palive
+        ifpdistl RETRIEVEDISTANCE
+          ifcount 6
+            ifphealthl MAXPLAYERHEALTH
+              ifcanseetarget
+      {
+        addphealth 1
+        ifspawnedby RAMENBOWL
+          state getcode
+        else
+          state quikget
+      }
+enda
+
 //Redefining game.con actors below to change values to match DNA
 actor SIXPAK
   fall
@@ -556,14 +602,7 @@ actor SHOTGUNSPRITE
         ifspawnedby PIGCOP
         {
           addweapon SHOTGUN_WEAPON 0
-          ifrnd 64
-            addammo SHOTGUN_WEAPON 4
-          else ifrnd 64
-            addammo SHOTGUN_WEAPON 3
-          else ifrnd 64
-            addammo SHOTGUN_WEAPON 2
-          else
-            addammo SHOTGUN_WEAPON 1
+          addammo SHOTGUN_WEAPON 8
           
           quote 57
           state transfer_lead_ammo
@@ -827,72 +866,47 @@ useractor notenemy DNA_YELLOWKEY 0
     state access_shared
 enda
 
-
-
-
-//// --------- PREPENDS FOR FREEZING 3D ENEMIES ---------
-prependstate troopcode
+// Handles freezing enemies, negates freezer damage which avoids old freezing logic
+state newEnemyFreeze
   geta [].htpicnum temp
   ife temp FREEZEBLAST {
     seta [].htextra -1
-    sound SOMETHINGFROZE
-    spritepal 1
-    seta [].htpicnum LIZTROOP
-    move 0
-    //resetcount
-    action ATROOPFROZEN
+    ifg sprite[THISACTOR].extra 0
+    {
+      sound SOMETHINGFROZE
+      spritepal 1
+      move 0
+      //resetcount
+      seta [].htpicnum sprite[THISACTOR].picnum
+      switch sprite[THISACTOR].picnum
+        case LIZTROOP action ATROOPFROZEN break
+        case PIGCOP action APIGFROZEN break
+        case LIZMAN action ALIZFROZEN break
+        case OCTABRAIN action AOCTAFROZEN break
+        case GREY { state enemy_deathtrigger ai AIGREYFROZEN break }
+        case SLIMECRAB ai AICRABFROZEN break
+        case SLIMEREGG ai AISLIMEREGGFROZEN break
+        case NEWBEASTHANG action NEWBEASTHANG break
+      endswitch
+    }
   }
 ends
 
+//// --------- PREPENDS FOR FREEZING ENEMIES ---------
+prependstate troopcode
+    state newEnemyFreeze
+ends
+
 prependstate checksquished
-  ifactor PIGCOP {
-    geta [].htpicnum temp
-    ife temp FREEZEBLAST {
-      seta [].htextra -1
-      sound SOMETHINGFROZE
-      spritepal 1
-      seta [].htpicnum PIGCOP
-      move 0
-      //resetcount
-      action APIGFROZEN
-    }
-  }
-  ifactor LIZMAN {
-    geta [].htpicnum temp
-    ife temp FREEZEBLAST {
-      seta [].htextra -1
-      sound SOMETHINGFROZE
-      spritepal 1
-      seta [].htpicnum LIZMAN
-      move 0
-      //resetcount
-      action ALIZFROZEN
-    }
-  }
-  ifactor OCTABRAIN {
-    geta [].htpicnum temp
-    ife temp FREEZEBLAST {
-      seta [].htextra -1
-      sound SOMETHINGFROZE
-      spritepal 1
-      seta [].htpicnum OCTABRAIN
-      move 0
-      //resetcount
-      action AOCTAFROZEN
-    }
-  }
+  ifactor PIGCOP { state newEnemyFreeze }
+  ifactor LIZMAN { state newEnemyFreeze }
+  ifactor OCTABRAIN { state newEnemyFreeze }
+  ifactor GREY { state newEnemyFreeze }
+  ifactor SLIMECRAB { state newEnemyFreeze }
+  ifactor SLIMEREGG { state newEnemyFreeze }
   // Needs to be tested.. also need to add commander
   ifactor NEWBEASTHANG {
-    geta [].htpicnum temp
-    ife temp FREEZEBLAST {
-      seta [].htextra -1
-      sound SOMETHINGFROZE
-      spritepal 1
-      seta [].htpicnum NEWBEASTHANG
-      move 0
-      //resetcount
-      action ANEWBEASTFROZEN
-    }
+    state newEnemyFreeze
   }
 ends
 
@@ -1198,3 +1212,14 @@ useractor notenemy DNA_SWITCH3A 0 state switchcode enda
 useractor notenemy DNA_SWITCH3B 0 state switchcode enda
 useractor notenemy DNA_SWITCH4A 0 state switchcode enda
 useractor notenemy DNA_SWITCH4B 0 state switchcode enda
+
+
+// Sets Shrink proj owner to -1 so that player can be effected by their own shot 
+appendevent EVENT_EGS
+{
+  ifactor SHRINKSPARK
+  {
+    seta [].owner -1
+  }
+}
+endevent

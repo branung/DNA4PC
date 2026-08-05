@@ -13,6 +13,11 @@ Just a very quick TL;DR list
 
 Below is a laundry list on some of the stuff combed through over 300 commits.
 
+- CHANGE: Restructuring on dir, loadable as a mod
+- ADD: Shared ammo pool for shrinker/freezer
+- ADD: Shrinker self-damage behavior from GBA
+- FIX: Few elevators and texture panning
+- CHANGE: Enemies now drop keycards with a set .extra instead of hacky CON hardcoding
 - ADD: Step sounds
 - ADD: Randomized level specific timed ambience sounds
 - ADD: Ambient sound effects to maps (wind, machinery, etc..)
