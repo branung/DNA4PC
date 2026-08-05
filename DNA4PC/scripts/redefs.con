@@ -9,6 +9,14 @@ define MAXFREEZEAMMO            50
 //Ammo pickup size redefinitions
 define CHAINGUNAMMOAMOUNT 20
 
+// Weapon strength redefinitions
+define PISTOL_WEAPON_STRENGTH 20
+define CHAINGUN_WEAPON_STRENGTH 17
+
+// Enemy strengths (hit points).
+define TROOPSTRENGTH 80
+define LIZSTRENGTH 200
+
 // Prevent Freeze ricochet
 define NUMFREEZEBOUNCES 1
 

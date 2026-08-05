@@ -227,9 +227,6 @@ gamevar INV_NUM_TEMP 0 2
 
 gamevar SCREENSIZE -1 1
 
-// Moved from dna4pc.con
-//gamevar WEAPON1_CLIP 0 0 // Prevent pistol from reloading
-gamevar WEAPON1_TOTALTIME 9 // Increases delay time between each pistol shot
 gamevar temp 0 1
 gamevar temp2 0 1
 gamevar temp3 0 1

@@ -642,6 +642,12 @@ endevent
 
 
 // Initial defines
+
+// Pistol
+//gamevar WEAPON1_CLIP 0 0 // Prevent pistol from reloading
+gamevar WEAPON1_TOTALTIME 18 // Increases delay time between each pistol shot
+
+
 // Lead Cannon
 gamevar WEAPON7_CLIP 0 1
 gamevar WEAPON7_RELOAD 13 1
