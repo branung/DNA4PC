@@ -73,6 +73,28 @@ onevent EVENT_DAMAGEWALL
 }
 endevent
 
+// Generic search for nearby explosives
+gamevar explodeState 0 2
+gamevar searchExplSpriteTrgt 0 2
+gamevar searchExplSpriteDist 0 2
+gamevar searchExplSpriteId -1 0
+
+state searchExplSprite
+  for i sprofstat 1
+  {  
+    ife sprite[i].picnum searchExplSpriteTrgt
+    {
+      dist temp i THISACTOR
+      ifl temp searchExplSpriteDist
+      {
+        setav[i].explodeState 1
+      }
+    }
+    add i 1
+  }
+  killit
+ends
+
 action GASPUMPFRAME     0   3   1   1   15
 actor GASPUMP 26
   fall
@@ -138,7 +160,12 @@ actor DNAGASCYLINDER 26
       spawn EXPLOSION2
       debris SCRAP2 2
       sound PIPEBOMB_EXPLODE
-      killit
+      set searchExplSpriteTrgt DNAGASCYLINDER
+      set searchExplSpriteDist 2048
+      ife explodeState 2
+        state searchExplSprite
+      ife explodeState 1
+        add explodeState 1
     }
     break
   }
@@ -149,6 +176,11 @@ actor DNAGASCYLINDER 26
     break
   }
   ifhitweapon
+  {
+    ife explodeState 0
+      set explodeState 1
+  }
+  ife explodeState 1
     action DNAGASCYLINDERFRAME
 enda
 
